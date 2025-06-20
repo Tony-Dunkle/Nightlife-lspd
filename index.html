@@ -37,9 +37,8 @@
     <!-- Flexbox with `flex-col md:flex-row` makes it stack vertically on small screens and horizontally on medium screens and up -->
     <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex flex-col md:flex-row items-center justify-between sticky top-0 z-50 rounded-b-lg">
         <div class="flex items-center mb-4 md:mb-0">
-            <!-- LSPD Logo - Source updated to Lspd.png and size fixed to prevent huge header -->
-            <!-- Removed rounded-full, border-2, and shadow-lg, added w-16 h-16 object-contain -->
-            <img src="Lspd.png" alt="LSPD Logo" class="mr-4 w-16 h-16 object-contain">
+            <!-- LSPD Logo - Added rounded-lg and border-2 border-white for a rounded border -->
+            <img src="Lspd.png" alt="LSPD Logo" class="mr-4 w-16 h-16 object-contain rounded-lg border-2 border-white" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/408e7d65f4560c6f683459b88a4a54a2e61cb344/Lspd.png';">
             <!-- Responsive font size: text-2xl for small screens, text-3xl for medium screens and up -->
             <h1 class="text-2xl md:text-3xl font-bold">LSPD Internal Portal</h1>
         </div>
@@ -120,7 +119,7 @@
                 <!-- Announcement Article 1 -->
                 <div class="bg-white rounded-lg shadow-md overflow-hidden flex flex-col md:flex-row hover:shadow-lg transition-shadow duration-300 ease-in-out">
                     <!-- Image takes full width on small, 1/3 on medium screens and up. `object-cover` ensures image scales without distortion -->
-                    <img src="https://placehold.co/250x180/ADD8E6/000000?text=Policy+Update" alt="Policy Update" class="w-full md:w-1/3 h-48 md:h-auto object-cover">
+                    <img src="https://placehold.co/250x180/ADD8E6/000000?text=Policy+Update" alt="Policy+Update" class="w-full md:w-1/3 h-48 md:h-auto object-cover">
                     <div class="p-6 flex-1">
                         <span class="text-sm text-gray-500">June 20, 2025</span>
                         <h3 class="text-xl font-semibold text-blue-700 mb-2 mt-1">New Use of Force Policy Update</h3>
@@ -131,7 +130,7 @@
                 </div>
                 <!-- Announcement Article 2 -->
                 <div class="bg-white rounded-lg shadow-md overflow-hidden flex flex-col md:flex-row hover:shadow-lg transition-shadow duration-300 ease-in-out">
-                    <img src="https://placehold.co/250x180/C6E2FF/000000?text=Training+Session" alt="Training Session" class="w-full md:w-1/3 h-48 md:h-auto object-cover">
+                    <img src="https://placehold.co/250x180/C6E2FF/000000?text=Training+Session" alt="Training+Session" class="w-full md:w-1/3 h-48 md:h-auto object-cover">
                     <div class="p-6 flex-1">
                         <span class="text-sm text-gray-500">June 15, 2025</span>
                         <h3 class="text-xl font-semibold text-blue-700 mb-2 mt-1">Advanced De-escalation Training Dates</h3>
@@ -160,7 +159,7 @@
                 </div>
                 <!-- Image takes 1/3 width on medium screens and up, full width on small screens -->
                 <div class="md:w-1/3 mt-6 md:mt-0">
-                    <img src="https://placehold.co/300x200/4682B4/FFFFFF?text=Teamwork" alt="LSPD Teamwork" class="rounded-lg shadow-md w-full h-auto object-cover">
+                    <img src="https://placehold.co/300x200/4682B4/FFFFFF?text=Teamwork" alt="LSPD+Teamwork" class="rounded-lg shadow-md w-full h-auto object-cover">
                 </div>
             </div>
         </section>
@@ -175,7 +174,7 @@
                 <h4 class="text-xl font-semibold mb-4 text-blue-300">Internal Contacts</h4>
                 <p class="text-gray-400 mb-2"><strong>HR Department:</strong> Ext. 5001</p>
                 <p class="text-gray-400 mb-2"><strong>IT Support:</strong> (555) 987-6543 / Ext. 5002</p>
-                <p class="text-gray-400 mb-2"><strong>Training Division:</strong> Ext. 5003</p>
+                <p class="text-400 mb-2"><strong>Training Division:</strong> Ext. 5003</p>
                 <p class="text-gray-400"><strong>Command Staff Office:</strong> Ext. 5004</p>
             </div>
             <!-- Internal Quick Links -->
@@ -194,7 +193,7 @@
                 <h4 class="text-xl font-semibold mb-4 text-blue-300">System Information</h4>
                 <p class="text-gray-500 text-sm mb-2">Unauthorized Access Strictly Prohibited</p>
                 <p class="text-gray-500 text-sm mb-2">For LSPD Personnel Use Only</p>
-                <p class="text-gray-500 text-sm mb-2">Created and Maintained by FiveM "NightLife RP"</p>
+                <p class="text-500 text-sm mb-2">Created and Maintained by FiveM "NightLife RP"</p>
                 <p class="text-gray-500 text-sm">&copy; 2025 Los Santos Police Department Internal Systems.</p>
             </div>
         </div>
