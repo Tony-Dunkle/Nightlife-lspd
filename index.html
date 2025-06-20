@@ -57,6 +57,8 @@
                 <li><a href="roster.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Roster</a></li>
                 <!-- Updated HR Info link -->
                 <li><a href="hr.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">HR Info</a></li>
+                <!-- New: Report Generator link -->
+                <li><a href="report.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Report Generator</a></li>
             </ul>
         </nav>
         <!-- Search Bar -->
@@ -112,33 +114,26 @@
             </div>
         </section>
 
-        <!-- Latest Internal Announcements -->
-        <!-- Grid layout with 1 column on small screens, 2 on medium screens and up -->
-        <section class="mb-12">
-            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Latest Internal Announcements</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Announcement Article 1 -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden flex flex-col md:flex-row hover:shadow-lg transition-shadow duration-300 ease-in-out">
-                    <!-- Image takes full width on small, 1/3 on medium screens and up. `object-cover` ensures image scales without distortion -->
-                    <img src="https://placehold.co/250x180/ADD8E6/000000?text=Policy+Update" alt="Policy+Update" class="w-full md:w-1/3 h-48 md:h-auto object-cover">
-                    <div class="p-6 flex-1">
-                        <span class="text-sm text-gray-500">June 20, 2025</span>
-                        <h3 class="text-xl font-semibold text-blue-700 mb-2 mt-1">New Use of Force Policy Update</h3>
-                        <p class="text-gray-700 mb-4">All officers are required to review the updated Use of Force policy by July 1st. Mandatory training sessions will be announced soon.</p>
-                        <!-- Updated SOP link in announcement -->
-                        <a href="SOP.html" class="text-blue-500 hover:underline font-medium">Read Full Policy &rarr;</a>
-                    </div>
+        <!-- New Section: Training Scenario Generator (LLM-powered) -->
+        <section class="bg-green-50 p-8 rounded-lg shadow-inner mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">✨ Training Scenario Generator ✨</h2>
+            <div class="max-w-3xl mx-auto">
+                <p class="text-lg text-gray-700 mb-4">
+                    Describe the type of training scenario you need (e.g., "traffic stop with a suspicious vehicle," "active shooter drill in a school," "de-escalation during a public protest"), and our AI will generate a detailed policing scenario.
+                </p>
+                <div class="mb-4">
+                    <label for="scenarioInput" class="block text-gray-700 text-sm font-bold mb-2">Scenario Description:</label>
+                    <textarea id="scenarioInput" class="shadow appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent h-32 resize-y" placeholder="Describe the scenario (e.g., 'a bank robbery in progress with hostages')..."></textarea>
                 </div>
-                <!-- Announcement Article 2 -->
-                <div class="bg-white rounded-lg shadow-md overflow-hidden flex flex-col md:flex-row hover:shadow-lg transition-shadow duration-300 ease-in-out">
-                    <img src="https://placehold.co/250x180/C6E2FF/000000?text=Training+Session" alt="Training+Session" class="w-full md:w-1/3 h-48 md:h-auto object-cover">
-                    <div class="p-6 flex-1">
-                        <span class="text-sm text-gray-500">June 15, 2025</span>
-                        <h3 class="text-xl font-semibold text-blue-700 mb-2 mt-1">Advanced De-escalation Training Dates</h3>
-                        <p class="text-gray-700 mb-4">Sign-ups are now open for the Q3 Advanced De-escalation Training. Limited slots available – register via the Training portal.</p>
-                        <!-- Updated Training link in announcement -->
-                        <a href="training.html" class="text-blue-500 hover:underline font-medium">Register Now &rarr;</a>
-                    </div>
+                <button id="generateScenarioBtn" class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-3 px-6 rounded-md transition duration-300 ease-in-out transform hover:scale-105 w-full md:w-auto">
+                    Generate Scenario
+                </button>
+                <div id="loadingIndicator" class="hidden text-center text-blue-600 mt-4 font-semibold">
+                    Generating scenario... Please wait.
+                </div>
+                <div id="scenarioOutput" class="mt-8 p-6 bg-white rounded-lg shadow-md border border-gray-200 hidden">
+                    <h3 class="text-xl font-semibold text-blue-700 mb-4">Generated Scenario:</h3>
+                    <p class="text-gray-800 whitespace-pre-wrap" id="scenarioText"></p>
                 </div>
             </div>
         </section>
@@ -203,5 +198,60 @@
         <!-- Font Awesome for any potential internal icons (though less needed here) -->
         <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     </footer>
+
+    <script>
+        document.getElementById('generateScenarioBtn').addEventListener('click', async () => {
+            const scenarioInput = document.getElementById('scenarioInput').value;
+            const scenarioOutputDiv = document.getElementById('scenarioOutput');
+            const scenarioText = document.getElementById('scenarioText');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+
+            // Clear previous output and show loading indicator
+            scenarioText.textContent = '';
+            scenarioOutputDiv.classList.add('hidden');
+            loadingIndicator.classList.remove('hidden');
+
+            if (!scenarioInput.trim()) {
+                scenarioText.textContent = 'Please enter a description for the scenario.';
+                scenarioOutputDiv.classList.remove('hidden');
+                loadingIndicator.classList.add('hidden');
+                return;
+            }
+
+            try {
+                let chatHistory = [];
+                const prompt = `Generate a detailed police training scenario based on the following description. Include objectives, participants, a brief narrative, and potential challenges. Description: "${scenarioInput}"`;
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+
+                const payload = { contents: chatHistory };
+                const apiKey = ""; // Canvas will provide this at runtime
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    scenarioText.textContent = text;
+                } else {
+                    scenarioText.textContent = 'Failed to generate scenario. Please try again.';
+                    console.error('Gemini API returned an unexpected structure or no content:', result);
+                }
+            } catch (error) {
+                scenarioText.textContent = 'An error occurred while generating the scenario. Please check your network connection and try again.';
+                console.error('Error calling Gemini API:', error);
+            } finally {
+                loadingIndicator.classList.add('hidden');
+                scenarioOutputDiv.classList.remove('hidden');
+            }
+        });
+    </script>
 </body>
 </html>
