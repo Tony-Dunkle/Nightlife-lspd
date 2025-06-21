@@ -57,6 +57,22 @@
         <section class="bg-blue-50 p-8 rounded-lg shadow-inner w-full">
             <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Police Report Generator</h2>
             <div class="bg-white p-8 rounded-xl shadow-2xl w-full">
+
+                <!-- Department Dropdown -->
+                <div class="mb-6">
+                    <label for="department" class="block text-gray-700 text-sm font-semibold mb-2">
+                        Department
+                    </label>
+                    <select
+                        id="department"
+                        name="department"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm text-gray-800"
+                    >
+                        <option value="LSPD">Los Santos Police Department</option>
+                        <option value="LSCSO">Los Santos County Sheriff's Office</option>
+                    </select>
+                </div>
+
                 <!-- Text Box 1: Officer Name and Badge Number -->
                 <div class="mb-6">
                     <label for="officerInfo" class="block text-gray-700 text-sm font-semibold mb-2">
@@ -184,6 +200,7 @@
 
     <script>
         // Get references to elements
+        const departmentSelect = document.getElementById('department');
         const officerInfoInput = document.getElementById('officerInfo');
         const suspectNameInput = document.getElementById('suspectName');
         const chargesInput = document.getElementById('charges');
@@ -195,6 +212,7 @@
         // Add event listener to the "Generate Report" button
         generateReportBtn.addEventListener('click', async () => {
             // Get values from input fields
+            const department = departmentSelect.value;
             const officerInfo = officerInfoInput.value.trim();
             const suspectName = suspectNameInput.value.trim();
             const charges = chargesInput.value.trim();
@@ -206,15 +224,15 @@
 
             // Basic validation
             if (!officerInfo || !suspectName || !charges || !narrative) {
-                generatedReportTextarea.value = 'Please fill in all fields (Officer Info, Suspect Name, Charges, Officer Narrative) to generate the report.';
+                generatedReportTextarea.value = 'Please fill in all fields (Department, Officer Info, Suspect Name, Charges, Officer Narrative) to generate the report.';
                 loadingIndicator.classList.add('hidden');
                 return;
             }
 
             try {
                 let chatHistory = [];
-                // Construct a detailed prompt for the Gemini API
-                const prompt = `Generate a detailed and professional police report based on the following information. Ensure it flows well, is coherent, and uses professional police terminology.
+                // Construct a detailed prompt for the Gemini API, including the selected department
+                const prompt = `Generate a detailed and professional police report for the ${department} based on the following information. Ensure it flows well, is coherent, and uses professional police terminology.
 
 Officer Information: ${officerInfo}
 Suspect Name: ${suspectName}
@@ -235,6 +253,15 @@ Police Report:`;
                     body: JSON.stringify(payload)
                 });
 
+                // Check if the response was successful (status 2xx)
+                if (!response.ok) {
+                    const errorBody = await response.text(); // Get raw error body for debugging
+                    generatedReportTextarea.value = `Error: API call failed with status ${response.status}. Details: ${errorBody}`;
+                    console.error('API Error Response:', response.status, errorBody);
+                    loadingIndicator.classList.add('hidden');
+                    return; // Exit function if response is not OK
+                }
+
                 const result = await response.json();
 
                 if (result.candidates && result.candidates.length > 0 &&
@@ -243,12 +270,13 @@ Police Report:`;
                     const generatedText = result.candidates[0].content.parts[0].text;
                     generatedReportTextarea.value = generatedText;
                 } else {
-                    generatedReportTextarea.value = 'Failed to generate report. Please try again.';
+                    generatedReportTextarea.value = 'Failed to generate report. Gemini API returned an unexpected structure or no content.';
                     console.error('Gemini API returned an unexpected structure or no content:', result);
                 }
             } catch (error) {
-                generatedReportTextarea.value = 'An error occurred while generating the report. Please check your network connection and try again.';
-                console.error('Error calling Gemini API:', error);
+                // Catch network errors, JSON parsing errors, etc.
+                generatedReportTextarea.value = `An error occurred: ${error.message}. Please check your network connection and try again.`;
+                console.error('Error during API call or processing:', error);
             } finally {
                 loadingIndicator.classList.add('hidden');
             }
