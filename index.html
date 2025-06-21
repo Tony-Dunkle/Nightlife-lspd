@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Viewport meta tag is crucial for responsive behavior across devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LSPD Internal Portal - Official Member Access</title>
+    <!-- Tailwind CSS CDN - provides responsive utility classes out of the box -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font for a clean, modern look */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f8f8; /* Light gray background */
+            color: #333; /* Dark gray text */
+        }
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <!-- Header Section -->
+    <!-- Flexbox with `flex-col md:flex-row` makes it stack vertically on small screens and horizontally on medium screens and up -->
+    <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex flex-col md:flex-row items-center justify-between sticky top-0 z-50 rounded-b-lg">
+        <div class="flex items-center mb-4 md:mb-0">
+            <!-- LSPD Logo - Removed rounded-lg and border-2 border-white for no border -->
+            <!-- Updated onerror to load the new RAW image from GitHub if Lspd.png fails -->
+            <img src="Lspd.png" alt="LSPD Logo" class="mr-4 w-16 h-16 object-contain" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
+            <!-- Responsive font size: text-2xl for small screens, text-3xl for medium screens and up -->
+            <h1 class="text-2xl md:text-3xl font-bold">LSPD Internal Portal</h1>
+        </div>
+        <!-- Navigation Menu -->
+        <nav class="w-full md:w-auto">
+            <!-- Flexbox with `flex-col md:flex-row` for navigation items -->
+            <ul class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-8 text-lg font-medium">
+                <li><a href="#" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Dashboard</a></li>
+                <!-- Updated SOP link -->
+                <li><a href="SOP.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">SOPs</a></li>
+                <!-- Updated Training link -->
+                <li><a href="training.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Training</a></li>
+                <!-- Updated Forms link -->
+                <li><a href="forms.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Forms</a></li>
+                <!-- Updated Roster link in navigation -->
+                <li><a href="roster.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Roster</a></li>
+                <!-- Updated HR Info link -->
+                <li><a href="hr.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">HR Info</a></li>
+                <!-- New: Report Generator link -->
+                <li><a href="report.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Report Generator</a></li>
+            </ul>
+        </nav>
+        <!-- Search Bar -->
+        <div class="mt-4 md:mt-0 w-full md:w-auto">
+            <!-- `w-full md:w-64` makes it full width on small screens and fixed width on medium screens and up -->
+            <input type="search" placeholder="Search Internal Docs..." class="p-2 border border-blue-600 rounded-lg focus:ring-2 focus:ring-blue-300 focus:border-transparent w-full md:w-64 bg-blue-800 text-white placeholder-blue-300">
+        </div>
+    </header>
+
+    <!-- Hero Section - Internal Focus -->
+    <section class="relative bg-gradient-to-r from-blue-700 to-blue-900 text-white py-20 px-6 md:px-12 rounded-lg m-4 md:m-8 overflow-hidden shadow-xl">
+        <div class="absolute inset-0 bg-cover bg-center opacity-30" style="background-image: url('https://placehold.co/1200x600/0A2F50/FFFFFF?text=LSPD+Officers');"></div>
+        <div class="relative z-10 text-center max-w-4xl mx-auto">
+            <h2 class="text-4xl md:text-6xl font-extrabold leading-tight mb-6">Empowering Our Officers</h2>
+            <p class="text-lg md:text-xl mb-8">Your central hub for LSPD resources, policies, and departmental communications. Thank you for your service.</p>
+            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
+                <!-- Updated SOP link in hero section -->
+                <a href="SOP.html" class="inline-block bg-white text-blue-800 hover:bg-blue-100 font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105">Access SOPs</a>
+                <!-- Updated Daily Briefing link in hero section -->
+                <a href="briefs.html" class="inline-block bg-blue-600 text-white hover:bg-blue-700 font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 border-2 border-white">View Daily Briefing</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content Sections -->
+    <main class="container mx-auto px-4 md:px-8 py-12">
+        <!-- Internal Quick Links / Important Information -->
+        <!-- Grid layout that changes columns based on screen size: 1 column on small, 2 on medium, 4 on large -->
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+            <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out">
+                <h3 class="text-xl font-semibold text-blue-700 mb-3">Standard Operating Procedures</h3>
+                <p class="text-gray-600 mb-4">Latest departmental protocols and guidelines.</p>
+                <!-- Updated SOP quick link -->
+                <a href="SOP.html" class="text-blue-500 hover:underline font-medium">Browse SOPs &rarr;</a>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out">
+                <h3 class="text-xl font-semibold text-blue-700 mb-3">Training & Development</h3>
+                <p class="text-gray-600 mb-4">Upcoming courses, certifications, and resources.</p>
+                <!-- Updated Training quick link -->
+                <a href="training.html" class="text-blue-500 hover:underline font-medium">View Schedule &rarr;</a>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out">
+                <h3 class="text-xl font-semibold text-blue-700 mb-3">Internal Forms & Requests</h3>
+                <p class="text-gray-600 mb-4">Access leave requests, equipment forms, and more.</p>
+                <!-- Updated Forms quick link -->
+                <a href="forms.html" class="text-blue-500 hover:underline font-medium">Download Forms &rarr;</a>
+            </div>
+            <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out">
+                <h3 class="text-xl font-semibold text-blue-700 mb-3">Shift Roster & Schedules</h3>
+                <p class="text-gray-600 mb-4">Check your upcoming shifts and team assignments.</p>
+                <!-- Updated Roster quick link -->
+                <a href="roster.html" class="text-blue-500 hover:underline font-medium">View Roster &rarr;</a>
+            </div>
+        </section>
+
+        <!-- Latest Internal Announcements -->
+        <!-- Grid layout with 1 column on small screens, 2 on medium screens and up -->
+        <section class="mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Latest Internal Announcements</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Announcement Article 1 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden flex flex-col md:flex-row hover:shadow-lg transition-shadow duration-300 ease-in-out">
+                    <!-- Image takes full width on small, 1/3 on medium screens and up. `object-cover` ensures image scales without distortion -->
+                    <img src="https://placehold.co/250x180/ADD8E6/000000?text=Policy+Update" alt="Policy+Update" class="w-full md:w-1/3 h-48 md:h-auto object-cover">
+                    <div class="p-6 flex-1">
+                        <span class="text-sm text-gray-500">June 20, 2025</span>
+                        <h3 class="text-xl font-semibold text-blue-700 mb-2 mt-1">New Use of Force Policy Update</h3>
+                        <p class="text-gray-700 mb-4">All officers are required to review the updated Use of Force policy by July 1st. Mandatory training sessions will be announced soon.</p>
+                        <!-- Updated SOP link in announcement -->
+                        <a href="SOP.html" class="text-blue-500 hover:underline font-medium">Read Full Policy &rarr;</a>
+                    </div>
+                </div>
+                <!-- Announcement Article 2 -->
+                <div class="bg-white rounded-lg shadow-md overflow-hidden flex flex-col md:flex-row hover:shadow-lg transition-shadow duration-300 ease-in-out">
+                    <img src="https://placehold.co/250x180/C6E2FF/000000?text=Training+Session" alt="Training+Session" class="w-full md:w-1/3 h-48 md:h-auto object-cover">
+                    <div class="p-6 flex-1">
+                        <span class="text-sm text-gray-500">June 15, 2025</span>
+                        <h3 class="text-xl font-semibold text-blue-700 mb-2 mt-1">Advanced De-escalation Training Dates</h3>
+                        <p class="text-gray-700 mb-4">Sign-ups are now open for the Q3 Advanced De-escalation Training. Limited slots available – register via the Training portal.</p>
+                        <!-- Updated Training link in announcement -->
+                        <a href="training.html" class="text-blue-500 hover:underline font-medium">Register Now &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Our Internal Commitment / Values -->
+        <section class="bg-blue-50 p-8 rounded-lg shadow-inner mb-12">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Our Commitment to Our Team</h2>
+            <!-- Flexbox that stacks vertically on small screens and horizontally on medium screens and up -->
+            <div class="flex flex-col md:flex-row items-center md:space-x-8">
+                <!-- Content takes 2/3 width on medium screens and up, full width on small screens -->
+                <div class="md:w-2/3">
+                    <p class="text-lg text-gray-700 leading-relaxed mb-4">
+                        The Los Santos Police Department is committed to providing our dedicated officers and staff with the resources, support, and training necessary to excel in their duties and maintain their well-being.
+                    </p>
+                    <p class="text-lg text-gray-700 leading-relaxed mb-4">
+                        We foster an environment of continuous learning, mutual respect, and operational excellence, ensuring our team is equipped to uphold the highest standards of law enforcement and community service.
+                    </p>
+                    <a href="#" class="inline-block bg-blue-700 text-white font-bold py-3 px-6 rounded-md hover:bg-blue-800 transition duration-300 ease-in-out mt-4">View Department Values</a>
+                </div>
+                <!-- Image takes 1/3 width on medium screens and up, full width on small screens -->
+                <div class="md:w-1/3 mt-6 md:mt-0">
+                    <img src="https://placehold.co/300x200/4682B4/FFFFFF?text=Teamwork" alt="LSPD+Teamwork" class="rounded-lg shadow-md w-full h-auto object-cover">
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer Section - Internal Contacts -->
+    <!-- Grid layout that changes columns based on screen size: 1 column on small, 3 on medium screens and up -->
+    <footer class="bg-gray-800 text-white py-10 px-6 md:px-12 rounded-t-lg">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Internal Contact Info -->
+            <div>
+                <h4 class="text-xl font-semibold mb-4 text-blue-300">Internal Contacts</h4>
+                <p class="text-gray-400 mb-2"><strong>HR Department:</strong> Ext. 5001</p>
+                <p class="text-gray-400 mb-2"><strong>IT Support:</strong> (555) 987-6543 / Ext. 5002</p>
+                <p class="text-400 mb-2"><strong>Training Division:</strong> Ext. 5003</p>
+                <p class="text-gray-400"><strong>Command Staff Office:</strong> Ext. 5004</p>
+            </div>
+            <!-- Internal Quick Links -->
+            <div>
+                <h4 class="text-xl font-semibold mb-4 text-blue-300">Quick Access</h4>
+                <ul>
+                    <!-- Updated My Profile link to roster.html, assuming profile might be part of the roster system -->
+                    <li class="mb-2"><a href="roster.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">My Profile</a></li>
+                    <!-- Updated Department Directory link to roster.html -->
+                    <li class="mb-2"><a href="roster.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Department Directory</a></li>
+                    <li class="mb-2"><a href="#" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Wellness Programs</a></li>
+                    <!-- Updated Internal Policies link to SOP.html as it's the closest fit for 'policies' -->
+                    <li class="mb-2"><a href="SOP.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Internal Policies</a></li>
+                </ul>
+            </div>
+            <!-- Copyright & Internal System Info -->
+            <div>
+                <h4 class="text-xl font-semibold mb-4 text-blue-300">System Information</h4>
+                <p class="text-gray-500 text-sm mb-2">Unauthorized Access Strictly Prohibited</p>
+                <p class="text-gray-500 text-sm mb-2">For LSPD Personnel Use Only</p>
+                <p class="text-500 text-sm mb-2">Created and Maintained by FiveM "NightLife RP"</p>
+                <p class="text-gray-500 text-sm">&copy; 2025 Los Santos Police Department Internal Systems.</p>
+            </div>
+        </div>
+        <!-- Font Awesome for any potential internal icons (though less needed here) -->
+        <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    </footer>
+</body>
+</html>
