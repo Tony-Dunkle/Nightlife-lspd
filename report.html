@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Viewport meta tag is crucial for responsive behavior across devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Police Report Generator</title>
+    <!-- Tailwind CSS CDN - provides responsive utility classes out of the box -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom font for a clean, modern look */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f8f8; /* Light gray background */
+            color: #333; /* Dark gray text */
+        }
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <!-- Header Section -->
+    <!-- Flexbox with `flex-col md:flex-row` makes it stack vertically on small screens and horizontally on medium screens and up -->
+    <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex flex-col md:flex-row items-center justify-between sticky top-0 z-50 rounded-b-lg">
+        <div class="flex items-center mb-4 md:mb-0">
+            <!-- LSPD Logo - Added rounded-lg and border-2 border-white for a rounded border -->
+            <img src="Lspd.png" alt="LSPD Logo" class="mr-4 w-16 h-16 object-contain rounded-lg border-2 border-white" onerror="this.onerror=null; this.src='https://placehold.co/64x64/0A2F50/FFFFFF?text=LSPD';">
+            <!-- Responsive font size: text-2xl for small screens, text-3xl for medium screens and up -->
+            <h1 class="text-2xl md:text-3xl font-bold">Police Report Generator</h1>
+        </div>
+        <!-- Navigation Menu - Simplified to only a Dashboard button -->
+        <nav class="w-full md:w-auto">
+            <ul class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-8 text-lg font-medium">
+                <li><a href="index.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Dashboard</a></li>
+            </ul>
+        </nav>
+        <!-- Search Bar - Removed as per instructions -->
+    </header>
+
+    <!-- Main Content Section -->
+    <main class="w-full px-4 md:px-8 py-12 flex justify-center items-start">
+        <!-- Police Report Generator Section -->
+        <section class="bg-blue-50 p-8 rounded-lg shadow-inner w-full">
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Police Report Generator</h2>
+            <div class="bg-white p-8 rounded-xl shadow-2xl w-full">
+                <!-- Text Box 1: Officer Name and Badge Number -->
+                <div class="mb-6">
+                    <label for="officerInfo" class="block text-gray-700 text-sm font-semibold mb-2">
+                        Officer Name and Badge Number
+                    </label>
+                    <input
+                        type="text"
+                        id="officerInfo"
+                        name="officerInfo"
+                        placeholder="Enter officer name and badge number"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400 text-gray-800"
+                    >
+                </div>
+
+                <!-- Text Box 2: Suspect First and Last Name -->
+                <div class="mb-6">
+                    <label for="suspectName" class="block text-gray-700 text-sm font-semibold mb-2">
+                        Suspect First and Last Name
+                    </label>
+                    <input
+                        type="text"
+                        id="suspectName"
+                        name="suspectName"
+                        placeholder="Enter suspect's first and last name"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400 text-gray-800"
+                    >
+                </div>
+
+                <!-- Text Box 3: Charges -->
+                <div class="mb-6">
+                    <label for="charges" class="block text-gray-700 text-sm font-semibold mb-2">
+                        Charges
+                    </label>
+                    <input
+                        type="text"
+                        id="charges"
+                        name="charges"
+                        placeholder="Enter charges (e.g., Theft, Assault)"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400 text-gray-800"
+                    >
+                </div>
+
+                <!-- Text Area: Officer Narrative -->
+                <div class="mb-6">
+                    <label for="narrative" class="block text-gray-700 text-sm font-semibold mb-2">
+                        Officer Narrative
+                    </label>
+                    <textarea
+                        id="narrative"
+                        name="narrative"
+                        rows="5"
+                        placeholder="Enter officer narrative here..."
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400 text-gray-800"
+                    ></textarea>
+                </div>
+
+                <!-- Text Area: Generated Report -->
+                <div class="mb-6">
+                    <label for="generatedReport" class="block text-gray-700 text-sm font-semibold mb-2">
+                        Generated Report
+                    </label>
+                    <textarea
+                        id="generatedReport"
+                        name="generatedReport"
+                        rows="10"
+                        readonly
+                        placeholder="Your generated report will appear here..."
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y text-gray-800"
+                    ></textarea>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="mt-8">
+                    <button
+                        type="button"
+                        id="generateReportBtn"
+                        class="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-300 ease-in-out shadow-md"
+                    >
+                        Generate Report
+                    </button>
+                </div>
+
+                <!-- Loading Indicator for AI Generation -->
+                <div id="loadingIndicator" class="hidden text-center text-blue-600 mt-4 font-semibold">
+                    Generating report... Please wait.
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer Section - Internal Contacts -->
+    <!-- Grid layout that changes columns based on screen size: 1 column on small, 3 on medium screens and up -->
+    <footer class="bg-gray-800 text-white py-10 px-6 md:px-12 rounded-t-lg">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Internal Contact Info -->
+            <div>
+                <h4 class="text-xl font-semibold mb-4 text-blue-300">Internal Contacts</h4>
+                <p class="text-gray-400 mb-2"><strong>HR Department:</strong> Ext. 5001</p>
+                <p class="text-gray-400 mb-2"><strong>IT Support:</strong> (555) 987-6543 / Ext. 5002</p>
+                <p class="text-400 mb-2"><strong>Training Division:</strong> Ext. 5003</p>
+                <p class="text-gray-400"><strong>Command Staff Office:</strong> Ext. 5004</p>
+            </div>
+            <!-- Internal Quick Links -->
+            <div>
+                <h4 class="text-xl font-semibold mb-4 text-blue-300">Quick Access</h4>
+                <ul>
+                    <li class="mb-2"><a href="roster.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">My Profile</a></li>
+                    <li class="mb-2"><a href="roster.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Department Directory</a></li>
+                    <li class="mb-2"><a href="#" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Wellness Programs</a></li>
+                    <li class="mb-2"><a href="SOP.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Internal Policies</a></li>
+                </ul>
+            </div>
+            <!-- Copyright & Internal System Info -->
+            <div>
+                <h4 class="text-xl font-semibold mb-4 text-blue-300">System Information</h4>
+                <p class="text-gray-500 text-sm mb-2">Unauthorized Access Strictly Prohibited</p>
+                <p class="text-gray-500 text-sm mb-2">For LSPD Personnel Use Only</p>
+                <p class="text-500 text-sm mb-2">Created and Maintained by FiveM "NightLife RP"</p>
+                <p class="text-gray-500 text-sm">&copy; 2025 Los Santos Police Department Internal Systems.</p>
+            </div>
+        </div>
+        <!-- Font Awesome for any potential internal icons (though less needed here) -->
+        <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    </footer>
+
+    <script>
+        // Get references to elements
+        const officerInfoInput = document.getElementById('officerInfo');
+        const suspectNameInput = document.getElementById('suspectName');
+        const chargesInput = document.getElementById('charges');
+        const narrativeTextarea = document.getElementById('narrative');
+        const generatedReportTextarea = document.getElementById('generatedReport');
+        const generateReportBtn = document.getElementById('generateReportBtn');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+
+        // Add event listener to the "Generate Report" button
+        generateReportBtn.addEventListener('click', async () => {
+            // Get values from input fields
+            const officerInfo = officerInfoInput.value.trim();
+            const suspectName = suspectNameInput.value.trim();
+            const charges = chargesInput.value.trim();
+            const narrative = narrativeTextarea.value.trim();
+
+            // Clear previous generated report and show loading indicator
+            generatedReportTextarea.value = '';
+            loadingIndicator.classList.remove('hidden');
+
+            // Basic validation
+            if (!officerInfo || !suspectName || !charges || !narrative) {
+                generatedReportTextarea.value = 'Please fill in all fields (Officer Info, Suspect Name, Charges, Officer Narrative) to generate the report.';
+                loadingIndicator.classList.add('hidden');
+                return;
+            }
+
+            try {
+                let chatHistory = [];
+                // Construct a detailed prompt for the Gemini API
+                const prompt = `Generate a detailed and professional police report based on the following information. Ensure it flows well, is coherent, and uses professional police terminology.
+
+Officer Information: ${officerInfo}
+Suspect Name: ${suspectName}
+Charges: ${charges}
+Officer Narrative: ${narrative}
+
+Police Report:`;
+
+                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+
+                const payload = { contents: chatHistory };
+                const apiKey = ""; // Canvas will provide this at runtime
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const generatedText = result.candidates[0].content.parts[0].text;
+                    generatedReportTextarea.value = generatedText;
+                } else {
+                    generatedReportTextarea.value = 'Failed to generate report. Please try again.';
+                    console.error('Gemini API returned an unexpected structure or no content:', result);
+                }
+            } catch (error) {
+                generatedReportTextarea.value = 'An error occurred while generating the report. Please check your network connection and try again.';
+                console.error('Error calling Gemini API:', error);
+            } finally {
+                loadingIndicator.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
