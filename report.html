@@ -209,6 +209,21 @@
         const generateReportBtn = document.getElementById('generateReportBtn');
         const loadingIndicator = document.getElementById('loadingIndicator');
 
+        // IMPORTANT SECURITY NOTE:
+        // Client-side JavaScript (this HTML file) CANNOT directly access GitHub Secrets.
+        // GitHub Secrets (`GEMINIAPIKEY`) are for server-side use.
+        //
+        // To use your Gemini API key securely in a web application:
+        // 1. Set up a backend server (e.g., Node.js, Python Flask, etc.).
+        // 2. Configure your backend server to securely access the GEMINIAPIKEY from its
+        //    environment variables (which can be populated from GitHub Secrets during deployment).
+        // 3. Your client-side (this HTML) would then make requests to YOUR backend server,
+        //    and YOUR backend server would make the secure call to the Gemini API.
+        //
+        // For local development/testing of this HTML file, the API key is now directly embedded.
+        // FOR PRODUCTION, THIS IS NOT SECURE.
+        const apiKey = "AIzaSyCsWMWfmCfR59mcAy4as7XR95YY__7hayc"; 
+
         // Add event listener to the "Generate Report" button
         generateReportBtn.addEventListener('click', async () => {
             // Get values from input fields
@@ -229,6 +244,13 @@
                 return;
             }
 
+            // Client-side API key check (will catch if the key is empty despite the prompt to fill it)
+            if (!apiKey || apiKey === "YOUR_ACTUAL_GEMINI_API_KEY_HERE") { // Added redundant check
+                generatedReportTextarea.value = 'Error: Gemini API Key is not configured. Please ensure it is correctly placed in the code (for local testing) or accessed via a backend (for secure deployment).';
+                loadingIndicator.classList.add('hidden');
+                return;
+            }
+
             try {
                 let chatHistory = [];
                 // Construct a detailed prompt for the Gemini API, including the selected department
@@ -244,7 +266,6 @@ Police Report:`;
                 chatHistory.push({ role: "user", parts: [{ text: prompt }] });
 
                 const payload = { contents: chatHistory };
-                const apiKey = ""; // Canvas will provide this at runtime
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
                 const response = await fetch(apiUrl, {
