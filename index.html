@@ -7,6 +7,21 @@
     <title>LSPD Internal Portal - Official Member Access</title>
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="LSPD.png">
+
+    <!-- Open Graph (Facebook, Discord, etc.) Meta Tags -->
+    <meta property="og:title" content="LSPD Internal Portal - Official Member Access">
+    <meta property="og:description" content="Your central hub for Los Santos Police Department resources, policies, and departmental communications.">
+    <!-- Use the direct raw GitHub URL for the image for consistent loading across platforms -->
+    <meta property="og:image" content="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png">
+    <meta property="og:url" content="https://your-website-url.com/index.html"> <!-- IMPORTANT: Replace with your actual deployed URL -->
+    <meta property="og:type" content="website">
+
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="LSPD Internal Portal - Official Member Access">
+    <meta name="twitter:description" content="Your central hub for Los Santos Police Department resources, policies, and departmental communications.">
+    <meta name="twitter:image" content="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png">
+
     <!-- Tailwind CSS CDN - provides responsive utility classes out of the box -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -106,17 +121,17 @@
             <ul class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-8 text-lg font-medium">
                 <!-- Dashboard link updated to index.html -->
                 <li><a href="index.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Dashboard</a></li>
-                <!-- SOPs link updated -->
-                <li><a href="pages/SOP.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">SOPs</a></li>
-                <!-- Training link updated -->
-                <li><a href="pages/training.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Training</a></li>
-                <!-- Forms link updated -->
-                <li><a href="pages/forms.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Forms</a></li>
-                <!-- Roster link updated -->
-                <li><a href="pages/roster.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Roster</a></li>
-                <!-- HR Info link updated -->
-                <li><a href="pages/hr.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">HR Info</a></li>
-                <!-- Report Generator link updated -->
+                <!-- SOPs link updated to SOP.html -->
+                <li><a href="SOP.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">SOPs</a></li>
+                <!-- Training link updated to training.html -->
+                <li><a href="training.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Training</a></li>
+                <!-- Forms link updated to forms.html -->
+                <li><a href="forms.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Forms</a></li>
+                <!-- Roster link updated to roster.html -->
+                <li><a href="roster.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Roster</a></li>
+                <!-- HR Info link updated to hr.html -->
+                <li><a href="hr.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">HR Info</a></li>
+                <!-- Report Generator link updated to report.html -->
                 <li><a href="report.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Report Generator</a></li>
             </ul>
         </nav>
@@ -131,9 +146,9 @@
             <p class="text-lg md:text-xl mb-8">Your central hub for LSPD resources, policies, and departmental communications. Thank you for your service.</p>
             <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
                 <!-- Updated SOP link in hero section -->
-                <a href="pages/SOP.html" class="inline-block bg-white text-blue-800 hover:bg-blue-100 font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105">Access SOPs</a>
+                <a href="SOP.html" class="inline-block bg-white text-blue-800 hover:bg-blue-100 font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105">Access SOPs</a>
                 <!-- Updated Daily Briefing link in hero section -->
-                <a href="pages/briefs.html" class="inline-block bg-blue-600 text-white hover:bg-blue-700 font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 border-2 border-white">View Daily Briefing</a>
+                <a href="briefs.html" class="inline-block bg-blue-600 text-white hover:bg-blue-700 font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 border-2 border-white">View Daily Briefing</a>
             </div>
         </div>
     </section>
@@ -147,25 +162,25 @@
                 <h3 class="text-xl font-semibold text-blue-700 mb-3">Standard Operating Procedures</h3>
                 <p class="text-gray-600 mb-4">Latest departmental protocols and guidelines.</p>
                 <!-- Updated SOP quick link -->
-                <a href="pages/SOP.html" class="text-blue-500 hover:underline font-medium">Browse SOPs &rarr;</a>
+                <a href="SOP.html" class="text-blue-500 hover:underline font-medium">Browse SOPs &rarr;</a>
             </div>
             <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out">
                 <h3 class="text-xl font-semibold text-blue-700 mb-3">Training & Development</h3>
                 <p class="text-gray-600 mb-4">Upcoming courses, certifications, and resources.</p>
                 <!-- Updated Training quick link -->
-                <a href="pages/training.html" class="text-blue-500 hover:underline font-medium">View Schedule &rarr;</a>
+                <a href="training.html" class="text-blue-500 hover:underline font-medium">View Schedule &rarr;</a>
             </div>
             <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out">
                 <h3 class="text-xl font-semibold text-blue-700 mb-3">Internal Forms & Requests</h3>
                 <p class="text-gray-600 mb-4">Access leave requests, equipment forms, and more.</p>
                 <!-- Updated Forms quick link -->
-                <a href="pages/forms.html" class="text-blue-500 hover:underline font-medium">Download Forms &rarr;</a>
+                <a href="forms.html" class="text-blue-500 hover:underline font-medium">Download Forms &rarr;</a>
             </div>
             <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out">
                 <h3 class="text-xl font-semibold text-blue-700 mb-3">Shift Roster & Schedules</h3>
                 <p class="text-gray-600 mb-4">Check your upcoming shifts and team assignments.</p>
                 <!-- Updated Roster quick link -->
-                <a href="pages/roster.html" class="text-blue-500 hover:underline font-medium">View Roster &rarr;</a>
+                <a href="roster.html" class="text-blue-500 hover:underline font-medium">View Roster &rarr;</a>
             </div>
         </section>
 
@@ -183,7 +198,7 @@
                         <h3 class="text-xl font-semibold text-blue-700 mb-2 mt-1">New Use of Force Policy Update</h3>
                         <p class="text-gray-700 mb-4">All officers are required to review the updated Use of Force policy by July 1st. Mandatory training sessions will be announced soon.</p>
                         <!-- Updated SOP link in announcement -->
-                        <a href="pages/SOP.html" class="text-blue-500 hover:underline font-medium">Read Full Policy &rarr;</a>
+                        <a href="SOP.html" class="text-blue-500 hover:underline font-medium">Read Full Policy &rarr;</a>
                     </div>
                 </div>
                 <!-- Announcement Article 2 -->
@@ -194,7 +209,7 @@
                         <h3 class="text-xl font-semibold text-blue-700 mb-2 mt-1">Advanced De-escalation Training Dates</h3>
                         <p class="text-gray-700 mb-4">Sign-ups are now open for the Q3 Advanced De-escalation Training. Limited slots available – register via the Training portal.</p>
                         <!-- Updated Training link in announcement -->
-                        <a href="pages/training.html" class="text-blue-500 hover:underline font-medium">Register Now &rarr;</a>
+                        <a href="training.html" class="text-blue-500 hover:underline font-medium">Register Now &rarr;</a>
                     </div>
                 </div>
             </div>
@@ -240,13 +255,13 @@
                 <h4 class="text-xl font-semibold mb-4 text-blue-300">Quick Access</h4>
                 <ul>
                     <!-- Updated My Profile link to roster.html, assuming profile might be part of the roster system -->
-                    <li class="mb-2"><a href="pages/roster.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">My Profile</a></li>
+                    <li class="mb-2"><a href="roster.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">My Profile</a></li>
                     <!-- Updated Department Directory link to roster.html -->
-                    <li class="mb-2"><a href="pages/roster.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Department Directory</a></li>
+                    <li class="mb-2"><a href="roster.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Department Directory</a></li>
                     <!-- "Wellness Programs" link updated to 404.html -->
                     <li class="mb-2"><a href="pages/404.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Wellness Programs</a></li>
                     <!-- Updated Internal Policies link to SOP.html as it's the closest fit for 'policies' -->
-                    <li class="mb-2"><a href="pages/SOP.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Internal Policies</a></li>
+                    <li class="mb-2"><a href="SOP.html" class="text-gray-400 hover:underline font-medium">Internal Policies</a></li>
                 </ul>
             </div>
             <!-- Copyright & Internal System Info -->
