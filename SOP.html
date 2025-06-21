@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LSPD Internal Portal - SOPs</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f8f8;
+            color: #333;
+        }
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 5px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+            }
+        .policy-section {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+        .policy-heading {
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e3a8a;
+        }
+        .policy-content {
+            display: none;
+            padding-left: 1rem;
+            padding-top: 0.5rem;
+            line-height: 1.6;
+        }
+        .policy-content.active {
+            display: block;
+        }
+        .policy-heading .arrow {
+            transition: transform 0.3s ease;
+        }
+        .policy-heading.active .arrow {
+            transform: rotate(90deg);
+        }
+        .highlight {
+            background-color: yellow;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body class="antialiased">
+    <!-- Header Section -->
+    <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex flex-col md:flex-row items-center justify-between sticky top-0 z-50 rounded-b-lg">
+        <div class="flex items-center mb-4 md:mb-0">
+            <img src="Lspd.png" alt="LSPD Logo" class="mr-4 w-16 h-16 object-contain rounded-lg border-2 border-white" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/408e7d65f4560c6f683459b88a4a54a2e61cb344/Lspd.png';">
+            <h1 class="text-2xl md:text-3xl font-bold">LSPD Internal Portal</h1>
+        </div>
+        <nav class="w-full md:w-auto">
+            <ul class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-8 text-lg font-medium">
+                <li><a href="#" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Dashboard</a></li>
+                <li><a href="SOP.html" class="text-white bg-blue-700 py-2 px-3 rounded-md">SOPs</a></li>
+                <li><a href="training.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Training</a></li>
+                <li><a href="forms.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Forms</a></li>
+                <li><a href="roster.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Roster</a></li>
+                <li><a href="hr.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">HR Info</a></li>
+                <li><a href="report.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Report Generator</a></li>
+            </ul>
+        </nav>
+        <div class="mt-4 md:mt-0 w-full md:w-auto">
+            <input type="search" id="searchInput" placeholder="Search SOPs..." class="p-2 border border-blue-600 rounded-lg focus:ring-2 focus:ring-blue-300 focus:border-transparent w-full md:w-64 bg-blue-800 text-white placeholder-blue-300">
+        </div>
+    </header>
+
+    <!-- Hero Section for SOPs -->
+    <section class="relative bg-gradient-to-r from-blue-700 to-blue-900 text-white py-16 px-6 md:px-12 rounded-lg m-4 md:m-8 overflow-hidden shadow-xl text-center">
+        <div class="absolute inset-0 bg-cover bg-center opacity-30" style="background-image: url('https://placehold.co/1200x600/0A2F50/FFFFFF?text=LSPD+SOPs');"></div>
+        <div class="relative z-10 max-w-4xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-extrabold leading-tight mb-4">Standard Operating Procedures</h2>
+            <p class="text-lg md:text-xl mb-6">Your comprehensive guide to LSPD policies and protocols. Utilize the search bar to find specific information quickly.</p>
+        </div>
+    </section>
+
+    <!-- Main Content Section - SOPs -->
+    <main class="container mx-auto px-4 md:px-8 py-12">
+        <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Departmental Policies and Guidelines</h2>
+
+        <div id="sop-container" class="bg-white p-6 rounded-lg shadow-lg">
+            <!-- SOP Content will be dynamically inserted here -->
+            <div class="policy-section">
+                <div class="policy-heading">
+                    1.0 Administrative Policies
+                    <span class="arrow">&#9656;</span>
+                </div>
+                <div class="policy-content">
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">1.1 Mission and Commitment</h3>
+                    <p class="text-gray-700 mb-4">Los Santos Police Department (LSPD) officers are officially certified law enforcement personnel within the state of San Andreas. They are vested with the Authority to enforce the Constitution of the United States, as well as all applicable state and local laws within the designated county limits. Their primary responsibility is to maintain public safety order and preserve peace within the community.</p>
+
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">1.1.2 Code of Conduct</h3>
+                    <p class="text-gray-700 mb-4">All LSPD officers are mandated to uphold the most stringent standards of professionalism, integrity, and ethical conduct at all times, both on and off duty. The actions and behavior of individual officers directly reflect upon the entire department and its reputation. Any instance of misconduct, whether internal or external, will be subject to a thorough investigation and may result in a range of disciplinary actions, up to and including termination of employment or referral to criminal authorities. Strict accountability shall be applied to all actions undertaken by department personnel.</p>
+
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">1.1.3 Code of Ethics</h3>
+                    <p class="text-gray-700 mb-4">Officers of the Los Santos Police Department shall adhere to the following ethical principles: Service and Protection, Constitutional Adherence, Exemplary Leadership, Self-Control and Impartiality, Confidentiality, Anti-Corruption, Continuous Improvement. The LSPD badge symbolizes the public's trust and confidence in the organization. Officers are honor-bound to uphold this trust through diligent adherence to ethical conduct and full accountability for their actions.</p>
+
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">1.1.4 Oath of Honor</h3>
+                    <p class="text-gray-700 mb-4">The Oath of Honor serves as a solemn declaration guiding the behavior and principles of every LSPD officer: "On my honor, I will never betray my integrity, my character, or the public trust. I will have the courage to hold myself and others accountable. I will maintain the highest ethical standards and uphold the values of my community and department." Core Values: Honor, Integrity, Accountability, Courage, Public Trust.</p>
+                </div>
+            </div>
+
+            <div class="policy-section">
+                <div class="policy-heading">
+                    1.2 Organization
+                    <span class="arrow">&#9656;</span>
+                </div>
+                <div class="policy-content">
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">1.2.1 Chain of Command</h3>
+                    <p class="text-gray-700 mb-4">The Los Santos Police Department operates under a strict Chain of Command established to ensure clear lines of communication, effective leadership, and comprehensive accountability across all operational levels. This includes High Command, Command Staff, Supervisors, and Patrol Officers. Officers report to their supervisors, and bypassing ranks is generally prohibited. Adherence to the Chain of Command is paramount, and failure to follow established channels may result in disciplinary action.</p>
+
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">1.2.2 Ranks and Roles</h3>
+                    <p class="text-gray-700 mb-4">The LSPD rank structure defines specific roles, responsibilities, and authorities: Chief of Police, Deputy Chief, Captain, Lieutenant, Master Sergeant, Staff Sergeant, Sergeant, Corporal, Senior Officer, Officer, and Cadet. Each rank has specific duties, disciplinary authority, and identification.</p>
+
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">1.2.3 Divisions & Units</h3>
+                    <p class="text-gray-700 mb-4">The LSPD is structured into specialized divisions and units including: Patrol Division (with Field Training Officers - FTO), H.E.A.T. (Highway Enforcement of Aggressive Traffic), MOTO (Motorcycle Unit), A.S.U. (Air Support Unit), Combat Medic, Narcotics Unit, K9 Unit, S.W.A.T. (Special Weapons and Tactics), and Internal Affairs (IA).</p>
+
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">1.2.4 Uniform Policy</h3>
+                    <p class="text-gray-700 mb-4">All officers must wear department-approved uniforms while on duty. Unauthorized civilian attire or insignia is strictly prohibited and may result in disciplinary action. The wearing of LSPD uniforms or insignia while off-duty is forbidden unless explicitly authorized.</p>
+                </div>
+            </div>
+
+            <div class="policy-section">
+                <div class="policy-heading">
+                    1.3 Hiring Process
+                    <span class="arrow">&#9656;</span>
+                </div>
+                <div class="policy-content">
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">1.3.1 Eligibility Requirements</h3>
+                    <p class="text-gray-700 mb-4">Prospective applicants must have no prior felony convictions and possess a valid San Andreas driver's license.</p>
+
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">1.3.2 Application Steps</h3>
+                    <p class="text-gray-700 mb-4">The application process involves formal application submission, a thorough background check, and an interview invitation for qualified applicants.</p>
+
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">1.3.3 Post-Interview Protocol</h3>
+                    <p class="text-gray-700 mb-4">Successful candidates enter a probationary Cadet phase. Cadets must contact an assigned FTO (Sergeant rank or higher) within 14 days of acceptance. After FTO interview and structured training, they enter a "Solo Cadet" phase for a minimum of 14 days before Officer promotion eligibility. Exceptions require Command Staff approval.</p>
+                </div>
+            </div>
+
+            <div class="policy-section">
+                <div class="policy-heading">
+                    1.4 Disciplinary Actions
+                    <span class="arrow">&#9656;</span>
+                </div>
+                <div class="policy-content">
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">1.4.1 Strike System</h3>
+                    <p class="text-gray-700 mb-4">LSPD officers are subject to a three-strike disciplinary system, with each strike expiring after 30 days. Cadets are terminated after a second strike. Penalties are: 1st Strike (3-day suspension from divisional assignments), 2nd Strike (demotion, 7-day suspension), 3rd Strike (immediate termination and permanent reapplication ban). Violations are reported to Internal Affairs.</p>
+
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">1.4.2 Suspension Policy</h3>
+                    <p class="text-gray-700 mb-4">Lieutenants or higher can suspend officers with one active strike for 3 days. Excessive force instances lead to immediate suspension pending investigation. Suspended officers are prohibited from on-duty activities, must return gear, cannot present as law enforcement, and must maintain 25 feet distance from LSPD property unless instructed otherwise. Suspension requests from Command Staff require documentation and High Command approval.</p>
+
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">1.4.3 Demotion</h3>
+                    <p class="text-gray-700 mb-4">Captains or higher can demote officers with two active strikes. Probationary officers may be terminated or reassigned with Command Staff approval.</p>
+
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">1.4.4 Termination</h3>
+                    <p class="text-gray-700 mb-4">Captains or higher can terminate officers for three active strikes or as a result of an administrative hearing. Terminated officers must surrender credentials and gear and are removed from rosters. Appeals can be filed with the Deputy Chief. Rehired officers are reinstated one rank lower than their previous rank.</p>
+
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">1.4.5 Strike Removal</h3>
+                    <p class="text-gray-700 mb-4">Officers can appeal strike removal after 14 days for hourly violations (with demonstrated activity adherence) or 7 days for misconduct (with demonstrated conduct improvement). 50% of the strike's weight may be removed initially, with full removal after 30 clean disciplinary days. Appeals are not accepted during LOA.</p>
+                </div>
+            </div>
+
+            <div class="policy-section">
+                <div class="policy-heading">
+                    1.5 Workplace Conduct & Harassment Policy
+                    <span class="arrow">&#9656;</span>
+                </div>
+                <div class="policy-content">
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">1.5.1 Respect & Equality</h3>
+                    <p class="text-gray-700 mb-4">All LSPD employees must contribute to a respectful and professional workplace. Harassment, bullying, and discrimination (based on age, gender, race, etc.) are strictly prohibited and will be investigated and disciplined.</p>
+
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">1.5.2 Interpersonal Conduct</h3>
+                    <p class="text-gray-700 mb-4">Personnel must maintain professional relationships with colleagues and allied agencies. Disruptive or unprofessional behavior is not tolerated and may result in counseling, disciplinary points, or more severe actions for repeat offenses.</p>
+                </div>
+            </div>
+
+            <div class="policy-section">
+                <div class="policy-heading">
+                    1.6 Callsigns
+                    <span class="arrow">&#9656;</span>
+                </div>
+                <div class="policy-content">
+                    <p class="text-gray-700 mb-4">Each officer has a unique callsign linked to their rank/unit. Consistent use of the callsign is mandatory in all official communications (radio, inter-agency, reports). Example: Callsign 245 | J. Doe.</p>
+                </div>
+            </div>
+
+            <div class="policy-section">
+                <div class="policy-heading">
+                    1.7 Activity Requirements
+                    <span class="arrow">&#9656;</span>
+                </div>
+                <div class="policy-content">
+                    <p class="text-gray-700 mb-4">Minimum weekly activity hours: Officer (8 hrs), Sergeant/Lieutenant (10 hrs), Captain (12 hrs including administrative tasks).</p>
+
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">1.7.1 Leave of Absence (LOA) Policy</h3>
+                    <p class="text-gray-700 mb-4">All LOA requests must be pre-approved by Command Staff. Misuse of LOA is subject to disciplinary action.</p>
+
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">1.7.2 Clock-In/Clock-Out Policy</h3>
+                    <p class="text-gray-700 mb-4">All employees must accurately clock in/out for shifts. First offense for missed clock-in/out results in verbal warning and manual adjustment; repeat offenses may nullify recorded time. Errors are reported to High Command. Three warnings max before strike points are issued.</p>
+
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">1.7.3 Sign-In / Sign-Out</h3>
+                    <p class="text-gray-700 mb-4">All personnel must formally sign on/off duty via the Mobile Data Terminal (MDT) at the beginning and end of each patrol/shift. Officers must sign off when engaging in non-LSPD tasks or unable to respond to calls. Failure to comply leads to disciplinary action.</p>
+
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">1.7.4 Weekly Hour Requirements</h3>
+                    <p class="text-gray-700 mb-4">Cadet / Officer / Deputy: 8 hours; Sergeant / Lieutenant: 10 hours; Captain+: 12 hours (including administrative time).</p>
+
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">1.7.5 Leave of Absence (LOA)</h3>
+                    <p class="text-gray-700 mb-4">Officers unable to meet hour requirements must submit formal LOA requests in advance, approved through the chain of command. LOAs cannot be retroactive, must have justifiable reasons, and are not for evading work. Officers on approved LOA cannot conduct training or issue certifications.</p>
+
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">1.7.6 Extended LOA (ELOA)</h3>
+                    <p class="text-gray-700 mb-4">Leave exceeding 14 days requires an ELOA request through the Division Head, with a maximum duration of 8 weeks. Officers on ELOA must check in with their supervisor every two weeks; failure to contact for 30 consecutive days may result in termination. Return from ELOA may necessitate rank review or reapplication.</p>
+                </div>
+            </div>
+
+            <div class="policy-section">
+                <div class="policy-heading">
+                    1.8 Certifications
+                    <span class="arrow">&#9656;</span>
+                </div>
+                <div class="policy-content">
+                    <p class="text-gray-700 mb-4">Certifications are formal qualifications from departmental training. Officers on LOA/ELOA cannot conduct training, issue certifications, or serve in FTO/specialized roles.</p>
+                </div>
+            </div>
+
+            <div class="policy-section">
+                <div class="policy-heading">
+                    1.9 Resignations
+                    <span class="arrow">&#9656;</span>
+                </div>
+                <div class="policy-content">
+                    <p class="text-gray-700 mb-4">Employees can resign at any time. Rehire does not guarantee former rank. All department-issued equipment and credentials must be surrendered to a Supervisor upon resignation.</p>
+                </div>
+            </div>
+
+            <div class="policy-section">
+                <div class="policy-heading">
+                    1.10 Tattoo Policy
+                    <span class="arrow">&#9656;</span>
+                </div>
+                <div class="policy-content">
+                    <p class="text-gray-700 mb-4">Facial tattoos are prohibited. Visible tattoos must not be disrespectful, demeaning, derogatory, or discriminatory. Violations may lead to corrective action and disciplinary measures.</p>
+                </div>
+            </div>
+
+            <div class="policy-section">
+                <div class="policy-heading">
+                    1.11 Duty to Intercede & Report
+                    <span class="arrow">&#9656;</span>
+                </div>
+                <div class="policy-content">
+                    <p class="text-gray-700 mb-4">Officers must intercede and report any excessive force by law enforcement personnel. Required actions: intervention (if safe), reporting to a Supervisor as soon as possible, and filing a comprehensive Use of Force Statement.</p>
+                </div>
+            </div>
+
+            <div class="policy-section">
+                <div class="policy-heading">
+                    1.12 Chain of Command & Orders
+                    <span class="arrow">&#9656;</span>
+                </div>
+                <div class="policy-content">
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">1.12.1 Unity of Command</h3>
+                    <p class="text-gray-700 mb-4">Each officer reports to only one direct supervisor per task, with exceptions for urgent operational needs from higher-ranking supervisors.</p>
+
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">1.12.2 Unlawful Orders</h3>
+                    <p class="text-gray-700 mb-4">Officers are strictly prohibited from following unlawful or policy-violating orders. If uncertain, officers must seek clarification or escalate to higher authority. Officers are responsible for justifying refusal.</p>
+
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">1.12.3 Conflicting Orders</h3>
+                    <p class="text-gray-700 mb-4">If lawful orders conflict, inform the supervisor who issued the latter order, who is responsible for resolution. Following the clarified order will not incur liability for disregarding the initial conflicting order.</p>
+                </div>
+            </div>
+
+            <div class="policy-section">
+                <div class="policy-heading">
+                    2.0 Operational Procedures
+                    <span class="arrow">&#9656;</span>
+                </div>
+                <div class="policy-content">
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">2.1 Robberies & Hostage Situations</h3>
+                    <h4 class="text-lg font-semibold text-blue-600 mb-1">2.1.1 General Protocol</h4>
+                    <p class="text-gray-700 mb-4">Life preservation is paramount. Officers can honor reasonable demands for hostage safety. Harm to hostages due to poor negotiation may lead to disciplinary action. SWAT typically manages high-risk scenes; otherwise, the highest-ranking officer commands. Suspect requests (e.g., "no AIR1") must be adhered to. After departure, debrief hostages, inspect scene, secure area, and file report.</p>
+
+                    <h4 class="text-lg font-semibold text-blue-600 mb-1">2.1.2 Hostage Negotiation Basics</h4>
+                    <p class="text-gray-700 mb-4">Key principles: Proof of Life, avoid direct refusal (explain limitations), and Five Negotiation Steps (Active Listening, Empathy, Rapport, Influence, Behavioral Change). Use affirmations, paraphrasing, mirroring, and labeling emotions.</p>
+
+                    <h4 class="text-lg font-semibold text-blue-600 mb-1">2.1.3 Robbery Negotiation Checklist</h4>
+                    <p class="text-gray-700 mb-4">Preparation (backup, log license plates), Hostage Safety (prioritize, get names), Suspect Engagement (log demands, tactfully decline unreasonable, consider SWAT), Pursuit Preparation (assign units, caution with spike strips), Rescue Protocol.</p>
+
+                    <h4 class="text-lg font-semibold text-blue-600 mb-1">2.1.4 House Robberies</h4>
+                    <p class="text-gray-700 mb-4">Response limited to 4 units. Use flashlights for evidence. Apprehended suspects' fingerprints matched at PD. Contact Detectives for interrogations.</p>
+
+                    <h4 class="text-lg font-semibold text-blue-600 mb-1">2.1.5 Suspicious Activity</h4>
+                    <p class="text-gray-700 mb-4">Response limited to 2 units. Pursuit authorized if suspect flees. Additional units only upon escalation.</p>
+
+                    <h4 class="text-lg font-semibold text-blue-600 mb-1">2.1.6 Car Boosting</h4>
+                    <p class="text-gray-700 mb-4">Response limited to 4 units. Additional units only if suspects fire shots.</p>
+
+                    <h4 class="text-lg font-semibold text-blue-600 mb-1">2.1.7 Gang Shootouts</h4>
+                    <p class="text-gray-700 mb-4">At Compounds: Establish perimeter, wait 5 min after last gunshot before entering. EMS at safe distance until Code 4. In Public: Prioritize de-escalation, move conflict away from civilians. Issue warning before "Code Red" (Lethal Force Authorized). All survivors subject to GSR test.</p>
+
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">2.2 Vehicle Pursuits</h3>
+                    <h4 class="text-lg font-semibold text-blue-600 mb-1">2.2.1 General Pursuit Guidelines</h4>
+                    <p class="text-gray-700 mb-4">Start with clear radio transmission (vehicle info, direction, reason, traffic). Max 4 ground units + AIR1/HEAT. Unit 4 runs parallel for observation/support. PIT maneuver authorized after 5 min or Supervisor approval (prohibited >100 MPH or striking front bumper). 30-second interval between PITs. Prohibited on damaged vehicles.</p>
+
+                    <h4 class="text-lg font-semibold text-blue-600 mb-1">2.2.2 Disabling Tires</h4>
+                    <p class="text-gray-700 mb-4">Sidearms to disable tires authorized only under severe public safety risk: suspects firing, repeatedly ramming, or intentionally striking pedestrians/officers. Last resort.</p>
+
+                    <h4 class="text-lg font-semibold text-blue-600 mb-1">2.2.3 Vehicle Threat Codes</h4>
+                    <p class="text-gray-700 mb-4">Code Blue (Tire Disabling Authorized): 3 confirmed rams, 2+ NVL jumps, pursuit >10 min, or escalating public safety threat. 20-sec cool-down between shots. Code Red (Lethal Force Authorized): Declared by highest-ranking officer. Authorized if final warning ignored, suspects fire at officers, or emergency/police/military vehicle stolen.</p>
+
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">2.3 Use of Force Levels</h3>
+                    <p class="text-gray-700 mb-4">Minimum force necessary. Progressive continuum: Level 1 (Officer Presence), Level 2 (Verbal Commands), Level 3 (Physical Control - tackling, restraining), Level 4 (Less-Lethal Force - Batons, Tasers up to 3 times after 2 failed hand-to-hand attempts, 20-sec cool-down), Level 5 (Lethal Force - sidearms, SMGs, rifles, for immediate credible threat of death/serious bodily harm, requires intent, capability, immediate threat). After Use of Force: Medical Transport, Arrest Decision (after medical clearance), Lethal Force Notification to supervisor.</p>
+
+                    <h4 class="text-lg font-semibold text-blue-600 mb-1">2.3.1 Apprehensions</h4>
+                    <p class="text-gray-700 mb-4">Initial restraint with handcuffs. Miranda Rights read immediately after cuffing and before questioning. Downed suspects (after shots fired): GSR test, Terry frisk if positive, full search if weapons found. Move suspect to safe location for medical aid. Shackles for flight risk. Treat suspects professionally, use de-escalation.</p>
+
+                    <h4 class="text-lg font-semibold text-blue-600 mb-1">2.3.2 Downed Officer Protocol</h4>
+                    <p class="text-gray-700 mb-4">Secure and recover downed personnel ASAP. If looted, officer authorized to revive until safely retrieved, transported, and department-issued gear fully inventoried/secured.</p>
+
+                    <h4 class="text-lg font-semibold text-blue-600 mb-1">2.3.2.1 Panic Button Use</h4>
+                    <p class="text-gray-700 mb-4">Only for critical, life-threatening emergencies (officer shot/incapacitated, immediate comprehensive departmental response). Prohibited for non-critical situations, off-duty, or when standard communication suffices. Misuse results in disciplinary action.</p>
+
+                    <h4 class="text-lg font-semibold text-blue-600 mb-1">2.3.3 Matched firepower</h4>
+                    <p class="text-gray-700 mb-4">Officers match suspect force with minimum necessary. Class 1/2 weapons (pistols, shotguns, SMGs, illegal mods): respond with Class 1 sidearm. Class 2 SMGs/Rifles or Class 3 weapons (fully auto/high-powered rifles): respond with Class 3 weapons. Firepower should not escalate beyond neutralizing immediate threat.</p>
+
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">2.4 Radio Usage</h3>
+                    <p class="text-gray-700 mb-4">All transmissions start with officer's sign. Messages brief, precise, professional. Remain on primary dispatch channel unless reassigned. Prioritized traffic: pursuits, confirmed shots fired, robbery in progress, officer in danger. Wait for pauses. Idle conversation reserved for non-radio means.</p>
+
+                    <h4 class="text-lg font-semibold text-blue-600 mb-1">2.4.1 Ten-Codes (10-Codes)</h4>
+                    <p class="text-gray-700 mb-4">Standardized radio codes for rapid/clear communication. Required use in all transmissions. (Includes a detailed table of 10-Codes and their meanings).</p>
+
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">2.5 Reasonable Suspicion vs. Probable Cause</h3>
+                    <h4 class="text-lg font-semibold text-blue-600 mb-1">2.5.1 Reasonable Suspicion</h4>
+                    <p class="text-gray-700 mb-4">Legal standard based on articulable facts. Allows officers to: Stop and Question, Conduct Terry Frisks, Administer GSR/sobriety tests.</p>
+
+                    <h4 class="text-lg font-semibold text-blue-600 mb-1">2.5.2 Probable Cause</h4>
+                    <p class="text-gray-700 mb-4">Higher legal standard, requires factual evidence of crime. Necessary for: Searches, Seizures, Arrests. Example: marijuana odor (reasonable suspicion) + blunt in plain view/slurred speech (probable cause).</p>
+
+                    <h4 class="text-lg font-semibold text-blue-600 mb-1">2.5.3 Detainment</h4>
+                    <p class="text-gray-700 mb-4">Temporary detention based on reasonable suspicion, not arrest. Terry frisk permitted if armed/contraband suspicion. Release promptly if no probable cause. Transport to station permissible if not escalating to unlawful arrest.</p>
+
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">2.6 Terry Frisk</h3>
+                    <p class="text-gray-700 mb-4">Protective pat-down of outer clothing during lawful detention, based on reasonable suspicion of weapons/contraband. Procedure: use departmental commands (/me pats down), then action command (/e). Permissible findings: weapons, large drug quantities (felony threshold). Prohibited: seizing unrelated items unless probable cause for full search/arrest is established.</p>
+
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">2.7 Miranda Rights</h3>
+                    <p class="text-gray-700 mb-4">Must be read verbatim to suspects in custody before questioning. Failure makes statements inadmissible. Required only when in custody AND being interrogated. Does not necessitate automatic release. Document all instances.</p>
+
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">2.8 Vehicle Impounds</h3>
+                    <p class="text-gray-700 mb-4">Authorized for vehicles in criminal activity/significant traffic violations. $2,000 release fee. Durations vary: Illegal Parking (2 hrs), 10-80 Pursuit (6 hrs), 10-80 with Gunfire (12 hrs), Interfering with Law Enforcement (6 hrs), Heist/Cartel/Bank Involvement (12 hrs), Drug Distribution (4 hrs), Excessive Speeding (2 hrs). All impounds logged in MDT and justified in report.</p>
+
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">2.9 Traffic Enforcement</h3>
+                    <h4 class="text-lg font-semibold text-blue-600 mb-1">2.9.1 Speed Limits</h4>
+                    <p class="text-gray-700 mb-4">City: 50 MPH. Highways/Freeways: 80 MPH. Exemptions for Code 2/3 responses, but with due regard for public safety.</p>
+
+                    <h4 class="text-lg font-semibold text-blue-600 mb-1">2.9.2 Red Lights</h4>
+                    <p class="text-gray-700 mb-4">Treat as four-way stops during patrol. Code 2: complete stop, short siren chirp, proceed with caution. Code 3: proceed with caution, prioritize clearing intersection. Collision Protocol: stop, assess, render assistance.</p>
+
+                    <h4 class="text-lg font-semibold text-blue-600 mb-1">2.9.3 Traffic Stops</h4>
+                    <p class="text-gray-700 mb-4">Notify dispatch with vehicle/occupant details. Safe, methodical approach. Explain reason, request ID. Outcomes: Verbal warning, Written warning, Citation, Arrest (if probable cause).</p>
+
+                    <h4 class="text-lg font-semibold text-blue-600 mb-1">2.9.4 Felony (Code 5) Stops</h4>
+                    <p class="text-gray-700 mb-4">For serious crimes/felony evasion. Immediate backup mandatory. Loud, clear commands from cover. Detain occupants safely, systematically, with firearms drawn until secure/compliant.</p>
+
+                    <h4 class="text-lg font-semibold text-blue-600 mb-1">2.9.5 Verbal Warnings</h4>
+                    <p class="text-gray-700 mb-4">Log minor infraction warnings in MDT: DD-MM-YYYY: <#> demerit points for <offense> issued by <officer>.</p>
+
+                    <h4 class="text-lg font-semibold text-blue-600 mb-1">2.9.6 Demerit Points</h4>
+                    <p class="text-gray-700 mb-4">2 demerit points per traffic violation. License revoked at 10+ points (via MDT). Incident report required for citations/infractions with demerit points/revocation.</p>
+
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">2.10 Weapon Usage</h3>
+                    <h4 class="text-lg font-semibold text-blue-600 mb-1">2.10.1 Authorized Weapons by Use</h4>
+                    <p class="text-gray-700 mb-4">Baton (defensive, compliance). Taser (non-compliant, actively resisting/threatening, physical control insufficient). Handgun (credible threat of serious bodily harm/death). Assault Rifle (Class 3) (armed/high-risk suspects, requires appropriate rank approval).</p>
+
+                    <h4 class="text-lg font-semibold text-blue-600 mb-1">2.10.2 Weapon Access by Rank</h4>
+                    <p class="text-gray-700 mb-4">Cadet – Senior Officer: Class 1 (Pistols) Standard, Class 2 (Shotguns, SMGs, Illegal Mods) Yes, Class 3 No. Lead Officer+: Class 1 Standard, Class 2 Yes, Class 3 Yes (with rank-based attachments).</p>
+
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">2.11 Vehicle Usage</h3>
+                    <p class="text-gray-700 mb-4">Operate only authorized LSPD vehicles. Cadets must ride with FTO or Corporal+.</p>
+
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">2.12 Equipment, Cameras, and Off-Duty Protocol</h3>
+                    <h4 class="text-lg font-semibold text-blue-600 mb-1">2.12.1 Body & Dash Cameras</h4>
+                    <p class="text-gray-700 mb-4">Body Cameras: Active and worn on duty, footage retained 72 hrs. Dash Cameras: Footage admissible only if correctly installed/operational. Panic Buttons: Functional and accessible on duty.</p>
+
+                    <h4 class="text-lg font-semibold text-blue-600 mb-1">2.12.2 Personal Body Cameras</h4>
+                    <p class="text-gray-700 mb-4">Only visible/identifiable (e.g., GoPro, Axon) admissible. Department vests presumed to have integrated cameras.</p>
+
+                    <h4 class="text-lg font-semibold text-blue-600 mb-1">2.12.3 Institutional Surveillance</h4>
+                    <p class="text-gray-700 mb-4">Footage from PDs/hospitals presumed recorded and admissible.</p>
+
+                    <h4 class="text-lg font-semibold text-blue-600 mb-1">2.12.4 Reporting Window for Footage Requests</h4>
+                    <p class="text-gray-700 mb-4">Civilians: 24-hour window. Agencies: Respond to requests within 24 hours.</p>
+
+                    <h4 class="text-lg font-semibold text-blue-600 mb-1">2.12.5 Off-Duty Equipment</h4>
+                    <p class="text-gray-700 mb-4">Carry: Body armor (worn only if immediate threat), handcuffs, radio. Securely store: Class 3 weapons, taser, baton, flashlight, IFAKs, spike strips, body armor (if not worn).</p>
+
+                    <h4 class="text-lg font-semibold text-blue-600 mb-1">2.12.6 Off-Duty Conduct</h4>
+                    <p class="text-gray-700 mb-4">Clock out (MDT, 10-42). Maintain high professional conduct/discretion. Prohibited from knowingly associating with convicted felons/gang members (except immediate family).</p>
+
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">2.13 Scene Control</h3>
+                    <p class="text-gray-700 mb-4">Manage incident scenes/crowds for public safety. Progression: Verbal Requests, Lawful Orders, Detainment (if non-compliant). Bystanders: maintain minimum 24 feet. Recording by civilians permitted if not interfering/compromising scene integrity.</p>
+
+                    <h3 class="text-xl font-semibold text-blue-700 mb-2">2.14 Report Writing</h3>
+                    <p class="text-gray-700 mb-4">All official reports comprehensive, addressing Who, What, Where, When, Why, How. Required Inclusions: Visuals (mugshot/inventory photos), Personnel (officer names), Charges & Plea (suspect charges/plea status), Evidence (linking suspect to crime).</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Section - Internal Contacts -->
+    <footer class="bg-gray-800 text-white py-10 px-6 md:px-12 rounded-t-lg">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+                <h4 class="text-xl font-semibold mb-4 text-blue-300">Internal Contacts</h4>
+                <p class="text-gray-400 mb-2"><strong>HR Department:</strong> Ext. 5001</p>
+                <p class="text-gray-400 mb-2"><strong>IT Support:</strong> (555) 987-6543 / Ext. 5002</p>
+                <p class="text-gray-400 mb-2"><strong>Training Division:</strong> Ext. 5003</p>
+                <p class="text-gray-400"><strong>Command Staff Office:</strong> Ext. 5004</p>
+            </div>
+            <div>
+                <h4 class="text-xl font-semibold mb-4 text-blue-300">Quick Access</h4>
+                <ul>
+                    <li class="mb-2"><a href="roster.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">My Profile</a></li>
+                    <li class="mb-2"><a href="roster.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Department Directory</a></li>
+                    <li class="mb-2"><a href="#" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Wellness Programs</a></li>
+                    <li class="mb-2"><a href="SOP.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Internal Policies</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-xl font-semibold mb-4 text-blue-300">System Information</h4>
+                <p class="text-gray-500 text-sm mb-2">Unauthorized Access Strictly Prohibited</p>
+                <p class="text-gray-500 text-sm mb-2">For LSPD Personnel Use Only</p>
+                <p class="text-gray-500 text-sm mb-2">Created and Maintained by FiveM "NightLife RP"</p>
+                <p class="text-gray-500 text-sm">&copy; 2025 Los Santos Police Department Internal Systems.</p>
+            </div>
+        </div>
+        <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const policyHeadings = document.querySelectorAll('.policy-heading');
+            policyHeadings.forEach(heading => {
+                heading.addEventListener('click', () => {
+                    const content = heading.nextElementSibling;
+                    heading.classList.toggle('active');
+                    content.classList.toggle('active');
+                    content.style.display = content.classList.contains('active') ? 'block' : 'none';
+                });
+            });
+
+            const searchInput = document.getElementById('searchInput');
+            searchInput.addEventListener('keyup', (event) => {
+                const searchTerm = event.target.value.toLowerCase();
+                const sopContainer = document.getElementById('sop-container');
+                let allContent = sopContainer.innerHTML;
+
+                // Remove previous highlights
+                allContent = allContent.replace(/<span class="highlight">(.*?)<\/span>/g, '$1');
+
+                if (searchTerm.length > 2) { // Only search if more than 2 characters
+                    let newContent = allContent;
+                    const regex = new RegExp(`(${searchTerm})`, 'gi');
+                    newContent = newContent.replace(regex, '<span class="highlight">$1</span>');
+                    sopContainer.innerHTML = newContent;
+
+                    // Open sections that contain highlighted text
+                    document.querySelectorAll('.highlight').forEach(highlightedSpan => {
+                        let currentParent = highlightedSpan.closest('.policy-content');
+                        if (currentParent && !currentParent.classList.contains('active')) {
+                            currentParent.classList.add('active');
+                            currentParent.style.display = 'block';
+                            currentParent.previousElementSibling.classList.add('active');
+                        }
+                    });
+
+                    // Scroll to the first highlight
+                    const firstHighlight = document.querySelector('.highlight');
+                    if (firstHighlight) {
+                        firstHighlight.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+
+                } else if (searchTerm.length === 0) {
+                     // If search term is empty, remove highlights and collapse all sections
+                    sopContainer.innerHTML = allContent; // Restore original content to remove highlights
+                    document.querySelectorAll('.policy-content').forEach(content => {
+                        content.classList.remove('active');
+                        content.style.display = 'none';
+                        content.previousElementSibling.classList.remove('active');
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
