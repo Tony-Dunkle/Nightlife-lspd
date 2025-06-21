@@ -37,18 +37,27 @@
     <!-- Flexbox with `flex-col md:flex-row` makes it stack vertically on small screens and horizontally on medium screens and up -->
     <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex flex-col md:flex-row items-center justify-between sticky top-0 z-50 rounded-b-lg">
         <div class="flex items-center mb-4 md:mb-0">
-            <!-- LSPD Logo - Added rounded-lg and border-2 border-white for a rounded border -->
-            <img src="Lspd.png" alt="LSPD Logo" class="mr-4 w-16 h-16 object-contain rounded-lg border-2 border-white" onerror="this.onerror=null; this.src='https://placehold.co/64x64/0A2F50/FFFFFF?text=LSPD';">
+            <!-- LSPD Logo - Removed border, updated src and onerror fallback -->
+            <img src="LSPD.png" alt="LSPD Logo" class="mr-4 w-16 h-16 object-contain rounded-lg" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
             <!-- Responsive font size: text-2xl for small screens, text-3xl for medium screens and up -->
             <h1 class="text-2xl md:text-3xl font-bold">Police Report Generator</h1>
         </div>
-        <!-- Navigation Menu - Simplified to only a Dashboard button -->
+        <!-- Navigation Menu -->
         <nav class="w-full md:w-auto">
             <ul class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-8 text-lg font-medium">
                 <li><a href="index.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Dashboard</a></li>
+                <li><a href="SOP.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">SOPs</a></li>
+                <li><a href="training.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Training</a></li>
+                <li><a href="forms.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Forms</a></li>
+                <li><a href="roster.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Roster</a></li>
+                <li><a href="hr.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">HR Info</a></li>
+                <li><a href="report.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Report Generator</a></li>
             </ul>
         </nav>
-        <!-- Search Bar - Removed as per instructions -->
+        <!-- Search Bar -->
+        <div class="mt-4 md:mt-0 w-full md:w-auto">
+            <input type="search" placeholder="Search Internal Docs..." class="p-2 border border-blue-600 rounded-lg focus:ring-2 focus:ring-blue-300 focus:border-transparent w-full md:w-64 bg-blue-800 text-white placeholder-blue-300">
+        </div>
     </header>
 
     <!-- Main Content Section -->
