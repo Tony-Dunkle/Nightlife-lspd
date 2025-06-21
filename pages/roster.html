@@ -2,23 +2,19 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- Viewport meta tag is crucial for responsive behavior across devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LSPD Internal Portal - Roster</title>
-    <!-- Tailwind CSS CDN - provides responsive utility classes out of the box -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Custom font for a clean, modern look */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8f8f8; /* Light gray background */
-            color: #333; /* Dark gray text */
-            display: flex; /* Added for sticky footer layout */
-            flex-direction: column; /* Added for sticky footer layout */
-            min-height: 100vh; /* Added for sticky footer layout */
+            background-color: #f8f8f8;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
         }
-        /* Custom scrollbar for better aesthetics */
         ::-webkit-scrollbar {
             width: 10px;
         }
@@ -33,28 +29,27 @@
         ::-webkit-scrollbar-thumb:hover {
             background: #555;
         }
-        /* Styles for the modal pop-up */
         .modal-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.7); /* Dim background */
+            background-color: rgba(0, 0, 0, 0.7);
             display: flex;
             justify-content: center;
             align-items: center;
-            z-index: 1000; /* Ensure it's on top */
+            z-index: 1000;
         }
         .modal-content {
             background-color: #fff;
-            padding: 2.5rem; /* Increased padding */
-            border-radius: 0.75rem; /* Rounded corners */
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); /* Stronger shadow */
+            padding: 2.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
             max-width: 90%;
-            width: 450px; /* Fixed width for better appearance */
+            width: 450px;
             text-align: center;
-            position: relative; /* For positioning the close button */
+            position: relative;
         }
         .modal-close-btn {
             position: absolute;
@@ -70,25 +65,19 @@
         .modal-close-btn:hover {
             color: #333;
         }
-        /* Styles for the iframe to ensure it's responsive and fits well */
-        .roster-iframe-container {
-            position: relative;
-            width: 100%;
-            padding-top: 56.25%; /* 16:9 Aspect Ratio (divide 9 by 16 = 0.5625) */
-            height: 0;
-            overflow: hidden;
-            background-color: #fff; /* White background for the container */
-            border-radius: 0.75rem; /* Rounded corners for the container */
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow */
-        }
 
-        .roster-iframe-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: none;
+        /* Loading indicator styles */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -103,8 +92,8 @@
                 <p class="text-gray-700 text-lg">
                     This website is currently under development. Some features or content may not work as expected or may be missing.
                 </p>
-                <!-- LSPD Logo added to the right of the text and made slightly bigger (w-20 h-20) -->
-                <img src="LSPD.png" alt="LSPD Logo" class="w-20 h-20 object-contain" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
+                <!-- Path adjusted for LSPD Logo -->
+                <img src="pages/LSPD.png" alt="LSPD Logo" class="w-20 h-20 object-contain" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
             </div>
             <button id="acknowledgeBtn" class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-5 rounded-md transition duration-300 ease-in-out">
                 Acknowledge
@@ -113,37 +102,25 @@
     </div>
 
     <!-- Header Section -->
-    <!-- Flexbox with `flex-col md:flex-row` makes it stack vertically on small screens and horizontally on medium screens and up -->
     <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex flex-col md:flex-row items-center justify-between sticky top-0 z-50 rounded-b-lg">
         <div class="flex items-center mb-4 md:mb-0">
-            <!-- LSPD Logo - Local source updated to LSPD.png -->
-            <img src="LSPD.png" alt="LSPD Logo" class="mr-4 w-16 h-16 object-contain" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
-            <!-- Responsive font size: text-2xl for small screens, text-3xl for medium screens and up -->
+            <!-- Path adjusted for LSPD Logo -->
+            <img src="pages/LSPD.png" alt="LSPD Logo" class="mr-4 w-16 h-16 object-contain" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
             <h1 class="text-2xl md:text-3xl font-bold">LSPD Internal Portal</h1>
         </div>
-        <!-- Navigation Menu -->
         <nav class="w-full md:w-auto">
-            <!-- Flexbox with `flex-col md:flex-row` for navigation items -->
             <ul class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-8 text-lg font-medium">
-                <!-- Dashboard link updated to 404.html -->
-                <li><a href="404.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Dashboard</a></li>
-                <!-- Updated SOP link -->
-                <li><a href="SOP.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">SOPs</a></li>
-                <!-- Updated Training link -->
-                <li><a href="training.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Training</a></li>
-                <!-- Updated Forms link -->
-                <li><a href="forms.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Forms</a></li>
-                <!-- Updated Roster link in navigation (active state for current page) -->
-                <li><a href="roster.html" class="text-white bg-blue-700 py-2 px-3 rounded-md">Roster</a></li>
-                <!-- Updated HR Info link -->
-                <li><a href="hr.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">HR Info</a></li>
-                <!-- New: Report Generator link -->
-                <li><a href="report.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Report Generator</a></li>
+                <!-- Paths adjusted for navigation links -->
+                <li><a href="pages/404.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Dashboard</a></li>
+                <li><a href="pages/SOP.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">SOPs</a></li>
+                <li><a href="pages/training.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Training</a></li>
+                <li><a href="pages/forms.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Forms</a></li>
+                <li><a href="pages/roster.html" class="text-white bg-blue-700 py-2 px-3 rounded-md">Roster</a></li>
+                <li><a href="pages/hr.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">HR Info</a></li>
+                <li><a href="pages/report.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Report Generator</a></li>
             </ul>
         </nav>
-        <!-- Search Bar -->
         <div class="mt-4 md:mt-0 w-full md:w-auto">
-            <!-- `w-full md:w-64` makes it full width on small screens and fixed width on medium screens and up -->
             <input type="search" placeholder="Search Internal Docs..." class="p-2 border border-blue-600 rounded-lg focus:ring-2 focus:ring-blue-300 focus:border-transparent w-full md:w-64 bg-blue-800 text-white placeholder-blue-300">
         </div>
     </header>
@@ -153,12 +130,14 @@
         <section class="bg-white p-6 md:p-8 rounded-lg shadow-xl mb-12">
             <h2 class="text-3xl md:text-4xl font-extrabold text-gray-800 mb-6 text-center border-b-4 border-blue-500 pb-3">LSPD Current Roster</h2>
             <p class="text-lg text-gray-700 text-center mb-8">
-                Below is the official Los Santos Police Department roster. This document is updated regularly by the HR division.
+                Below is the official Los Santos Police Department roster. This data is dynamically loaded and updated regularly by the HR division.
             </p>
-            <div class="roster-iframe-container">
-                <!-- Embedded Google Sheet for the Roster -->
-                <iframe src="https://docs.google.com/spreadsheets/d/e/2PACX-1vT8yueJjp9o-XVH1_RXPji6N_IAP1DDbNLZ8l4__IqGCvVEUWscsdsJ6uNHZ8u6kDhhXkSxcdkdeDJI/pubhtml?gid=0&amp;single=true&amp;widget=true&amp;headers=false"></iframe>
+
+            <div id="roster-display" class="w-full flex justify-center items-center min-h-[300px]">
+                <!-- Roster data will be loaded here dynamically -->
+                <div class="loader" id="roster-loader"></div>
             </div>
+
             <p class="text-gray-600 text-sm mt-8 text-center">
                 For any discrepancies or updates to the roster, please contact the LSPD Human Resources Department.
             </p>
@@ -166,10 +145,8 @@
     </main>
 
     <!-- Footer Section - Internal Contacts -->
-    <!-- Grid layout that changes columns based on screen size: 1 column on small, 3 on medium screens and up -->
     <footer class="bg-gray-800 text-white py-10 px-6 md:px-12 rounded-t-lg">
         <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Internal Contact Info -->
             <div>
                 <h4 class="text-xl font-semibold mb-4 text-blue-300">Internal Contacts</h4>
                 <p class="text-gray-400 mb-2"><strong>HR Department:</strong> Ext. 5001</p>
@@ -177,21 +154,16 @@
                 <p class="text-gray-400 mb-2"><strong>Training Division:</strong> Ext. 5003</p>
                 <p class="text-gray-400"><strong>Command Staff Office:</strong> Ext. 5004</p>
             </div>
-            <!-- Internal Quick Links -->
             <div>
                 <h4 class="text-xl font-semibold mb-4 text-blue-300">Quick Access</h4>
                 <ul>
-                    <!-- Updated My Profile link to roster.html, assuming profile might be part of the roster system -->
-                    <li class="mb-2"><a href="roster.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">My Profile</a></li>
-                    <!-- Updated Department Directory link to roster.html -->
-                    <li class="mb-2"><a href="roster.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Department Directory</a></li>
-                    <!-- "Wellness Programs" link updated to 404.html -->
-                    <li class="mb-2"><a href="404.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Wellness Programs</a></li>
-                    <!-- Updated Internal Policies link to SOP.html as it's the closest fit for 'policies' -->
-                    <li class="mb-2"><a href="SOP.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Internal Policies</a></li>
+                    <!-- Paths adjusted for footer quick links -->
+                    <li class="mb-2"><a href="pages/roster.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">My Profile</a></li>
+                    <li class="mb-2"><a href="pages/roster.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Department Directory</a></li>
+                    <li class="mb-2"><a href="pages/404.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Wellness Programs</a></li>
+                    <li class="mb-2"><a href="pages/SOP.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Internal Policies</a></li>
                 </ul>
             </div>
-            <!-- Copyright & Internal System Info -->
             <div>
                 <h4 class="text-xl font-semibold mb-4 text-blue-300">System Information</h4>
                 <p class="text-gray-500 text-sm mb-2">Unauthorized Access Strictly Prohibited</p>
@@ -200,7 +172,6 @@
                 <p class="text-gray-500 text-sm">&copy; 2025 Los Santos Police Department Internal Systems.</p>
             </div>
         </div>
-        <!-- Font Awesome for any potential internal icons (though less needed here) -->
         <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     </footer>
 
@@ -209,6 +180,8 @@
             const modal = document.getElementById('devNoticeModal');
             const closeModalBtn = document.getElementById('closeModalBtn');
             const acknowledgeBtn = document.getElementById('acknowledgeBtn');
+            const rosterDisplay = document.getElementById('roster-display');
+            const rosterLoader = document.getElementById('roster-loader');
 
             // Show the modal when the page loads
             modal.classList.remove('hidden');
@@ -216,18 +189,277 @@
             // Function to hide the modal
             const hideModal = () => {
                 modal.classList.add('hidden');
+                // Once modal is hidden, fetch the roster data
+                fetchRosterData();
             };
 
             // Event listeners for closing the modal
             closeModalBtn.addEventListener('click', hideModal);
             acknowledgeBtn.addEventListener('click', hideModal);
 
-            // Optional: Hide modal if user clicks outside (can be useful but sometimes annoying on small screens)
-            // modal.addEventListener('click', (event) => {
-            //      if (event.target === modal) {
-            //           hideModal();
-            //      }
-            // });
+            /**
+             * Converts an Excel-style column letter (e.g., 'A', 'B', 'AA') to a 0-based index.
+             * @param {string} columnLetter - The column letter (e.g., 'C').
+             * @returns {number} The 0-based column index (e.g., 'C' returns 2).
+             */
+            function columnLetterToIndex(columnLetter) {
+                let index = 0;
+                for (let i = 0; i < columnLetter.length; i++) {
+                    index = index * 26 + (columnLetter.charCodeAt(i) - 'A'.charCodeAt(0) + 1);
+                }
+                return index - 1; // Convert to 0-based index
+            }
+
+            /**
+             * Fetches CSV data from a Google Sheet and parses it.
+             * Displays the data in a structured, column-based format based on specific row and column filters.
+             */
+            async function fetchRosterData() {
+                rosterLoader.classList.remove('hidden'); // Show loader
+                rosterDisplay.innerHTML = ''; // Clear previous content
+
+                // Construct the CSV export URL from the provided Google Sheet ID
+                const sheetId = '1o4Xw8GSQBp6brMfGo_ubYngnhWJU_f8AhyUIftAlT1Y';
+                const gid = '0'; // Assuming gid=0 for the primary sheet tab
+                const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
+
+                try {
+                    const response = await fetch(csvUrl);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const csvText = await response.text();
+
+                    // Parse CSV data into raw rows
+                    const rawRows = csvText.trim().split('\n');
+                    if (rawRows.length === 0) {
+                        rosterDisplay.innerHTML = '<p class="text-red-500">No roster data available.</p>';
+                        rosterLoader.classList.add('hidden');
+                        return;
+                    }
+
+                    // Define the target spreadsheet row numbers (1-indexed)
+                    const targetSpreadsheetRows = new Set(); // Using a Set for efficient lookup
+                    const addRange = (start, end) => {
+                        for (let i = start; i <= end; i++) {
+                            targetSpreadsheetRows.add(i);
+                        }
+                    };
+
+                    targetSpreadsheetRows.add(6);
+                    targetSpreadsheetRows.add(9);
+                    addRange(12, 16);
+                    addRange(18, 22);
+                    addRange(24, 27);
+                    addRange(29, 32);
+                    addRange(34, 43);
+                    addRange(45, 54);
+                    addRange(56, 65);
+                    addRange(67, 78);
+                    addRange(80, 96);
+                    addRange(98, 117);
+                    addRange(119, 148);
+
+                    // Filter rows based on the target spreadsheet row numbers
+                    const filteredRowsData = [];
+                    const regex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/; // Regex to split by comma, ignoring commas in double quotes
+
+                    rawRows.forEach((rowString, index) => {
+                        const spreadsheetRowNumber = index + 1; // CSV rows are 0-indexed, spreadsheet rows are 1-indexed
+                        if (targetSpreadsheetRows.has(spreadsheetRowNumber)) {
+                            // Parse each cell, removing quotes if present
+                            const parsedCells = rowString.split(regex).map(cell => cell.replace(/^"(.*)"$/, '$1').trim());
+                            filteredRowsData.push(parsedCells);
+                        }
+                    });
+
+                    // Define the user's desired columns by letter and convert to 0-based indices
+                    // This list must include ALL columns present in the sheet, even if not displayed,
+                    // to correctly map the indices.
+                    const allPossibleColumnLetters = [
+                        'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
+                        'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH',
+                        'AI', 'AJ', 'AK', 'AL'
+                    ]; // Expanded to cover all likely columns in a large sheet
+
+
+                    // Define the display headers based on the user's explicit list, EXCLUDING the ones to be removed
+                    // and including Discord Username for AI content
+                    const displayHeaders = [
+                        'Badge No.', 'Name', 'Rank', 'Hire Date',
+                        'Region', 'Divison Information', 'Specialization', 'FTO Status',
+                        'Discord Username', 'I.C. Phone Number'
+                    ];
+
+                    // Process data to extract only the desired columns and map to display headers
+                    const processedData = [];
+                    // Mapping from display header to its original column index in the full CSV
+                    // We must still map all relevant original columns even if not displayed as their values might be combined.
+                    const headerToColIndexMap = {
+                        'Insignia': columnLetterToIndex('B'), // Not displayed, but kept for parsing if needed
+                        'Badge No.': columnLetterToIndex('C'),
+                        'Name': columnLetterToIndex('D'),
+                        'Rank': columnLetterToIndex('E'),
+                        'Hire Date': columnLetterToIndex('G'),
+                        'Time in service': columnLetterToIndex('H'), // Not displayed
+                        'Promotion Date': columnLetterToIndex('I'), // Not displayed
+                        'Time in grade': columnLetterToIndex('J'), // Not displayed
+                        'Region': columnLetterToIndex('L'),
+                        'Status': columnLetterToIndex('M'), // Not displayed
+                        'Department information': columnLetterToIndex('O'), // Not displayed
+                        'Divison Information': columnLetterToIndex('P'),
+                        'Specialization': columnLetterToIndex('Q'),
+                        'FTO Status': columnLetterToIndex('R'),
+                        'Certifications': columnLetterToIndex('T'), // Not displayed
+                        'Divisions': columnLetterToIndex('U'), // Not displayed
+                        'Strikes': columnLetterToIndex('V'), // Not displayed
+                        'CC': columnLetterToIndex('W'), // Not displayed
+                        'Discord Username': columnLetterToIndex('Y'), // Main Discord Username column
+                        'Notes': columnLetterToIndex('Z'), // Not displayed
+                        'I.C. Phone Number': columnLetterToIndex('AA'), // Main I.C. Phone Number column
+                        'CID': columnLetterToIndex('AC'), // Not displayed
+                        'AI_Column_Data': columnLetterToIndex('AI'), // Column AI data (for combining with Discord)
+                        'AK_Column_Data': columnLetterToIndex('AK')  // Column AK data (for combining with I.C. Phone Number)
+                    };
+
+
+                    filteredRowsData.forEach(rowData => {
+                        const newRow = [];
+                        displayHeaders.forEach(header => {
+                            let value;
+                            if (header === 'Discord Username') {
+                                // Get Discord Username (Y) and AI column data (AI)
+                                const discordUserValue = rowData[headerToColIndexMap['Discord Username']] ? rowData[headerToColIndexMap['Discord Username']].trim() : '';
+                                const aiColumnValue = rowData[headerToColIndexMap['AI_Column_Data']] ? rowData[headerToColIndexMap['AI_Column_Data']].trim() : '';
+
+                                // Combine and format. Handle 'true'/'false' from original Discord Username.
+                                let displayDiscord = '';
+                                if (discordUserValue.toLowerCase() === 'true' || discordUserValue.toLowerCase() === 'false' || discordUserValue === '') {
+                                    displayDiscord = 'N/A';
+                                } else {
+                                    displayDiscord = discordUserValue;
+                                }
+
+                                if (aiColumnValue && aiColumnValue.toLowerCase() !== 'true' && aiColumnValue.toLowerCase() !== 'false' && aiColumnValue !== 'N/A' && aiColumnValue !== '') {
+                                    if (displayDiscord === 'N/A') {
+                                        value = aiColumnValue; // If no Discord username, just show AI content
+                                    } else {
+                                        value = `${displayDiscord} (${aiColumnValue})`; // Combine
+                                    }
+                                } else {
+                                    value = displayDiscord; // If AI content is empty/true/false, just show Discord username
+                                }
+
+                            } else if (header === 'I.C. Phone Number') {
+                                // Get I.C. Phone Number (AA) and AK column data (AK)
+                                const icPhoneNumberValue = rowData[headerToColIndexMap['I.C. Phone Number']] ? rowData[headerToColIndexMap['I.C. Phone Number']].trim() : '';
+                                const akColumnValue = rowData[headerToColIndexMap['AK_Column_Data']] ? rowData[headerToColIndexMap['AK_Column_Data']].trim() : '';
+
+                                // Format I.C. Phone Number. Handle 'true'/'false' from original value.
+                                let displayICPhone = '';
+                                if (icPhoneNumberValue.toLowerCase() === 'true' || icPhoneNumberValue.toLowerCase() === 'false' || icPhoneNumberValue === '') {
+                                    displayICPhone = 'N/A';
+                                } else {
+                                    displayICPhone = icPhoneNumberValue;
+                                }
+
+                                // Combine with AK value. Handle 'true'/'false' from AK value.
+                                if (akColumnValue && akColumnValue.toLowerCase() !== 'true' && akColumnValue.toLowerCase() !== 'false' && akColumnValue !== 'N/A' && akColumnValue !== '') {
+                                    if (displayICPhone === 'N/A') {
+                                        value = akColumnValue; // If no I.C. Phone, just show AK content
+                                    } else {
+                                        value = `${displayICPhone} (${akColumnValue})`; // Combine
+                                    }
+                                } else {
+                                    value = displayICPhone; // If AK content is empty/true/false, just show I.C. Phone
+                                }
+
+                            } else {
+                                const originalColIndex = headerToColIndexMap[header];
+                                // Check if originalColIndex is defined and valid before accessing rowData
+                                if (originalColIndex !== undefined && rowData[originalColIndex] !== undefined) {
+                                    value = rowData[originalColIndex].trim();
+                                } else {
+                                    value = 'N/A'; // Fallback if column index is not found or data is missing
+                                }
+                                // Apply the generic TRUE/FALSE/empty check for other fields that might have it
+                                if (value.toLowerCase() === 'true' || value.toLowerCase() === 'false' || value === '') {
+                                    value = 'N/A';
+                                }
+                            }
+                            newRow.push(value);
+                        });
+                        processedData.push(newRow);
+                    });
+
+                    renderRoster(processedData, displayHeaders);
+
+                } catch (error) {
+                    console.error('Error fetching or parsing roster data:', error);
+                    rosterDisplay.innerHTML = '<p class="text-red-500">Failed to load roster data. Please try again later.</p>';
+                } finally {
+                    rosterLoader.classList.add('hidden'); // Hide loader
+                }
+            }
+
+            /**
+             * Renders the roster data into the DOM.
+             * @param {Array<Array<string>>} data - The processed data (array of rows, each row is an array of cells).
+             * @param {Array<string>} headers - An array of header names, used for displaying labels.
+             */
+            function renderRoster(data, headers) {
+                rosterDisplay.innerHTML = ''; // Clear loading spinner/previous content
+
+                if (data.length === 0) {
+                    rosterDisplay.innerHTML = '<p class="text-gray-600">No roster entries found for the specified filters.</p>';
+                    return;
+                }
+
+                // Create a container for the grid layout of officer cards
+                const gridContainer = document.createElement('div');
+                gridContainer.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full';
+
+                data.forEach((rowData) => {
+                    // Get the 'Name' value (which is at index 2 in the `displayHeaders` array)
+                    const nameValue = rowData[headers.indexOf('Name')];
+                    if (!nameValue || nameValue.trim() === 'N/A') {
+                        return; // Skip this row if Name is empty or 'N/A'
+                    }
+
+                    const officerCard = document.createElement('div');
+                    officerCard.className = 'bg-blue-50 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 ease-in-out flex flex-col items-start';
+
+                    // Iterate through headers and display corresponding data
+                    headers.forEach((header, colIndex) => {
+                        let value = rowData[colIndex]; // Already processed in fetchRosterData
+                        if (value === undefined || value === null || value.trim() === '') {
+                            value = 'N/A';
+                        }
+
+                        const detailDiv = document.createElement('div');
+                        detailDiv.className = 'mb-2';
+
+                        // Apply specific styling based on the header for better presentation
+                        if (header === 'Name') {
+                            detailDiv.innerHTML = `<h3 class="text-xl font-semibold text-blue-800">${value}</h3>`;
+                        } else if (header === 'Rank') {
+                            detailDiv.innerHTML = `<p class="text-md text-gray-700 font-medium"><span class="font-bold">${header}:</span> ${value}</p>`;
+                        } else if (header === 'Badge No.' || header === 'I.C. Phone Number' || header === 'Discord Username') {
+                            detailDiv.innerHTML = `<p class="text-md text-gray-700"><span class="font-bold">${header}:</span> <span class="font-mono">${value}</span></p>`;
+                        }
+                        else if (header.includes('Date') || header.includes('Time')) {
+                            detailDiv.innerHTML = `<p class="text-md text-gray-700"><span class="font-bold">${header}:</span> <span class="text-sm text-gray-500">${value}</span></p>`;
+                        }
+                        // Removed Insignia specific handling as the header is removed.
+                        else {
+                            detailDiv.innerHTML = `<p class="text-md text-gray-700"><span class="font-bold">${header}:</span> ${value}</p>`;
+                        }
+                        officerCard.appendChild(detailDiv);
+                    });
+                    gridContainer.appendChild(officerCard);
+                });
+                rosterDisplay.appendChild(gridContainer);
+            }
         });
     </script>
 </body>
