@@ -214,7 +214,7 @@
         // GitHub Secrets (`GEMINIAPIKEY`) are for server-side use.
         //
         // To use your Gemini API key securely in a web application:
-        // 1. Set up a backend server (e.g., Node.js, Python Flask, etc.).
+        // 1. Set up a backend server (e.js., Node.js, Python Flask, etc.).
         // 2. Configure your backend server to securely access the GEMINIAPIKEY from its
         //    environment variables (which can be populated from GitHub Secrets during deployment).
         // 3. Your client-side (this HTML) would then make requests to YOUR backend server,
@@ -254,7 +254,8 @@
             try {
                 let chatHistory = [];
                 // Construct a detailed prompt for the Gemini API, including the selected department
-                const prompt = `Generate a detailed and professional police report for the ${department} based on the following information. Ensure it flows well, is coherent, and uses professional police terminology.
+                // Modified prompt to explicitly request no Markdown formatting.
+                const prompt = `Generate a detailed and professional police report for the ${department} based on the following information. Ensure it flows well, is coherent, and uses professional police terminology. Do not use any Markdown formatting (like bold, italics, headers, or bullet points).
 
 Officer Information: ${officerInfo}
 Suspect Name: ${suspectName}
