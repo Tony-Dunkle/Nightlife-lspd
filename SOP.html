@@ -117,17 +117,8 @@
     <main class="container mx-auto px-4 md:px-8 py-12">
         <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Departmental Policies and Guidelines</h2>
 
-        <!-- Policy Clarifier Section -->
-        <section class="bg-blue-50 p-6 rounded-lg shadow-lg mb-8">
-            <h3 class="text-xl font-semibold text-blue-700 mb-4">Ask Gemini about SOPs ✨</h3>
-            <textarea id="clarifierInput" class="w-full p-3 border border-blue-300 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-transparent mb-4 resize-y" rows="4" placeholder="Ask a question about any SOP policy..."></textarea>
-            <button id="clarifierButton" class="bg-blue-700 text-white px-6 py-2 rounded-md hover:bg-blue-800 transition duration-300 ease-in-out">Get Clarification</button>
-            <div id="clarifierResponse" class="mt-4 p-4 bg-blue-100 rounded-md text-gray-800 hidden">
-                <p><strong>Gemini's Response:</strong></p>
-                <div id="clarifierResponseContent" class="mt-2"></div>
-                <div id="clarifierLoading" class="hidden text-blue-600 mt-2">Loading...</div>
-            </div>
-        </section>
+        <!-- Policy Clarifier Section Removed -->
+        <!-- The previous section for 'Ask Gemini about SOPs' has been removed. -->
 
 
         <div id="sop-container" class="bg-white p-6 rounded-lg shadow-lg">
@@ -292,54 +283,9 @@ of my community and department."</pre>
                     },
                     {
                         "id": "1.4",
-                        "title": "1.4 Disciplinary Actions",
+                        "title": "1.4 Disciplinary Actions Removed (See Section 3.0 Disciplinary Guidelines)",
                         "content": `
-                            <h3 class="text-xl font-semibold text-blue-700 mb-2">1.4.1 Strike System</h3>
-                            <p class="text-gray-700 mb-4">All Officers and above follow a structured three-strike disciplinary system. Each strike issued expires after thirty (30) calendar days from the date of issuance.</p>
-                            <ul class="list-disc list-inside text-gray-700 mb-4 pl-4">
-                                <li><strong>Cadets:</strong> Cadets are subject to a maximum of one (1) strike. The accumulation of a second strike will result in immediate termination from the department.</li>
-                            </ul>
-                            <p class="text-gray-700 mb-4"><strong>Strike Penalties:</strong></p>
-                            <ul class="list-disc list-inside text-gray-700 mb-4 pl-4">
-                                <li><strong>1st Strike:</strong> Results in a three (3) day suspension from all divisional assignments or specialized certifications.</li>
-                                <li><strong>2nd Strike:</strong> Results in a demotion in rank, coupled with a seven (7) day suspension from all duties.</li>
-                                <li><strong>3rd Strike:</strong> Results in immediate termination from the Los Santos Police Department and a permanent ban on reapplication for future employment.</li>
-                            </ul>
-                            <p class="text-gray-700 mb-4"><strong>Reporting Violations:</strong> All complaints or observations of policy violations or misconduct must be formally filed with the Head of Internal Affairs (IA). The Internal Affairs division is committed to ensuring fairness and accountability, with a primary focus on upholding departmental standards rather than solely punitive measures.</p>
-                            <h3 class="text-xl font-semibold text-blue-700 mb-2">1.4.2 Suspension Policy</h3>
-                            <p class="text-gray-700 mb-4">Officers holding the rank of Lieutenant or higher are authorized to suspend officers who have accumulated one (1) active strike for three (3) days. This suspension may apply to specific certifications or all departmental duties. Instances involving excessive force, as determined by a preliminary assessment, will result in immediate suspension pending a full investigation by Internal Affairs.</p>
-                            <p class="text-gray-700 mb-4"><strong>Suspended Officers Must Adhere To The Following:</strong></p>
-                            <ul class="list-disc list-inside text-gray-700 mb-4 pl-4">
-                                <li>Not go on duty</li>
-                                <li>Return issued gear</li>
-                                <li>Not present as law enforcement</li>
-                                <li>Stay 25+ feet from LSPD property unless instructed or in emergency</li>
-                            </ul>
-                            <h4 class="text-lg font-semibold text-blue-600 mb-1">1.4.2.1 Suspension Requests</h4>
-                            <p class="text-gray-700 mb-4">Command Staff members initiating a suspension request must meticulously document the alleged misconduct, gather all relevant evidence, and submit a comprehensive report to High Command for review and approval. If approved, the affected officer will be suspended for twenty-four (24) hours, with further duration to be determined by the ongoing investigation.</p>
-                            <h3 class="text-xl font-semibold text-blue-700 mb-2">1.4.3 Demotion</h3>
-                            <p class="text-gray-700 mb-4">Officers holding the rank of Captain or higher are authorized to demote officers who have accumulated two (2) active strikes. Probationary officers, depending on the severity of the infraction, may be subject to termination or reassignment, pending the approval of Command Staff.</p>
-                            <h3 class="text-xl font-semibold text-blue-700 mb-2">1.4.4 Termination</h3>
-                            <p class="text-gray-700 mb-4">Officers holding the rank of Captain or higher possess the Authority to terminate an officer's employment under the following circumstances:</p>
-                            <ul class="list-disc list-inside text-gray-700 mb-4 pl-4">
-                                <li>After 3 strikes</li>
-                                <li>As a direct outcome of a formal administrative hearing</li>
-                            </ul>
-                            <p class="text-gray-700 mb-4"><strong>Upon termination:</strong></p>
-                            <ul class="list-disc list-inside text-gray-700 mb-4 pl-4">
-                                <li>All access and gear must be surrendered</li>
-                                <li>Officer is fully removed from department</li>
-                            </ul>
-                            <p class="text-gray-700 mb-4"><strong>Appeals:</strong> Officers wishing to appeal a termination decision must formally file their appeal with their assigned Deputy Chief.</p>
-                            <p class="text-gray-700 mb-4"><strong>Rehire Policy:</strong> Former officers who are rehired into the department will be reinstated at a rank one (1) level lower than their rank at the time of their previous termination.</p>
-                            <h3 class="text-xl font-semibold text-blue-700 mb-2">1.4.5 Strike Removal</h3>
-                            <p class="text-gray-700 mb-4">Officers may initiate an appeal for strike removal based on the following criteria:</p>
-                            <ul class="list-disc list-inside text-gray-700 mb-4 pl-4">
-                                <li><strong>Hourly Violation:</strong> An appeal may be submitted fourteen (14) days after the strike issuance, provided consistent adherence to activity requirements is demonstrated.</li>
-                                <li><strong>Misconduct:</strong> An appeal may be submitted seven (7) days after the strike issuance, contingent upon demonstrated improvement in conduct and adherence to policy.</li>
-                            </ul>
-                            <p class="text-gray-700 mb-4">Fifty percent (50%) of the strike's weight may be removed upon a successful initial appeal. Complete removal of a strike is possible after thirty (30) consecutive days of maintaining a clean disciplinary record.</p>
-                            <p class="text-gray-700 mb-4"><strong>Note:</strong> Appeals will not be accepted while an officer is on an approved Leave of Absence (LOA).</p>
+                            <p class="text-gray-700 mb-4">This section has been replaced by the comprehensive "Disciplinary Guidelines" found under Section 3.0.</p>
                         `
                     },
                     {
@@ -431,7 +377,6 @@ of my community and department."</pre>
                             </ul>
                             <h3 class="text-xl font-semibold text-blue-700 mb-2">1.7.6 Extended LOA (ELOA)</h3>
                             <p class="text-gray-700 mb-4">If leave exceeds 14 days, an ELOA is required through a Division Head.</p>
-                            <p class="text-gray-700 mb-4"><strong>ELOA Guidelines:</strong></p>
                             <ul class="list-disc list-inside text-gray-700 mb-4 pl-4">
                                 <li>Max duration: 8 weeks total</li>
                                 <li>Must check in every 2 weeks</li>
@@ -816,11 +761,9 @@ of my community and department."</pre>
                         "title": "2.9 Traffic Enforcement",
                         "content": `
                             <h4 class="text-lg font-semibold text-blue-600 mb-1">2.9.1 Speed Limits</h4>
-                            <ul class="list-disc list-inside text-gray-700 mb-4 pl-4">
-                                <li><strong>City:</strong> The maximum speed limit within city limits is fifty (50) MPH.</li>
-                                <li><strong>Highways/Freeways:</strong> The maximum speed limit on roads and freeways is eighty (80) MPH.</li>
-                                <li><strong>Exception:</strong> Officers responding to Code 2 (lights only) or Code 3 (lights and sirens) are exempt from these speed limits but must operate with due regard for public safety.</li>
-                            </ul>
+                            <p class="text-gray-700 mb-4">The maximum speed limit within city limits is fifty (50) MPH.</p>
+                            <p class="text-gray-700 mb-4">The maximum speed limit on highways and freeways is eighty (80) MPH.</p>
+                            <p class="text-gray-700 mb-4">Officers responding to Code 2 (lights only) or Code 3 (lights and sirens) are exempt from these speed limits but must operate with due regard for public safety.</p>
                             <h4 class="text-lg font-semibold text-blue-600 mb-1">2.9.2 Red Lights</h4>
                             <p class="text-gray-700 mb-4">During the patrol, red lights should be treated as four-way stops.</p>
                             <ul class="list-disc list-inside text-gray-700 mb-4 pl-4">
@@ -956,6 +899,156 @@ of my community and department."</pre>
                         `
                     }
                 ]
+            },
+            {
+                "id": "3.0",
+                "title": "3.0 Disciplinary Guidelines",
+                "subsections": [
+                    {
+                        "id": "3.1",
+                        "title": "Purpose",
+                        "content": `
+                            <p class="text-gray-700 mb-4">The purpose of this document is to establish a clear and comprehensive disciplinary framework that promotes accountability, professionalism, maturity, and integrity within the Los Santos Police Department (LSPD). Officers are expected to uphold the highest standards of conduct, both on and off duty. These guidelines aim to correct improper behavior, protect public trust, and maintain the Department's efficiency and credibility.</p>
+                        `
+                    },
+                    {
+                        "id": "3.2",
+                        "title": "I. General Principles of Conduct",
+                        "content": `
+                            <p class="text-gray-700 mb-4">All members of the Los Santos Police Department shall:</p>
+                            <ul class="list-disc list-inside text-gray-700 mb-4 pl-4">
+                                <li>Comply with all Department policies, rules, and standard operating procedures (SOPs)</li>
+                                <li>Conduct themselves with professionalism, courtesy, and respect</li>
+                                <li>Exercise restraint, sound judgment, and maturity in the execution of their duties</li>
+                                <li>Report misconduct and cooperate with investigations</li>
+                                <li>Avoid behavior that brings disrepute to the Department or undermines public confidence</li>
+                            </ul>
+                        `
+                    },
+                    {
+                        "id": "3.3",
+                        "title": "II. Disciplinary Categories and Guidelines",
+                        "content": `
+                            <h4 class="text-lg font-semibold text-blue-600 mb-1">1. General Misconduct / SOP Violations</h4>
+                            <p class="text-gray-700 mb-2">Examples:</p>
+                            <ul class="list-disc list-inside text-gray-700 mb-4 pl-4">
+                                <li>Failure to follow radio procedures</li>
+                                <li>Improper use of force</li>
+                                <li>Violation of chain of command</li>
+                            </ul>
+                            <p class="text-gray-700 mb-2">Consequences:</p>
+                            <ul class="list-disc list-inside text-gray-700 mb-4 pl-4">
+                                <li>Verbal Warning (First Minor Offense)</li>
+                                <li>Written Reprimand (Repeat or Moderate Violation)</li>
+                                <li>Strike Issued after Written Reprimand</li>
+                                <li>Suspension or Demotion (Serious or Continued Violation)</li>
+                            </ul>
+
+                            <h4 class="text-lg font-semibold text-blue-600 mb-1">2. Speeding or Reckless Driving on Duty</h4>
+                            <p class="text-gray-700 mb-2">Examples:</p>
+                            <ul class="list-disc list-inside text-gray-700 mb-4 pl-4">
+                                <li>Exceeding speed limits without cause</li>
+                                <li>Collisions due to negligent driving</li>
+                            </ul>
+                            <p class="text-gray-700 mb-2">Consequences:</p>
+                            <ul class="list-disc list-inside text-gray-700 mb-4 pl-4">
+                                <li>Written Warning / Driver Re-Education (First Offense)</li>
+                                <li>Strike Issued after Written Warning</li>
+                                <li>Suspension from Driving Duties (Repeated Offense)</li>
+                                <li>Formal Disciplinary Hearing (Habitual or Dangerous Behavior)</li>
+                            </ul>
+
+                            <h4 class="text-lg font-semibold text-blue-600 mb-1">3. Disrespectful Conduct Toward Officers, Civilians, Supervisors, or Command Staff</h4>
+                            <p class="text-gray-700 mb-2">Examples:</p>
+                            <ul class="list-disc list-inside text-gray-700 mb-4 pl-4">
+                                <li>Insults, derogatory remarks, or aggressive tone</li>
+                                <li>Insubordination</li>
+                                <li>Public humiliation of colleagues</li>
+                            </ul>
+                            <p class="text-gray-700 mb-2">Consequences:</p>
+                            <ul class="list-disc list-inside text-gray-700 mb-4 pl-4">
+                                <li>Counseling and Verbal Warning</li>
+                                <li>Written Reprimand and Sensitivity Training</li>
+                                <li>Strike Issued after Written Reprimand</li>
+                                <li>Demotion or Suspension (for Serious or Repeated Violations)</li>
+                            </ul>
+
+                            <h4 class="text-lg font-semibold text-blue-600 mb-1">4. Misappropriation or Unauthorized Distribution of Equipment</h4>
+                            <p class="text-gray-700 mb-2">Examples:</p>
+                            <ul class="list-disc list-inside text-gray-700 mb-4 pl-4">
+                                <li>Giving away or selling government-issued equipment</li>
+                                <li>Using equipment for personal gain</li>
+                            </ul>
+                            <p class="text-gray-700 mb-2">Consequences:</p>
+                            <ul class="list-disc list-inside text-gray-700 mb-4 pl-4">
+                                <li>Immediate Suspension Pending Investigation</li>
+                                <li>Strike Issued upon Confirmation of Misconduct</li>
+                                <li>Termination and Referral for Criminal Charges (if applicable)</li>
+                            </ul>
+
+                            <h4 class="text-lg font-semibold text-blue-600 mb-1">5. Dereliction of Duty</h4>
+                            <p class="text-gray-700 mb-2">Examples:</p>
+                            <ul class="list-disc list-inside text-gray-700 mb-4 pl-4">
+                                <li>“Sleeping” while on duty</li>
+                                <li>Leaving assigned post without authorization</li>
+                                <li>Failing to respond to calls or emergencies</li>
+                            </ul>
+                            <p class="text-gray-700 mb-2">Consequences:</p>
+                            <ul class="list-disc list-inside text-gray-700 mb-4 pl-4">
+                                <li>Written Warning (First Offense)</li>
+                                <li>Strike Issued after Written Warning</li>
+                                <li>Suspension or Loss of Patrol Privileges</li>
+                                <li>Termination (Chronic Offense)</li>
+                            </ul>
+                        `
+                    },
+                    {
+                        "id": "3.4",
+                        "title": "III. Disciplinary Process",
+                        "content": `
+                            <h4 class="text-lg font-semibold text-blue-600 mb-1">1. Initial Complaint or Incident Report</h4>
+                            <ul class="list-disc list-inside text-gray-700 mb-4 pl-4">
+                                <li>Reported by a supervisor, officer, or civilian</li>
+                                <li>Logged and reviewed by Internal Affairs or Departmental Review Board</li>
+                            </ul>
+                            <h4 class="text-lg font-semibold text-blue-600 mb-1">2. Investigation</h4>
+                            <ul class="list-disc list-inside text-gray-700 mb-4 pl-4">
+                                <li>Witness statements, video/audio logs, and other evidence collected</li>
+                                <li>Subject to formal review by designated disciplinary officers</li>
+                            </ul>
+                            <h4 class="text-lg font-semibold text-blue-600 mb-1">3. Determination of Responsibility</h4>
+                            <ul class="list-disc list-inside text-gray-700 mb-4 pl-4">
+                                <li>Based on preponderance of the evidence</li>
+                                <li>Officer given opportunity to respond to allegations</li>
+                            </ul>
+                            <h4 class="text-lg font-semibold text-blue-600 mb-1">4. Disciplinary Action</h4>
+                            <ul class="list-disc list-inside text-gray-700 mb-4 pl-4">
+                                <li>Administered proportionally to offense severity</li>
+                                <li>Documented and reviewed for future patterns of conduct</li>
+                            </ul>
+                            <h4 class="text-lg font-semibold text-blue-600 mb-1">5. Right to Appeal</h4>
+                            <ul class="list-disc list-inside text-gray-700 mb-4 pl-4">
+                                <li>Officers may appeal decisions through the official grievance process</li>
+                            </ul>
+                        `
+                    },
+                    {
+                        "id": "3.5",
+                        "title": "IV. Commitment to Professional Growth",
+                        "content": `
+                            <p class="text-gray-700 mb-4">While discipline is essential for accountability, the LSPD also emphasizes mentorship, training, and leadership development. Corrective action should ideally include opportunities for learning, not merely punishment.</p>
+                        `
+                    },
+                    {
+                        "id": "3.6",
+                        "title": "V. Final Notes",
+                        "content": `
+                            <p class="text-gray-700 mb-4">This guideline shall be made available to all LSPD personnel and reviewed annually. Supervisors are responsible for ensuring the fair and consistent enforcement of these standards.</p>
+                            <p class="text-gray-700 mb-4"><strong>Signed</strong></p>
+                            <p class="text-gray-700 mb-4"><strong>Clovis Wiggum</strong><br>Chief of Police<br>Los Santos Police Department</p>
+                        `
+                    }
+                ]
             }
         ];
 
@@ -1044,73 +1137,6 @@ of my community and department."</pre>
             document.querySelectorAll('.policy-content').forEach(content => content.classList.add('active'));
             document.querySelectorAll('.policy-heading').forEach(heading => heading.classList.add('active'));
         });
-
-        // LLM Clarifier functionality
-        const clarifierInput = document.getElementById('clarifierInput');
-        const clarifierButton = document.getElementById('clarifierButton');
-        const clarifierResponseDiv = document.getElementById('clarifierResponse');
-        const clarifierResponseContent = document.getElementById('clarifierResponseContent');
-        const clarifierLoading = document.getElementById('clarifierLoading');
-
-        clarifierButton.addEventListener('click', async () => {
-            const userQuestion = clarifierInput.value.trim();
-            if (!userQuestion) {
-                clarifierResponseContent.innerHTML = '<p class="text-red-600">Please enter a question to get clarification.</p>';
-                clarifierResponseDiv.classList.remove('hidden');
-                return;
-            }
-
-            clarifierLoading.classList.remove('hidden');
-            clarifierResponseDiv.classList.remove('hidden');
-            clarifierResponseContent.innerHTML = ''; // Clear previous response
-
-            // Construct a single string of all SOP content for the LLM
-            let allSOPContent = "";
-            sopData.forEach(section => {
-                section.subsections.forEach(subsection => {
-                    allSOPContent += `<h3>${subsection.title}</h3>${subsection.content}\n\n`;
-                });
-            });
-
-            const prompt = `Based on the following LSPD Standard Operating Procedures, answer the question: "${userQuestion}"
-            
-            SOP Content:
-            ${allSOPContent}
-            
-            Provide a concise answer, directly referencing relevant SOP sections if applicable. If the information is not explicitly stated in the SOP, state that.`;
-
-            let chatHistory = [];
-            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
-            const payload = { contents: chatHistory };
-            // Gemini API Key
-            const apiKey = "AIzaSyCsWMWfmCfR59mcAy4as7XR95YY__7hayc";
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-
-            try {
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                const result = await response.json();
-                clarifierLoading.classList.add('hidden');
-
-                if (result.candidates && result.candidates.length > 0 &&
-                    result.candidates[0].content && result.candidates[0].content.parts &&
-                    result.candidates[0].content.parts.length > 0) {
-                    const text = result.candidates[0].content.parts[0].text;
-                    clarifierResponseContent.innerHTML = `<p>${text}</p>`;
-                } else {
-                    clarifierResponseContent.innerHTML = '<p class="text-red-600">Could not get a response. Please try again.</p>';
-                }
-            } catch (error) {
-                console.error("Error fetching from Gemini API:", error);
-                clarifierLoading.classList.add('hidden');
-                clarifierResponseContent.innerHTML = `<p class="text-red-600">Error communicating with the AI. Please try again later.</p>`;
-            }
-        });
-
 
         // Initial render of all SOPs on page load
         document.addEventListener('DOMContentLoaded', () => {
