@@ -10,6 +10,7 @@
     <style>
         /* Custom font for a clean, modern look */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f8f8f8; /* Light gray background */
@@ -19,17 +20,20 @@
         ::-webkit-scrollbar {
             width: 10px;
         }
+
         ::-webkit-scrollbar-track {
             background: #f1f1f1;
             border-radius: 5px;
         }
+
         ::-webkit-scrollbar-thumb {
             background: #888;
             border-radius: 5px;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #555;
+            }
     </style>
 </head>
 <body class="antialiased">
@@ -54,10 +58,7 @@
                 <li><a href="report.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Report Generator</a></li>
             </ul>
         </nav>
-        <!-- Search Bar -->
-        <div class="mt-4 md:mt-0 w-full md:w-auto">
-            <input type="search" placeholder="Search Internal Docs..." class="p-2 border border-blue-600 rounded-lg focus:ring-2 focus:ring-blue-300 focus:border-transparent w-full md:w-64 bg-blue-800 text-white placeholder-blue-300">
-        </div>
+        <!-- Removed Search Bar -->
     </header>
 
     <!-- Main Content Section -->
@@ -72,11 +73,9 @@
                     <label for="department" class="block text-gray-700 text-sm font-semibold mb-2">
                         Department
                     </label>
-                    <select
-                        id="department"
-                        name="department"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm text-gray-800"
-                    >
+                    <select id="department"
+                            name="department"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm text-gray-800">
                         <option value="LSPD">Los Santos Police Department</option>
                         <option value="LSCSO">Los Santos County Sheriff's Office</option>
                     </select>
@@ -87,13 +86,11 @@
                     <label for="officerInfo" class="block text-gray-700 text-sm font-semibold mb-2">
                         Officer Name and Badge Number
                     </label>
-                    <input
-                        type="text"
-                        id="officerInfo"
-                        name="officerInfo"
-                        placeholder="Enter officer name and badge number"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400 text-gray-800"
-                    >
+                    <input type="text"
+                           id="officerInfo"
+                           name="officerInfo"
+                           placeholder="Enter officer name and badge number"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400 text-gray-800">
                 </div>
 
                 <!-- Text Box 2: Suspect First and Last Name -->
@@ -101,13 +98,11 @@
                     <label for="suspectName" class="block text-gray-700 text-sm font-semibold mb-2">
                         Suspect First and Last Name
                     </label>
-                    <input
-                        type="text"
-                        id="suspectName"
-                        name="suspectName"
-                        placeholder="Enter suspect's first and last name"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400 text-gray-800"
-                    >
+                    <input type="text"
+                           id="suspectName"
+                           name="suspectName"
+                           placeholder="Enter suspect's first and last name"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400 text-gray-800">
                 </div>
 
                 <!-- Text Box 3: Charges -->
@@ -115,25 +110,21 @@
                     <label for="charges" class="block text-gray-700 text-sm font-semibold mb-2">
                         Charges
                     </label>
-                    <input
-                        type="text"
-                        id="charges"
-                        name="charges"
-                        placeholder="Enter charges (e.g., Theft, Assault)"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400 text-gray-800"
-                    >
+                    <input type="text"
+                           id="charges"
+                           name="charges"
+                           placeholder="Enter charges (e.g., Theft, Assault)"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400 text-gray-800">
                 </div>
-                
+
                 <!-- Mirandized Dropdown -->
                 <div class="mb-6">
                     <label for="mirandized" class="block text-gray-700 text-sm font-semibold mb-2">
                         Mirandized (Required)
                     </label>
-                    <select
-                        id="mirandized"
-                        name="mirandized"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm text-gray-800"
-                    >
+                    <select id="mirandized"
+                            name="mirandized"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm text-gray-800">
                         <option value="">Select an option</option>
                         <option value="Yes">Yes</option>
                         <option value="No">No</option>
@@ -145,11 +136,9 @@
                     <label for="gsrTest" class="block text-gray-700 text-sm font-semibold mb-2">
                         GSR Test (Required)
                     </label>
-                    <select
-                        id="gsrTest"
-                        name="gsrTest"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm text-gray-800"
-                    >
+                    <select id="gsrTest"
+                            name="gsrTest"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm text-gray-800">
                         <option value="">Select an option</option>
                         <option value="positive">Positive</option>
                         <option value="negative">Negative</option>
@@ -162,13 +151,11 @@
                     <label for="legalRepresentation" class="block text-gray-700 text-sm font-semibold mb-2">
                         Name of Legal Representation (leave blank if none present)
                     </label>
-                    <input
-                        type="text"
-                        id="legalRepresentation"
-                        name="legalRepresentation"
-                        placeholder="Enter legal representation name"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400 text-gray-800"
-                    >
+                    <input type="text"
+                           id="legalRepresentation"
+                           name="legalRepresentation"
+                           placeholder="Enter legal representation name"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400 text-gray-800">
                 </div>
 
                 <!-- Items Seized -->
@@ -176,13 +163,11 @@
                     <label for="itemsSeized" class="block text-gray-700 text-sm font-semibold mb-2">
                         Items Seized
                     </label>
-                    <textarea
-                        id="itemsSeized"
-                        name="itemsSeized"
-                        rows="3"
-                        placeholder="List any items seized (e.g., Weapon, Contraband)"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400 text-gray-800"
-                    ></textarea>
+                    <textarea id="itemsSeized"
+                              name="itemsSeized"
+                              rows="3"
+                              placeholder="List any items seized (e.g., Weapon, Contraband)"
+                              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400 text-gray-800"></textarea>
                 </div>
 
                 <!-- Level of Force Dropdown -->
@@ -190,11 +175,9 @@
                     <label for="levelOfForce" class="block text-gray-700 text-sm font-semibold mb-2">
                         Level of Force
                     </label>
-                    <select
-                        id="levelOfForce"
-                        name="levelOfForce"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm text-gray-800"
-                    >
+                    <select id="levelOfForce"
+                            name="levelOfForce"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm text-gray-800">
                         <option value="">Select Level of Force</option>
                         <option value="Level 1 Officer Presence">A) Level 1 Officer Presence — No force is used. Considered the best way to resolve a situation.</option>
                         <option value="Level 2 Verbalization">B) Level 2 Verbalization — Force is not-physical.</option>
@@ -209,11 +192,9 @@
                     <label for="medicalTreatment" class="block text-gray-700 text-sm font-semibold mb-2">
                         Medical Treatment
                     </label>
-                    <select
-                        id="medicalTreatment"
-                        name="medicalTreatment"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm text-gray-800"
-                    >
+                    <select id="medicalTreatment"
+                            name="medicalTreatment"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm text-gray-800">
                         <option value="">Select an option</option>
                         <option value="Yes">Yes</option>
                         <option value="No">No</option>
@@ -225,13 +206,11 @@
                     <label for="weaponsSeized" class="block text-gray-700 text-sm font-semibold mb-2">
                         Weapons Seized
                     </label>
-                    <input
-                        type="text"
-                        id="weaponsSeized"
-                        name="weaponsSeized"
-                        placeholder="List any weapons seized"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400 text-gray-800"
-                    >
+                    <input type="text"
+                           id="weaponsSeized"
+                           name="weaponsSeized"
+                           placeholder="List any weapons seized"
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400 text-gray-800">
                 </div>
 
                 <!-- Are Weapons Returnable Dropdown -->
@@ -239,11 +218,9 @@
                     <label for="weaponsReturnable" class="block text-gray-700 text-sm font-semibold mb-2">
                         Are weapons returnable?
                     </label>
-                    <select
-                        id="weaponsReturnable"
-                        name="weaponsReturnable"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm text-gray-800"
-                    >
+                    <select id="weaponsReturnable"
+                            name="weaponsReturnable"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm text-gray-800">
                         <option value="">Select an option</option>
                         <option value="Yes">Yes</option>
                         <option value="No">No</option>
@@ -256,11 +233,9 @@
                     <label for="pleaType" class="block text-gray-700 text-sm font-semibold mb-2">
                         Plea Type:
                     </label>
-                    <select
-                        id="pleaType"
-                        name="pleaType"
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm text-gray-800"
-                    >
+                    <select id="pleaType"
+                            name="pleaType"
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm text-gray-800">
                         <option value="">Select Plea Type</option>
                         <option value="guilty">Guilty</option>
                         <option value="not guilty">Not Guilty</option>
@@ -268,19 +243,17 @@
                         <option value="N/A">N/A</option>
                     </select>
                 </div>
-                
+
                 <!-- Text Area: Officer Narrative -->
                 <div class="mb-6">
                     <label for="narrative" class="block text-gray-700 text-sm font-semibold mb-2">
                         Officer Narrative
                     </label>
-                    <textarea
-                        id="narrative"
-                        name="narrative"
-                        rows="5"
-                        placeholder="Enter officer narrative here..."
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400 text-gray-800"
-                    ></textarea>
+                    <textarea id="narrative"
+                              name="narrative"
+                              rows="5"
+                              placeholder="Enter officer narrative here..."
+                              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400 text-gray-800"></textarea>
                 </div>
 
                 <!-- Text Area: Generated Report -->
@@ -288,31 +261,25 @@
                     <label for="generatedReport" class="block text-gray-700 text-sm font-semibold mb-2">
                         Generated Report
                     </label>
-                    <button
-                        type="button"
-                        id="copyReportBtn"
-                        class="absolute top-0 right-0 mt-2 mr-2 bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold py-1 px-3 rounded-lg shadow-md transition duration-200 ease-in-out hidden"
-                        title="Copy report to clipboard"
-                    >
+                    <button type="button"
+                            id="copyReportBtn"
+                            class="absolute top-0 right-0 mt-2 mr-2 bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold py-1 px-3 rounded-lg shadow-md transition duration-200 ease-in-out hidden"
+                            title="Copy report to clipboard">
                         Copy Report
                     </button>
-                    <textarea
-                        id="generatedReport"
-                        name="generatedReport"
-                        rows="10"
-                        readonly
-                        placeholder="Your generated report will appear here..."
-                        class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y text-gray-800 pt-10"
-                    ></textarea>
+                    <textarea id="generatedReport"
+                              name="generatedReport"
+                              rows="10"
+                              readonly
+                              placeholder="Your generated report will appear here..."
+                              class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y text-gray-800 pt-10"></textarea>
                 </div>
 
                 <!-- Submit Button -->
                 <div class="mt-8">
-                    <button
-                        type="button"
-                        id="generateReportBtn"
-                        class="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-300 ease-in-out shadow-md"
-                    >
+                    <button type="button"
+                            id="generateReportBtn"
+                            class="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-300 ease-in-out shadow-md">
                         Generate Report
                     </button>
                 </div>
@@ -331,12 +298,18 @@
             <!-- Internal Contact Info -->
             <div>
                 <h4 class="text-xl font-semibold mb-4 text-blue-300">Internal Contacts</h4>
-                <!-- All text content removed as requested -->
+                <ul class="text-sm">
+                    <!-- Added text-sm here for smaller font -->
+                    <li class="mb-1"><a href="https://discord.gg/7FwxdpfDTM" class="text-gray-400 hover:text-white transition duration-300 ease-in-out" target="_blank" rel="noopener noreferrer">Discord</a></li>
+                    <li class="mb-1"><a href="https://discord.com/channels/1383775098464370768/1383775099777318972" class="text-gray-400 hover:text-white transition duration-300 ease-in-out" target="_blank" rel="noopener noreferrer">UPD Chat</a></li>
+                    <li class="mb-1"><a href="https://discord.com/channels/1383775098464370768/1383782578976456735" class="text-gray-400 hover:text-white transition duration-300 ease-in-out" target="_blank" rel="noopener noreferrer">Cadet Support</a></li>
+                </ul>
             </div>
             <!-- Internal Quick Links -->
             <div>
                 <h4 class="text-xl font-semibold mb-4 text-blue-300">Quick Access</h4>
-                <ul class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-1 text-sm"> <!-- Adjusted gap-x and gap-y, and text-sm -->
+                <ul class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-1 text-sm">
+                    <!-- Adjusted gap-x and gap-y, and text-sm -->
                     <li><a href="SOP.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">SOPs</a></li>
                     <li><a href="training.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Training</a></li>
                     <li><a href="forms.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Forms</a></li>
@@ -378,7 +351,7 @@
 
         const generatedReportTextarea = document.getElementById('generatedReport');
         const generateReportBtn = document.getElementById('generateReportBtn');
-        const copyReportBtn = document.getElementById('copyReportBtn'); 
+        const copyReportBtn = document.getElementById('copyReportBtn');
         const loadingIndicator = document.getElementById('loadingIndicator');
 
         // IMPORTANT SECURITY NOTE:
@@ -394,7 +367,7 @@
         //
         // For local development/testing of this HTML file, the API key is now directly embedded.
         // FOR PRODUCTION, THIS IS NOT SECURE.
-        const apiKey = "AIzaSyCsWMWfmCfR59mcAy4as7XR95YY__7hayc"; 
+        const apiKey = "AIzaSyCsWMWfmCfR59mcAy4as7XR95YY__7hayc";
 
         // Add event listener to the "Generate Report" button
         generateReportBtn.addEventListener('click', async () => {
@@ -416,7 +389,7 @@
 
 
             // Clear previous generated report value and ensure it's truly empty
-            generatedReportTextarea.value = ''; 
+            generatedReportTextarea.value = '';
             copyReportBtn.classList.add('hidden'); // Hide copy button initially or on new generation
             loadingIndicator.classList.remove('hidden');
 
@@ -428,7 +401,7 @@
             }
 
             // Client-side API key check (will catch if the key is empty despite the prompt to fill it)
-            if (!apiKey || apiKey === "YOUR_ACTUAL_GEMINI_API_KEY_HERE") { 
+            if (!apiKey || apiKey === "YOUR_ACTUAL_GEMINI_API_KEY_HERE") {
                 generatedReportTextarea.value = 'Error: Gemini API Key is not configured. Please ensure it is correctly placed in the code (for local testing) or accessed via a backend (for secure deployment).';
                 loadingIndicator.classList.add('hidden');
                 return;
@@ -458,7 +431,7 @@ Strict Output Format:
 Debrief: [Detailed summary of the incident based on the narrative and provided information. Focus on the factual account of events, what happened, and actions taken by law enforcement.]
 
 Justification of Charges:
-${charges.split(',').map(charge => `(${charge.trim()}): [Reason for this specific charge based on the narrative and incident details]` ).join('\n')}
+${charges.split(',').map(charge => `(${charge.trim()}): [Reason for this specific charge based on the narrative and incident details]`).join('\n')}
 
 Postal/Location: [Location of the incident, if mentioned in narrative, otherwise provide a general placeholder like "Not specified in narrative" or "Los Santos, CA"]
 
@@ -486,11 +459,11 @@ Plea (guilty | not guilty | no contest): ${pleaType}
 
                 // Check if the response was successful (status 2xx)
                 if (!response.ok) {
-                    const errorBody = await response.text(); 
+                    const errorBody = await response.text();
                     generatedReportTextarea.value = `Error: API call failed with status ${response.status}. Details: ${errorBody}`;
                     console.error('API Error Response:', response.status, errorBody);
                     loadingIndicator.classList.add('hidden');
-                    return; 
+                    return;
                 }
 
                 const result = await response.json();
@@ -500,7 +473,7 @@ Plea (guilty | not guilty | no contest): ${pleaType}
                     result.candidates[0].content.parts.length > 0) {
                     let generatedText = result.candidates[0].content.parts[0].text;
                     // Post-process the generated text to remove any stray '>' or '<' characters and trim whitespace
-                    generatedText = generatedText.replace(/[<>]/g, '').trim(); 
+                    generatedText = generatedText.replace(/[<>]/g, '').trim();
                     generatedReportTextarea.value = generatedText;
                     copyReportBtn.classList.remove('hidden'); // Show copy button on successful generation
                 } else {
@@ -533,7 +506,7 @@ Plea (guilty | not guilty | no contest): ${pleaType}
 
             tempTextArea.select(); // Select the text in the temporary textarea
             document.execCommand('copy'); // Copy the selected text
-            
+
             // Provide a visual cue that text has been copied
             const originalText = copyReportBtn.textContent;
             copyReportBtn.textContent = 'Copied!';

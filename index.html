@@ -27,6 +27,7 @@
     <style>
         /* Custom font for a clean, modern look */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f8f8f8; /* Light gray background */
@@ -36,17 +37,20 @@
         ::-webkit-scrollbar {
             width: 10px;
         }
+
         ::-webkit-scrollbar-track {
             background: #f1f1f1;
             border-radius: 5px;
         }
+
         ::-webkit-scrollbar-thumb {
             background: #888;
             border-radius: 5px;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #555;
+            }
         /* Styles for the modal pop-up */
         .modal-overlay {
             position: fixed;
@@ -60,6 +64,7 @@
             align-items: center;
             z-index: 1000; /* Ensure it's on top */
         }
+
         .modal-content {
             background-color: #fff;
             padding: 2.5rem; /* Increased padding */
@@ -70,6 +75,7 @@
             text-align: center;
             position: relative; /* For positioning the close button */
         }
+
         .modal-close-btn {
             position: absolute;
             top: 0.75rem;
@@ -81,9 +87,10 @@
             color: #666;
             transition: color 0.2s;
         }
-        .modal-close-btn:hover {
-            color: #333;
-        }
+
+            .modal-close-btn:hover {
+                color: #333;
+            }
     </style>
 </head>
 <body class="antialiased">
@@ -147,8 +154,7 @@
             <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
                 <!-- Updated SOP link in hero section -->
                 <a href="SOP.html" class="inline-block bg-white text-blue-800 hover:bg-blue-100 font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105">Access SOPs</a>
-                <!-- Updated Daily Briefing link in hero section -->
-                <a href="briefs.html" class="inline-block bg-blue-600 text-white hover:bg-blue-700 font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105 border-2 border-white">View Daily Briefing</a>
+                <!-- Removed the "View Daily Briefing" button -->
             </div>
         </div>
     </section>
@@ -215,12 +221,17 @@
             <!-- Internal Contact Info (content removed, titles remain) -->
             <div>
                 <h4 class="text-xl font-semibold mb-4 text-blue-300">Internal Contacts</h4>
-                <!-- Removed specific contact information -->
+                <ul class="space-y-2 text-sm">
+                    <li><a href="https://discord.gg/7FwxdpfDTM" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Discord</a></li>
+                    <li><a href="https://discord.com/channels/1383775098464370768/1383775099777318972" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Chat</a></li>
+                    <li><a href="https://discord.com/channels/1383775098464370768/1383782578976456735" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Cadet Support</a></li>
+                </ul>
             </div>
             <!-- Internal Quick Links (text links added) -->
             <div>
                 <h4 class="text-xl font-semibold mb-4 text-blue-300">Quick Access</h4>
-                <ul class="space-y-2 text-sm"> <!-- Added text-sm here -->
+                <ul class="space-y-2 text-sm">
+                    <!-- Added text-sm here -->
                     <li><a href="https://docs.google.com/document/d/1etjilZ1dAHGviw33MV5Zs-b5dXqcSHyoYIHvHiRIyy4/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">LSPD SOP</a></li>
                     <li><a href="https://docs.google.com/document/d/1hKQ4fw9b1_yQELhPi1p1b4M6uiSaYb7bBp-9C6GVTdY/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Los Santos Police Department Interview Procedure & Questions</a></li>
                     <li><a href="https://docs.google.com/document/d/1d004FfAhZBgESn88Mx21N3CGqXlcoNeP9_sadn_ePak/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Promotional Pathway & Subdivision Assignment Policy</a></li>
