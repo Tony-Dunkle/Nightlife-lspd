@@ -119,7 +119,8 @@
 
         .form-group input[type="text"],
         .form-group input[type="email"],
-        .form-group textarea {
+        .form-group textarea,
+        .form-group select {
             width: 100%;
             padding: 0.75rem;
             border: 1px solid #ccc;
@@ -130,7 +131,8 @@
 
             .form-group input[type="text"]:focus,
             .form-group input[type="email"]:focus,
-            .form-group textarea:focus {
+            .form-group textarea:focus,
+            .form-group select:focus {
                 outline: none;
                 border-color: #3b82f6;
                 box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
@@ -257,7 +259,7 @@
 
         <div id="applications-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <!-- CID Application Card -->
-            <a href="#" class="app-card bg-white p-6 rounded-lg shadow-lg flex flex-col items-center text-center hover:bg-blue-50 transition duration-300 ease-in-out">
+            <a href="#" id="openCidAppModal" class="app-card bg-white p-6 rounded-lg shadow-lg flex flex-col items-center text-center hover:bg-blue-50 transition duration-300 ease-in-out">
                 <img src="https://placehold.co/80x80/003366/FFFFFF?text=CID" alt="CID Icon" class="w-20 h-20 mb-4 rounded-full border-4 border-blue-700 object-cover">
                 <h3 class="text-xl font-bold text-blue-800 mb-2">Criminal Investigations Division (CID)</h3>
                 <p class="text-gray-700 text-sm">Access tools and resources for in-depth criminal investigations, case management, and evidence analysis.</p>
@@ -271,21 +273,21 @@
             </a>
 
             <!-- SWAT Application Card -->
-            <a href="#" class="app-card bg-white p-6 rounded-lg shadow-lg flex flex-col items-center text-center hover:bg-blue-50 transition duration-300 ease-in-out">
+            <a href="#" id="openSwatAppModal" class="app-card bg-white p-6 rounded-lg shadow-lg flex flex-col items-center text-center hover:bg-blue-50 transition duration-300 ease-in-out">
                 <img src="https://placehold.co/80x80/333333/FFFFFF?text=SWAT" alt="SWAT Icon" class="w-20 h-20 mb-4 rounded-full border-4 border-gray-700 object-cover">
                 <h3 class="text-xl font-bold text-gray-900 mb-2">Special Weapons And Tactics (SWAT)</h3>
                 <p class="text-gray-700 text-sm">Tools and protocols for high-risk operations, hostage situations, riot control, and tactical response.</p>
             </a>
 
             <!-- ASU Application Card -->
-            <a href="#" class="app-card bg-white p-6 rounded-lg shadow-lg flex flex-col items-center text-center hover:bg-blue-50 transition duration-300 ease-in-out">
+            <a href="#" id="openAsuAppModal" class="app-card bg-white p-6 rounded-lg shadow-lg flex flex-col items-center text-center hover:bg-blue-50 transition duration-300 ease-in-out">
                 <img src="https://placehold.co/80x80/6699FF/FFFFFF?text=ASU" alt="ASU Icon" class="w-20 h-20 mb-4 rounded-full border-4 border-blue-400 object-cover">
                 <h3 class="text-xl font-bold text-blue-600 mb-2">Air Support Unit (ASU)</h3>
                 <p class="text-gray-700 text-sm">Access to aerial surveillance data, flight logs, and coordination tools for air operations.</p>
             </a>
 
             <!-- K9 Application Card -->
-            <a href="#" class="app-card bg-white p-6 rounded-lg shadow-lg flex flex-col items-center text-center hover:bg-blue-50 transition duration-300 ease-in-out">
+            <a href="#" id="openK9AppModal" class="app-card bg-white p-6 rounded-lg shadow-lg flex flex-col items-center text-center hover:bg-blue-50 transition duration-300 ease-in-out">
                 <img src="https://placehold.co/80x80/996633/FFFFFF?text=K9" alt="K9 Icon" class="w-20 h-20 mb-4 rounded-full border-4 border-yellow-700 object-cover">
                 <h3 class="text-xl font-bold text-yellow-800 mb-2">K-9 Unit</h3>
                 <p class="text-gray-700 text-sm">Management system for K-9 deployments, training records, and tracking suspect apprehension data.</p>
@@ -296,60 +298,60 @@
     <!-- HEAT Application Modal -->
     <div id="heatAppModal" class="modal-overlay">
         <div class="modal-content">
-            <button class="modal-close-button" id="closeHeatAppModal">&times;</button>
+            <button class="modal-close-button" data-modal-target="heatAppModal">&times;</button>
             <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">HEAT Unit Application</h2>
             <p class="text-md text-gray-600 mb-6 text-center">Complete the form below to apply for the Highway Enforcement & Traffic Unit.</p>
 
             <form id="heatApplicationForm">
                 <div class="mb-4 form-group">
-                    <label for="modal_discordId">Your Discord ID:</label>
-                    <input type="text" id="modal_discordId" name="discordId" class="mt-1 block" required>
+                    <label for="heat_discordId">Your Discord ID:</label>
+                    <input type="text" id="heat_discordId" name="discordId" class="mt-1 block" required>
                 </div>
 
                 <div class="mb-4 form-group">
-                    <label for="modal_inGameName">Your In-Game Name:</label>
-                    <input type="text" id="modal_inGameName" name="inGameName" class="mt-1 block" required>
+                    <label for="heat_inGameName">Your In-Game Name:</label>
+                    <input type="text" id="heat_inGameName" name="inGameName" class="mt-1 block" required>
                 </div>
 
                 <div class="mb-4 form-group">
                     <label class="mb-2">Do you have a clean record with LSPD and other departments? (No disciplinary actions in the last 30 days)</label>
                     <div class="flex items-center space-x-6 radio-group mt-2">
                         <label>
-                            <input type="radio" name="cleanRecord" value="Yes" required>
+                            <input type="radio" name="heat_cleanRecord" value="Yes" required>
                             Yes
                         </label>
                         <label>
-                            <input type="radio" name="cleanRecord" value="No">
+                            <input type="radio" name="heat_cleanRecord" value="No">
                             No
                         </label>
                     </div>
                 </div>
 
                 <div class="mb-4 form-group">
-                    <label for="modal_whyHeat">Why do you want to join HEAT? (Minimum 50 words)</label>
-                    <textarea id="modal_whyHeat" name="whyHeat" rows="6" class="mt-1 block" required minlength="50"></textarea>
-                    <p class="text-sm text-gray-500 mt-1" id="modal_whyHeatWordCount">0 words</p>
+                    <label for="heat_whyHeat">Why do you want to join HEAT? (Minimum 50 words)</label>
+                    <textarea id="heat_whyHeat" name="whyHeat" rows="6" class="mt-1 block" required minlength="50"></textarea>
+                    <p class="text-sm text-gray-500 mt-1" id="heat_whyHeatWordCount">0 words</p>
                 </div>
 
                 <div class="mb-4 form-group">
-                    <label for="modal_coreResponsibilities">What do you believe are the core responsibilities of a HEAT officer?</label>
-                    <textarea id="modal_coreResponsibilities" name="coreResponsibilities" rows="6" class="mt-1 block" required></textarea>
+                    <label for="heat_coreResponsibilities">What do you believe are the core responsibilities of a HEAT officer?</label>
+                    <textarea id="heat_coreResponsibilities" name="coreResponsibilities" rows="6" class="mt-1 block" required></textarea>
                 </div>
 
                 <div class="mb-4 form-group">
-                    <label for="modal_pursuitScenario">Describe a high-speed pursuit scenario and how you would manage it according to LSPD protocols.</label>
-                    <textarea id="modal_pursuitScenario" name="pursuitScenario" rows="6" class="mt-1 block" required></textarea>
+                    <label for="heat_pursuitScenario">Describe a high-speed pursuit scenario and how you would manage it according to LSPD protocols.</label>
+                    <textarea id="heat_pursuitScenario" name="pursuitScenario" rows="6" class="mt-1 block" required></textarea>
                 </div>
 
                 <div class="mb-4 form-group">
                     <label class="mb-2">Have you reviewed the HEAT unit SOPs?</label>
                     <div class="flex items-center space-x-6 radio-group mt-2">
                         <label>
-                            <input type="radio" name="reviewedSOPs" value="Yes" required>
+                            <input type="radio" name="heat_reviewedSOPs" value="Yes" required>
                             Yes
                         </label>
                         <label>
-                            <input type="radio" name="reviewedSOPs" value="No">
+                            <input type="radio" name="heat_reviewedSOPs" value="No">
                             No
                         </label>
                     </div>
@@ -359,11 +361,11 @@
                     <label class="mb-2">Are you proficient in high-speed driving and pursuit tactics?</label>
                     <div class="flex items-center space-x-6 radio-group mt-2">
                         <label>
-                            <input type="radio" name="proficientDriving" value="Yes" required>
+                            <input type="radio" name="heat_proficientDriving" value="Yes" required>
                             Yes
                         </label>
                         <label>
-                            <input type="radio" name="proficientDriving" value="No">
+                            <input type="radio" name="heat_proficientDriving" value="No">
                             No
                         </label>
                     </div>
@@ -373,28 +375,297 @@
                     <label class="mb-2">Do you understand that HEAT is a specialized unit and requires higher standards of discipline and performance?</label>
                     <div class="flex items-center space-x-6 radio-group mt-2">
                         <label>
-                            <input type="radio" name="understandStandards" value="Yes" required>
+                            <input type="radio" name="heat_understandStandards" value="Yes" required>
                             Yes
                         </label>
                         <label>
-                            <input type="radio" name="understandStandards" value="No">
+                            <input type="radio" name="heat_understandStandards" value="No">
                             No
                         </label>
                     </div>
                 </div>
 
                 <div class="mb-8 form-group">
-                    <label for="modal_signature">Signature (Type your full name):</label>
-                    <input type="text" id="modal_signature" name="signature" class="mt-1 block" required>
+                    <label for="heat_signature">Signature (Type your full name):</label>
+                    <input type="text" id="heat_signature" name="signature" class="mt-1 block" required>
                 </div>
 
                 <div class="text-center">
                     <button type="submit" id="submitHeatButton" class="submit-button">Submit Application</button>
                 </div>
-                <div id="submissionMessage" class="submission-message" role="alert"></div>
+                <div id="heatSubmissionMessage" class="submission-message" role="alert"></div>
             </form>
         </div>
     </div>
+
+    <!-- CID Application Modal -->
+    <div id="cidAppModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-button" data-modal-target="cidAppModal">&times;</button>
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Criminal Investigations Division (CID) Application</h2>
+            <p class="text-md text-gray-600 mb-6 text-center">Complete the form below to apply for the CID unit.</p>
+
+            <form id="cidApplicationForm">
+                <div class="mb-4 form-group">
+                    <label for="cid_discordId">Your Discord ID:</label>
+                    <input type="text" id="cid_discordId" name="discordId" class="mt-1 block" required>
+                </div>
+
+                <div class="mb-4 form-group">
+                    <label for="cid_inGameName">Your In-Game Name:</label>
+                    <input type="text" id="cid_inGameName" name="inGameName" class="mt-1 block" required>
+                </div>
+
+                <div class="mb-4 form-group">
+                    <label class="mb-2">Do you have prior experience in investigations or detective work?</label>
+                    <div class="flex items-center space-x-6 radio-group mt-2">
+                        <label>
+                            <input type="radio" name="cid_experience" value="Yes" required>
+                            Yes
+                        </label>
+                        <label>
+                            <input type="radio" name="cid_experience" value="No">
+                            No
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mb-4 form-group">
+                    <label for="cid_whyCid">Why do you want to join CID? (Minimum 50 words)</label>
+                    <textarea id="cid_whyCid" name="whyCid" rows="6" class="mt-1 block" required minlength="50"></textarea>
+                    <p class="text-sm text-gray-500 mt-1" id="cid_whyCidWordCount">0 words</p>
+                </div>
+
+                <div class="mb-4 form-group">
+                    <label for="cid_complexCase">Describe your approach to investigating a complex criminal case from start to finish.</label>
+                    <textarea id="cid_complexCase" name="complexCase" rows="6" class="mt-1 block" required></textarea>
+                </div>
+
+                <div class="mb-4 form-group">
+                    <label class="mb-2">Are you knowledgeable about evidence collection, preservation, and chain of custody?</label>
+                    <div class="flex items-center space-x-6 radio-group mt-2">
+                        <label>
+                            <input type="radio" name="cid_knowledge" value="Yes" required>
+                            Yes
+                        </label>
+                        <label>
+                            <input type="radio" name="cid_knowledge" value="No">
+                            No
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mb-8 form-group">
+                    <label for="cid_signature">Signature (Type your full name):</label>
+                    <input type="text" id="cid_signature" name="signature" class="mt-1 block" required>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" id="submitCidButton" class="submit-button">Submit Application</button>
+                </div>
+                <div id="cidSubmissionMessage" class="submission-message" role="alert"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- SWAT Application Modal -->
+    <div id="swatAppModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-button" data-modal-target="swatAppModal">&times;</button>
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Special Weapons And Tactics (SWAT) Application</h2>
+            <p class="text-md text-gray-600 mb-6 text-center">Complete the form below to apply for the SWAT unit.</p>
+
+            <form id="swatApplicationForm">
+                <div class="mb-4 form-group">
+                    <label for="swat_discordId">Your Discord ID:</label>
+                    <input type="text" id="swat_discordId" name="discordId" class="mt-1 block" required>
+                </div>
+
+                <div class="mb-4 form-group">
+                    <label for="swat_inGameName">Your In-Game Name:</label>
+                    <input type="text" id="swat_inGameName" name="inGameName" class="mt-1 block" required>
+                </div>
+
+                <div class="mb-4 form-group">
+                    <label class="mb-2">Do you have prior tactical training or experience (e.g., military, other law enforcement tactical units)?</label>
+                    <div class="flex items-center space-x-6 radio-group mt-2">
+                        <label>
+                            <input type="radio" name="swat_tacticalExperience" value="Yes" required>
+                            Yes
+                        </label>
+                        <label>
+                            <input type="radio" name="swat_tacticalExperience" value="No">
+                            No
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mb-4 form-group">
+                    <label for="swat_whySwat">Why do you want to join SWAT? (Minimum 50 words)</label>
+                    <textarea id="swat_whySwat" name="whySwat" rows="6" class="mt-1 block" required minlength="50"></textarea>
+                    <p class="text-sm text-gray-500 mt-1" id="swat_whySwatWordCount">0 words</p>
+                </div>
+
+                <div class="mb-4 form-group">
+                    <label for="swat_scenario">Describe how you would approach a high-risk warrant service or a hostage situation as a SWAT operator.</label>
+                    <textarea id="swat_scenario" name="scenario" rows="6" class="mt-1 block" required></textarea>
+                </div>
+
+                <div class="mb-4 form-group">
+                    <label class="mb-2">How would you rate your physical fitness and endurance?</label>
+                    <select id="swat_physicalFitness" name="physicalFitness" class="mt-1 block" required>
+                        <option value="">Select one</option>
+                        <option value="Excellent">Excellent</option>
+                        <option value="Good">Good</option>
+                        <option value="Average">Average</option>
+                        <option value="Needs Improvement">Needs Improvement</option>
+                    </select>
+                </div>
+
+                <div class="mb-8 form-group">
+                    <label for="swat_signature">Signature (Type your full name):</label>
+                    <input type="text" id="swat_signature" name="signature" class="mt-1 block" required>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" id="submitSwatButton" class="submit-button">Submit Application</button>
+                </div>
+                <div id="swatSubmissionMessage" class="submission-message" role="alert"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ASU Application Modal -->
+    <div id="asuAppModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-button" data-modal-target="asuAppModal">&times;</button>
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Air Support Unit (ASU) Application</h2>
+            <p class="text-md text-gray-600 mb-6 text-center">Complete the form below to apply for the ASU unit.</p>
+
+            <form id="asuApplicationForm">
+                <div class="mb-4 form-group">
+                    <label for="asu_discordId">Your Discord ID:</label>
+                    <input type="text" id="asu_discordId" name="discordId" class="mt-1 block" required>
+                </div>
+
+                <div class="mb-4 form-group">
+                    <label for="asu_inGameName">Your In-Game Name:</label>
+                    <input type="text" id="asu_inGameName" name="inGameName" class="mt-1 block" required>
+                </div>
+
+                <div class="mb-4 form-group">
+                    <label for="asu_flightExperience">Do you have prior flight experience or relevant qualifications?</label>
+                    <textarea id="asu_flightExperience" name="flightExperience" rows="3" class="mt-1 block" required></textarea>
+                </div>
+
+                <div class="mb-4 form-group">
+                    <label for="asu_whyAsu">Why do you want to join ASU? (Minimum 50 words)</label>
+                    <textarea id="asu_whyAsu" name="whyAsu" rows="6" class="mt-1 block" required minlength="50"></textarea>
+                    <p class="text-sm text-gray-500 mt-1" id="asu_whyAsuWordCount">0 words</p>
+                </div>
+
+                <div class="mb-4 form-group">
+                    <label for="asu_surveillanceScenario">Describe how you would conduct aerial surveillance for a high-value target or during a pursuit.</label>
+                    <textarea id="asu_surveillanceScenario" name="surveillanceScenario" rows="6" class="mt-1 block" required></textarea>
+                </div>
+
+                <div class="mb-4 form-group">
+                    <label class="mb-2">Are you familiar with LSPD airspace regulations and communication protocols?</label>
+                    <div class="flex items-center space-x-6 radio-group mt-2">
+                        <label>
+                            <input type="radio" name="asu_regulationsKnowledge" value="Yes" required>
+                            Yes
+                        </label>
+                        <label>
+                            <input type="radio" name="asu_regulationsKnowledge" value="No">
+                            No
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mb-8 form-group">
+                    <label for="asu_signature">Signature (Type your full name):</label>
+                    <input type="text" id="asu_signature" name="signature" class="mt-1 block" required>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" id="submitAsuButton" class="submit-button">Submit Application</button>
+                </div>
+                <div id="asuSubmissionMessage" class="submission-message" role="alert"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- K9 Application Modal -->
+    <div id="k9AppModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-button" data-modal-target="k9AppModal">&times;</button>
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">K-9 Unit Application</h2>
+            <p class="text-md text-gray-600 mb-6 text-center">Complete the form below to apply for the K-9 unit.</p>
+
+            <form id="k9ApplicationForm">
+                <div class="mb-4 form-group">
+                    <label for="k9_discordId">Your Discord ID:</label>
+                    <input type="text" id="k9_discordId" name="discordId" class="mt-1 block" required>
+                </div>
+
+                <div class="mb-4 form-group">
+                    <label for="k9_inGameName">Your In-Game Name:</label>
+                    <input type="text" id="k9_inGameName" name="inGameName" class="mt-1 block" required>
+                </div>
+
+                <div class="mb-4 form-group">
+                    <label class="mb-2">Do you have experience working with animals or dog handling?</label>
+                    <div class="flex items-center space-x-6 radio-group mt-2">
+                        <label>
+                            <input type="radio" name="k9_animalExperience" value="Yes" required>
+                            Yes
+                        </label>
+                        <label>
+                            <input type="radio" name="k9_animalExperience" value="No">
+                            No
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mb-4 form-group">
+                    <label for="k9_whyK9">Why do you want to join the K-9 unit? (Minimum 50 words)</label>
+                    <textarea id="k9_whyK9" name="whyK9" rows="6" class="mt-1 block" required minlength="50"></textarea>
+                    <p class="text-sm text-gray-500 mt-1" id="k9_whyK9WordCount">0 words</p>
+                </div>
+
+                <div class="mb-4 form-group">
+                    <label for="k9_trackingScenario">Describe how you would deploy a K-9 for suspect tracking in a dense urban environment.</label>
+                    <textarea id="k9_trackingScenario" name="trackingScenario" rows="6" class="mt-1 block" required></textarea>
+                </div>
+
+                <div class="mb-4 form-group">
+                    <label class="mb-2">Are you familiar with LSPD K-9 deployment protocols and ethical guidelines?</label>
+                    <div class="flex items-center space-x-6 radio-group mt-2">
+                        <label>
+                            <input type="radio" name="k9_protocolsFamiliarity" value="Yes" required>
+                            Yes
+                        </label>
+                        <label>
+                            <input type="radio" name="k9_protocolsFamiliarity" value="No">
+                            No
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mb-8 form-group">
+                    <label for="k9_signature">Signature (Type your full name):</label>
+                    <input type="text" id="k9_signature" name="signature" class="mt-1 block" required>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" id="submitK9Button" class="submit-button">Submit Application</button>
+                </div>
+                <div id="k9SubmissionMessage" class="submission-message" role="alert"></div>
+            </form>
+        </div>
+    </div>
+
 
     <!-- Footer Section - Internal Contacts -->
     <footer class="bg-gray-800 text-white py-10 px-6 md:px-12 rounded-t-lg">
@@ -436,191 +707,213 @@
             }
         });
 
-        // Discord Webhook URL for HEAT applications
+        // Discord Webhook URL for all applications
         const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1382934755674296320/y0sqCTwgGwAV3Er2rLU0rlZKc-m6Y4loLZUsysMG4w57G8I2d9kWrDI1nt9MUP3TrhkG";
 
-        // Get modal elements
-        const heatAppModal = document.getElementById('heatAppModal');
-        const openHeatAppModalBtn = document.getElementById('openHeatAppModal');
-        const closeHeatAppModalBtn = document.getElementById('closeHeatAppModal');
-        const modalWhyHeatTextarea = document.getElementById('modal_whyHeat');
-        const modalWhyHeatWordCount = document.getElementById('modal_whyHeatWordCount');
-        const heatApplicationForm = document.getElementById('heatApplicationForm');
-        const submissionMessage = document.getElementById('submissionMessage');
-        const submitHeatButton = document.getElementById('submitHeatButton'); // Get the submit button
+        // Generic function to open a modal
+        function openModal(modalId, textareaId, wordCountId, submitButtonId) {
+            const modal = document.getElementById(modalId);
+            const textarea = document.getElementById(textareaId);
+            const wordCountElement = document.getElementById(wordCountId);
+            const submitButton = document.getElementById(submitButtonId);
 
-        // Function to open the modal
-        openHeatAppModalBtn.addEventListener('click', function (event) {
-            event.preventDefault(); // Prevent default link behavior
-            heatAppModal.classList.add('active');
-            document.body.style.overflow = 'hidden'; // Prevent scrolling on the main page
-            modalWhyHeatTextarea.dispatchEvent(new Event('input')); // Initialize word count
+            if (modal) {
+                modal.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Prevent scrolling on the main page
 
-            // Clear and hide previous submission messages and errors
-            submissionMessage.style.display = 'none';
-            submissionMessage.classList.remove('success', 'error');
-            const wordCountMessageBox = document.getElementById('wordCountMessageBox');
-            if (wordCountMessageBox) {
-                wordCountMessageBox.style.display = 'none';
+                // Reset and hide previous submission messages and errors for this modal
+                const submissionMessage = modal.querySelector('.submission-message');
+                if (submissionMessage) {
+                    submissionMessage.style.display = 'none';
+                    submissionMessage.classList.remove('success', 'error');
+                }
+                const wordCountMessageBox = modal.querySelector('#wordCountMessageBox');
+                if (wordCountMessageBox) {
+                    wordCountMessageBox.style.display = 'none';
+                }
+
+                if (textarea) {
+                    textarea.dispatchEvent(new Event('input')); // Initialize word count
+                }
+                if (submitButton) {
+                    submitButton.disabled = false; // Ensure button is enabled when opening
+                    submitButton.textContent = 'Submit Application'; // Reset button text
+                }
             }
-            submitHeatButton.disabled = false; // Ensure button is enabled when opening
-            submitHeatButton.textContent = 'Submit Application'; // Reset button text
-        });
+        }
 
-        // Function to close the modal
-        closeHeatAppModalBtn.addEventListener('click', function () {
-            heatAppModal.classList.remove('active');
-            document.body.style.overflow = ''; // Restore scrolling
-            resetForm(heatApplicationForm); // Reset the form fields
-        });
-
-        // Close modal when clicking outside the content
-        heatAppModal.addEventListener('click', function (event) {
-            if (event.target === heatAppModal) {
-                heatAppModal.classList.remove('active');
-                document.body.style.overflow = '';
-                resetForm(heatApplicationForm); // Reset the form fields
+        // Generic function to close a modal
+        function closeModal(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) {
+                modal.classList.remove('active');
+                document.body.style.overflow = ''; // Restore scrolling
+                // Reset the form within the modal
+                const form = modal.querySelector('form');
+                if (form) {
+                    resetForm(form);
+                }
             }
-        });
+        }
 
-        // Word counter for the "Why do you want to join HEAT?" textarea inside the modal
-        modalWhyHeatTextarea.addEventListener('input', function () {
-            const text = this.value.trim();
-            const words = text === '' ? 0 : text.split(/\s+/).length;
-            modalWhyHeatWordCount.textContent = `${words} words`;
-
-            if (words < 50) {
-                modalWhyHeatWordCount.classList.remove('text-green-600');
-                modalWhyHeatWordCount.classList.add('text-red-600');
-            } else {
-                modalWhyHeatWordCount.classList.remove('text-red-600');
-                modalWhyHeatWordCount.classList.add('text-green-600');
-            }
-        });
-
-        // Function to reset the form
+        // Generic function to reset a form
         function resetForm(form) {
             form.reset();
-            // Also reset word count display
-            const whyHeatWordCountElement = form.querySelector('#modal_whyHeatWordCount');
-            if (whyHeatWordCountElement) {
-                whyHeatWordCountElement.textContent = '0 words';
-                whyHeatWordCountElement.classList.remove('text-green-600', 'text-red-600');
-                whyHeatWordCountElement.classList.add('text-gray-500'); // Or initial color
+            // Also reset word count display for any textarea in the form
+            const whyTextarea = form.querySelector('textarea[name*="why"]'); // Targeting textareas with 'why' in their name
+            const whyWordCountElement = form.querySelector(`p[id*="why"][id*="WordCount"]`);
+            if (whyTextarea && whyWordCountElement) {
+                whyWordCountElement.textContent = '0 words';
+                whyWordCountElement.classList.remove('text-green-600', 'text-red-600');
+                whyWordCountElement.classList.add('text-gray-500'); // Or initial color
             }
-            // Hide any previous error messages
-            const messageBox = document.getElementById('wordCountMessageBox');
+            // Hide any previous error messages specific to this form
+            const messageBox = form.querySelector('.submission-message');
             if (messageBox) {
                 messageBox.style.display = 'none';
             }
+            const wordCountMessageBox = form.querySelector('#wordCountMessageBox');
+            if (wordCountMessageBox) {
+                wordCountMessageBox.style.display = 'none';
+            }
+
             // Ensure button is enabled and text reset
-            submitHeatButton.disabled = false;
-            submitHeatButton.textContent = 'Submit Application';
-            submissionMessage.style.display = 'none';
-            submissionMessage.classList.remove('success', 'error');
+            const submitButton = form.querySelector('button[type="submit"]');
+            if (submitButton) {
+                submitButton.disabled = false;
+                submitButton.textContent = 'Submit Application';
+            }
         }
 
-        // Handle form submission to Discord Webhook
-        heatApplicationForm.addEventListener('submit', async function (event) {
+        // Generic function for word count updates
+        function setupWordCount(textareaId, wordCountId, minWords) {
+            const textarea = document.getElementById(textareaId);
+            const wordCountElement = document.getElementById(wordCountId);
+
+            if (textarea && wordCountElement) {
+                textarea.addEventListener('input', function () {
+                    const text = this.value.trim();
+                    const words = text === '' ? 0 : text.split(/\s+/).length;
+                    wordCountElement.textContent = `${words} words`;
+
+                    if (words < minWords) {
+                        wordCountElement.classList.remove('text-green-600');
+                        wordCountElement.classList.add('text-red-600');
+                    } else {
+                        wordCountElement.classList.remove('text-red-600');
+                        wordCountElement.classList.add('text-green-600');
+                    }
+                });
+            }
+        }
+
+        // Generic function to handle Discord webhook submission
+        async function handleFormSubmission(event, formId, unitName, color) {
             event.preventDefault(); // Prevent default form submission
 
-            submitHeatButton.disabled = true; // Disable button immediately
-            submitHeatButton.textContent = 'Submitting...'; // Change button text
+            const form = document.getElementById(formId);
+            const submitButton = form.querySelector('button[type="submit"]');
+            const submissionMessage = form.querySelector('.submission-message');
+            const whyTextarea = form.querySelector('textarea[name*="why"]');
+            const whyWordCountMessageBox = form.querySelector('#wordCountMessageBox');
+            const minWords = whyTextarea ? parseInt(whyTextarea.getAttribute('minlength')) : 0;
 
-            const whyHeatText = modalWhyHeatTextarea.value.trim();
-            const words = whyHeatText === '' ? 0 : whyHeatText.split(/\s+/).length;
+            submitButton.disabled = true; // Disable button immediately
+            submitButton.textContent = 'Submitting...'; // Change button text
 
-            // Client-side validation for word count
-            if (words < 50) {
-                let messageBox = document.getElementById('wordCountMessageBox');
-                if (!messageBox) {
-                    messageBox = document.createElement('div');
-                    messageBox.id = 'wordCountMessageBox';
-                    messageBox.className = 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4';
-                    heatApplicationForm.prepend(messageBox);
-                }
-                messageBox.innerHTML = '<p class="font-bold">Error:</p><p>Please ensure your answer to "Why do you want to join HEAT?" has at least 50 words.</p>';
-                messageBox.style.display = 'block';
-                submitHeatButton.disabled = false; // Re-enable button on validation failure
-                submitHeatButton.textContent = 'Submit Application';
-                return; // Stop submission
-            } else {
-                const messageBox = document.getElementById('wordCountMessageBox');
-                if (messageBox) {
-                    messageBox.style.display = 'none';
+            // Client-side validation for word count if applicable
+            if (whyTextarea && minWords > 0) {
+                const whyText = whyTextarea.value.trim();
+                const words = whyText === '' ? 0 : whyText.split(/\s+/).length;
+
+                if (words < minWords) {
+                    if (!whyWordCountMessageBox) {
+                        const newMessageBox = document.createElement('div');
+                        newMessageBox.id = 'wordCountMessageBox';
+                        newMessageBox.className = 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4';
+                        form.prepend(newMessageBox);
+                    }
+                    whyWordCountMessageBox.innerHTML = `<p class="font-bold">Error:</p><p>Please ensure your answer to "Why do you want to join ${unitName}?" has at least ${minWords} words.</p>`;
+                    whyWordCountMessageBox.style.display = 'block';
+                    submitButton.disabled = false; // Re-enable button on validation failure
+                    submitButton.textContent = 'Submit Application';
+                    return; // Stop submission
+                } else {
+                    if (whyWordCountMessageBox) {
+                        whyWordCountMessageBox.style.display = 'none';
+                    }
                 }
             }
 
+
             // Collect form data
-            const formData = new FormData(heatApplicationForm);
+            const formData = new FormData(form);
             const data = {};
             for (let [key, value] of formData.entries()) {
                 data[key] = value;
             }
 
             // Construct Discord Embed Payload
+            const fields = [
+                { name: "Discord ID", value: data.discordId || "N/A", inline: true },
+                { name: "In-Game Name", value: data.inGameName || "N/A", inline: true }
+            ];
+
+            // Add fields specific to each application type
+            if (formId === 'heatApplicationForm') {
+                fields.push(
+                    { name: "Clean Record (Last 30 Days)", value: data.heat_cleanRecord || "N/A", inline: false },
+                    { name: "Why join HEAT?", value: data.whyHeat ? data.whyHeat.substring(0, 1024) : "N/A", inline: false },
+                    { name: "Core Responsibilities of HEAT Officer", value: data.coreResponsibilities ? data.coreResponsibilities.substring(0, 1024) : "N/A", inline: false },
+                    { name: "High-Speed Pursuit Scenario", value: data.pursuitScenario ? data.pursuitScenario.substring(0, 1024) : "N/A", inline: false },
+                    { name: "Reviewed HEAT SOPs?", value: data.heat_reviewedSOPs || "N/A", inline: true },
+                    { name: "Proficient in High-Speed Driving?", value: data.heat_proficientDriving || "N/A", inline: true },
+                    { name: "Understands Higher Standards?", value: data.heat_understandStandards || "N/A", inline: false }
+                );
+            } else if (formId === 'cidApplicationForm') {
+                fields.push(
+                    { name: "Prior Investigative Experience?", value: data.cid_experience || "N/A", inline: false },
+                    { name: "Why join CID?", value: data.whyCid ? data.whyCid.substring(0, 1024) : "N/A", inline: false },
+                    { name: "Complex Case Investigation Approach", value: data.complexCase ? data.complexCase.substring(0, 1024) : "N/A", inline: false },
+                    { name: "Knowledge of Evidence Collection?", value: data.cid_knowledge || "N/A", inline: false }
+                );
+            } else if (formId === 'swatApplicationForm') {
+                fields.push(
+                    { name: "Prior Tactical Experience?", value: data.swat_tacticalExperience || "N/A", inline: false },
+                    { name: "Why join SWAT?", value: data.whySwat ? data.whySwat.substring(0, 1024) : "N/A", inline: false },
+                    { name: "High-Risk Scenario Approach", value: data.scenario ? data.scenario.substring(0, 1024) : "N/A", inline: false },
+                    { name: "Physical Fitness Level", value: data.physicalFitness || "N/A", inline: false }
+                );
+            } else if (formId === 'asuApplicationForm') {
+                fields.push(
+                    { name: "Prior Flight Experience", value: data.flightExperience || "N/A", inline: false },
+                    { name: "Why join ASU?", value: data.whyAsu ? data.whyAsu.substring(0, 1024) : "N/A", inline: false },
+                    { name: "Aerial Surveillance Scenario", value: data.surveillanceScenario ? data.surveillanceScenario.substring(0, 1024) : "N/A", inline: false },
+                    { name: "Familiar with Airspace Regulations?", value: data.asu_regulationsKnowledge || "N/A", inline: false }
+                );
+            } else if (formId === 'k9ApplicationForm') {
+                fields.push(
+                    { name: "Animal/Dog Handling Experience?", value: data.k9_animalExperience || "N/A", inline: false },
+                    { name: "Why join K-9?", value: data.whyK9 ? data.whyK9.substring(0, 1024) : "N/A", inline: false },
+                    { name: "Suspect Tracking Scenario", value: data.trackingScenario ? data.trackingScenario.substring(0, 1024) : "N/A", inline: false },
+                    { name: "Familiar with K-9 Protocols?", value: data.k9_protocolsFamiliarity || "N/A", inline: false }
+                );
+            }
+
+            fields.push({ name: "Applicant Signature", value: data.signature || "N/A", inline: false });
+
+
             const payload = {
                 embeds: [
                     {
-                        title: "New HEAT Application Submitted!",
+                        title: `New ${unitName} Application Submitted!`,
                         description: `Application from **${data.signature}** (Discord ID: \`${data.discordId}\`)`,
-                        color: 16711680, // Red color (decimal for #FF0000)
-                        fields: [
-                            {
-                                name: "Discord ID",
-                                value: data.discordId || "N/A",
-                                inline: true
-                            },
-                            {
-                                name: "In-Game Name",
-                                value: data.inGameName || "N/A",
-                                inline: true
-                            },
-                            {
-                                name: "Clean Record (Last 30 Days)",
-                                value: data.cleanRecord || "N/A",
-                                inline: false
-                            },
-                            {
-                                name: "Why join HEAT?",
-                                value: data.whyHeat ? data.whyHeat.substring(0, 1024) : "N/A", // Truncate if too long for embed field limit
-                                inline: false
-                            },
-                            {
-                                name: "Core Responsibilities of HEAT Officer",
-                                value: data.coreResponsibilities ? data.coreResponsibilities.substring(0, 1024) : "N/A",
-                                inline: false
-                            },
-                            {
-                                name: "High-Speed Pursuit Scenario",
-                                value: data.pursuitScenario ? data.pursuitScenario.substring(0, 1024) : "N/A",
-                                inline: false
-                            },
-                            {
-                                name: "Reviewed HEAT SOPs?",
-                                value: data.reviewedSOPs || "N/A",
-                                inline: true
-                            },
-                            {
-                                name: "Proficient in High-Speed Driving?",
-                                value: data.proficientDriving || "N/A",
-                                inline: true
-                            },
-                            {
-                                name: "Understands Higher Standards?",
-                                value: data.understandStandards || "N/A",
-                                inline: false
-                            },
-                            {
-                                name: "Applicant Signature",
-                                value: data.signature || "N/A",
-                                inline: false
-                            }
-                        ],
+                        color: color,
+                        fields: fields,
                         timestamp: new Date().toISOString(),
                         footer: {
-                            text: "LSPD Internal Portal | HEAT Unit Application",
-                            icon_url: "https://placehold.co/64x64/CC0000/FFFFFF?text=H" // Small HEAT icon for footer
+                            text: `LSPD Internal Portal | ${unitName} Application`,
+                            icon_url: `https://placehold.co/64x64/${color.toString(16).padStart(6, '0').toUpperCase()}/FFFFFF?text=${unitName.charAt(0)}` // Dynamic icon for footer
                         }
                     }
                 ]
@@ -632,7 +925,7 @@
             submissionMessage.textContent = 'Submitting application... Please wait.';
 
             try {
-                console.log('Attempting to send webhook payload:', payload); // Log the payload being sent
+                console.log('Attempting to send webhook payload for', unitName, ':', payload);
                 const response = await fetch(DISCORD_WEBHOOK_URL, {
                     method: 'POST',
                     headers: {
@@ -641,28 +934,82 @@
                     body: JSON.stringify(payload),
                 });
 
-                console.log('Webhook response status:', response.status); // Log the response status
+                console.log('Webhook response status for', unitName, ':', response.status);
 
                 if (response.ok) {
                     submissionMessage.className = 'submission-message success';
-                    submissionMessage.textContent = 'Application submitted successfully! You can now close this window.';
-                    heatApplicationForm.reset(); // Clear the form on success
-                    modalWhyHeatTextarea.dispatchEvent(new Event('input')); // Reset word count display
+                    submissionMessage.textContent = `Application for ${unitName} submitted successfully! You can now close this window.`;
+                    form.reset(); // Clear the form on success
+                    if (whyTextarea) {
+                        whyTextarea.dispatchEvent(new Event('input')); // Reset word count display
+                    }
                 } else {
                     const errorText = await response.text();
-                    console.error('Webhook submission failed with status:', response.status, 'Error text:', errorText);
+                    console.error('Webhook submission failed for', unitName, 'with status:', response.status, 'Error text:', errorText);
                     submissionMessage.className = 'submission-message error';
-                    submissionMessage.textContent = `Submission failed. Error: ${response.status} - ${errorText.substring(0, 150) || 'Unknown error'}. Please check console for details.`;
+                    submissionMessage.textContent = `Submission failed for ${unitName}. Error: ${response.status} - ${errorText.substring(0, 150) || 'Unknown error'}. Please check console for details.`;
                 }
             } catch (error) {
-                console.error('Network or other error sending webhook:', error);
+                console.error('Network or other error sending webhook for', unitName, ':', error);
                 submissionMessage.className = 'submission-message error';
-                submissionMessage.textContent = `An unexpected network error occurred: ${error.message}. Please check your internet connection and console.`;
+                submissionMessage.textContent = `An unexpected network error occurred for ${unitName}: ${error.message}. Please check your internet connection and console.`;
             } finally {
-                submitHeatButton.disabled = false; // Re-enable button
-                submitHeatButton.textContent = 'Submit Application'; // Reset button text
+                submitButton.disabled = false; // Re-enable button
+                submitButton.textContent = 'Submit Application'; // Reset button text
             }
+        }
+
+        // --- Event Listeners for Opening Modals ---
+        document.getElementById('openHeatAppModal').addEventListener('click', function (event) {
+            openModal('heatAppModal', 'heat_whyHeat', 'heat_whyHeatWordCount', 'submitHeatButton');
+            event.preventDefault();
         });
+        document.getElementById('openCidAppModal').addEventListener('click', function (event) {
+            openModal('cidAppModal', 'cid_whyCid', 'cid_whyCidWordCount', 'submitCidButton');
+            event.preventDefault();
+        });
+        document.getElementById('openSwatAppModal').addEventListener('click', function (event) {
+            openModal('swatAppModal', 'swat_whySwat', 'swat_whySwatWordCount', 'submitSwatButton');
+            event.preventDefault();
+        });
+        document.getElementById('openAsuAppModal').addEventListener('click', function (event) {
+            openModal('asuAppModal', 'asu_whyAsu', 'asu_whyAsuWordCount', 'submitAsuButton');
+            event.preventDefault();
+        });
+        document.getElementById('openK9AppModal').addEventListener('click', function (event) {
+            openModal('k9AppModal', 'k9_whyK9', 'k9_whyK9WordCount', 'submitK9Button');
+            event.preventDefault();
+        });
+
+        // --- Event Listeners for Closing Modals and Outside Clicks ---
+        document.querySelectorAll('.modal-close-button').forEach(button => {
+            button.addEventListener('click', function () {
+                const modalId = this.dataset.modalTarget;
+                closeModal(modalId);
+            });
+        });
+        document.querySelectorAll('.modal-overlay').forEach(overlay => {
+            overlay.addEventListener('click', function (event) {
+                if (event.target === overlay) {
+                    const modalId = this.id;
+                    closeModal(modalId);
+                }
+            });
+        });
+
+        // --- Setup Word Counters for all relevant textareas ---
+        setupWordCount('heat_whyHeat', 'heat_whyHeatWordCount', 50);
+        setupWordCount('cid_whyCid', 'cid_whyCidWordCount', 50);
+        setupWordCount('swat_whySwat', 'swat_whySwatWordCount', 50);
+        setupWordCount('asu_whyAsu', 'asu_whyAsuWordCount', 50);
+        setupWordCount('k9_whyK9', 'k9_whyK9WordCount', 50);
+
+        // --- Event Listeners for Form Submissions ---
+        document.getElementById('heatApplicationForm').addEventListener('submit', (e) => handleFormSubmission(e, 'heatApplicationForm', 'HEAT', 0xFF0000)); // Red
+        document.getElementById('cidApplicationForm').addEventListener('submit', (e) => handleFormSubmission(e, 'cidApplicationForm', 'CID', 0x003366)); // Dark Blue
+        document.getElementById('swatApplicationForm').addEventListener('submit', (e) => handleFormSubmission(e, 'swatApplicationForm', 'SWAT', 0x333333)); // Dark Gray
+        document.getElementById('asuApplicationForm').addEventListener('submit', (e) => handleFormSubmission(e, 'asuApplicationForm', 'ASU', 0x6699FF)); // Light Blue
+        document.getElementById('k9ApplicationForm').addEventListener('submit', (e) => handleFormSubmission(e, 'k9ApplicationForm', 'K9', 0x996633)); // Brown/Gold
     </script>
 </body>
 </html>
