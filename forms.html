@@ -2,112 +2,417 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- Viewport meta tag is crucial for responsive behavior across devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LSPD Internal Portal - Coming Soon</title>
-    <!-- Tailwind CSS CDN - provides responsive utility classes out of the box -->
+    <title>LSPD Internal Portal - Applications</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Custom font for a clean, modern look */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8f8f8; /* Light gray background */
-            color: #333; /* Dark gray text */
+            background-color: #f8f8f8;
+            color: #333;
+            /* Flexbox to push footer to the bottom */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensure body takes full viewport height */
         }
-        /* Custom scrollbar for better aesthetics */
+
+        main {
+            flex-grow: 1; /* Allow main content to grow and push footer down */
+        }
+
         ::-webkit-scrollbar {
             width: 10px;
         }
+
         ::-webkit-scrollbar-track {
             background: #f1f1f1;
             border-radius: 5px;
         }
+
         ::-webkit-scrollbar-thumb {
             background: #888;
             border-radius: 5px;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555;
-            border-radius: 5px;
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #555;
+            }
+
+        .app-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
         }
+
+            .app-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            }
+
+        /* Modal specific styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            overflow-y: auto; /* Allow scrolling for long forms */
+            padding: 20px; /* Add padding for small screens */
+            box-sizing: border-box; /* Include padding in element's total width and height */
+        }
+
+            .modal-overlay.active {
+                opacity: 1;
+                visibility: visible;
+            }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 700px; /* Max width for readability */
+            position: relative;
+            transform: translateY(20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: translateY(0);
+        }
+
+        .modal-close-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+            transition: color 0.2s ease;
+        }
+
+            .modal-close-button:hover {
+                color: #333;
+            }
+
+        /* Form specific styles */
+        .form-group label {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            display: block;
+            color: #1e3a8a;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ccc;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+
+            .form-group input[type="text"]:focus,
+            .form-group input[type="email"]:focus,
+            .form-group textarea:focus {
+                outline: none;
+                border-color: #3b82f6;
+                box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+            }
+
+        .radio-group label {
+            display: inline-flex;
+            align-items: center;
+            margin-right: 1.5rem;
+            cursor: pointer;
+        }
+
+        .radio-group input[type="radio"] {
+            margin-right: 0.5rem;
+            appearance: none;
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 2px solid #3b82f6;
+            border-radius: 50%;
+            display: grid;
+            place-content: center;
+            transition: all 0.2s ease;
+        }
+
+            .radio-group input[type="radio"]::before {
+                content: "";
+                width: 0.65rem;
+                height: 0.65rem;
+                border-radius: 50%;
+                transform: scale(0);
+                transition: transform 0.2s ease;
+                box-shadow: inset 1em 1em #3b82f6; /* Custom checkmark color */
+            }
+
+            .radio-group input[type="radio"]:checked::before {
+                transform: scale(1);
+            }
+
+        .submit-button {
+            background-color: #1e3a8a;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 0.5rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.1s ease;
+            border: none; /* Ensure no default button border */
+        }
+
+            .submit-button:hover:not(:disabled) {
+                background-color: #1c337a;
+                transform: translateY(-2px);
+            }
+
+            .submit-button:active:not(:disabled) {
+                transform: translateY(0);
+            }
+
+            .submit-button:disabled {
+                opacity: 0.7;
+                cursor: not-allowed;
+            }
+
+        .submission-message {
+            margin-top: 1rem;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            font-weight: 500;
+            text-align: center;
+            display: none; /* Hidden by default */
+        }
+
+            .submission-message.success {
+                background-color: #d1fae5; /* green-100 */
+                color: #065f46; /* green-800 */
+            }
+
+            .submission-message.error {
+                background-color: #fee2e2; /* red-100 */
+                color: #991b1b; /* red-800 */
+            }
     </style>
 </head>
 <body class="antialiased">
     <!-- Header Section -->
-    <!-- Flexbox with `flex-col md:flex-row` makes it stack vertically on small screens and horizontally on medium screens and up -->
     <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex flex-col md:flex-row items-center justify-between sticky top-0 z-50 rounded-b-lg">
         <div class="flex items-center mb-4 md:mb-0">
-            <!-- LSPD Logo - Local source updated to LSPD.png -->
-            <img src="LSPD.png" alt="LSPD Logo" class="mr-4 w-16 h-16 object-contain" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
-            <!-- Responsive font size: text-2xl for small screens, text-3xl for medium screens and up -->
+            <!-- Adjusted LSPD Logo: Removed border -->
+            <img src="https://placehold.co/64x64/0000FF/FFFFFF?text=LSPD" alt="LSPD Logo" class="mr-4 w-16 h-16 object-contain rounded-lg" onerror="this.onerror=null; this.src='https://placehold.co/64x64/0000FF/FFFFFF?text=LSPD';">
             <h1 class="text-2xl md:text-3xl font-bold">LSPD Internal Portal</h1>
         </div>
-        <!-- Navigation Menu -->
         <nav class="w-full md:w-auto">
-            <!-- Flexbox with `flex-col md:flex-row` for navigation items -->
             <ul class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-8 text-lg font-medium">
-                <li><a href="#" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Dashboard</a></li>
-                <!-- Updated SOP link -->
+                <li><a href="index.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Dashboard</a></li>
                 <li><a href="SOP.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">SOPs</a></li>
-                <!-- Updated Training link -->
                 <li><a href="training.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Training</a></li>
-                <!-- Updated Forms link -->
                 <li><a href="forms.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Forms</a></li>
-                <!-- Updated Roster link in navigation -->
                 <li><a href="roster.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Roster</a></li>
-                <!-- Updated HR Info link -->
                 <li><a href="hr.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">HR Info</a></li>
-                <!-- New: Report Generator link -->
                 <li><a href="report.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Report Generator</a></li>
+                <li><a href="charges.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Charge Calculator</a></li>
+                <!-- New Applications Link -->
+                <li><a href="applications.html" class="text-white bg-blue-700 py-2 px-3 rounded-md">Applications</a></li>
             </ul>
         </nav>
-        <!-- Search Bar -->
         <div class="mt-4 md:mt-0 w-full md:w-auto">
-            <!-- `w-full md:w-64` makes it full width on small screens and fixed width on medium screens and up -->
-            <input type="search" placeholder="Search Internal Docs..." class="p-2 border border-blue-600 rounded-lg focus:ring-2 focus:ring-blue-300 focus:border-transparent w-full md:w-64 bg-blue-800 text-white placeholder-blue-300">
+            <input type="search" id="searchInput" placeholder="Search Portal..." class="p-2 border border-blue-600 rounded-lg focus:ring-2 focus:ring-blue-300 focus:border-transparent w-full md:w-64 bg-blue-800 text-white placeholder-blue-300">
         </div>
     </header>
 
-    <!-- Main Content Section - Coming Soon -->
-    <main class="container mx-auto px-4 md:px-8 py-12 flex flex-col items-center justify-center min-h-[50vh]">
-        <div class="text-center bg-white p-8 md:p-12 rounded-lg shadow-xl max-w-2xl w-full">
-            <h2 class="text-4xl md:text-5xl font-extrabold text-blue-800 mb-4">Coming Soon!</h2>
-            <p class="text-lg md:text-xl text-gray-700 mb-6">
-                We're diligently working to bring you exciting new content and features. Please check back later!
-            </p>
-            <div class="text-gray-500 text-sm">
-                Thank you for your patience.
-            </div>
+    <!-- Hero Section for Applications -->
+    <section class="relative bg-gradient-to-r from-blue-700 to-blue-900 text-white py-16 px-6 md:px-12 rounded-lg m-4 md:m-8 overflow-hidden shadow-xl text-center">
+        <div class="absolute inset-0 bg-cover bg-center opacity-30"></div>
+        <div class="relative z-10 max-w-4xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-extrabold leading-tight mb-4">LSPD Applications</h2>
+            <p class="text-lg md:text-xl mb-6">Access essential tools and specialized unit applications.</p>
+        </div>
+    </section>
+
+    <!-- Main Content Section - Applications -->
+    <main class="container mx-auto px-4 md:px-8 py-12">
+        <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Departmental Applications</h2>
+
+        <div id="applications-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- CID Application Card -->
+            <a href="#" class="app-card bg-white p-6 rounded-lg shadow-lg flex flex-col items-center text-center hover:bg-blue-50 transition duration-300 ease-in-out">
+                <img src="https://placehold.co/80x80/003366/FFFFFF?text=CID" alt="CID Icon" class="w-20 h-20 mb-4 rounded-full border-4 border-blue-700 object-cover">
+                <h3 class="text-xl font-bold text-blue-800 mb-2">Criminal Investigations Division (CID)</h3>
+                <p class="text-gray-700 text-sm">Access tools and resources for in-depth criminal investigations, case management, and evidence analysis.</p>
+            </a>
+
+            <!-- HEAT Application Card - Opens Modal -->
+            <a href="#" id="openHeatAppModal" class="app-card bg-white p-6 rounded-lg shadow-lg flex flex-col items-center text-center hover:bg-blue-50 transition duration-300 ease-in-out">
+                <img src="https://placehold.co/80x80/CC0000/FFFFFF?text=HEAT" alt="HEAT Icon" class="w-20 h-20 mb-4 rounded-full border-4 border-red-700 object-cover">
+                <h3 class="text-xl font-bold text-red-800 mb-2">Highway Enforcement & Traffic (HEAT)</h3>
+                <p class="text-gray-700 text-sm">Dedicated resources for high-speed pursuit management, traffic enforcement, and vehicle-related incidents.</p>
+            </a>
+
+            <!-- SWAT Application Card -->
+            <a href="#" class="app-card bg-white p-6 rounded-lg shadow-lg flex flex-col items-center text-center hover:bg-blue-50 transition duration-300 ease-in-out">
+                <img src="https://placehold.co/80x80/333333/FFFFFF?text=SWAT" alt="SWAT Icon" class="w-20 h-20 mb-4 rounded-full border-4 border-gray-700 object-cover">
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Special Weapons And Tactics (SWAT)</h3>
+                <p class="text-gray-700 text-sm">Tools and protocols for high-risk operations, hostage situations, riot control, and tactical response.</p>
+            </a>
+
+            <!-- ASU Application Card -->
+            <a href="#" class="app-card bg-white p-6 rounded-lg shadow-lg flex flex-col items-center text-center hover:bg-blue-50 transition duration-300 ease-in-out">
+                <img src="https://placehold.co/80x80/6699FF/FFFFFF?text=ASU" alt="ASU Icon" class="w-20 h-20 mb-4 rounded-full border-4 border-blue-400 object-cover">
+                <h3 class="text-xl font-bold text-blue-600 mb-2">Air Support Unit (ASU)</h3>
+                <p class="text-gray-700 text-sm">Access to aerial surveillance data, flight logs, and coordination tools for air operations.</p>
+            </a>
+
+            <!-- K9 Application Card -->
+            <a href="#" class="app-card bg-white p-6 rounded-lg shadow-lg flex flex-col items-center text-center hover:bg-blue-50 transition duration-300 ease-in-out">
+                <img src="https://placehold.co/80x80/996633/FFFFFF?text=K9" alt="K9 Icon" class="w-20 h-20 mb-4 rounded-full border-4 border-yellow-700 object-cover">
+                <h3 class="text-xl font-bold text-yellow-800 mb-2">K-9 Unit</h3>
+                <p class="text-gray-700 text-sm">Management system for K-9 deployments, training records, and tracking suspect apprehension data.</p>
+            </a>
         </div>
     </main>
 
+    <!-- HEAT Application Modal -->
+    <div id="heatAppModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-button" id="closeHeatAppModal">&times;</button>
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">HEAT Unit Application</h2>
+            <p class="text-md text-gray-600 mb-6 text-center">Complete the form below to apply for the Highway Enforcement & Traffic Unit.</p>
+
+            <form id="heatApplicationForm">
+                <div class="mb-4 form-group">
+                    <label for="modal_discordId">Your Discord ID:</label>
+                    <input type="text" id="modal_discordId" name="discordId" class="mt-1 block" required>
+                </div>
+
+                <div class="mb-4 form-group">
+                    <label for="modal_inGameName">Your In-Game Name:</label>
+                    <input type="text" id="modal_inGameName" name="inGameName" class="mt-1 block" required>
+                </div>
+
+                <div class="mb-4 form-group">
+                    <label class="mb-2">Do you have a clean record with LSPD and other departments? (No disciplinary actions in the last 30 days)</label>
+                    <div class="flex items-center space-x-6 radio-group mt-2">
+                        <label>
+                            <input type="radio" name="cleanRecord" value="Yes" required>
+                            Yes
+                        </label>
+                        <label>
+                            <input type="radio" name="cleanRecord" value="No">
+                            No
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mb-4 form-group">
+                    <label for="modal_whyHeat">Why do you want to join HEAT? (Minimum 50 words)</label>
+                    <textarea id="modal_whyHeat" name="whyHeat" rows="6" class="mt-1 block" required minlength="50"></textarea>
+                    <p class="text-sm text-gray-500 mt-1" id="modal_whyHeatWordCount">0 words</p>
+                </div>
+
+                <div class="mb-4 form-group">
+                    <label for="modal_coreResponsibilities">What do you believe are the core responsibilities of a HEAT officer?</label>
+                    <textarea id="modal_coreResponsibilities" name="coreResponsibilities" rows="6" class="mt-1 block" required></textarea>
+                </div>
+
+                <div class="mb-4 form-group">
+                    <label for="modal_pursuitScenario">Describe a high-speed pursuit scenario and how you would manage it according to LSPD protocols.</label>
+                    <textarea id="modal_pursuitScenario" name="pursuitScenario" rows="6" class="mt-1 block" required></textarea>
+                </div>
+
+                <div class="mb-4 form-group">
+                    <label class="mb-2">Have you reviewed the HEAT unit SOPs?</label>
+                    <div class="flex items-center space-x-6 radio-group mt-2">
+                        <label>
+                            <input type="radio" name="reviewedSOPs" value="Yes" required>
+                            Yes
+                        </label>
+                        <label>
+                            <input type="radio" name="reviewedSOPs" value="No">
+                            No
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mb-4 form-group">
+                    <label class="mb-2">Are you proficient in high-speed driving and pursuit tactics?</label>
+                    <div class="flex items-center space-x-6 radio-group mt-2">
+                        <label>
+                            <input type="radio" name="proficientDriving" value="Yes" required>
+                            Yes
+                        </label>
+                        <label>
+                            <input type="radio" name="proficientDriving" value="No">
+                            No
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mb-6 form-group">
+                    <label class="mb-2">Do you understand that HEAT is a specialized unit and requires higher standards of discipline and performance?</label>
+                    <div class="flex items-center space-x-6 radio-group mt-2">
+                        <label>
+                            <input type="radio" name="understandStandards" value="Yes" required>
+                            Yes
+                        </label>
+                        <label>
+                            <input type="radio" name="understandStandards" value="No">
+                            No
+                        </label>
+                    </div>
+                </div>
+
+                <div class="mb-8 form-group">
+                    <label for="modal_signature">Signature (Type your full name):</label>
+                    <input type="text" id="modal_signature" name="signature" class="mt-1 block" required>
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" id="submitHeatButton" class="submit-button">Submit Application</button>
+                </div>
+                <div id="submissionMessage" class="submission-message" role="alert"></div>
+            </form>
+        </div>
+    </div>
+
     <!-- Footer Section - Internal Contacts -->
-    <!-- Grid layout that changes columns based on screen size: 1 column on small, 3 on medium screens and up -->
     <footer class="bg-gray-800 text-white py-10 px-6 md:px-12 rounded-t-lg">
         <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Internal Contact Info -->
             <div>
                 <h4 class="text-xl font-semibold mb-4 text-blue-300">Internal Contacts</h4>
-                <p class="text-gray-400 mb-2"><strong>HR Department:</strong> Ext. 5001</p>
-                <p class="text-gray-400 mb-2"><strong>IT Support:</strong> (555) 987-6543 / Ext. 5002</p>
-                <p class="text-gray-400 mb-2"><strong>Training Division:</strong> Ext. 5003</p>
-                <p class="text-gray-400"><strong>Command Staff Office:</strong> Ext. 5004</p>
+                <ul>
+                    <li class="mb-2"><a href="https://discord.gg/7FwxdpfDTM" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Discord</a></li>
+                    <li class="mb-2"><a href="https://discord.com/channels/1383775098464370768/1383775099777318972" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">UPD Chat</a></li>
+                    <li class="mb-2"><a href="https://discord.com/channels/1383775098464370768/1383782578976456735" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Cadet Support</a></li>
+                </ul>
             </div>
-            <!-- Internal Quick Links -->
             <div>
                 <h4 class="text-xl font-semibold mb-4 text-blue-300">Quick Access</h4>
                 <ul>
-                    <!-- Updated My Profile link to roster.html, assuming profile might be part of the roster system -->
                     <li class="mb-2"><a href="roster.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">My Profile</a></li>
-                    <!-- Updated Department Directory link to roster.html -->
                     <li class="mb-2"><a href="roster.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Department Directory</a></li>
                     <li class="mb-2"><a href="#" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Wellness Programs</a></li>
-                    <!-- Updated Internal Policies link to SOP.html as it's the closest fit for 'policies' -->
                     <li class="mb-2"><a href="SOP.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Internal Policies</a></li>
                 </ul>
             </div>
-            <!-- Copyright & Internal System Info -->
             <div>
                 <h4 class="text-xl font-semibold mb-4 text-blue-300">System Information</h4>
                 <p class="text-gray-500 text-sm mb-2">Unauthorized Access Strictly Prohibited</p>
@@ -116,8 +421,245 @@
                 <p class="text-gray-500 text-sm">&copy; 2025 Los Santos Police Department Internal Systems.</p>
             </div>
         </div>
-        <!-- Font Awesome for any potential internal icons (though less needed here) -->
         <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     </footer>
+
+    <script>
+        // Basic search functionality for the header search bar
+        document.getElementById('searchInput').addEventListener('keyup', function (event) {
+            if (event.key === 'Enter') {
+                const query = this.value.toLowerCase();
+                console.log(`Searching for: ${query}`);
+            }
+        });
+
+        // Discord Webhook URL for HEAT applications
+        const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1382934755674296320/y0sqCTwgGwAV3Er2rLU0rlZKc-m6Y4loLZUsysMG4w57G8I2d9kWrDI1nt9MUP3TrhkG";
+
+        // Get modal elements
+        const heatAppModal = document.getElementById('heatAppModal');
+        const openHeatAppModalBtn = document.getElementById('openHeatAppModal');
+        const closeHeatAppModalBtn = document.getElementById('closeHeatAppModal');
+        const modalWhyHeatTextarea = document.getElementById('modal_whyHeat');
+        const modalWhyHeatWordCount = document.getElementById('modal_whyHeatWordCount');
+        const heatApplicationForm = document.getElementById('heatApplicationForm');
+        const submissionMessage = document.getElementById('submissionMessage');
+        const submitHeatButton = document.getElementById('submitHeatButton'); // Get the submit button
+
+        // Function to open the modal
+        openHeatAppModalBtn.addEventListener('click', function (event) {
+            event.preventDefault(); // Prevent default link behavior
+            heatAppModal.classList.add('active');
+            document.body.style.overflow = 'hidden'; // Prevent scrolling on the main page
+            modalWhyHeatTextarea.dispatchEvent(new Event('input')); // Initialize word count
+
+            // Clear and hide previous submission messages and errors
+            submissionMessage.style.display = 'none';
+            submissionMessage.classList.remove('success', 'error');
+            const wordCountMessageBox = document.getElementById('wordCountMessageBox');
+            if (wordCountMessageBox) {
+                wordCountMessageBox.style.display = 'none';
+            }
+            submitHeatButton.disabled = false; // Ensure button is enabled when opening
+            submitHeatButton.textContent = 'Submit Application'; // Reset button text
+        });
+
+        // Function to close the modal
+        closeHeatAppModalBtn.addEventListener('click', function () {
+            heatAppModal.classList.remove('active');
+            document.body.style.overflow = ''; // Restore scrolling
+            resetForm(heatApplicationForm); // Reset the form fields
+        });
+
+        // Close modal when clicking outside the content
+        heatAppModal.addEventListener('click', function (event) {
+            if (event.target === heatAppModal) {
+                heatAppModal.classList.remove('active');
+                document.body.style.overflow = '';
+                resetForm(heatApplicationForm); // Reset the form fields
+            }
+        });
+
+        // Word counter for the "Why do you want to join HEAT?" textarea inside the modal
+        modalWhyHeatTextarea.addEventListener('input', function () {
+            const text = this.value.trim();
+            const words = text === '' ? 0 : text.split(/\s+/).length;
+            modalWhyHeatWordCount.textContent = `${words} words`;
+
+            if (words < 50) {
+                modalWhyHeatWordCount.classList.remove('text-green-600');
+                modalWhyHeatWordCount.classList.add('text-red-600');
+            } else {
+                modalWhyHeatWordCount.classList.remove('text-red-600');
+                modalWhyHeatWordCount.classList.add('text-green-600');
+            }
+        });
+
+        // Function to reset the form
+        function resetForm(form) {
+            form.reset();
+            // Also reset word count display
+            const whyHeatWordCountElement = form.querySelector('#modal_whyHeatWordCount');
+            if (whyHeatWordCountElement) {
+                whyHeatWordCountElement.textContent = '0 words';
+                whyHeatWordCountElement.classList.remove('text-green-600', 'text-red-600');
+                whyHeatWordCountElement.classList.add('text-gray-500'); // Or initial color
+            }
+            // Hide any previous error messages
+            const messageBox = document.getElementById('wordCountMessageBox');
+            if (messageBox) {
+                messageBox.style.display = 'none';
+            }
+            // Ensure button is enabled and text reset
+            submitHeatButton.disabled = false;
+            submitHeatButton.textContent = 'Submit Application';
+            submissionMessage.style.display = 'none';
+            submissionMessage.classList.remove('success', 'error');
+        }
+
+        // Handle form submission to Discord Webhook
+        heatApplicationForm.addEventListener('submit', async function (event) {
+            event.preventDefault(); // Prevent default form submission
+
+            submitHeatButton.disabled = true; // Disable button immediately
+            submitHeatButton.textContent = 'Submitting...'; // Change button text
+
+            const whyHeatText = modalWhyHeatTextarea.value.trim();
+            const words = whyHeatText === '' ? 0 : whyHeatText.split(/\s+/).length;
+
+            // Client-side validation for word count
+            if (words < 50) {
+                let messageBox = document.getElementById('wordCountMessageBox');
+                if (!messageBox) {
+                    messageBox = document.createElement('div');
+                    messageBox.id = 'wordCountMessageBox';
+                    messageBox.className = 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4';
+                    heatApplicationForm.prepend(messageBox);
+                }
+                messageBox.innerHTML = '<p class="font-bold">Error:</p><p>Please ensure your answer to "Why do you want to join HEAT?" has at least 50 words.</p>';
+                messageBox.style.display = 'block';
+                submitHeatButton.disabled = false; // Re-enable button on validation failure
+                submitHeatButton.textContent = 'Submit Application';
+                return; // Stop submission
+            } else {
+                const messageBox = document.getElementById('wordCountMessageBox');
+                if (messageBox) {
+                    messageBox.style.display = 'none';
+                }
+            }
+
+            // Collect form data
+            const formData = new FormData(heatApplicationForm);
+            const data = {};
+            for (let [key, value] of formData.entries()) {
+                data[key] = value;
+            }
+
+            // Construct Discord Embed Payload
+            const payload = {
+                embeds: [
+                    {
+                        title: "New HEAT Application Submitted!",
+                        description: `Application from **${data.signature}** (Discord ID: \`${data.discordId}\`)`,
+                        color: 16711680, // Red color (decimal for #FF0000)
+                        fields: [
+                            {
+                                name: "Discord ID",
+                                value: data.discordId || "N/A",
+                                inline: true
+                            },
+                            {
+                                name: "In-Game Name",
+                                value: data.inGameName || "N/A",
+                                inline: true
+                            },
+                            {
+                                name: "Clean Record (Last 30 Days)",
+                                value: data.cleanRecord || "N/A",
+                                inline: false
+                            },
+                            {
+                                name: "Why join HEAT?",
+                                value: data.whyHeat ? data.whyHeat.substring(0, 1024) : "N/A", // Truncate if too long for embed field limit
+                                inline: false
+                            },
+                            {
+                                name: "Core Responsibilities of HEAT Officer",
+                                value: data.coreResponsibilities ? data.coreResponsibilities.substring(0, 1024) : "N/A",
+                                inline: false
+                            },
+                            {
+                                name: "High-Speed Pursuit Scenario",
+                                value: data.pursuitScenario ? data.pursuitScenario.substring(0, 1024) : "N/A",
+                                inline: false
+                            },
+                            {
+                                name: "Reviewed HEAT SOPs?",
+                                value: data.reviewedSOPs || "N/A",
+                                inline: true
+                            },
+                            {
+                                name: "Proficient in High-Speed Driving?",
+                                value: data.proficientDriving || "N/A",
+                                inline: true
+                            },
+                            {
+                                name: "Understands Higher Standards?",
+                                value: data.understandStandards || "N/A",
+                                inline: false
+                            },
+                            {
+                                name: "Applicant Signature",
+                                value: data.signature || "N/A",
+                                inline: false
+                            }
+                        ],
+                        timestamp: new Date().toISOString(),
+                        footer: {
+                            text: "LSPD Internal Portal | HEAT Unit Application",
+                            icon_url: "https://placehold.co/64x64/CC0000/FFFFFF?text=H" // Small HEAT icon for footer
+                        }
+                    }
+                ]
+            };
+
+            // Show a loading indicator
+            submissionMessage.className = 'submission-message'; // Reset classes
+            submissionMessage.style.display = 'block';
+            submissionMessage.textContent = 'Submitting application... Please wait.';
+
+            try {
+                console.log('Attempting to send webhook payload:', payload); // Log the payload being sent
+                const response = await fetch(DISCORD_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload),
+                });
+
+                console.log('Webhook response status:', response.status); // Log the response status
+
+                if (response.ok) {
+                    submissionMessage.className = 'submission-message success';
+                    submissionMessage.textContent = 'Application submitted successfully! You can now close this window.';
+                    heatApplicationForm.reset(); // Clear the form on success
+                    modalWhyHeatTextarea.dispatchEvent(new Event('input')); // Reset word count display
+                } else {
+                    const errorText = await response.text();
+                    console.error('Webhook submission failed with status:', response.status, 'Error text:', errorText);
+                    submissionMessage.className = 'submission-message error';
+                    submissionMessage.textContent = `Submission failed. Error: ${response.status} - ${errorText.substring(0, 150) || 'Unknown error'}. Please check console for details.`;
+                }
+            } catch (error) {
+                console.error('Network or other error sending webhook:', error);
+                submissionMessage.className = 'submission-message error';
+                submissionMessage.textContent = `An unexpected network error occurred: ${error.message}. Please check your internet connection and console.`;
+            } finally {
+                submitHeatButton.disabled = false; // Re-enable button
+                submitHeatButton.textContent = 'Submit Application'; // Reset button text
+            }
+        });
+    </script>
 </body>
 </html>
