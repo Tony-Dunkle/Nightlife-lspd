@@ -380,15 +380,16 @@
             const suspectName = suspectNameInput.value.trim();
             const charges = chargesInput.value.trim();
             const narrative = narrativeTextarea.value.trim();
+            // Corrected variable access: use the element reference (e.g., mirandizedSelect) to get its value
             const mirandized = mirandizedSelect.value;
-            const gsrTest = gsrTest.value;
+            const gsrTest = gsrTestSelect.value; // Corrected line
             const legalRepresentation = legalRepresentationInput.value.trim();
             const itemsSeized = itemsSeizedTextarea.value.trim();
-            const levelOfForce = levelOfForceSelect.value;
-            const medicalTreatment = medicalTreatmentSelect.value;
+            const levelOfForce = levelOfForceSelect.value; // Corrected line
+            const medicalTreatment = medicalTreatmentSelect.value; // Corrected line
             const weaponsSeized = weaponsSeizedInput.value.trim();
-            const weaponsReturnable = weaponsReturnableSelect.value;
-            const pleaType = pleaTypeSelect.value;
+            const weaponsReturnable = weaponsReturnableSelect.value; // Corrected line
+            const pleaType = pleaTypeSelect.value; // Corrected line
 
 
             // Clear previous generated report value and ensure it's truly empty
