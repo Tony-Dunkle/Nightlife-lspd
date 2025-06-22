@@ -369,8 +369,9 @@
         //    and YOUR backend server would make the secure call to the Gemini API.
         //
         // For local development/testing of this HTML file, the API key is now directly embedded.
-        // FOR PRODUCTION, THIS IS NOT SECURE.
-        const apiKey = "AIzaSyCsWMWfmCfR59mcAy4as7XR95YY__7hayc";
+        // If deploying to your own production server, REPLACE THE EMPTY STRING BELOW with your ACTUAL Gemini API Key.
+        // Example: const apiKey = "YOUR_ACTUAL_GEMINI_API_KEY_HERE";
+        const apiKey = "";
 
         // Add event listener to the "Generate Report" button
         generateReportBtn.addEventListener('click', async () => {
@@ -380,16 +381,15 @@
             const suspectName = suspectNameInput.value.trim();
             const charges = chargesInput.value.trim();
             const narrative = narrativeTextarea.value.trim();
-            // Corrected variable access: use the element reference (e.g., mirandizedSelect) to get its value
             const mirandized = mirandizedSelect.value;
-            const gsrTest = gsrTestSelect.value; // Corrected line
+            const gsrTest = gsrTestSelect.value;
             const legalRepresentation = legalRepresentationInput.value.trim();
             const itemsSeized = itemsSeizedTextarea.value.trim();
-            const levelOfForce = levelOfForceSelect.value; // Corrected line
-            const medicalTreatment = medicalTreatmentSelect.value; // Corrected line
+            const levelOfForce = levelOfForceSelect.value;
+            const medicalTreatment = medicalTreatmentSelect.value;
             const weaponsSeized = weaponsSeizedInput.value.trim();
-            const weaponsReturnable = weaponsReturnableSelect.value; // Corrected line
-            const pleaType = pleaTypeSelect.value; // Corrected line
+            const weaponsReturnable = weaponsReturnableSelect.value;
+            const pleaType = pleaTypeSelect.value;
 
 
             // Clear previous generated report value and ensure it's truly empty
@@ -404,9 +404,13 @@
                 return;
             }
 
-            // Client-side API key check (will catch if the key is empty despite the prompt to fill it)
-            if (!apiKey || apiKey === "YOUR_ACTUAL_GEMINI_API_KEY_HERE") {
-                generatedReportTextarea.value = 'Error: Gemini API Key is not configured. Please ensure it is correctly placed in the code (for local testing) or accessed via a backend (for secure deployment).';
+            // Client-side API key check
+            // If running in Canvas, __api_key__ will be defined. Otherwise, use the apiKey variable.
+            const finalApiKey = typeof __api_key__ !== 'undefined' ? __api_key__ : apiKey;
+
+            if (!finalApiKey || finalApiKey === "YOUR_ACTUAL_GEMINI_API_KEY_HERE") {
+                generatedReportTextarea.value = 'Error: Gemini API Key is not configured. If running on your own server, please replace "const apiKey = \'\';" with your actual API key.';
+                console.error('API Key not configured.');
                 loadingIndicator.classList.add('hidden');
                 return;
             }
@@ -453,7 +457,7 @@ Plea (guilty | not guilty | no contest): ${pleaType}
                 chatHistory.push({ role: "user", parts: [{ text: prompt }] });
 
                 const payload = { contents: chatHistory };
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${finalApiKey}`;
 
                 const response = await fetch(apiUrl, {
                     method: 'POST',
