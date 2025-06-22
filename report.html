@@ -357,20 +357,13 @@
         const copyReportBtn = document.getElementById('copyReportBtn');
         const loadingIndicator = document.getElementById('loadingIndicator');
 
-        // IMPORTANT SECURITY NOTE:
-        // Client-side JavaScript (this HTML file) CANNOT directly access GitHub Secrets.
-        // GitHub Secrets (`GEMINIAPIKEY`) are for server-side use.
-        //
-        // To use your Gemini API key securely in a web application:
-        // 1. Set up a backend server (e.js., Node.js, Python Flask, etc.).
-        // 2. Configure your backend server to securely access the GEMINIAPIKEY from its
-        //    environment variables (which can be populated from GitHub Secrets during deployment).
-        // 3. Your client-side (this HTML) would then make requests to YOUR backend server,
-        //    and YOUR backend server would make the secure call to the Gemini API.
-        //
-        // For local development/testing of this HTML file, the API key is now directly embedded.
-        // If deploying to your own production server, REPLACE THE EMPTY STRING BELOW with your ACTUAL Gemini API Key.
-        // Example: const apiKey = "YOUR_ACTUAL_GEMINI_API_KEY_HERE";
+        // IMPORTANT: Gemini API Key Configuration
+        // If you are running this code on YOUR OWN WEB SERVER:
+        // 1. Go to Google AI Studio (https://aistudio.google.com/app/apikey) or Google Cloud.
+        // 2. Generate a new API key.
+        // 3. Replace the empty string below with your ACTUAL, VALID API key.
+        //    Example: const apiKey = "YOUR_ACTUAL_GEMINI_API_KEY_HERE";
+        // If you are running this within the Google Canvas environment, leave this as "".
         const apiKey = "";
 
         // Add event listener to the "Generate Report" button
@@ -404,13 +397,15 @@
                 return;
             }
 
-            // Client-side API key check
-            // If running in Canvas, __api_key__ will be defined. Otherwise, use the apiKey variable.
+            // Determine which API key to use
+            // If running in the Canvas environment, __api_key__ will be automatically provided.
+            // Otherwise, it falls back to the 'apiKey' variable defined above (which you need to set on your server).
             const finalApiKey = typeof __api_key__ !== 'undefined' ? __api_key__ : apiKey;
 
-            if (!finalApiKey || finalApiKey === "YOUR_ACTUAL_GEMINI_API_KEY_HERE") {
-                generatedReportTextarea.value = 'Error: Gemini API Key is not configured. If running on your own server, please replace "const apiKey = \'\';" with your actual API key.';
-                console.error('API Key not configured.');
+            // Check if the API key is genuinely missing or still the placeholder
+            if (!finalApiKey || finalApiKey === "AIzaSyCsWMWfmCfR59mcAy4as7XR95YY__7hayc") {
+                generatedReportTextarea.value = 'Error: Gemini API Key is not configured. Please ensure your API key is correctly set in the JavaScript code.';
+                console.error('API Key not configured. Please set your actual Gemini API key.');
                 loadingIndicator.classList.add('hidden');
                 return;
             }
