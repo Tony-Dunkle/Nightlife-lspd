@@ -181,24 +181,7 @@
 </head>
 <body class="antialiased">
 
-    <!-- Development Notice Pop-up Modal -->
-    <div id="devNoticeModal" class="modal-overlay hidden">
-        <div class="modal-content">
-            <button class="modal-close-btn" id="closeModalBtn">&times;</button>
-            <h2 class="text-2xl font-bold text-blue-800 mb-4">Website Under Development</h2>
-            <div class="flex items-center justify-center space-x-4 mb-6">
-                <p class="text-gray-700 text-lg">
-                    This website is currently under development. Some features or content may not work as expected or may be missing.
-                </p>
-                <!-- Path adjusted for LSPD Logo -->
-                <img src="LSPD.png" alt="LSPD Logo" class="w-20 h-20 object-contain" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
-            </div>
-            <button id="acknowledgeBtn" class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-5 rounded-md transition duration-300 ease-in-out">
-                Acknowledge
-            </button>
-        </div>
-    </div>
-
+    <!-- Development Notice Pop-up Modal - REMOVED -->
     <!-- Header Section -->
     <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex flex-col md:flex-row items-center justify-between sticky top-0 z-50 rounded-b-lg">
         <div class="flex items-center mb-4 md:mb-0">
@@ -352,9 +335,10 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const devNoticeModal = document.getElementById('devNoticeModal');
-            const closeDevModalBtn = document.getElementById('closeModalBtn');
-            const acknowledgeBtn = document.getElementById('acknowledgeBtn');
+            // Removed devNoticeModal, closeDevModalBtn, acknowledgeBtn as they are no longer needed.
+            // Original line: const devNoticeModal = document.getElementById('devNoticeModal');
+            // Original line: const closeDevModalBtn = document.getElementById('closeModalBtn');
+            // Original line: const acknowledgeBtn = document.getElementById('acknowledgeBtn');
 
             const chargeInput = document.getElementById('charge-input');
             const clearAllMainChargesBtn = document.getElementById('clear-all-main-charges-btn'); // Renamed for clarity
@@ -551,14 +535,12 @@
                 "jaywalking": { fine: 500, jail: 0 },
             };
 
-            // Dev Notice Modal Logic
-            devNoticeModal.classList.remove('hidden'); // Show the modal when the page loads
-
-            const hideDevModal = () => {
-                devNoticeModal.classList.add('hidden');
-            };
-            closeDevModalBtn.addEventListener('click', hideDevModal);
-            acknowledgeBtn.addEventListener('click', hideDevModal);
+            // Dev Notice Modal Logic - REMOVED
+            // Original lines:
+            // devNoticeModal.classList.remove('hidden');
+            // const hideDevModal = () => { devNoticeModal.classList.add('hidden'); };
+            // closeDevModalBtn.addEventListener('click', hideDevModal);
+            // acknowledgeBtn.addEventListener('click', hideDevModal);
 
             // Charge Selection Modal Logic
             chargeInput.addEventListener('click', () => {
@@ -772,8 +754,8 @@
                 }
             }
 
-            // Initial render on load (after dev modal acknowledged implicitly by user interaction)
-            // No direct call to renderCharges or calculateTotals until charges are added.
+            // The dev notice modal is now completely removed from the HTML and JavaScript.
+            // No need to explicitly call renderCharges or calculateTotals here, as they are triggered by user interaction.
         });
     </script>
 </body>
