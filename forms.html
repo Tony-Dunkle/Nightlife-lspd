@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LSPD Internal Portal - Applications</title>
+    <link rel="icon" href="LSPD.png" type="image/png"> <!-- Favicon added here -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -235,13 +236,8 @@
                 <li><a href="hr.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">HR Info</a></li>
                 <li><a href="report.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Report Generator</a></li>
                 <li><a href="charges.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Charge Calculator</a></li>
-                <!-- New Applications Link -->
-                <li><a href="applications.html" class="text-white bg-blue-700 py-2 px-3 rounded-md">Applications</a></li>
             </ul>
         </nav>
-        <div class="mt-4 md:mt-0 w-full md:w-auto">
-            <input type="search" id="searchInput" placeholder="Search Portal..." class="p-2 border border-blue-600 rounded-lg focus:ring-2 focus:ring-blue-300 focus:border-transparent w-full md:w-64 bg-blue-800 text-white placeholder-blue-300">
-        </div>
     </header>
 
     <!-- Hero Section for Applications -->
@@ -699,14 +695,6 @@
     </footer>
 
     <script>
-        // Basic search functionality for the header search bar
-        document.getElementById('searchInput').addEventListener('keyup', function (event) {
-            if (event.key === 'Enter') {
-                const query = this.value.toLowerCase();
-                console.log(`Searching for: ${query}`);
-            }
-        });
-
         // Discord Webhook URL for all applications
         const DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1382934755674296320/y0sqCTwgGwAV3Er2rLU0rlZKc-m6Y4loLZUsysMG4w57G8I2d9kWrDI1nt9MUP3TrhkG";
 
@@ -727,6 +715,7 @@
                     submissionMessage.style.display = 'none';
                     submissionMessage.classList.remove('success', 'error');
                 }
+                // Word count message box (specific to word count validation)
                 const wordCountMessageBox = modal.querySelector('#wordCountMessageBox');
                 if (wordCountMessageBox) {
                     wordCountMessageBox.style.display = 'none';
@@ -760,8 +749,10 @@
         function resetForm(form) {
             form.reset();
             // Also reset word count display for any textarea in the form
+            // Select elements by their specific IDs for word count related elements
             const whyTextarea = form.querySelector('textarea[name*="why"]'); // Targeting textareas with 'why' in their name
-            const whyWordCountElement = form.querySelector(`p[id*="why"][id*="WordCount"]`);
+            const whyWordCountElement = form.querySelector(`p[id^="${form.id.substring(0, form.id.indexOf('ApplicationForm'))}_why"][id$="WordCount"]`);
+
             if (whyTextarea && whyWordCountElement) {
                 whyWordCountElement.textContent = '0 words';
                 whyWordCountElement.classList.remove('text-green-600', 'text-red-600');
@@ -907,7 +898,7 @@
                 embeds: [
                     {
                         title: `New ${unitName} Application Submitted!`,
-                        description: `Application from **${data.signature}** (Discord ID: \`${data.discordId}\`)`,
+                        description: `Application from **${data.signature} || ${data.discordId}**`, // Combined Discord ID into description
                         color: color,
                         fields: fields,
                         timestamp: new Date().toISOString(),

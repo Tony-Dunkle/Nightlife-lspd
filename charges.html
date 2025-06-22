@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LSPD Internal Portal - Charge Calculator</title>
+    <!-- Favicon added here -->
+    <link rel="icon" href="LSPD.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -632,10 +634,10 @@
                         const li = document.createElement('li');
                         li.classList.add('modal-selected-charge-item');
                         li.innerHTML = `
-                            <span class="flex-grow">${charge.name.charAt(0).toUpperCase() + charge.name.slice(1)}</span>
-                            <input type="number" min="1" value="${charge.quantity}" data-charge-name="${charge.name}" class="quantity-input">
-                            <button class="remove-modal-charge-btn text-red-500 hover:text-red-700 font-bold px-2 rounded-full ml-2" data-charge-name="${charge.name}">&times;</button>
-                        `;
+                                <span class="flex-grow">${charge.name.charAt(0).toUpperCase() + charge.name.slice(1)}</span>
+                                <input type="number" min="1" value="${charge.quantity}" data-charge-name="${charge.name}" class="quantity-input">
+                                <button class="remove-modal-charge-btn text-red-500 hover:text-red-700 font-bold px-2 rounded-full ml-2" data-charge-name="${charge.name}">&times;</button>
+                            `;
                         modalSelectedChargesList.appendChild(li);
                     });
 
@@ -669,9 +671,24 @@
 
             addSelectedChargesBtn.addEventListener('click', () => {
                 // Add selected charges from modal to the main list
+                // For each selected charge in the modal, add it to the main 'charges' array
+                // while accounting for quantity.
                 Object.values(modalSelectedCharges).forEach(selectedCharge => {
-                    charges.push(selectedCharge);
+                    // Check if this charge already exists in the main 'charges' array
+                    const existingChargeIndex = charges.findIndex(c => c.name === selectedCharge.name);
+
+                    if (existingChargeIndex > -1) {
+                        // If it exists, update its quantity
+                        charges[existingChargeIndex].quantity += selectedCharge.quantity;
+                    } else {
+                        // If not, add it as a new entry
+                        charges.push({ ...selectedCharge }); // Push a copy to avoid reference issues
+                    }
                 });
+
+                // Sort the charges array alphabetically by name for consistent display
+                charges.sort((a, b) => a.name.localeCompare(b.name));
+
                 renderCharges(); // Render main charges list
                 calculateTotals();
                 chargeSelectionModal.classList.add('hidden'); // Close modal
@@ -695,9 +712,9 @@
                         const li = document.createElement('li');
                         li.className = 'flex items-center justify-between bg-white p-3 rounded-md shadow-sm border border-gray-100';
                         li.innerHTML = `
-                            <span>${charge.name.charAt(0).toUpperCase() + charge.name.slice(1)} (x${charge.quantity})</span>
-                            <button class="remove-main-charge-btn text-red-500 hover:text-red-700 font-bold px-2 rounded-full" data-index="${index}">&times;</button>
-                        `;
+                                <span>${charge.name.charAt(0).toUpperCase() + charge.name.slice(1)} (x${charge.quantity})</span>
+                                <button class="remove-main-charge-btn text-red-500 hover:text-red-700 font-bold px-2 rounded-full" data-index="${index}">&times;</button>
+                            `;
                         chargesList.appendChild(li);
                     });
                 }
@@ -747,7 +764,7 @@
                 totalFineDisplay.textContent = `$${totalFine.toLocaleString()}`;
 
                 if (totalJailTime >= 999999) {
-                     totalJailTimeDisplay.textContent = 'Life Sentence';
+                    totalJailTimeDisplay.textContent = 'Life Sentence';
                 } else if (totalJailTime > 0 && totalJailTime < 1) {
                     totalJailTimeDisplay.textContent = '< 1 Month';
                 } else {
