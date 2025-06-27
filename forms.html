@@ -718,7 +718,7 @@
         // ${{ secrets.webhook }} with the actual Discord webhook URL before serving
         // this HTML file to the client's browser. Client-side JavaScript cannot directly
         // access GitHub secrets or local file paths for security reasons.
-        const DISCORD_WEBHOOK_URL = "${{ secrets.webhook }}";
+        const DISCORD_WEBHOOK_URL = "${{ secrets.WEBHOOK }}";
 
         // Generic function to open a modal
         function openModal(modalId) {
