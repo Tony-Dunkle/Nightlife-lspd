@@ -43,25 +43,34 @@
     <!-- Flexbox with `flex-col md:flex-row` makes it stack vertically on small screens and horizontally on medium screens and up -->
     <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex flex-col md:flex-row items-center justify-between sticky top-0 z-50 rounded-b-lg">
         <div class="flex items-center mb-4 md:mb-0">
-            <!-- LSPD Logo - Removed border, updated src and onerror fallback -->
-            <img src="LSPD.png" alt="LSPD Logo" class="mr-4 w-16 h-16 object-contain rounded-lg" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
+            <!-- LSPD Logo - Local source updated to LSPD.png -->
+            <img src="LSPD.png" alt="LSPD Logo" class="mr-4 w-16 h-16 object-contain" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
             <!-- Responsive font size: text-2xl for small screens, text-3xl for medium screens and up -->
-            <h1 class="text-2xl md:text-3xl font-bold">Police Report Generator</h1>
+            <h1 class="text-2xl md:text-3xl font-bold">LSPD Internal Portal</h1>
         </div>
         <!-- Navigation Menu -->
         <nav class="w-full md:w-auto">
+            <!-- Flexbox with `flex-col md:flex-row` for navigation items -->
             <ul class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-8 text-lg font-medium">
+                <!-- Dashboard link updated to index.html -->
                 <li><a href="index.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Dashboard</a></li>
+                <!-- SOPs link updated to SOP.html -->
                 <li><a href="SOP.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">SOPs</a></li>
+                <!-- Training link updated to training.html -->
                 <li><a href="training.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Training</a></li>
+                <!-- Forms link updated to forms.html -->
                 <li><a href="forms.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Forms</a></li>
+                <!-- Roster link updated to roster.html -->
                 <li><a href="roster.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Roster</a></li>
+                <!-- HR Info link updated to hr.html -->
                 <li><a href="hr.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">HR Info</a></li>
+                <!-- Report Generator link updated to report.html -->
                 <li><a href="report.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Report Generator</a></li>
+                <!-- New: Charge Calculator button -->
                 <li><a href="charges.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Charge Calculator</a></li>
             </ul>
         </nav>
-        <!-- Removed Search Bar -->
+        <!-- Search Bar removed from here -->
     </header>
 
     <!-- Main Content Section -->

@@ -181,35 +181,38 @@
 </head>
 <body class="antialiased">
 
-    <!-- Development Notice Pop-up Modal - REMOVED -->
     <!-- Header Section -->
+    <!-- Flexbox with `flex-col md:flex-row` makes it stack vertically on small screens and horizontally on medium screens and up -->
     <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex flex-col md:flex-row items-center justify-between sticky top-0 z-50 rounded-b-lg">
         <div class="flex items-center mb-4 md:mb-0">
-            <!-- Path adjusted for LSPD Logo -->
+            <!-- LSPD Logo - Local source updated to LSPD.png -->
             <img src="LSPD.png" alt="LSPD Logo" class="mr-4 w-16 h-16 object-contain" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
+            <!-- Responsive font size: text-2xl for small screens, text-3xl for medium screens and up -->
             <h1 class="text-2xl md:text-3xl font-bold">LSPD Internal Portal</h1>
         </div>
+        <!-- Navigation Menu -->
         <nav class="w-full md:w-auto">
+            <!-- Flexbox with `flex-col md:flex-row` for navigation items -->
             <ul class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-8 text-lg font-medium">
-                <!-- Dashboard link: now points to index.html in the parent directory -->
-                <li><a href="../index.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Dashboard</a></li>
-                <!-- SOPs link: points to SOP.html (relative to current directory 'pages/') -->
+                <!-- Dashboard link updated to index.html -->
+                <li><a href="index.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Dashboard</a></li>
+                <!-- SOPs link updated to SOP.html -->
                 <li><a href="SOP.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">SOPs</a></li>
-                <!-- Training link: points to training.html (relative to current directory 'pages/') -->
+                <!-- Training link updated to training.html -->
                 <li><a href="training.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Training</a></li>
-                <!-- Forms link: points to forms.html (relative to current directory 'pages/') -->
+                <!-- Forms link updated to forms.html -->
                 <li><a href="forms.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Forms</a></li>
-                <!-- Roster link: points to roster.html (relative to current directory 'pages/') -->
+                <!-- Roster link updated to roster.html -->
                 <li><a href="roster.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Roster</a></li>
-                <!-- HR Info link: points to hr.html (relative to current directory 'pages/') -->
+                <!-- HR Info link updated to hr.html -->
                 <li><a href="hr.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">HR Info</a></li>
-                <!-- Report Generator link: points to report.html (relative to current directory 'pages/') -->
+                <!-- Report Generator link updated to report.html -->
                 <li><a href="report.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Report Generator</a></li>
-                <!-- New link for Charge Calculator -->
-                <li><a href="#" class="text-white bg-blue-700 py-2 px-3 rounded-md">Charge Calculator</a></li>
+                <!-- New: Charge Calculator button -->
+                <li><a href="charges.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Charge Calculator</a></li>
             </ul>
         </nav>
-        <!-- Removed Search Bar as requested -->
+        <!-- Search Bar removed from here -->
     </header>
 
     <!-- Main Content Section - Charge Calculator -->
@@ -530,7 +533,7 @@
                 "possession with intent to distribute (large quantity)": { fine: 10000, jail: 45 },
                 "manufacturing of cocaine": { fine: 15000, jail: 60 },
                 "possession of cocaine manufacturing materials": { fine: 4500, jail: 20 },
-                "drug trafficking – cocaine": { fine: 20000, jail: 75 },
+                "drug trafficking ï¿½ cocaine": { fine: 20000, jail: 75 },
                 "loitering on government property": { fine: 750, jail: 5 },
                 "jaywalking": { fine: 500, jail: 0 },
             };
@@ -616,10 +619,10 @@
                         const li = document.createElement('li');
                         li.classList.add('modal-selected-charge-item');
                         li.innerHTML = `
-                                <span class="flex-grow">${charge.name.charAt(0).toUpperCase() + charge.name.slice(1)}</span>
-                                <input type="number" min="1" value="${charge.quantity}" data-charge-name="${charge.name}" class="quantity-input">
-                                <button class="remove-modal-charge-btn text-red-500 hover:text-red-700 font-bold px-2 rounded-full ml-2" data-charge-name="${charge.name}">&times;</button>
-                            `;
+                                    <span class="flex-grow">${charge.name.charAt(0).toUpperCase() + charge.name.slice(1)}</span>
+                                    <input type="number" min="1" value="${charge.quantity}" data-charge-name="${charge.name}" class="quantity-input">
+                                    <button class="remove-modal-charge-btn text-red-500 hover:text-red-700 font-bold px-2 rounded-full ml-2" data-charge-name="${charge.name}">&times;</button>
+                                `;
                         modalSelectedChargesList.appendChild(li);
                     });
 
@@ -694,9 +697,9 @@
                         const li = document.createElement('li');
                         li.className = 'flex items-center justify-between bg-white p-3 rounded-md shadow-sm border border-gray-100';
                         li.innerHTML = `
-                                <span>${charge.name.charAt(0).toUpperCase() + charge.name.slice(1)} (x${charge.quantity})</span>
-                                <button class="remove-main-charge-btn text-red-500 hover:text-red-700 font-bold px-2 rounded-full" data-index="${index}">&times;</button>
-                            `;
+                                    <span>${charge.name.charAt(0).toUpperCase() + charge.name.slice(1)} (x${charge.quantity})</span>
+                                    <button class="remove-main-charge-btn text-red-500 hover:text-red-700 font-bold px-2 rounded-full" data-index="${index}">&times;</button>
+                                `;
                         chargesList.appendChild(li);
                     });
                 }
