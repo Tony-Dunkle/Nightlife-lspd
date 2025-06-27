@@ -34,7 +34,7 @@
 
         ::-webkit-scrollbar-thumb {
             background: #888;
-            border-radius: 5px; /* Corrected typo from 5_px to 5px */
+            border-radius: 5px;
         }
 
             ::-webkit-scrollbar-thumb:hover {
@@ -223,7 +223,7 @@
     <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex flex-col md:flex-row items-center justify-between sticky top-0 z-50 rounded-b-lg">
         <div class="flex items-center mb-4 md:mb-0">
             <!-- Adjusted LSPD Logo: Removed border -->
-            <img src="LSPD.png" alt="LSPD Logo" class="mr-4 w-16 h-16 object-contain rounded-lg" onerror="this.onerror=null; this.src='https://placehold.co/64x64/0000FF/FFFFFF?text=LSPD';">
+            <img src="https://placehold.co/64x64/0000FF/FFFFFF?text=LSPD" alt="LSPD Logo" class="mr-4 w-16 h-16 object-contain rounded-lg" onerror="this.onerror=null; this.src='https://placehold.co/64x64/0000FF/FFFFFF?text=LSPD';">
             <h1 class="text-2xl md:text-3xl font-bold">LSPD Internal Portal</h1>
         </div>
         <nav class="w-full md:w-auto">
@@ -682,47 +682,43 @@
 
 
     <!-- Footer Section - Internal Contacts -->
-    <!-- Grid layout that changes columns based on screen size: 1 column on small, 3 on medium screens and up -->
     <footer class="bg-gray-800 text-white py-10 px-6 md:px-12 rounded-t-lg">
         <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Internal Contact Info (content removed, titles remain) -->
             <div>
                 <h4 class="text-xl font-semibold mb-4 text-blue-300">Internal Contacts</h4>
-                <ul class="space-y-2 text-sm">
-                    <li><a href="https://discord.gg/7FwxdpfDTM" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Discord</a></li>
-                    <li><a href="https://discord.com/channels/1383775098464370768/1383775099777318972" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Chat</a></li>
-                    <li><a href="https://discord.com/channels/1383775098464370768/1383782578976456735" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Cadet Support</a></li>
+                <ul>
+                    <!-- Removed Discord embed links -->
+                    <li class="mb-2"><a href="#" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Discord (Link Placeholder)</a></li>
+                    <li class="mb-2"><a href="#" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">UPD Chat (Link Placeholder)</a></li>
+                    <li class="mb-2"><a href="#" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Cadet Support (Link Placeholder)</a></li>
                 </ul>
             </div>
-            <!-- Internal Quick Links (text links added) -->
             <div>
                 <h4 class="text-xl font-semibold mb-4 text-blue-300">Quick Access</h4>
-                <ul class="space-y-2 text-sm">
-                    <!-- Added text-sm here -->
-                    <li><a href="https://docs.google.com/document/d/1etjilZ1dAHGviw33MV5Zs-b5dXqcSHyoYIHvHiRIyy4/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">LSPD SOP</a></li>
-                    <li><a href="https://docs.google.com/document/d/1hKQ4fw9b1_yQELhPi1p1b4M6uiSaYb7bBp-9C6GVTdY/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Los Santos Police Department Interview Procedure & Questions</a></li>
-                    <li><a href="https://docs.google.com/document/d/1d004FfAhZBgESn88Mx21N3CGqXlcoNeP9_sadn_ePak/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Promotional Pathway & Subdivision Assignment Policy</a></li>
-                    <li><a href="https://docs.google.com/document/d/14QIEsYMWpTssti1xGbGWiMxQ2b0jbiYxuMmvV8XWUUo/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Highway Enforcement and Apprehension Team (HEAT) Activation Policy</a></li>
-                    <li><a href="https://docs.google.com/document/d/1Ggf7SS5voiIjr3iSLB3VtAc47JN3aDjm2J_gYnpoZ6s/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Disciplinary Guidelines</a></li>
-                    <li><a href="https://nlspd.net/" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">LSPD Website</a></li>
+                <ul>
+                    <li class="mb-2"><a href="roster.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">My Profile</a></li>
+                    <li class="mb-2"><a href="roster.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Department Directory</a></li>
+                    <li class="mb-2"><a href="#" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Wellness Programs</a></li>
+                    <li class="mb-2"><a href="SOP.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Internal Policies</a></li>
                 </ul>
             </div>
-            <!-- Copyright & Internal System Info (content removed, titles remain) -->
             <div>
                 <h4 class="text-xl font-semibold mb-4 text-blue-300">System Information</h4>
                 <p class="text-gray-500 text-sm mb-2">Unauthorized Access Strictly Prohibited</p>
                 <p class="text-gray-500 text-sm mb-2">For LSPD Personnel Use Only</p>
-                <p class="text-500 text-sm mb-2">Created and Maintained by FiveM "NightLife RP"</p>
+                <p class="text-gray-500 text-sm mb-2">Created and Maintained by FiveM "NightLife RP"</p>
                 <p class="text-gray-500 text-sm">&copy; 2025 Los Santos Police Department Internal Systems.</p>
             </div>
         </div>
-        <!-- Font Awesome for any potential internal icons (though less needed here) -->
         <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     </footer>
 
     <script>
-        // Removed Discord Webhook URL as per request.
-        // const DISCORD_WEBHOOK_URL = "";
+        // IMPORTANT: This placeholder assumes a server-side process will replace
+        // ${{ secrets.webhook }} with the actual Discord webhook URL before serving
+        // this HTML file to the client's browser. Client-side JavaScript cannot directly
+        // access GitHub secrets or local file paths for security reasons.
+        const DISCORD_WEBHOOK_URL = "${{ secrets.webhook }}";
 
         // Generic function to open a modal
         function openModal(modalId) {
@@ -830,8 +826,19 @@
             }
         }
 
-        // Modified function to handle form submission - now displays an info modal
-        async function handleFormSubmission(event, formId, unitName) {
+        // Function to collect form data
+        function getFormData(formId) {
+            const form = document.getElementById(formId);
+            const formData = new FormData(form);
+            const data = {};
+            for (let [key, value] of formData.entries()) {
+                data[key] = value;
+            }
+            return data;
+        }
+
+        // Modified function to handle form submission - sends to Discord webhook
+        async function handleFormSubmission(event, formId, unitName, color) {
             event.preventDefault(); // Prevent default form submission
             console.log(`Form submission triggered for: ${formId}`);
 
@@ -842,8 +849,14 @@
             const whyWordCountMessageBox = form.querySelector('#wordCountMessageBox');
             const minWords = whyTextarea ? parseInt(whyTextarea.getAttribute('minlength')) : 0;
 
+            // Clear previous messages
+            submissionMessage.style.display = 'none';
+            if (whyWordCountMessageBox) {
+                whyWordCountMessageBox.style.display = 'none';
+            }
+
             submitButton.disabled = true; // Disable button immediately
-            submitButton.textContent = 'Processing...'; // Change button text
+            submitButton.textContent = 'Submitting...'; // Change button text
 
             // Client-side validation for word count if applicable
             if (whyTextarea && minWords > 0) {
@@ -863,25 +876,80 @@
                     submitButton.disabled = false; // Re-enable button on validation failure
                     submitButton.textContent = 'Submit Application';
                     return; // Stop submission
-                } else {
-                    if (whyWordCountMessageBox) {
-                        whyWordCountMessageBox.style.display = 'none';
-                    }
                 }
             }
 
-            // Hide the in-form submission message if it was visible
-            submissionMessage.style.display = 'none';
-            console.log('Opening info modal.');
-            openModal('infoModal');
+            const formData = getFormData(formId);
 
-            // Re-enable the submit button immediately after opening the info modal
-            // The user will close the info modal manually.
-            submitButton.disabled = false;
-            submitButton.textContent = 'Submit Application';
+            // Construct Discord embed
+            const fields = [];
+            for (const key in formData) {
+                // Skip the signature field for the Discord embed title, it will be added as a field
+                if (key === 'signature') continue;
 
-            // No longer automatically closing the original modal after a delay here.
-            // The user will close the application modal manually.
+                // Format radio button values nicely
+                let value = formData[key];
+                if (value === 'Yes' || value === 'No') {
+                    value = `**${value}**`;
+                }
+
+                fields.push({
+                    name: key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()), // Convert camelCase to Title Case
+                    value: value,
+                    inline: key.includes('Id') || key.includes('Name') || key.includes('Record') || key.includes('SOPs') || key.includes('Driving') || key.includes('Standards') || key.includes('experience') || key.includes('knowledge') || key.includes('physicalFitness') || key.includes('flightExperience') || key.includes('regulationsKnowledge') || key.includes('animalExperience') || key.includes('protocolsFamiliarity')
+                });
+            }
+
+            const embed = {
+                title: `New ${unitName} Application from ${formData.signature || formData.inGameName || 'Unknown'}`,
+                description: `A new application has been submitted for the **${unitName}** unit.`,
+                color: color, // Dynamic color based on unit
+                fields: fields,
+                timestamp: new Date().toISOString(),
+                footer: {
+                    text: 'LSPD Internal Portal Application System',
+                    icon_url: 'LSPD.png' // Placeholder for LSPD logo
+                }
+            };
+
+            try {
+                const response = await fetch(DISCORD_WEBHOOK_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ embeds: [embed] }),
+                });
+
+                if (response.ok) {
+                    console.log('Webhook sent successfully!');
+                    submissionMessage.className = 'submission-message success';
+                    submissionMessage.textContent = 'Application submitted successfully! You may now close this window.';
+                    submissionMessage.style.display = 'block';
+                    // Reset form and close modal after a short delay
+                    setTimeout(() => {
+                        resetForm(form);
+                        const modalId = form.closest('.modal-overlay').id;
+                        closeModal(modalId);
+                    }, 3000); // Close after 3 seconds
+                } else {
+                    console.error('Failed to send webhook:', response.status, response.statusText);
+                    const errorText = await response.text();
+                    console.error('Error response body:', errorText);
+                    submissionMessage.className = 'submission-message error';
+                    submissionMessage.textContent = `Failed to submit application. Error: ${response.status} ${response.statusText}. Please try again or contact IT support.`;
+                    submissionMessage.style.display = 'block';
+                    submitButton.disabled = false; // Re-enable button on error
+                    submitButton.textContent = 'Submit Application';
+                }
+            } catch (error) {
+                console.error('Error during fetch:', error);
+                submissionMessage.className = 'submission-message error';
+                submissionMessage.textContent = `An unexpected error occurred: ${error.message}. Please check your internet connection and try again.`;
+                submissionMessage.style.display = 'block';
+                submitButton.disabled = false; // Re-enable button on error
+                submitButton.textContent = 'Submit Application';
+            }
         }
 
         // --- Event Listeners for Opening Modals ---
@@ -930,12 +998,11 @@
         setupWordCount('k9_whyK9', 'k9_whyK9WordCount', 50);
 
         // --- Event Listeners for Form Submissions ---
-        // These now call the modified handleFormSubmission which shows the info modal
-        document.getElementById('heatApplicationForm').addEventListener('submit', (e) => handleFormSubmission(e, 'heatApplicationForm', 'HEAT'));
-        document.getElementById('cidApplicationForm').addEventListener('submit', (e) => handleFormSubmission(e, 'cidApplicationForm', 'CID'));
-        document.getElementById('swatApplicationForm').addEventListener('submit', (e) => handleFormSubmission(e, 'swatApplicationForm', 'SWAT'));
-        document.getElementById('asuApplicationForm').addEventListener('submit', (e) => handleFormSubmission(e, 'asuApplicationForm', 'ASU'));
-        document.getElementById('k9ApplicationForm').addEventListener('submit', (e) => handleFormSubmission(e, 'k9ApplicationForm', 'K9'));
+        document.getElementById('heatApplicationForm').addEventListener('submit', (e) => handleFormSubmission(e, 'heatApplicationForm', 'HEAT', 0xFF0000)); // Red
+        document.getElementById('cidApplicationForm').addEventListener('submit', (e) => handleFormSubmission(e, 'cidApplicationForm', 'CID', 0x003366)); // Dark Blue
+        document.getElementById('swatApplicationForm').addEventListener('submit', (e) => handleFormSubmission(e, 'swatApplicationForm', 'SWAT', 0x333333)); // Dark Gray
+        document.getElementById('asuApplicationForm').addEventListener('submit', (e) => handleFormSubmission(e, 'asuApplicationForm', 'ASU', 0x6699FF)); // Light Blue
+        document.getElementById('k9ApplicationForm').addEventListener('submit', (e) => handleFormSubmission(e, 'k9ApplicationForm', 'K9', 0x996633)); // Brown
 
         // This line will now open the infoModal on page load.
         document.addEventListener('DOMContentLoaded', () => {
