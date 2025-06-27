@@ -271,34 +271,41 @@
     </main>
 
     <!-- Footer Section - Internal Contacts -->
+    <!-- Grid layout that changes columns based on screen size: 1 column on small, 3 on medium screens and up -->
     <footer class="bg-gray-800 text-white py-10 px-6 md:px-12 rounded-t-lg">
         <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Internal Contact Info (content removed, titles remain) -->
             <div>
                 <h4 class="text-xl font-semibold mb-4 text-blue-300">Internal Contacts</h4>
-                <ul>
-                    <li><a href="https://discord.gg/7FwxdpfDTM" target="_blank" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Discord</a></li>
-                    <li><a href="https://discord.com/channels/1383775098464370768/1383775099777318972" target="_blank" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">UPD Chat</a></li>
-                    <li><a href="https://discord.com/channels/1383775098464370768/1383782578976456735" target="_blank" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Cadet Support</a></li>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="https://discord.gg/7FwxdpfDTM" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Discord</a></li>
+                    <li><a href="https://discord.com/channels/1383775098464370768/1383775099777318972" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Chat</a></li>
+                    <li><a href="https://discord.com/channels/1383775098464370768/1383782578976456735" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Cadet Support</a></li>
                 </ul>
             </div>
+            <!-- Internal Quick Links (text links added) -->
             <div>
                 <h4 class="text-xl font-semibold mb-4 text-blue-300">Quick Access</h4>
-                <ul>
-                    <!-- Paths adjusted for footer quick links -->
-                    <li><a href="roster.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">My Profile</a></li>
-                    <li><a href="roster.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Department Directory</a></li>
-                    <li><a href="404.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Wellness Programs</a></li>
-                    <li><a href="SOP.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Internal Policies</a></li>
+                <ul class="space-y-2 text-sm">
+                    <!-- Added text-sm here -->
+                    <li><a href="https://docs.google.com/document/d/1etjilZ1dAHGviw33MV5Zs-b5dXqcSHyoYIHvHiRIyy4/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">LSPD SOP</a></li>
+                    <li><a href="https://docs.google.com/document/d/1hKQ4fw9b1_yQELhPi1p1b4M6uiSaYb7bBp-9C6GVTdY/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Los Santos Police Department Interview Procedure & Questions</a></li>
+                    <li><a href="https://docs.google.com/document/d/1d004FfAhZBgESn88Mx21N3CGqXlcoNeP9_sadn_ePak/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Promotional Pathway & Subdivision Assignment Policy</a></li>
+                    <li><a href="https://docs.google.com/document/d/14QIEsYMWpTssti1xGbGWiMxQ2b0jbiYxuMmvV8XWUUo/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Highway Enforcement and Apprehension Team (HEAT) Activation Policy</a></li>
+                    <li><a href="https://docs.google.com/document/d/1Ggf7SS5voiIjr3iSLB3VtAc47JN3aDjm2J_gYnpoZ6s/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Disciplinary Guidelines</a></li>
+                    <li><a href="https://nlspd.net/" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">LSPD Website</a></li>
                 </ul>
             </div>
+            <!-- Copyright & Internal System Info (content removed, titles remain) -->
             <div>
                 <h4 class="text-xl font-semibold mb-4 text-blue-300">System Information</h4>
                 <p class="text-gray-500 text-sm mb-2">Unauthorized Access Strictly Prohibited</p>
                 <p class="text-gray-500 text-sm mb-2">For LSPD Personnel Use Only</p>
-                <p class="text-gray-500 text-sm mb-2">Created and Maintained by FiveM "NightLife RP"</p>
+                <p class="text-500 text-sm mb-2">Created and Maintained by FiveM "NightLife RP"</p>
                 <p class="text-gray-500 text-sm">&copy; 2025 Los Santos Police Department Internal Systems.</p>
             </div>
         </div>
+        <!-- Font Awesome for any potential internal icons (though less needed here) -->
         <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     </footer>
 
@@ -619,10 +626,10 @@
                         const li = document.createElement('li');
                         li.classList.add('modal-selected-charge-item');
                         li.innerHTML = `
-                                    <span class="flex-grow">${charge.name.charAt(0).toUpperCase() + charge.name.slice(1)}</span>
-                                    <input type="number" min="1" value="${charge.quantity}" data-charge-name="${charge.name}" class="quantity-input">
-                                    <button class="remove-modal-charge-btn text-red-500 hover:text-red-700 font-bold px-2 rounded-full ml-2" data-charge-name="${charge.name}">&times;</button>
-                                `;
+                                        <span class="flex-grow">${charge.name.charAt(0).toUpperCase() + charge.name.slice(1)}</span>
+                                        <input type="number" min="1" value="${charge.quantity}" data-charge-name="${charge.name}" class="quantity-input">
+                                        <button class="remove-modal-charge-btn text-red-500 hover:text-red-700 font-bold px-2 rounded-full ml-2" data-charge-name="${charge.name}">&times;</button>
+                                    `;
                         modalSelectedChargesList.appendChild(li);
                     });
 
@@ -697,9 +704,9 @@
                         const li = document.createElement('li');
                         li.className = 'flex items-center justify-between bg-white p-3 rounded-md shadow-sm border border-gray-100';
                         li.innerHTML = `
-                                    <span>${charge.name.charAt(0).toUpperCase() + charge.name.slice(1)} (x${charge.quantity})</span>
-                                    <button class="remove-main-charge-btn text-red-500 hover:text-red-700 font-bold px-2 rounded-full" data-index="${index}">&times;</button>
-                                `;
+                                        <span>${charge.name.charAt(0).toUpperCase() + charge.name.slice(1)} (x${charge.quantity})</span>
+                                        <button class="remove-main-charge-btn text-red-500 hover:text-red-700 font-bold px-2 rounded-full" data-index="${index}">&times;</button>
+                                    `;
                         chargesList.appendChild(li);
                     });
                 }

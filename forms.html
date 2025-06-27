@@ -34,7 +34,7 @@
 
         ::-webkit-scrollbar-thumb {
             background: #888;
-            border-radius: 5px;
+            border-radius: 5px; /* Corrected typo from 5_px to 5px */
         }
 
             ::-webkit-scrollbar-thumb:hover {
@@ -290,6 +290,24 @@
             </a>
         </div>
     </main>
+
+    <!-- General Information Modal for Under Construction -->
+    <div id="infoModal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close-button" data-modal-target="infoModal">&times;</button>
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Important Notice</h2>
+            <p class="text-md text-gray-600 mb-6 text-center">
+                Please be aware that **applications submitted through these forms do not currently submit to anything.**
+                <br><br>
+                We are actively working on the backend functionality to process these applications.
+                <br><br>
+                Thank you for your patience!
+            </p>
+            <div class="text-center">
+                <button type="button" class="submit-button" onclick="closeModal('infoModal')">Close</button>
+            </div>
+        </div>
+    </div>
 
     <!-- HEAT Application Modal -->
     <div id="heatAppModal" class="modal-overlay">
@@ -664,50 +682,56 @@
 
 
     <!-- Footer Section - Internal Contacts -->
+    <!-- Grid layout that changes columns based on screen size: 1 column on small, 3 on medium screens and up -->
     <footer class="bg-gray-800 text-white py-10 px-6 md:px-12 rounded-t-lg">
         <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Internal Contact Info (content removed, titles remain) -->
             <div>
                 <h4 class="text-xl font-semibold mb-4 text-blue-300">Internal Contacts</h4>
-                <ul>
-                    <li class="mb-2"><a href="https://discord.gg/7FwxdpfDTM" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Discord</a></li>
-                    <li class="mb-2"><a href="https://discord.com/channels/1383775098464370768/1383775099777318972" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">UPD Chat</a></li>
-                    <li class="mb-2"><a href="https://discord.com/channels/1383775098464370768/1383782578976456735" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Cadet Support</a></li>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="https://discord.gg/7FwxdpfDTM" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Discord</a></li>
+                    <li><a href="https://discord.com/channels/1383775098464370768/1383775099777318972" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Chat</a></li>
+                    <li><a href="https://discord.com/channels/1383775098464370768/1383782578976456735" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Cadet Support</a></li>
                 </ul>
             </div>
+            <!-- Internal Quick Links (text links added) -->
             <div>
                 <h4 class="text-xl font-semibold mb-4 text-blue-300">Quick Access</h4>
-                <ul>
-                    <li class="mb-2"><a href="roster.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">My Profile</a></li>
-                    <li class="mb-2"><a href="roster.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Department Directory</a></li>
-                    <li class="mb-2"><a href="#" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Wellness Programs</a></li>
-                    <li class="mb-2"><a href="SOP.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Internal Policies</a></li>
+                <ul class="space-y-2 text-sm">
+                    <!-- Added text-sm here -->
+                    <li><a href="https://docs.google.com/document/d/1etjilZ1dAHGviw33MV5Zs-b5dXqcSHyoYIHvHiRIyy4/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">LSPD SOP</a></li>
+                    <li><a href="https://docs.google.com/document/d/1hKQ4fw9b1_yQELhPi1p1b4M6uiSaYb7bBp-9C6GVTdY/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Los Santos Police Department Interview Procedure & Questions</a></li>
+                    <li><a href="https://docs.google.com/document/d/1d004FfAhZBgESn88Mx21N3CGqXlcoNeP9_sadn_ePak/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Promotional Pathway & Subdivision Assignment Policy</a></li>
+                    <li><a href="https://docs.google.com/document/d/14QIEsYMWpTssti1xGbGWiMxQ2b0jbiYxuMmvV8XWUUo/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Highway Enforcement and Apprehension Team (HEAT) Activation Policy</a></li>
+                    <li><a href="https://docs.google.com/document/d/1Ggf7SS5voiIjr3iSLB3VtAc47JN3aDjm2J_gYnpoZ6s/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Disciplinary Guidelines</a></li>
+                    <li><a href="https://nlspd.net/" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">LSPD Website</a></li>
                 </ul>
             </div>
+            <!-- Copyright & Internal System Info (content removed, titles remain) -->
             <div>
                 <h4 class="text-xl font-semibold mb-4 text-blue-300">System Information</h4>
                 <p class="text-gray-500 text-sm mb-2">Unauthorized Access Strictly Prohibited</p>
                 <p class="text-gray-500 text-sm mb-2">For LSPD Personnel Use Only</p>
-                <p class="text-gray-500 text-sm mb-2">Created and Maintained by FiveM "NightLife RP"</p>
+                <p class="text-500 text-sm mb-2">Created and Maintained by FiveM "NightLife RP"</p>
                 <p class="text-gray-500 text-sm">&copy; 2025 Los Santos Police Department Internal Systems.</p>
             </div>
         </div>
+        <!-- Font Awesome for any potential internal icons (though less needed here) -->
         <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     </footer>
 
     <script>
-        // Discord Webhook URL for all applications
-        const DISCORD_WEBHOOK_URL = "";
+        // Removed Discord Webhook URL as per request.
+        // const DISCORD_WEBHOOK_URL = "";
 
         // Generic function to open a modal
-        function openModal(modalId, textareaId, wordCountId, submitButtonId) {
+        function openModal(modalId) {
+            console.log(`Attempting to open modal: ${modalId}`);
             const modal = document.getElementById(modalId);
-            const textarea = document.getElementById(textareaId);
-            const wordCountElement = document.getElementById(wordCountId);
-            const submitButton = document.getElementById(submitButtonId);
-
             if (modal) {
                 modal.classList.add('active');
                 document.body.style.overflow = 'hidden'; // Prevent scrolling on the main page
+                console.log(`Modal ${modalId} should now be active.`);
 
                 // Reset and hide previous submission messages and errors for this modal
                 const submissionMessage = modal.querySelector('.submission-message');
@@ -721,27 +745,36 @@
                     wordCountMessageBox.style.display = 'none';
                 }
 
+                // For application modals, re-initialize word count and enable button
+                const textarea = modal.querySelector('textarea[name*="why"]');
                 if (textarea) {
                     textarea.dispatchEvent(new Event('input')); // Initialize word count
                 }
+                const submitButton = modal.querySelector('button[type="submit"]');
                 if (submitButton) {
                     submitButton.disabled = false; // Ensure button is enabled when opening
                     submitButton.textContent = 'Submit Application'; // Reset button text
                 }
+            } else {
+                console.error(`Modal with ID ${modalId} not found.`);
             }
         }
 
         // Generic function to close a modal
         function closeModal(modalId) {
+            console.log(`Attempting to close modal: ${modalId}`);
             const modal = document.getElementById(modalId);
             if (modal) {
                 modal.classList.remove('active');
                 document.body.style.overflow = ''; // Restore scrolling
-                // Reset the form within the modal
+                console.log(`Modal ${modalId} should now be inactive.`);
+                // Reset the form within the modal if it's an application modal
                 const form = modal.querySelector('form');
                 if (form) {
                     resetForm(form);
                 }
+            } else {
+                console.error(`Modal with ID ${modalId} not found for closing.`);
             }
         }
 
@@ -749,7 +782,6 @@
         function resetForm(form) {
             form.reset();
             // Also reset word count display for any textarea in the form
-            // Select elements by their specific IDs for word count related elements
             const whyTextarea = form.querySelector('textarea[name*="why"]'); // Targeting textareas with 'why' in their name
             const whyWordCountElement = form.querySelector(`p[id^="${form.id.substring(0, form.id.indexOf('ApplicationForm'))}_why"][id$="WordCount"]`);
 
@@ -798,9 +830,10 @@
             }
         }
 
-        // Generic function to handle Discord webhook submission
-        async function handleFormSubmission(event, formId, unitName, color) {
+        // Modified function to handle form submission - now displays an info modal
+        async function handleFormSubmission(event, formId, unitName) {
             event.preventDefault(); // Prevent default form submission
+            console.log(`Form submission triggered for: ${formId}`);
 
             const form = document.getElementById(formId);
             const submitButton = form.querySelector('button[type="submit"]');
@@ -810,7 +843,7 @@
             const minWords = whyTextarea ? parseInt(whyTextarea.getAttribute('minlength')) : 0;
 
             submitButton.disabled = true; // Disable button immediately
-            submitButton.textContent = 'Submitting...'; // Change button text
+            submitButton.textContent = 'Processing...'; // Change button text
 
             // Client-side validation for word count if applicable
             if (whyTextarea && minWords > 0) {
@@ -818,6 +851,7 @@
                 const words = whyText === '' ? 0 : whyText.split(/\s+/).length;
 
                 if (words < minWords) {
+                    console.log('Word count validation failed.');
                     if (!whyWordCountMessageBox) {
                         const newMessageBox = document.createElement('div');
                         newMessageBox.id = 'wordCountMessageBox';
@@ -836,139 +870,39 @@
                 }
             }
 
+            // Hide the in-form submission message if it was visible
+            submissionMessage.style.display = 'none';
+            console.log('Opening info modal.');
+            openModal('infoModal');
 
-            // Collect form data
-            const formData = new FormData(form);
-            const data = {};
-            for (let [key, value] of formData.entries()) {
-                data[key] = value;
-            }
+            // Re-enable the submit button immediately after opening the info modal
+            // The user will close the info modal manually.
+            submitButton.disabled = false;
+            submitButton.textContent = 'Submit Application';
 
-            // Construct Discord Embed Payload
-            const fields = [
-                { name: "Discord ID", value: data.discordId || "N/A", inline: true },
-                { name: "In-Game Name", value: data.inGameName || "N/A", inline: true }
-            ];
-
-            // Add fields specific to each application type
-            if (formId === 'heatApplicationForm') {
-                fields.push(
-                    { name: "Clean Record (Last 30 Days)", value: data.heat_cleanRecord || "N/A", inline: false },
-                    { name: "Why join HEAT?", value: data.whyHeat ? data.whyHeat.substring(0, 1024) : "N/A", inline: false },
-                    { name: "Core Responsibilities of HEAT Officer", value: data.coreResponsibilities ? data.coreResponsibilities.substring(0, 1024) : "N/A", inline: false },
-                    { name: "High-Speed Pursuit Scenario", value: data.pursuitScenario ? data.pursuitScenario.substring(0, 1024) : "N/A", inline: false },
-                    { name: "Reviewed HEAT SOPs?", value: data.heat_reviewedSOPs || "N/A", inline: true },
-                    { name: "Proficient in High-Speed Driving?", value: data.heat_proficientDriving || "N/A", inline: true },
-                    { name: "Understands Higher Standards?", value: data.heat_understandStandards || "N/A", inline: false }
-                );
-            } else if (formId === 'cidApplicationForm') {
-                fields.push(
-                    { name: "Prior Investigative Experience?", value: data.cid_experience || "N/A", inline: false },
-                    { name: "Why join CID?", value: data.whyCid ? data.whyCid.substring(0, 1024) : "N/A", inline: false },
-                    { name: "Complex Case Investigation Approach", value: data.complexCase ? data.complexCase.substring(0, 1024) : "N/A", inline: false },
-                    { name: "Knowledge of Evidence Collection?", value: data.cid_knowledge || "N/A", inline: false }
-                );
-            } else if (formId === 'swatApplicationForm') {
-                fields.push(
-                    { name: "Prior Tactical Experience?", value: data.swat_tacticalExperience || "N/A", inline: false },
-                    { name: "Why join SWAT?", value: data.whySwat ? data.whySwat.substring(0, 1024) : "N/A", inline: false },
-                    { name: "High-Risk Scenario Approach", value: data.scenario ? data.scenario.substring(0, 1024) : "N/A", inline: false },
-                    { name: "Physical Fitness Level", value: data.physicalFitness || "N/A", inline: false }
-                );
-            } else if (formId === 'asuApplicationForm') {
-                fields.push(
-                    { name: "Prior Flight Experience", value: data.flightExperience || "N/A", inline: false },
-                    { name: "Why join ASU?", value: data.whyAsu ? data.whyAsu.substring(0, 1024) : "N/A", inline: false },
-                    { name: "Aerial Surveillance Scenario", value: data.surveillanceScenario ? data.surveillanceScenario.substring(0, 1024) : "N/A", inline: false },
-                    { name: "Familiar with Airspace Regulations?", value: data.asu_regulationsKnowledge || "N/A", inline: false }
-                );
-            } else if (formId === 'k9ApplicationForm') {
-                fields.push(
-                    { name: "Animal/Dog Handling Experience?", value: data.k9_animalExperience || "N/A", inline: false },
-                    { name: "Why join K-9?", value: data.whyK9 ? data.whyK9.substring(0, 1024) : "N/A", inline: false },
-                    { name: "Suspect Tracking Scenario", value: data.trackingScenario ? data.trackingScenario.substring(0, 1024) : "N/A", inline: false },
-                    { name: "Familiar with K-9 Protocols?", value: data.k9_protocolsFamiliarity || "N/A", inline: false }
-                );
-            }
-
-            fields.push({ name: "Applicant Signature", value: data.signature || "N/A", inline: false });
-
-
-            const payload = {
-                embeds: [
-                    {
-                        title: `New ${unitName} Application Submitted!`,
-                        description: `Application from **${data.signature} || ${data.discordId}**`, // Combined Discord ID into description
-                        color: color,
-                        fields: fields,
-                        timestamp: new Date().toISOString(),
-                        footer: {
-                            text: `LSPD Internal Portal | ${unitName} Application`,
-                            icon_url: `https://placehold.co/64x64/${color.toString(16).padStart(6, '0').toUpperCase()}/FFFFFF?text=${unitName.charAt(0)}` // Dynamic icon for footer
-                        }
-                    }
-                ]
-            };
-
-            // Show a loading indicator
-            submissionMessage.className = 'submission-message'; // Reset classes
-            submissionMessage.style.display = 'block';
-            submissionMessage.textContent = 'Submitting application... Please wait.';
-
-            try {
-                console.log('Attempting to send webhook payload for', unitName, ':', payload);
-                const response = await fetch(DISCORD_WEBHOOK_URL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(payload),
-                });
-
-                console.log('Webhook response status for', unitName, ':', response.status);
-
-                if (response.ok) {
-                    submissionMessage.className = 'submission-message success';
-                    submissionMessage.textContent = `Application for ${unitName} submitted successfully! You can now close this window.`;
-                    form.reset(); // Clear the form on success
-                    if (whyTextarea) {
-                        whyTextarea.dispatchEvent(new Event('input')); // Reset word count display
-                    }
-                } else {
-                    const errorText = await response.text();
-                    console.error('Webhook submission failed for', unitName, 'with status:', response.status, 'Error text:', errorText);
-                    submissionMessage.className = 'submission-message error';
-                    submissionMessage.textContent = `Submission failed for ${unitName}. Error: ${response.status} - ${errorText.substring(0, 150) || 'Unknown error'}. Please check console for details.`;
-                }
-            } catch (error) {
-                console.error('Network or other error sending webhook for', unitName, ':', error);
-                submissionMessage.className = 'submission-message error';
-                submissionMessage.textContent = `An unexpected network error occurred for ${unitName}: ${error.message}. Please check your internet connection and console.`;
-            } finally {
-                submitButton.disabled = false; // Re-enable button
-                submitButton.textContent = 'Submit Application'; // Reset button text
-            }
+            // No longer automatically closing the original modal after a delay here.
+            // The user will close the application modal manually.
         }
 
         // --- Event Listeners for Opening Modals ---
         document.getElementById('openHeatAppModal').addEventListener('click', function (event) {
-            openModal('heatAppModal', 'heat_whyHeat', 'heat_whyHeatWordCount', 'submitHeatButton');
+            openModal('heatAppModal');
             event.preventDefault();
         });
         document.getElementById('openCidAppModal').addEventListener('click', function (event) {
-            openModal('cidAppModal', 'cid_whyCid', 'cid_whyCidWordCount', 'submitCidButton');
+            openModal('cidAppModal');
             event.preventDefault();
         });
         document.getElementById('openSwatAppModal').addEventListener('click', function (event) {
-            openModal('swatAppModal', 'swat_whySwat', 'swat_whySwatWordCount', 'submitSwatButton');
+            openModal('swatAppModal');
             event.preventDefault();
         });
         document.getElementById('openAsuAppModal').addEventListener('click', function (event) {
-            openModal('asuAppModal', 'asu_whyAsu', 'asu_whyAsuWordCount', 'submitAsuButton');
+            openModal('asuAppModal');
             event.preventDefault();
         });
         document.getElementById('openK9AppModal').addEventListener('click', function (event) {
-            openModal('k9AppModal', 'k9_whyK9', 'k9_whyK9WordCount', 'submitK9Button');
+            openModal('k9AppModal');
             event.preventDefault();
         });
 
@@ -996,11 +930,17 @@
         setupWordCount('k9_whyK9', 'k9_whyK9WordCount', 50);
 
         // --- Event Listeners for Form Submissions ---
-        document.getElementById('heatApplicationForm').addEventListener('submit', (e) => handleFormSubmission(e, 'heatApplicationForm', 'HEAT', 0xFF0000)); // Red
-        document.getElementById('cidApplicationForm').addEventListener('submit', (e) => handleFormSubmission(e, 'cidApplicationForm', 'CID', 0x003366)); // Dark Blue
-        document.getElementById('swatApplicationForm').addEventListener('submit', (e) => handleFormSubmission(e, 'swatApplicationForm', 'SWAT', 0x333333)); // Dark Gray
-        document.getElementById('asuApplicationForm').addEventListener('submit', (e) => handleFormSubmission(e, 'asuApplicationForm', 'ASU', 0x6699FF)); // Light Blue
-        document.getElementById('k9ApplicationForm').addEventListener('submit', (e) => handleFormSubmission(e, 'k9ApplicationForm', 'K9', 0x996633)); // Brown/Gold
+        // These now call the modified handleFormSubmission which shows the info modal
+        document.getElementById('heatApplicationForm').addEventListener('submit', (e) => handleFormSubmission(e, 'heatApplicationForm', 'HEAT'));
+        document.getElementById('cidApplicationForm').addEventListener('submit', (e) => handleFormSubmission(e, 'cidApplicationForm', 'CID'));
+        document.getElementById('swatApplicationForm').addEventListener('submit', (e) => handleFormSubmission(e, 'swatApplicationForm', 'SWAT'));
+        document.getElementById('asuApplicationForm').addEventListener('submit', (e) => handleFormSubmission(e, 'asuApplicationForm', 'ASU'));
+        document.getElementById('k9ApplicationForm').addEventListener('submit', (e) => handleFormSubmission(e, 'k9ApplicationForm', 'K9'));
+
+        // This line will now open the infoModal on page load.
+        document.addEventListener('DOMContentLoaded', () => {
+            openModal('infoModal');
+        });
     </script>
 </body>
 </html>
