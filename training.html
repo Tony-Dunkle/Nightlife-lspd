@@ -35,57 +35,68 @@
                 background: #555;
                 border-radius: 5px;
             }
+        /* Ensure the iframe itself is responsive within its container */
+        .iframe-container {
+            width: 100%;
+            padding-bottom: 75%; /* Aspect ratio 4:3 (height/width * 100%). Adjust as needed. */
+            position: relative;
+            height: 0;
+            overflow: hidden;
+            background-color: #fff; /* Background for loading */
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+            .iframe-container iframe {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                border: none; /* Remove iframe default border */
+            }
     </style>
 </head>
 <body class="antialiased">
-    <!-- Header Section -->
-    <!-- Flexbox with `flex-col md:flex-row` makes it stack vertically on small screens and horizontally on medium screens and up -->
+    <!-- Header Section - Reverted to original design from training.html -->
     <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex flex-col md:flex-row items-center justify-between sticky top-0 z-50 rounded-b-lg">
         <div class="flex items-center mb-4 md:mb-0">
-            <!-- LSPD Logo - Local source updated to LSPD.png -->
-            <img src="LSPD.png" alt="LSPD Logo" class="mr-4 w-16 h-16 object-contain" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
-            <!-- Responsive font size: text-2xl for small screens, text-3xl for medium screens and up -->
+            <!-- LSPD Logo - Using a placeholder as local 'LSPD.png' is not directly accessible in this environment -->
+            <img src="https://placehold.co/64x64/0000FF/FFFFFF?text=LSPD" alt="LSPD Logo" class="mr-4 w-16 h-16 object-contain" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
             <h1 class="text-2xl md:text-3xl font-bold">LSPD Internal Portal</h1>
         </div>
         <!-- Navigation Menu -->
         <nav class="w-full md:w-auto">
-            <!-- Flexbox with `flex-col md:flex-row` for navigation items -->
             <ul class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-8 text-lg font-medium">
                 <li><a href="#" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Dashboard</a></li>
-                <!-- Updated SOP link -->
                 <li><a href="SOP.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">SOPs</a></li>
-                <!-- Updated Training link -->
                 <li><a href="training.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Training</a></li>
-                <!-- Updated Forms link -->
                 <li><a href="forms.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Forms</a></li>
-                <!-- Updated Roster link in navigation -->
                 <li><a href="roster.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Roster</a></li>
-                <!-- Updated HR Info link -->
                 <li><a href="hr.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">HR Info</a></li>
-                <!-- New: Report Generator link -->
                 <li><a href="report.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Report Generator</a></li>
             </ul>
         </nav>
-        <!-- Search Bar -->
-        <div class="mt-4 md:mt-0 w-full md:w-auto">
-            <!-- `w-full md:w-64` makes it full width on small screens and fixed width on medium screens and up -->
-            <input type="search" placeholder="Search Internal Docs..." class="p-2 border border-blue-600 rounded-lg focus:ring-2 focus:ring-blue-300 focus:border-transparent w-full md:w-64 bg-blue-800 text-white placeholder-blue-300">
-        </div>
+        <!-- Search Bar - This section has been removed -->
     </header>
 
-    <!-- Main Content Section - Training Manual -->
+    <!-- Main Content Section - Now embedding the Google Document -->
     <main class="container mx-auto px-4 md:px-8 py-12">
         <h2 class="text-4xl md:text-5xl font-extrabold text-blue-800 mb-8 text-center">LSPD Training Manual</h2>
 
-        <!-- Content will be dynamically loaded here -->
-        <div id="training-content">
-            <!-- A loading indicator while content is being fetched -->
-            <div class="text-center text-gray-600 text-xl">Loading training manual content...</div>
+        <!-- Embedded Google Document -->
+        <div class="iframe-container">
+            <iframe src="https://docs.google.com/document/d/1RdaCbbjqkr5u8OUI-RvaDTKhmKy2lE-JAIE1EclLCgw/edit?usp=sharing"
+                    frameborder="0"
+                    allowfullscreen></iframe>
         </div>
+
+        <p class="mt-8 text-gray-600 text-sm text-center">
+            If the document does not load, please ensure you have permission to view the Google Document at the provided link.
+        </p>
     </main>
 
-    <!-- Footer Section - Internal Contacts -->
-    <!-- Grid layout that changes columns based on screen size: 1 column on small, 3 on medium screens and up -->
+    <!-- Footer Section - Reverted to original design from training.html -->
     <footer class="bg-gray-800 text-white py-10 px-6 md:px-12 rounded-t-lg">
         <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
             <!-- Internal Contact Info -->
@@ -94,18 +105,15 @@
                 <p class="text-gray-400 mb-2"><strong>HR Department:</strong> Ext. 5001</p>
                 <p class="text-gray-400 mb-2"><strong>IT Support:</strong> (555) 987-6543 / Ext. 5002</p>
                 <p class="text-gray-400 mb-2"><strong>Training Division:</strong> Ext. 5003</p>
-                <p class="text-gray-400"><strong>Command Staff Office:</strong> Ext. 5004</p>
+                <p class="text-400"><strong>Command Staff Office:</strong> Ext. 5004</p>
             </div>
             <!-- Internal Quick Links -->
             <div>
                 <h4 class="text-xl font-semibold mb-4 text-blue-300">Quick Access</h4>
                 <ul>
-                    <!-- Updated My Profile link to roster.html, assuming profile might be part of the roster system -->
                     <li class="mb-2"><a href="roster.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">My Profile</a></li>
-                    <!-- Updated Department Directory link to roster.html -->
                     <li class="mb-2"><a href="roster.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Department Directory</a></li>
                     <li class="mb-2"><a href="#" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Wellness Programs</a></li>
-                    <!-- Updated Internal Policies link to SOP.html as it's the closest fit for 'policies' -->
                     <li class="mb-2"><a href="SOP.html" class="text-gray-400 hover:text-white transition duration-300 ease-in-out">Internal Policies</a></li>
                 </ul>
             </div>
@@ -120,113 +128,6 @@
         </div>
         <!-- Font Awesome for any potential internal icons (though less needed here) -->
         <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                const trainingContentDiv = document.getElementById('training-content');
-
-                // Construct the path more robustly
-                const currentPath = window.location.pathname;
-                const directoryPath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
-                const contentPath = directoryPath + 'training_manual_content.json';
-
-                fetch(contentPath)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error(`HTTP error! status: ${response.status}`);
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        // Clear the loading message
-                        trainingContentDiv.innerHTML = '';
-
-                        // Loop through sections and append them to the div
-                        data.sections.forEach(section => {
-                            const sectionElement = document.createElement('section');
-                            sectionElement.className = 'bg-white p-8 md:p-10 rounded-lg shadow-xl mb-12';
-
-                            // Add section title
-                            const titleElement = document.createElement('h3');
-                            titleElement.className = 'text-3xl font-bold text-blue-700 mb-6';
-                            titleElement.textContent = section.title;
-                            sectionElement.appendChild(titleElement);
-
-                            // Add description if available
-                            if (section.description) {
-                                const descElement = document.createElement('p');
-                                descElement.className = 'text-lg text-gray-700 leading-relaxed mb-4';
-                                descElement.textContent = section.description;
-                                sectionElement.appendChild(descElement);
-                            }
-
-                            // Add content paragraphs
-                            if (section.content && Array.isArray(section.content)) {
-                                section.content.forEach(paragraphText => {
-                                    const pElement = document.createElement('p');
-                                    pElement.className = 'text-lg text-gray-700 leading-relaxed mb-4';
-                                    pElement.textContent = paragraphText;
-                                    sectionElement.appendChild(pElement);
-                                });
-                            }
-
-                            // Add subsections (if any)
-                            if (section.subsections && Array.isArray(section.subsections)) {
-                                section.subsections.forEach(subsection => {
-                                    const subSectionDiv = document.createElement('div');
-                                    subSectionDiv.className = 'mt-8'; // Add some top margin for spacing
-
-                                    const subTitleElement = document.createElement('h4');
-                                    subTitleElement.className = 'text-2xl font-semibold text-gray-800 mb-4';
-                                    subTitleElement.textContent = subsection.title;
-                                    subSectionDiv.appendChild(subTitleElement);
-
-                                    if (subsection.paragraphs && Array.isArray(subsection.paragraphs)) {
-                                        subsection.paragraphs.forEach(pText => {
-                                            const pElement = document.createElement('p');
-                                            pElement.className = 'text-gray-700 leading-relaxed mb-4';
-                                            pElement.textContent = pText;
-                                            subSectionDiv.appendChild(pElement);
-                                        });
-                                    }
-
-                                    if (subsection.listItems && Array.isArray(subsection.listItems)) {
-                                        const ulElement = document.createElement('ul');
-                                        ulElement.className = 'list-disc list-inside text-gray-700 leading-relaxed';
-                                        subsection.listItems.forEach(itemText => {
-                                            const liElement = document.createElement('li');
-                                            liElement.className = 'mb-2';
-                                            liElement.innerHTML = itemText; // Use innerHTML to allow for bold tags etc.
-                                            ulElement.appendChild(liElement);
-                                        });
-                                        subSectionDiv.appendChild(ulElement);
-                                    }
-
-                                    sectionElement.appendChild(subSectionDiv);
-                                });
-                            }
-
-                            // Add image if available
-                            if (section.imageUrl) {
-                                const imgContainer = document.createElement('div');
-                                imgContainer.className = 'flex justify-center mt-8';
-                                const imgElement = document.createElement('img');
-                                imgElement.src = section.imageUrl;
-                                imgElement.alt = section.imageAlt || 'Training Manual Image';
-                                imgElement.className = 'rounded-lg shadow-md w-full max-w-xl';
-                                imgContainer.appendChild(imgElement);
-                                sectionElement.appendChild(imgContainer);
-                            }
-
-                            trainingContentDiv.appendChild(sectionElement);
-                        });
-                    })
-                    .catch(error => {
-                        console.error('Error fetching the training manual content:', error);
-                        trainingContentDiv.innerHTML = '<div class="text-center text-red-600 text-xl">Failed to load training manual. Please ensure "training_manual_content.json" is in the same directory as this HTML file and is valid JSON.</div>';
-                    });
-            });
-        </script>
     </footer>
 </body>
 </html>
