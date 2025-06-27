@@ -4,12 +4,13 @@
     <meta charset="UTF-8">
     <!-- Viewport meta tag is crucial for responsive behavior across devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LSPD Internal Portal - Coming Soon</title>
+    <title>LSPD Training Manual</title>
     <!-- Tailwind CSS CDN - provides responsive utility classes out of the box -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         /* Custom font for a clean, modern look */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
         body {
             font-family: 'Inter', sans-serif;
             background-color: #f8f8f8; /* Light gray background */
@@ -19,18 +20,21 @@
         ::-webkit-scrollbar {
             width: 10px;
         }
+
         ::-webkit-scrollbar-track {
             background: #f1f1f1;
             border-radius: 5px;
         }
+
         ::-webkit-scrollbar-thumb {
             background: #888;
             border-radius: 5px;
         }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #555;
-            border-radius: 5px;
-        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #555;
+                border-radius: 5px;
+            }
     </style>
 </head>
 <body class="antialiased">
@@ -69,16 +73,14 @@
         </div>
     </header>
 
-    <!-- Main Content Section - Coming Soon -->
-    <main class="container mx-auto px-4 md:px-8 py-12 flex flex-col items-center justify-center min-h-[50vh]">
-        <div class="text-center bg-white p-8 md:p-12 rounded-lg shadow-xl max-w-2xl w-full">
-            <h2 class="text-4xl md:text-5xl font-extrabold text-blue-800 mb-4">Coming Soon!</h2>
-            <p class="text-lg md:text-xl text-gray-700 mb-6">
-                We're diligently working to bring you exciting new content and features. Please check back later!
-            </p>
-            <div class="text-gray-500 text-sm">
-                Thank you for your patience.
-            </div>
+    <!-- Main Content Section - Training Manual -->
+    <main class="container mx-auto px-4 md:px-8 py-12">
+        <h2 class="text-4xl md:text-5xl font-extrabold text-blue-800 mb-8 text-center">LSPD Training Manual</h2>
+
+        <!-- Content will be dynamically loaded here -->
+        <div id="training-content">
+            <!-- A loading indicator while content is being fetched -->
+            <div class="text-center text-gray-600 text-xl">Loading training manual content...</div>
         </div>
     </main>
 
@@ -118,6 +120,113 @@
         </div>
         <!-- Font Awesome for any potential internal icons (though less needed here) -->
         <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', () => {
+                const trainingContentDiv = document.getElementById('training-content');
+
+                // Construct the path more robustly
+                const currentPath = window.location.pathname;
+                const directoryPath = currentPath.substring(0, currentPath.lastIndexOf('/') + 1);
+                const contentPath = directoryPath + 'training_manual_content.json';
+
+                fetch(contentPath)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        // Clear the loading message
+                        trainingContentDiv.innerHTML = '';
+
+                        // Loop through sections and append them to the div
+                        data.sections.forEach(section => {
+                            const sectionElement = document.createElement('section');
+                            sectionElement.className = 'bg-white p-8 md:p-10 rounded-lg shadow-xl mb-12';
+
+                            // Add section title
+                            const titleElement = document.createElement('h3');
+                            titleElement.className = 'text-3xl font-bold text-blue-700 mb-6';
+                            titleElement.textContent = section.title;
+                            sectionElement.appendChild(titleElement);
+
+                            // Add description if available
+                            if (section.description) {
+                                const descElement = document.createElement('p');
+                                descElement.className = 'text-lg text-gray-700 leading-relaxed mb-4';
+                                descElement.textContent = section.description;
+                                sectionElement.appendChild(descElement);
+                            }
+
+                            // Add content paragraphs
+                            if (section.content && Array.isArray(section.content)) {
+                                section.content.forEach(paragraphText => {
+                                    const pElement = document.createElement('p');
+                                    pElement.className = 'text-lg text-gray-700 leading-relaxed mb-4';
+                                    pElement.textContent = paragraphText;
+                                    sectionElement.appendChild(pElement);
+                                });
+                            }
+
+                            // Add subsections (if any)
+                            if (section.subsections && Array.isArray(section.subsections)) {
+                                section.subsections.forEach(subsection => {
+                                    const subSectionDiv = document.createElement('div');
+                                    subSectionDiv.className = 'mt-8'; // Add some top margin for spacing
+
+                                    const subTitleElement = document.createElement('h4');
+                                    subTitleElement.className = 'text-2xl font-semibold text-gray-800 mb-4';
+                                    subTitleElement.textContent = subsection.title;
+                                    subSectionDiv.appendChild(subTitleElement);
+
+                                    if (subsection.paragraphs && Array.isArray(subsection.paragraphs)) {
+                                        subsection.paragraphs.forEach(pText => {
+                                            const pElement = document.createElement('p');
+                                            pElement.className = 'text-gray-700 leading-relaxed mb-4';
+                                            pElement.textContent = pText;
+                                            subSectionDiv.appendChild(pElement);
+                                        });
+                                    }
+
+                                    if (subsection.listItems && Array.isArray(subsection.listItems)) {
+                                        const ulElement = document.createElement('ul');
+                                        ulElement.className = 'list-disc list-inside text-gray-700 leading-relaxed';
+                                        subsection.listItems.forEach(itemText => {
+                                            const liElement = document.createElement('li');
+                                            liElement.className = 'mb-2';
+                                            liElement.innerHTML = itemText; // Use innerHTML to allow for bold tags etc.
+                                            ulElement.appendChild(liElement);
+                                        });
+                                        subSectionDiv.appendChild(ulElement);
+                                    }
+
+                                    sectionElement.appendChild(subSectionDiv);
+                                });
+                            }
+
+                            // Add image if available
+                            if (section.imageUrl) {
+                                const imgContainer = document.createElement('div');
+                                imgContainer.className = 'flex justify-center mt-8';
+                                const imgElement = document.createElement('img');
+                                imgElement.src = section.imageUrl;
+                                imgElement.alt = section.imageAlt || 'Training Manual Image';
+                                imgElement.className = 'rounded-lg shadow-md w-full max-w-xl';
+                                imgContainer.appendChild(imgElement);
+                                sectionElement.appendChild(imgContainer);
+                            }
+
+                            trainingContentDiv.appendChild(sectionElement);
+                        });
+                    })
+                    .catch(error => {
+                        console.error('Error fetching the training manual content:', error);
+                        trainingContentDiv.innerHTML = '<div class="text-center text-red-600 text-xl">Failed to load training manual. Please ensure "training_manual_content.json" is in the same directory as this HTML file and is valid JSON.</div>';
+                    });
+            });
+        </script>
     </footer>
 </body>
 </html>

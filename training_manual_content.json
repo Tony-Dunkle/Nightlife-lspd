@@ -1,0 +1,762 @@
+{
+  "title": "Los Santos Police Department Training Handbook",
+  "sections": [
+    {
+      "title": "Introduction and Purpose",
+      "content": "The Los Santos Police Department (LSPD) is committed to maintaining the highest standards of professionalism, integrity, and public service. In pursuit of these ideals, this Training Document has been developed to provide all sworn and non-sworn personnel with the knowledge, guidance, and expectations required to serve the community with competence, discipline, and ethical conduct.\n\nThis document serves as a foundational resource for both recruits and seasoned officers. It outlines the core principles, operational procedures, and situational protocols that every department member must understand and apply in the performance of their duties. By standardizing our training expectations and reinforcing departmental values, we aim to cultivate a unified and well-prepared police force that can respond effectively to the diverse challenges faced in the field.",
+      "objectives": [
+        "To establish clear training standards and operational expectations for all LSPD personnel.",
+        "To promote consistency in tactical response, decision-making, and community engagement.",
+        "To reinforce the importance of accountability, constitutional policing, and respect for all individuals.",
+        "To ensure that all officers are equipped with the necessary skills, knowledge, and mindset to protect and serve with honor."
+      ],
+      "note": "This Training Document is a living resource that will be periodically reviewed and updated to reflect evolving best practices, departmental needs, and legal standards. Adherence to its contents is mandatory, and all personnel are expected to be familiar with its provisions."
+    },
+    {
+      "title": "Uniform & Gear Setup",
+      "subsections": [
+        {
+          "title": "Cadet Standard Uniform",
+          "content": "All Cadets of the Los Santos Police Department are required to wear the designated uniform while on duty. This uniform ensures department-wide consistency, professionalism, and immediate visual identification by both civilians and other law enforcement personnel.",
+          "uniform_items": [
+            {"item": "Mask", "code_description": "None"},
+            {"item": "Scarf & Chains", "code_description": "306 or Other Pistol on Hip"},
+            {"item": "Jackets", "code_description": "875 (Variation 2)"},
+            {"item": "Undershirt", "code_description": "357"},
+            {"item": "Vest", "code_description": "185"},
+            {"item": "Bags & Parachute", "code_description": "0"},
+            {"item": "Arms & Gloves", "code_description": "0"},
+            {"item": "Pants", "code_description": "407"},
+            {"item": "Shoes", "code_description": "Black Professional Shoes"},
+            {"item": "Decals", "code_description": "N/A"},
+            {"item": "Hats", "code_description": "278"},
+            {"item": "Glasses", "code_description": "Any Black or Grey"}
+          ],
+          "note": "Uniform must be clean, pressed, and worn correctly at all times while on duty. Variations without approval from Command Staff are not permitted."
+        },
+        {
+          "title": "Required Equipment for Cadets",
+          "content": "Every Cadet must carry the following department-issued gear while on patrol or engaging in any official capacity. Failure to possess the required equipment may result in disciplinary action.",
+          "equipment": [
+            "Department-Issued Glock (Primary sidearm)",
+            "Department-Issued Baton (Non-lethal force option)",
+            "Department-Issued Taser (Standard-issue less-lethal weapon)",
+            "Department-Issued Radio (Active and tuned to the appropriate frequency)",
+            "Department-Issued Body Armor (Ballistic vest rated for duty use)",
+            "Department-Issued Handcuffs (Standard double-locking cuffs)"
+          ],
+          "note": "All gear must be properly maintained, fully functional, and accounted for at the beginning and end of each shift. Regular equipment checks will be conducted by supervising officers."
+        }
+      ]
+    },
+    {
+      "title": "Field Training Program (FTP)",
+      "content": "The Field Training Program (FTP) is a mandatory, performance-based training period designed to transition Cadets from classroom instruction to active patrol duties. This program ensures that all probationary officers are equipped with the practical skills, decision-making abilities, and professionalism required to uphold the standards of the Los Santos Police Department.",
+      "program_overview": "Each Cadet will be assigned to a certified Field Training Officer (FTO) who will supervise, evaluate, and mentor them throughout the program. The FTP emphasizes real-world application of departmental procedures, policies, and community interaction protocols, reinforcing the department’s commitment to public safety and professional conduct.",
+      "program_structure": [
+        {
+          "phase": "Phase I: Orientation and Observation",
+          "duration": "1–2 patrol shifts",
+          "focus": "Cadets observe their FTO in action",
+          "goals": [
+            "Acclimate to department radio traffic, terminology, and patrol culture.",
+            "Learn the proper standards for report writing and documentation.",
+            "Understand the chain of command and basic patrol responsibilities."
+          ]
+        },
+        {
+          "phase": "Phase II: Participation and Instruction",
+          "duration": "3–5 patrol shifts",
+          "focus": "Cadet performs basic patrol functions under FTO supervision",
+          "goals": [
+            "Execute traffic stops, respond to calls, and engage in pedestrian contacts.",
+            "Demonstrate safe and appropriate use of force.",
+            "Begin to show initiative in community engagement and problem-solving"
+          ]
+        },
+        {
+          "phase": "Phase III: Lead Role and Evaluation",
+          "duration": "3–5 patrol shifts",
+          "focus": "Cadet leads patrol operations under FTO observation",
+          "goals": [
+            "Handle calls for service independently.",
+            "Demonstrate proper application of penal and procedural law.",
+            "Exhibit professionalism, officer safety, and sound judgment under pressure"
+          ]
+        },
+        {
+          "phase": "Phase IV: Final Review and Recommendation",
+          "content": "Final performance assessment by FTO and supervisory staff\nWritten evaluation covering competency, conduct, and readiness for solo patrol\nSuccessful candidates will be cleared for active patrol status.\nUnsuccessful candidates may be recycled through specific phases or recommended for dismissal.."
+        }
+      ],
+      "training_officer_expectations": [
+        "Provide structured, consistent mentorship and feedback",
+        "Maintain impartial, detailed evaluations using department forms",
+        "Hold Cadets accountable while fostering confidence and growth.",
+        "Immediately report serious misconduct, policy violations, or safety concerns."
+      ],
+      "cadet_responsibilities": [
+        "Arrive on time, in proper uniform, with all equipment ready",
+        "Actively participate, ask questions, and respond to feedback.",
+        "Maintain a professional demeanor at all times.",
+        "Demonstrate consistent progress throughout the program."
+      ]
+    },
+    {
+      "title": "Classroom Instruction & MDT Orientation",
+      "content": "The classroom phase of training is designed to establish the foundational knowledge each officer must possess before advancing to practical application in the field. It reinforces our core policies, legal standards, and operational expectations while also introducing essential digital tools such as the Mobile Data Terminal (MDT), which supports daily policing functions.",
+      "subsections": [
+        {
+          "title": "Accessing Departmental Resources",
+          "content": "All instructional materials, standard operating procedures (SOPs), and department manuals are readily available through the following official platforms:",
+          "platforms": [
+            {
+              "name": "Email Server",
+              "description": "Navigate to the designated #important documents channels within the LSPD Email. These channels are regularly updated and pinned with the most recent documents, policies, and training materials. You are expected to review and understand the contents relevant to your role."
+            },
+            {
+              "name": "Department Website – nlspd.net",
+              "description": "Visit our official website to access a centralized library of training documents, operational protocols, and administrative forms. This platform is accessible 24/7 and should be your primary source for document retrieval when off-duty or outside of Discord."
+            }
+          ],
+          "note": "Trainees are responsible for remaining up to date on any policy changes or newly released materials posted on either platform. Failure to do so may result in disciplinary action or delays in training progression."
+        },
+        {
+          "title": "Mobile Data Terminal (MDT) Orientation",
+          "content": "The Mobile Data Terminal is a vital tool used for field reporting, warrant checks, issuing citations, making arrests, and accessing department databases. Officers will receive a hands-on overview of the MDT system during the classroom portion of their training. This instruction will cover:",
+          "topics": [
+            "Logging in",
+            "Report and citation entry",
+            "Searching persons, vehicles, and property",
+            "Accessing active BOLOs and call history"
+          ],
+          "note": "Detailed MDT functionality and case examples will be added by departmental leadership and are subject to ongoing updates. All trainees will be required to demonstrate basic proficiency before proceeding to field work."
+        }
+      ]
+    },
+    {
+      "title": "Chain of Command & Communication",
+      "content": "The Chain of Command is a foundational principle in maintaining operational discipline, organizational clarity, and effective leadership within the LSPD. Officers are expected to respect and utilize the established hierarchy in all official matters.",
+      "subsections": [
+        {
+          "title": "Purpose of Chain of Command",
+          "points": [
+            "Clarifies authority and responsibility at every level.",
+            "Ensures accountability in decision-making.",
+            "Facilitates structured communication both vertically (up and down) and laterally (between units)."
+          ]
+        },
+        {
+          "title": "Communication Protocol",
+          "points": [
+            "Follow the Chain: Always report concerns, questions, or requests to your immediate supervisor unless circumstances require higher-level intervention (e.g., misconduct by that supervisor).",
+            "Command-Level Decisions: Issues involving policy interpretation, internal investigations, or major incidents must be escalated appropriately through your command structure.",
+            "Respect Rank: Address supervisors and command staff with their appropriate titles (e.g., Sergeant, Lieutenant, Captain) and observe all protocols when communicating with them."
+          ]
+        },
+        {
+          "title": "Roles & Responsibilities (General Overview)",
+          "roles": [
+            {"rank": "Officer/Cadet", "responsibilities": "Carry out duties as directed. Report incidents and seek guidance when needed."},
+            {"rank": "Corporal/Field Training Officer (FTO)", "responsibilities": "Mentor new officers. Provide oversight during daily operations."},
+            {"rank": "Sergeant", "responsibilities": "Supervise shifts, ensure policy compliance, and handle first-level disciplinary issues."},
+            {"rank": "Lieutenant", "responsibilities": "Command units or divisions. Manage operations, personnel, and administrative matters."},
+            {"rank": "Captain", "responsibilities": "Oversee major divisions or departments. Implement policy and strategic decisions."},
+            {"rank": "Command Staff (Major/Deputy Chief/Chief)", "responsibilities": "Direct departmental strategy, policy, disciplinary review, and critical incident response."}
+          ]
+        },
+        {
+          "title": "Emergency Bypass",
+          "content": "During emergencies, officers may bypass traditional command layers if immediate action is required to protect life, prevent crime, or preserve public safety. All such deviations must be reported and justified."
+        }
+      ],
+      "conclusion": "By adhering to courtroom standards and the established chain of command, LSPD officers maintain the professionalism and operational integrity expected of a modern law enforcement agency."
+    },
+    {
+      "title": "Use of Force & Legal Standards",
+      "content": "The appropriate and lawful application of force is one of the most serious responsibilities entrusted to law enforcement officers. The Los Santos Police Department holds every officer to the highest standard of accountability, requiring that all uses of force be reasonable, necessary, and proportional to the threat or resistance encountered.",
+      "guiding_principles": [
+        "Necessity: Force may only be used when no lesser alternative is reasonably available to achieve a lawful objective.",
+        "Proportionality: The level of force applied must be appropriate to the seriousness of the threat posed.",
+        "Reasonableness: All uses of force are judged from the perspective of a reasonable officer on the scene, not with the benefit of hindsight.",
+        "Duty to Intervene: Officers are obligated to intervene and report when they observe excessive or unlawful force used by another officer."
+      ],
+      "levels_of_force": {
+        "description": "The department recognizes a graduated scale of force, often referred to as the Use of Force Continuum. Officers are trained to assess each situation and utilize the least amount of force necessary to resolve the incident safely. Common levels include:",
+        "levels": [
+          "Officer Presence – Visual deterrence through professional appearance and demeanor.",
+          "Verbal Commands – Clear, authoritative instructions to gain voluntary compliance.",
+          "Control Techniques – Empty-hand control, escorts, joint manipulations.",
+          "Intermediate Weapons – Baton, taser (subject to policy and qualification).",
+          "Lethal Force – Authorized only when there is an imminent threat of death or serious bodily harm to the officer or others."
+        ]
+      },
+      "lethal_force_policy": {
+        "content": "Lethal force is a last resort and may only be employed under the following conditions:",
+        "conditions": [
+          "The officer reasonably believes there is an immediate threat of death or serious bodily injury.",
+          "The threat cannot be safely neutralized by lesser means.",
+          "All other reasonable alternatives have been exhausted or are not feasible under the circumstances."
+        ],
+        "warning": "The unjustified or excessive use of lethal force is a violation of both department policy and the law and may result in criminal prosecution, civil liability, and termination of employment."
+      },
+      "legal_standards": {
+        "content": "Officers must understand and operate within the legal framework governing the use of force, including but not limited to:",
+        "standards": [
+          "The Fourth Amendment protects against unreasonable searches and seizures, including the use of excessive force.",
+          "Graham v. Connor (1989) – Establishes the \"objective reasonableness\" standard for use of force.",
+          "Tennessee v. Garner (1985) – Restricts the use of deadly force against fleeing suspects unless there is an immediate threat."
+        ]
+      },
+      "documentation_review": {
+        "content": "All uses of force, regardless of severity, must be:",
+        "requirements": [
+          "Immediately reported to a supervisor.",
+          "Thoroughly documented in the appropriate reports and within the MDT system.",
+          "Reviewed and investigated by command staff to determine compliance with policy."
+        ],
+        "note": "Officers involved in or witnessing the use of force are expected to cooperate fully with administrative reviews and investigations."
+      }
+    },
+    {
+      "title": "Officer Conduct & Ethics",
+      "content": "The badge of the Los Santos Police Department is a symbol of public trust and civic responsibility. Every officer is expected to uphold the core values of honor, integrity, respect, and accountability in both their professional duties and personal conduct. Misconduct—whether on or off duty—undermines public confidence, compromises department integrity, and endangers officer credibility.",
+      "code_of_conduct": [
+        "Professionalism: Officers must conduct themselves in a manner that reflects positively on the department at all times, both in public and within the workplace.",
+        "Respect and Courtesy: Officers will treat all individuals—regardless of race, gender, background, or criminal status—with dignity and fairness.",
+        "Honesty: Falsifying reports, lying to superiors, or concealing misconduct is grounds for immediate disciplinary action and may result in potential dismissal.",
+        "Confidentiality: Information obtained through police duties must not be disclosed improperly or used for personal advantage.",
+        "Chain of Command: Officers are expected to follow lawful orders, observe the established rank structure, and resolve grievances through the proper channels."
+      ],
+      "off_duty_expectations": {
+        "content": "Officer conduct off duty reflects on the department and must remain consistent with the ethical standards of the LSPD. This includes, but is not limited to:",
+        "expectations": [
+          "Avoiding behavior that may bring disrepute to the department.",
+          "Abstaining from associating with known criminals or participating in illegal enterprises.",
+          "Reporting any arrest, criminal charge, or significant legal incident to command staff without delay."
+        ]
+      },
+      "conflict_of_interest_abuse_of_authority": {
+        "content": "The use of one's position for personal gain, favoritism, retaliation, or intimidation is strictly prohibited. Officers must avoid situations where personal interests could impair judgment or compromise impartial enforcement of the law.",
+        "examples": [
+          "Using police authority in personal disputes or private business matters.",
+          "Accepting gifts, gratuities, or favors from individuals or businesses that could influence professional judgment.",
+          "Showing preferential treatment based on friendships, affiliations, or internal connections."
+        ]
+      },
+      "accountability_discipline": {
+        "content": "Violations of the LSPD’s Code of Conduct are taken seriously. Depending on severity, misconduct may result in:",
+        "consequences": [
+          "Verbal or written reprimands",
+          "Strikes or suspensions",
+          "Demotion or reassignment",
+          "Termination",
+          "Referral for criminal prosecution (where applicable)"
+        ],
+        "note": "All officers are subject to administrative review and internal investigation procedures. Failure to cooperate with an internal investigation is itself a violation of departmental policy."
+      },
+      "conclusion": "Your badge is not a right—it is a privilege, earned through honorable service and protected through ethical conduct. Officers who fail to meet these standards jeopardize not only their careers but the legitimacy of the department as a whole."
+    },
+    {
+      "title": "Vehicle Operations & Pursuit Policy",
+      "content": "Operating a police vehicle is a critical component of law enforcement, demanding both skill and discretion. Officers are expected to operate department vehicles safely, lawfully, and in a manner that reflects professionalism and concern for public welfare. Vehicular operation—especially during pursuits—carries heightened risk and requires strict adherence to department policy.",
+      "general_vehicle_operation_standards": [
+        "Safe Driving Practices: Officers must obey traffic laws, unless they are lawfully operating under emergency conditions. Emergency lights and sirens must be activated when engaging in urgent response or pursuit activities.",
+        "Vehicle Readiness: Officers are responsible for inspecting their assigned vehicle at the beginning and end of each shift. Any damage or mechanical concerns must be repaired immediately.",
+        "Professional Conduct: Officers shall not use department vehicles for personal errands, reckless behavior, or unauthorized transportation."
+      ],
+      "pursuit_policy": {
+        "title": "Pursuit Policy",
+        "content": "Operating a police vehicle is a critical component of law enforcement, demanding both skill and discretion. Officers are expected to operate department vehicles safely, lawfully, and professionally, with particular caution exercised during vehicle pursuits.",
+        "subsections": [
+          {
+            "title": "2.2 Vehicle Pursuits",
+            "guidelines": [
+              "General Pursuit Guidelines: Begin with a radio call providing vehicle information, direction of travel, reason for pursuit, and traffic status. Pursuits are limited to a maximum of four ground units plus AIR1/HEAT support. Unit 4 is designed to run in parallel with the quest. PIT maneuvers are permitted only after 5 minutes of pursuit or with Supervisor approval, with a maximum PIT speed of 100 MPH, and no front bumper hits allowed. A minimum 30-second interval is required between PIT attempts. Do not PIT vehicles that are smoking or showing mechanical issues."
+            ]
+          },
+          {
+            "title": "2.2.2 Disabling Tires",
+            "content": "Sidearms may be used to turn off tires only if suspects:",
+            "conditions": [
+              "Fire at officers,",
+              "Ram police vehicles repeatedly, or",
+              "Hit pedestrians or officers."
+            ],
+            "note": "This action is a last resort when public safety is at risk."
+          },
+          {
+            "title": "2.2.3 Vehicle Threat Codes",
+            "codes": [
+              "Code Blue (Tire Disabling Authorized): Triggered if the suspect has rammed police vehicles three times (after two warnings), performed two or more NVL jumps, the pursuit exceeds 10 minutes, or there is a direct threat to the public. Wait 20 seconds between tire shots.",
+              "Code Red (Lethal Force Authorized): Authorized only by the highest-ranking officer. Conditions include: issuance of a final warning that is ignored, suspects firing on officers, or theft of an emergency, police, or military vehicle."
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "title": "Report Writing & Documentation Standards",
+      "content": "Accurate, timely, and professional documentation is essential to every police function. Reports serve as the permanent record of an officer’s actions and observations. They provide the basis for prosecution, departmental review, and public accountability.",
+      "general_reporting_expectations": [
+        "All reports must be submitted before the end of the officer’s shift unless directed otherwise by a supervisor.",
+        "Reports must be objective, factual, and free of opinion or speculation.",
+        "Use clear, professional language. Slang, abbreviations (unless standardized), and excessive jargon are prohibited."
+      ],
+      "required_reports_include": [
+        "Arrest Reports – Detailing probable cause, suspect information, and arrest procedures.",
+        "Incident Reports – For significant events, including crimes, traffic stops resulting in citations, or use of force.",
+        "Supplemental Reports – Updates to ongoing investigations or new witness statements.",
+        "Pursuit Reports – Documenting any vehicle pursuit by policy."
+      ],
+      "documentation_best_practices": [
+        "Chronological Order: Detail events in the sequence in which they occurred.",
+        "Accuracy Over Assumption: If you are unsure, state “unknown” rather than speculate.",
+        "Quotations: Use direct quotes when referencing statements from suspects, victims, or witnesses.",
+        "Officer Identification: Always include your badge number, unit, and the names of any personnel assisting you."
+      ],
+      "mdt_digital_entry": {
+        "content": "Reports are entered through the department’s MDT system. Officers are expected to maintain competence in using this system to:",
+        "functions": [
+          "File citations and arrest reports.",
+          "Upload evidence references (photos, videos, witness info).",
+          "Review previous records for investigative continuity."
+        ],
+        "note": "Failure to complete proper documentation may result in disciplinary action and may compromise court proceedings or internal investigations."
+      }
+    },
+    {
+      "title": "Radio Communication Protocol",
+      "content": "The Los Santos Police Department (LSPD) utilizes an encrypted radio channel to ensure secure, confidential, and uninterrupted communication among officers and dispatch personnel. This system protects sensitive information and operational security, safeguarding both officers and the public.",
+      "emergency_priority_radio_traffic": {
+        "content": "The department’s emergency and priority radio traffic procedures mandate that all available units respond immediately to an officer emergency. This rapid response protocol is crucial to officer safety and the efficient resolution of incidents.",
+        "acknowledgements": "Acknowledgements and confirmations during radio communication are to be made using the 10-code system, ensuring concise and standardized messaging across the department."
+      },
+      "general_radio_etiquette": [
+        "Maintain Professionalism: Communicate in a calm and respectful manner. Avoid slang and unnecessary jargon.",
+        "Listen Before Transmitting: Confirm the channel is free before speaking to prevent overlap and confusion.",
+        "Use Assigned Call Signs: Identify yourself and your unit at the beginning of each transmission to ensure clear communication.",
+        "Keep Transmissions Brief: Relay information succinctly to maximize channel availability.",
+        "Respect Radio Discipline: Use codes appropriately and follow priority protocols, especially during emergencies."
+      ],
+      "acknowledgements_confirmations": {
+        "content": "Use the 10-4 code (“Affirmative / OK”) to acknowledge receipt of messages or instructions. Repetition of critical instructions is encouraged to confirm accuracy.",
+        "codes": [
+          {"code": "10-02", "meaning": "Clear Communication"},
+          {"code": "10-03", "meaning": "Stop Communication"},
+          {"code": "10-04", "meaning": "Affirmative / OK"},
+          {"code": "10-07", "meaning": "Taking a Break"},
+          {"code": "10-08", "meaning": "Back On Duty"},
+          {"code": "10-09", "meaning": "Repeat last"},
+          {"code": "10-10", "meaning": "Fight in Progress"},
+          {"code": "10-11", "meaning": "Discharge of a firearm"},
+          {"code": "10-13", "meaning": "Suspicious Handoff"},
+          {"code": "10-20", "meaning": "Location"},
+          {"code": "10-23", "meaning": "Arrived on the scene"},
+          {"code": "10-25", "meaning": "In-person meeting"},
+          {"code": "10-28", "meaning": "License/Registration Check"},
+          {"code": "10-29", "meaning": "Background Check"},
+          {"code": "10-32", "meaning": "Additional units"},
+          {"code": "10-35", "meaning": "Vehicle Theft"},
+          {"code": "10-38", "meaning": "Traffic stop"},
+          {"code": "10-41", "meaning": "Beginning shift"},
+          {"code": "10-42", "meaning": "Ending shift"},
+          {"code": "10-50", "meaning": "Vehicle accident"},
+          {"code": "10-51", "meaning": "Tow truck needed"},
+          {"code": "10-52", "meaning": "Ambulance needed"},
+          {"code": "10-60", "meaning": "Shots were fired from a vehicle"},
+          {"code": "10-76", "meaning": "Enroute"},
+          {"code": "10-77", "meaning": "Estimated Time of Arrival"},
+          {"code": "10-78", "meaning": "Need assistance"},
+          {"code": "10-80", "meaning": "Vehicle pursuit"},
+          {"code": "10-85", "meaning": "Supervisor needed"},
+          {"code": "10-90", "meaning": "Robbery"},
+          {"code": "10-95", "meaning": "Suspect in custody"},
+          {"code": "10-98", "meaning": "Jail break"},
+          {"code": "11-99", "meaning": "Officer in distress"},
+          {"code": "11-99b", "meaning": "Officer in distress (Low Risk)"}
+        ]
+      },
+      "conclusion": "Strict adherence to this protocol ensures efficient, secure, and professional communication across all levels of the department, enhancing coordination and officer safety."
+    },
+    {
+      "title": "Disciplinary Process & Corrective Action",
+      "content": "Maintaining discipline and accountability within the Los Santos Police Department (LSPD) is fundamental to upholding the department’s integrity, professionalism, and public trust. The disciplinary process ensures that violations of policy, misconduct, or substandard performance are addressed fairly, consistently, and promptly.",
+      "purpose": "The purpose of this section is to outline the procedures for identifying, investigating, and resolving disciplinary matters while providing corrective actions designed to promote improvement and uphold departmental standards.",
+      "principles_of_discipline": [
+        "Fairness: Every officer is entitled to due process and a thorough, impartial investigation.",
+        "Consistency: Disciplinary measures shall be applied uniformly, taking into account the nature and severity of the infraction.",
+        "Transparency: Officers will be informed of allegations and findings, with opportunities to respond and address any concerns.",
+        "Corrective Focus: Discipline aims to correct behavior and prevent recurrence, not merely to punish."
+      ],
+      "types_of_disciplinary_actions": {
+        "content": "Disciplinary responses may vary depending on the seriousness of the offense and the officer’s disciplinary history. Everyday corrective actions include:",
+        "actions": [
+          "Verbal Reprimand: Informal counseling to address minor infractions or performance issues.",
+          "Written Reprimand: Formal documentation of misconduct requiring improvement.",
+          "Suspension: Temporary removal from duty without pay, typically reserved for serious violations.",
+          "Demotion: Reduction in rank or responsibilities for sustained or severe misconduct.",
+          "Termination: Dismissal from the department for gross misconduct or repeated violations.",
+          "Criminal Prosecution: Referral to legal authorities when conduct violates criminal law."
+        ]
+      },
+      "disciplinary_procedure": [
+        "Complaint and Report: Allegations of misconduct may arise from citizen complaints, supervisory observations, or internal audits.",
+        "Preliminary Review: Supervisors conduct an initial assessment to determine if a formal investigation is warranted.",
+        "Investigation: A designated investigator or internal affairs unit will gather evidence, conduct interviews with witnesses, and document the findings.",
+        "Notification: The subject officer will be notified of the allegations and given the opportunity to respond.",
+        "Determination: Based on evidence, a decision is made regarding the validity of the complaint and appropriate disciplinary action.",
+        "Appeal: Officers may appeal disciplinary decisions in accordance with department procedures.",
+        "Record Keeping: All disciplinary actions are documented and maintained confidentially in the officer’s personnel file."
+      ],
+      "officer_responsibilities": [
+        "Cooperate fully and truthfully during all stages of the disciplinary process.",
+        "Maintain professionalism and confidentiality throughout investigations.",
+        "Take corrective actions seriously and demonstrate commitment to improvement."
+      ],
+      "conclusion": "Strict adherence to this disciplinary framework ensures that the LSPD remains a respected, accountable, and effective law enforcement agency. Officers who uphold these standards reinforce the department’s mission to serve and protect with integrity."
+    },
+    {
+      "title": "Community Engagement Protocols",
+      "content": "The Los Santos Police Department (LSPD) recognizes that effective law enforcement depends not only on enforcement actions but also on building and maintaining strong, respectful relationships with the community it serves. Community engagement is a foundational pillar of modern policing, fostering trust, cooperation, and shared responsibility for public safety.",
+      "purpose": "This section outlines the standards and strategies for positive community interaction, designed to enhance transparency, encourage public collaboration, and reduce conflict through proactive and respectful communication.",
+      "core_principles": [
+        "Respect: Treat all community members with dignity and fairness, regardless of background or circumstance.",
+        "Transparency: Communicate openly about department policies, initiatives, and actions when appropriate.",
+        "Accessibility: Be approachable and available, demonstrating a willingness to listen and respond to community concerns.",
+        "Collaboration: Encourage partnerships with local organizations, businesses, and residents to address safety and quality-of-life issues jointly."
+      ],
+      "engagement_strategies": [
+        "Visibility and Approachability: Officers should maintain a visible presence in neighborhoods, parks, and public venues, engaging positively with citizens through conversation, assistance, and participation in community events.",
+        "Problem-Oriented Policing: Identify and address specific community problems through dialogue and cooperative problem-solving, rather than relying solely on enforcement.",
+        "Cultural Competence: Understand and respect the diverse cultural, ethnic, and social backgrounds of community members. Officers should continually seek training to enhance their cultural awareness and communication skills."
+      ],
+      "communication_feedback": [
+        "Encourage citizens to provide feedback through official channels such as community meetings, surveys, or direct contact with community liaison officers.",
+        "Respond promptly and professionally to public inquiries and complaints.",
+        "Use social media and department websites responsibly to share information and promote positive engagement without compromising operational security."
+      ],
+      "handling_community_conflicts": [
+        "Approach disputes with impartiality, patience, and professionalism.",
+        "Utilize de-escalation techniques to calm tensions and facilitate constructive dialogue.",
+        "Avoid actions or language that could escalate conflicts or erode public trust."
+      ],
+      "conclusion": "By adhering to these community engagement protocols, LSPD officers reinforce the department’s commitment to serve as guardians and partners, creating a safer and more united Los Santos for all."
+    },
+    {
+      "title": "Scenario-Based Training",
+      "content": "Scenario-Based Training (SBT) is an essential component of the Los Santos Police Department’s commitment to preparing officers for the complexities and realities of law enforcement. By engaging in realistic, controlled simulations, officers develop critical decision-making skills, tactical proficiency, and the ability to manage stress in dynamic environments.",
+      "purpose": "The purpose of Scenario-Based Training is to bridge the gap between classroom instruction and real-world application. It enhances officers’ ability to respond effectively and ethically to a wide range of incidents while emphasizing safety, communication, and sound judgment.",
+      "key_objectives": [
+        "To cultivate practical skills in use-of-force decision-making, communication, and tactical operations.",
+        "To improve officer confidence and adaptability in high-pressure situations.",
+        "To reinforce department policies, legal standards, and ethical considerations.",
+        "To provide a safe environment for constructive feedback and continuous improvement."
+      ],
+      "training_structure": [
+        "Realism: Scenarios replicate actual incidents officers may encounter, including traffic stops, domestic disputes, active shooter situations, and mental health crises.",
+        "Controlled Environment: Training is conducted under supervision with safety protocols in place, allowing officers to make decisions and experience consequences without real-world risk.",
+        "Role Players: Use of trained actors or simulated suspects enhances authenticity and challenges officers’ interpersonal skills.",
+        "Debriefing: Each scenario concludes with a detailed after-action review, focusing on strengths, areas for improvement, and policy compliance."
+      ],
+      "evaluation_criteria": [
+        "Tactical decision-making and adherence to use-of-force policies.",
+        "Communication skills with suspects, victims, and fellow officers.",
+        "Situational awareness and risk assessment.",
+        "Stress management and emotional control.",
+        "Report writing and documentation accuracy in response to the scenario."
+      ],
+      "ongoing_training": "Scenario-Based Training is not limited to initial academy instruction but is integrated throughout an officer’s career to reinforce skills, introduce new tactics, and address evolving challenges.",
+      "conclusion": "Incorporating Scenario-Based Training ensures that LSPD officers remain prepared, professional, and responsive to the diverse demands of modern policing."
+    },
+    {
+      "title": "Traffic Stops & Felony Traffic Stops",
+      "content": "Conducting traffic stops is one of the most routine—yet potentially dangerous—duties in law enforcement. The Los Santos Police Department requires that all officers approach both standard and high-risk (felony) traffic stops with caution, professionalism, and strict adherence to established policies. These encounters demand situational awareness, sound judgment, and effective communication.",
+      "standard_traffic_stops": {
+        "title": "Standard Traffic Stops",
+        "description": "Standard (non-felony) traffic stops typically involve violations such as speeding, equipment failures, and infractions related to registration or licensing.",
+        "procedure": [
+          {
+            "step": "Call It Out",
+            "details": "Notify dispatch of your location (10-20), vehicle description, plate number, and number of occupants (10-38).",
+            "example": "“401, 10-38 on a black Sultan, plate 82KDW882, occupied two times, westbound on San Andreas Avenue.”"
+          },
+          {
+            "step": "Approach with Caution",
+            "details": "Activate emergency lights and initiate the stop in a safe location.\nUse a passenger-side approach when appropriate.\nMaintain visual contact with occupants and observe hands at all times."
+          },
+          {
+            "step": "Officer Safety",
+            "details": "Keep your body angled and weapon side away from the vehicle.\nScan for weapons, movement, and suspicious behavior.\nMaintain control of the scene while remaining professional and courteous at all times."
+          },
+          {
+            "step": "Conducting the Stop",
+            "details": "Greet the driver, identify yourself, and state the reason for the stop.\nRequest driver’s license, registration, and proof of insurance.\nRun checks via the MDT or dispatch (10-28, 10-29).\nIssue warnings, citations, or take further action as appropriate."
+          },
+          {
+            "step": "Conclusion",
+            "details": "Return documents, explain any enforcement action, and conclude with a safe and tactful departure."
+          }
+        ]
+      },
+      "felony_traffic_stops": {
+        "title": "Felony Traffic Stops",
+        "description": "Felony stops involve suspects believed to be armed, dangerous, or involved in a felony. These stops are high-risk and must be conducted with tactical precision and teamwork.",
+        "criteria": [
+          "Known or suspected felony suspect (armed robbery, shooting, etc.)",
+          "Vehicle reported stolen or involved in a violent crime.",
+          "Occupants are considered armed and dangerous.",
+          "The officer has reasonable suspicion of an imminent threat."
+        ],
+        "procedure": [
+          {
+            "step": "Coordinate Units",
+            "details": "Do not attempt to stop alone unless necessary.\nCoordinate with at least two backup units.\nCall out the stop location, vehicle description, number of occupants, and charges."
+          },
+          {
+            "step": "Set Up Safely",
+            "details": "Position patrol vehicles in a staggered formation with cover and distance.\nActivate takedown lights and PA system (if applicable).\nUse vehicle doors as cover. Draw weapons only as appropriate."
+          },
+          {
+            "step": "High-Risk Commands",
+            "details": "Command occupants out one at a time.\nInstruct hands to be visible at all times—no sudden movements.\nOrder each suspect to walk backward and kneel before approaching for cuffing."
+          },
+          {
+            "step": "Custody and Vehicle Clearing",
+            "details": "Secure all occupants in custody before clearing the vehicle.\nUse a tactical team or coordinated entry if danger is present.\nDo not rush the vehicle clear unless life-threatening circumstances exist."
+          },
+          {
+            "step": "Documentation",
+            "details": "Complete detailed reports, including justification for felony stop procedures.\nEnsure all involved units document their role and observations."
+          }
+        ]
+      },
+      "officer_considerations": [
+        "Every stop is potentially high-risk—do not become complacent.",
+        "Use clear and assertive communication while remaining respectful and professional.",
+        "Record stops when possible using body cams and in-vehicle systems.",
+        "Always debrief after high-risk encounters to reinforce training and identify improvements."
+      ],
+      "conclusion": "Proper execution of traffic and felony stops is vital to officer safety, legal compliance, and public confidence. Adherence to these protocols ensures consistency, professionalism, and tactical readiness across all patrol operations."
+    },
+    {
+      "title": "Detainment & Arrest Procedures",
+      "content": "The lawful detainment and arrest of individuals are among the most serious responsibilities an officer assumes. All Los Santos Police Department personnel are expected to understand and execute these procedures with strict adherence to constitutional rights, department policy, and officer safety protocols.",
+      "detainment": {
+        "title": "1. Detainment",
+        "definition": "A detainment is a temporary and limited interference with an individual’s freedom, based on reasonable suspicion that the person may be involved in criminal activity.",
+        "key_guidelines": [
+          "Legal Standard: Detainment requires reasonable suspicion, not probable cause. It must be supported by clear, articulable facts, not assumptions or hunches.",
+          "Duration: The detention must be brief and limited to the time reasonably necessary to confirm or dispel the officer’s suspicion.",
+          "Communication: Identify yourself as a law enforcement officer and explain the reason for the stop when it is safe to do so.",
+          "Searches: A Terry frisk (pat-down for weapons) is permitted only if the officer has a reasonable belief the person is armed and dangerous. A frisk is not a full search.",
+          "Handcuffing During Detention: May be used as a temporary safety measure, but does not, by itself, convert a detention into an arrest. Officers must continuously assess whether continued handcuffing is necessary and legally justified."
+        ]
+      },
+      "arrest": {
+        "title": "2. Arrest",
+        "definition": "An arrest is the act of taking a person into custody, based on probable cause, to charge them with a crime.",
+        "procedure": [
+          "Establish Probable Cause: You must have facts and evidence that would lead a reasonable officer to believe the individual committed a crime.",
+          "Announce the Arrest: Inform the subject that they are under arrest and the reason for the arrest. Use direct and unambiguous language.",
+          "Use of Force: Reasonable force may be used to effect an arrest if the individual resists or attempts to flee. Officers must follow department Use of Force guidelines and complete a report if force is applied.",
+          "Search Incident to Arrest: Once lawfully arrested, you may conduct a full search of the individual and their immediate belongings or vehicle under the “search incident to arrest” doctrine.",
+          "Miranda Warning: Must be issued only when the subject is both in custody and being interrogated. Failure to provide Miranda warnings does not invalidate the arrest, but it may suppress statements made in court.",
+          "Transportation: Secure the subject in the patrol vehicle using department-approved restraints. Monitor them throughout transport and notify dispatch of your location and status."
+        ],
+        "booking_documentation": {
+          "title": "Booking and Documentation",
+          "content": "Complete an arrest report including:",
+          "items": [
+            "Probable cause narrative",
+            "Charges",
+            "Use of force (if applicable)",
+            "Evidence collected"
+          ],
+          "note": "Process the individual according to department booking procedures, ensuring personal property is inventoried correctly."
+        }
+      },
+      "officer_responsibilities": {
+        "title": "3. Officer Responsibilities",
+        "responsibilities": [
+          "Maintain a professional demeanor at all times, even in the face of resistance or hostility.",
+          "Avoid escalating verbal or physical confrontations unnecessarily.",
+          "Respect constitutional protections: unlawful detention, arrest, or excessive use of force may result in criminal or civil liability, as well as disciplinary action.",
+          "Ensure bodycam and/or dashcam footage is active and preserved throughout the interaction."
+        ]
+      },
+      "conclusion": "The proper execution of detention and arrest procedures is critical to lawful policing, officer credibility, and successful prosecution. Officers must continually exercise sound judgment, maintain a high level of legal awareness, and prioritize both public safety and individual rights."
+    },
+    {
+      "title": "Search & Seizure Protocols",
+      "content": "The Fourth Amendment governs searches and seizures and must always be justified, limited in scope, and conducted with respect for individual rights. Officers must ensure all searches are supported by legal authority and adequately documented.",
+      "lawful_grounds_for_a_search": {
+        "title": "1. Lawful Grounds for a Search",
+        "grounds": [
+          "Consent: Voluntary and informed permission granted by an individual with authority over the area or item being searched. Consent may be withdrawn at any time.",
+          "Search Incident to Arrest: A full search of the person and their immediate area following a lawful arrest. No separate warrant is needed.",
+          "Plain View Doctrine: Items in plain view may be seized if the officer is lawfully present and it is immediately apparent that the item is evidence or contraband.",
+          "Probable Cause + Exigent Circumstances: If there is a pressing need (e.g., destruction of evidence or pursuit of a fleeing suspect), officers may search without a warrant.",
+          "Warrant: A written order issued by a judge permitting the search of a specific location for specific evidence."
+        ]
+      },
+      "vehicle_searches": {
+        "title": "2. Vehicle Searches",
+        "content": "Vehicles may be searched without a warrant if:",
+        "conditions": [
+          "There is probable cause to believe it contains evidence of a crime.",
+          "It is being impounded (inventory search).",
+          "The search is incident to a lawful arrest involving the vehicle."
+        ]
+      },
+      "pat_downs_frisk_searches": {
+        "title": "3. Pat-Downs & Frisk Searches",
+        "content": "Officers may conduct a Terry frisk for weapons if they have a reasonable belief the person is armed and poses a danger.",
+        "note": "Frisk is limited to outer clothing and does not permit searching for evidence unless contraband is felt."
+      },
+      "seizure_of_property": {
+        "title": "4. Seizure of Property",
+        "content": "Seized items must be:",
+        "requirements": [
+          "Documented clearly in your report.",
+          "Photographed when appropriate.",
+          "Logged into evidence following department chain-of-custody procedures."
+        ],
+        "warning": "Unlawful searches or seizures may result in the suppression of evidence, civil liability, and internal disciplinary action."
+      }
+    },
+    {
+      "title": "Jail & Booking Procedures",
+      "content": "Once a suspect has been lawfully arrested, officers are responsible for correctly processing and transferring the individual into custody. Professionalism, accuracy, and attention to procedural detail are mandatory.",
+      "transport_to_pd": {
+        "title": "1. Transport to PD",
+        "steps": [
+          "Confirm the suspect is restrained correctly (handcuffed, seat-belted).",
+          "Notify dispatch of your transport and destination.",
+          "Monitor the suspect continuously during transport; use in-vehicle cameras where available."
+        ]
+      },
+      "arrival_booking": {
+        "title": "2. Arrival & Booking",
+        "inform_custody_staff": {
+          "content": "Inform custody staff of all relevant details:",
+          "details": [
+            "Charges",
+            "Medical concerns",
+            "Use of force",
+            "Mental health indicators"
+          ]
+        },
+        "search_suspect": "Search the suspect again before entry to ensure no weapons or contraband are brought into the facility.",
+        "property_inventory": {
+          "title": "Property Inventory",
+          "steps": [
+            "Remove and document all personal items.",
+            "Place property in a secured bag with proper tagging.",
+            "Ensure that valuables (phones, jewelry, wallets) are accurately noted."
+          ]
+        }
+      },
+      "documentation": {
+        "title": "3. Documentation",
+        "content": "Complete all required arrest reports before ending the shift.",
+        "include": [
+          "Probable cause statement",
+          "Details of the arrest",
+          "Items seized",
+          "Injuries (if any)",
+          "Charges being recommended"
+        ],
+        "note": "Submit booking photos and fingerprints as required.\nFailure to complete proper jail processing may result in the release of the suspect or an administrative review of the case."
+      },
+      "access_to_legal_representation": {
+        "title": "Access to Legal Representation",
+        "content": "The right to legal counsel is a constitutional guarantee protected under the Sixth Amendment. LSPD officers must ensure that all individuals in custody are informed of and granted access to legal representation as mandated by law and policy.",
+        "miranda_warnings": {
+          "title": "1. Miranda Warnings",
+          "steps": [
+            "Must be read before any custodial interrogation.",
+            "Silence or refusal to speak must be respected.",
+            "If the individual requests an attorney, questioning must immediately cease until counsel is present."
+          ]
+        },
+        "attorney_access": {
+          "title": "2. Attorney Access",
+          "content": "Individuals have the right to consult an attorney without unreasonable delay.",
+          "officers_must_not": [
+            "Obstruct access to counsel.",
+            "Discourage legal consultation",
+            "Continue questioning after a request for a lawyer."
+          ],
+          "note": "If an attorney appears on behalf of a detainee, they must be permitted to meet in a secure, private area as soon as safely possible."
+        },
+        "vulnerable_persons": {
+          "title": "3. Vulnerable Persons",
+          "content": "Additional protections apply.",
+          "note": "Do not interrogate individuals with known impairments without ensuring a guardian, advocate, or attorney is present."
+        }
+      },
+      "conclusion": "By upholding these standards, LSPD personnel safeguard the department’s legal integrity and ensure that the constitutional rights of those in custody are protected, thereby guaranteeing that all enforcement actions are not only lawful but also just."
+    },
+    {
+      "title": "Court Testimony Guidelines",
+      "content": "Testifying in court is a vital duty of all LSPD officers and a critical part of the criminal justice process. Your performance on the stand directly influences case outcomes, departmental reputation, and public trust. Officers are expected to testify with integrity, accuracy, and professionalism.",
+      "preparation": {
+        "title": "1. Preparation",
+        "steps": [
+          "Review the Case: Thoroughly review your report(s), bodycam footage, evidence logs, and any supplemental documentation before court.",
+          "Coordinate with Prosecutors: Communicate with the prosecuting attorney to clarify any legal points or expectations regarding your testimony.",
+          "Understand Your Role: Your responsibility is to present facts, not opinions or speculation. Remain objective and impartial."
+        ]
+      },
+      "professional_conduct_in_court": {
+        "title": "2. Professional Conduct in Court",
+        "steps": [
+          "Appearance: Attend court in full uniform (or business attire, if directed), clean and presentable.",
+          "Punctuality: Arrive on time. Tardiness reflects poorly on the department and may affect the case.",
+          "Courtroom Decorum: Address the judge respectfully. Avoid side conversations, gestures, or facial expressions during testimony."
+        ]
+      },
+      "testifying_effectively": {
+        "title": "3. Testifying Effectively",
+        "steps": [
+          "Tell the Truth: Always testify honestly, even if the facts are unfavorable. Do not exaggerate or attempt to fill in gaps.",
+          "Be Precise: Speak, answer questions directly, and avoid providing unnecessary details unless specifically asked.",
+          "Remain Calm Under Pressure: Defense attorneys may attempt to provoke or discredit you. Stay composed and professional at all times.",
+          "If You Don’t Know, Say So: It is acceptable to say “I don’t recall” or “I don’t know” if you are unsure. Never guess."
+        ]
+      },
+      "post_testimony_conduct": {
+        "title": "4. Post-Testimony Conduct",
+        "steps": [
+          "Do not discuss your testimony with other witnesses until the case concludes.",
+          "Be prepared for follow-up requests or additional testimony if the case proceeds to further hearings or trial."
+        ]
+      }
+    },
+    {
+      "title": "Summary & Conclusion",
+      "content": "The Los Santos Police Department Training Manual represents more than a collection of policies and procedures—it reflects the standards, responsibilities, and values expected of every officer who wears this badge. Whether patrolling the streets, testifying in court, conducting a traffic stop, or engaging with the community, each action you take is a direct reflection of this department’s integrity, discipline, and professionalism.",
+      "manual_introduces": [
+        "The department’s core operational protocols",
+        "The lawful and ethical execution of police duties",
+        "Critical decision-making frameworks for field scenarios",
+        "The importance of community trust, internal accountability, and officer wellness",
+        "The foundational legal and procedural standards that govern arrests, searches, use of force, and courtroom conduct"
+      ],
+      "unifying_principle": "Every section is built upon a single unifying principle: To Serve and Protect with Honor. This is not merely a slogan—it is the measure by which your peers, your command, and the public will judge you.",
+      "your_role_moving_forward": {
+        "title": "Your Role Moving Forward",
+        "content": "Completion of training is not the end of your development—it is the beginning of a lifelong commitment to professional excellence. The choices you make in the field will demand confidence, restraint, and courage. You must constantly balance assertiveness with discretion, enforcement with empathy, and procedure with purpose.",
+        "expected_as_member": [
+          "Uphold the Constitution and the laws of the state with impartiality",
+          "Act decisively but ethically under pressure.",
+          "Demonstrate sound judgment and maturity.",
+          "Support your fellow officers, and hold yourself accountable for your conduct.",
+          "Continue to train, improve, and lead by example."
+        ]
+      },
+      "final_message": "The streets of Los Santos are ever-changing. But the expectations of this department are not. Carry this manual’s guidance with you. Refer back to it when in doubt. Uphold its standards even when no one is watching.\nBecause being an officer of the Los Santos Police Department is not just about what you do— It’s about who you choose to be.\nStay vigilant. Stay professional. Serve with integrity."
+    }
+  ]
+}
