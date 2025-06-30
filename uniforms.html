@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LSPD Clothing Ranks</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Custom styles for Inter font */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f3ffef; /* Light gray background */
+        }
+        /* Basic styling for scrollbars for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #e0e0e0;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #555;
+            }
+        /* Modal specific styles */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0, 0, 0, 0.6); /* Dark overlay */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000; /* Ensure it's on top */
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* shadow-xl */
+            padding: 1.5rem; /* p-6 */
+            max-width: 90%; /* Responsive width */
+            width: 500px; /* Max width for desktop */
+            position: relative;
+            max-height: 90vh; /* Max height to allow scrolling */
+            overflow-y: auto; /* Enable scrolling for long content */
+        }
+
+        .modal-close-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #4a5568; /* gray-700 */
+            transition: color 0.2s;
+        }
+
+            .modal-close-button:hover {
+                color: #1a202c; /* gray-900 */
+            }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Header Section -->
+    <!-- Flexbox with `flex-col md:flex-row` makes it stack vertically on small screens and horizontally on medium screens and up -->
+    <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex flex-col md:flex-row items-center justify-between sticky top-0 z-50 rounded-b-lg">
+        <div class="flex items-center mb-4 md:mb-0">
+            <!-- LSPD Logo - Local source updated to LSPD.png -->
+            <img src="LSPD.png" alt="LSPD Logo" class="mr-4 w-16 h-16 object-contain" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
+            <!-- Responsive font size: text-2xl for small screens, text-3xl for medium screens and up -->
+            <h1 class="text-2xl md:text-3xl font-bold">Los Santos Police Department</h1>
+        </div>
+        <!-- Navigation Menu -->
+        <nav class="w-full md:w-auto">
+            <!-- Flexbox with `flex-col md:flex-row` for navigation items -->
+            <ul class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-8 text-lg font-medium">
+                <!-- Dashboard link updated to index.html -->
+                <li><a href="index.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Dashboard</a></li>
+                <!-- SOPs link updated to SOP.html -->
+                <li><a href="SOP.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">SOPs</a></li>
+                <!-- Training link updated to training.html -->
+                <li><a href="training.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Training</a></li>
+                <!-- Forms link updated to forms.html -->
+                <li><a href="forms.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Forms</a></li>
+                <!-- Roster link updated to roster.html -->
+                <li><a href="roster.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Roster</a></li>
+                <!-- HR Info link updated to hr.html -->
+                <li><a href="hr.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">HR Info</a></li>
+                <!-- Report Generator link updated to report.html -->
+                <li><a href="report.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Report Generator</a></li>
+                <!-- New: Charge Calculator button -->
+                <li><a href="charges.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Charge Calculator</a></li>
+                <!-- New: Commonly Used PD INFO -->
+                <li><a href="info.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Common Information</a></li>
+            </ul>
+        </nav>
+        <!-- Search Bar removed from here -->
+    </header>
+
+    <main id="data-section" class="container mx-auto p-6 flex-grow">
+        <div id="loading-indicator" class="text-center text-gray-600 text-xl font-semibold mt-10">
+            <div class="flex items-center justify-center space-x-2">
+                <svg class="animate-spin h-8 w-8 text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span>Loading data... Please wait.</span>
+            </div>
+        </div>
+        <div id="error-message" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-md relative mt-10" role="alert">
+            <strong class="font-bold">Error!</strong>
+            <span class="block sm:inline" id="error-text"></span>
+        </div>
+
+        <!-- Rank Selector Dropdown -->
+        <div class="mb-8 p-4 bg-white rounded-xl shadow-md flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+            <label for="rank-selector" class="text-lg font-semibold text-gray-700">Select Rank:</label>
+            <select id="rank-selector" class="block w-full sm:w-auto px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-gray-800">
+                <option value="" selected disabled>Select Rank</option> <!-- Default "Select Rank" option -->
+                <!-- Options will be populated by JavaScript -->
+            </select>
+        </div>
+
+        <!-- This div will remain empty initially, as data is shown in modal -->
+        <div id="content" class="text-center text-gray-500 mt-10">
+            Please select a rank from the dropdown above to view its clothing data.
+        </div>
+    </main>
+
+    <!-- Footer Section - Internal Contacts -->
+    <!-- Grid layout that changes columns based on screen size: 1 column on small, 3 on medium screens and up -->
+    <footer class="bg-gray-800 text-white py-10 px-6 md:px-12 rounded-t-lg">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Internal Contact Info (content removed, titles remain) -->
+            <div>
+                <h4 class="text-xl font-semibold mb-4 text-blue-300">Internal Contacts</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="https://discord.gg/7FwxdpfDTM" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Discord</a></li>
+                    <li><a href="https://discord.com/channels/1383775098464370768/1383775099777318972" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Chat</a></li>
+                    <li><a href="https://discord.com/channels/1383775098464370768/1383782578976456735" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Cadet Support</a></li>
+                </ul>
+            </div>
+            <!-- Internal Quick Links (text links added) -->
+            <div>
+                <h4 class="text-xl font-semibold mb-4 text-blue-300">Quick Access</h4>
+                <ul class="space-y-2 text-sm">
+                    <!-- Added text-sm here -->
+                    <li><a href="https://docs.google.com/document/d/1etjilZ1dAHGviw33MV5Zs-b5dXqcSHyoYIHvHiRIyy4/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">LSPD SOP</a></li>
+                    <li><a href="https://docs.google.com/document/d/1hKQ4fw9b1_yQELhPi1p1b4M6uiSaYb7bBp-9C6GVTdY/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Los Santos Police Department Interview Procedure & Questions</a></li>
+                    <li><a href="https://docs.google.com/document/d/1d004FfAhZBgESn88Mx21N3CGqXlcoNeP9_sadn_ePak/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Promotional Pathway & Subdivision Assignment Policy</a></li>
+                    <li><a href="https://docs.google.com/document/d/14QIEsYMWpTssti1xGbGWiMxQ2b0jbiYxuMmvV8XWUUo/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Highway Enforcement and Apprehension Team (HEAT) Activation Policy</a></li>
+                    <li><a href="https://docs.google.com/document/d/1Ggf7SS5voiIjr3iSLB3VtAc47JN3aDjm2J_gYnpoZ6s/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Disciplinary Guidelines</a></li>
+                    <li><a href="https://nlspd.net/" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">LSPD Website</a></li>
+                </ul>
+            </div>
+            <!-- Copyright & Internal System Info (content removed, titles remain) -->
+            <div>
+                <h4 class="text-xl font-semibold mb-4 text-blue-300">System Information</h4>
+                <p class="text-gray-500 text-sm mb-2">Unauthorized Access Strictly Prohibited</p>
+                <p class="text-gray-500 text-sm mb-2">For LSPD Personnel Use Only</p>
+                <p class="text-500 text-sm mb-2">Created and Maintained by FiveM "NightLife RP"</p>
+                <p class="text-gray-500 text-sm">&copy; 2025 Los Santos Police Department Internal Systems.</p>
+            </div>
+        </div>
+        <!-- Font Awesome for any potential internal icons (though less needed here) -->
+        <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    </footer>
+
+    <!-- Rank Data Modal -->
+    <div id="rank-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button class="modal-close-button" id="modal-close-button">&times;</button>
+            <h2 id="modal-rank-title" class="text-3xl font-bold text-blue-800 mb-6 border-b-2 border-blue-200 pb-3"></h2>
+            <div id="modal-rank-content" class="space-y-6">
+                <!-- Rank-specific clothing data will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const googleSheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8yueJjp9o-XVH1_RXPji6N_IAP1DDbNLZ8l4__IqGCvVEUWscsdsJ6uNHZ8u6kDhhXkSxcdkdeDJi/pubhtml?gid=756380647&single=true';
+            const loadingIndicator = document.getElementById('loading-indicator');
+            const errorMessage = document.getElementById('error-message');
+            const errorText = document.getElementById('error-text');
+            const contentDiv = document.getElementById('content');
+            const rankSelector = document.getElementById('rank-selector');
+            const rankModal = document.getElementById('rank-modal');
+            const modalCloseButton = document.getElementById('modal-close-button');
+            const modalRankTitle = document.getElementById('modal-rank-title');
+            const modalRankContent = document.getElementById('modal-rank-content');
+
+            let allFetchedData = {};
+
+            const rankToDataColumn = {
+                'LSPD Cadet': 'E',
+                'LSPD Probationary Officer': 'H',
+                'LSPD Officer': 'K',
+                'LSPD Senior Officer': 'N',
+                'LSPD Lead Officer': 'Q',
+                'LSPD Corporal': 'T',
+                'LSPD Sergeant': 'W',
+                'LSPD Staff Sergeant': 'Z',
+                'LSPD Master Sergeant': 'AC',
+                'LSPD Lieutenant': 'AF',
+                'LSPD Captain': 'AI',
+                'LSPD Commander': 'AL'
+            };
+
+            const CATEGORY_NAME_COLUMN = 'B';
+            const DATA_START_ROW = 19; // Spreadsheet row 19 (HTML index 18)
+            const DATA_END_ROW = 41;   // Spreadsheet row 41 (HTML index 40)
+
+            /**
+             * Populates the rank selector dropdown with options.
+             * @param {Object} ranks - An object where keys are rank names.
+             */
+            function populateRankSelector(ranks) {
+                while (rankSelector.options.length > 1) {
+                    rankSelector.remove(1);
+                }
+                Object.keys(ranks).forEach(rankName => {
+                    const option = document.createElement('option');
+                    option.value = rankName;
+                    option.textContent = rankName;
+                    rankSelector.appendChild(option);
+                });
+            }
+
+            /**
+             * Shows the modal with data for the selected rank.
+             * @param {string} rankName - The name of the rank to display.
+             */
+            function showRankModal(rankName) {
+                const rankData = allFetchedData[rankName];
+                if (!rankData) {
+                    console.warn(`No data found for rank: ${rankName}`);
+                    return;
+                }
+
+                modalRankTitle.textContent = rankName;
+                modalRankContent.innerHTML = ''; // Clear previous modal content
+
+                let hasContentForRank = false;
+
+                for (const categoryName in rankData.categories) { // Access categories property
+                    const items = rankData.categories[categoryName];
+                    const filteredItems = items.filter(item => item.id);
+
+                    if (filteredItems.length > 0) {
+                        hasContentForRank = true;
+                        const categorySection = document.createElement('div');
+                        categorySection.className = 'mb-4';
+
+                        const categoryTitle = document.createElement('h3');
+                        categoryTitle.className = 'text-xl font-semibold text-gray-700 mb-2 flex items-center';
+                        categoryTitle.innerHTML = `<span class="mr-2 text-blue-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                            </svg>
+                        </span> ${categoryName}`;
+                        categorySection.appendChild(categoryTitle);
+
+                        const itemList = document.createElement('ul');
+                        itemList.className = 'list-disc list-inside text-gray-600 space-y-0.5 text-sm';
+
+                        filteredItems.sort((a, b) => {
+                            const idA = parseInt(a.id, 10);
+                            const idB = parseInt(b.id, 10);
+                            if (!isNaN(idA) && !isNaN(idB)) {
+                                return idA - idB;
+                            }
+                            return a.id.localeCompare(b.id);
+                        });
+
+                        filteredItems.forEach(item => {
+                            const listItem = document.createElement('li');
+                            listItem.className = 'flex items-center';
+                            listItem.innerHTML = `<span class="font-medium text-gray-800">${item.id || 'N/A'}</span>`;
+                            itemList.appendChild(listItem);
+                        });
+                        categorySection.appendChild(itemList);
+                        modalRankContent.appendChild(categorySection);
+                    }
+                }
+
+                if (hasContentForRank) {
+                    rankModal.classList.remove('hidden');
+                } else {
+                    modalRankContent.innerHTML = `<p class="text-center text-gray-600 text-lg">No clothing data found for ${rankName}.</p>`;
+                    rankModal.classList.remove('hidden');
+                }
+            }
+
+            /**
+             * Hides the modal.
+             */
+            function hideRankModal() {
+                rankModal.classList.add('hidden');
+            }
+
+            // Add event listener for modal close button
+            modalCloseButton.addEventListener('click', hideRankModal);
+
+            // Add event listener for rank selector change
+            rankSelector.addEventListener('change', (event) => {
+                const selectedRank = event.target.value;
+                if (selectedRank === '') {
+                    hideRankModal();
+                    contentDiv.innerHTML = `<p class="text-center text-gray-500 mt-10">Please select a rank from the dropdown above to view its clothing data.</p>`;
+                } else {
+                    showRankModal(selectedRank);
+                }
+            });
+
+            /**
+             * Fetches the Google Sheet HTML, parses it, and extracts the data.
+             * @returns {Promise<Object>} A promise that resolves with the structured data.
+             */
+            async function fetchAndParseSheet() {
+                try {
+                    const response = await fetch(googleSheetUrl);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! Status: ${response.status}. This might be due to an incorrect URL, network issues, or restricted sheet access.`);
+                    }
+                    const htmlText = await response.text();
+
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(htmlText, 'text/html');
+
+                    const table = doc.querySelector('table.waffle');
+                    if (!table) {
+                        throw new Error('Could not find the main data table in the sheet.');
+                    }
+
+                    const rows = Array.from(table.querySelectorAll('tbody tr'));
+                    // Ensure enough rows for data
+                    if (rows.length < DATA_END_ROW) {
+                        throw new Error(`Insufficient rows found in the sheet data. Expected at least ${DATA_END_ROW} rows, but found ${rows.length}.`);
+                    }
+
+                    const parsedRanksData = {};
+                    const dynamicClothingCategories = [];
+
+                    // IMPORTANT: Build column mapping from a row that accurately represents the layout
+                    // Using DATA_START_ROW - 1 (spreadsheet row 19) for general column mapping
+                    const referenceRowForColMapping = rows[DATA_START_ROW - 1];
+                    if (!referenceRowForColMapping) {
+                        throw new Error(`Reference row for column mapping (spreadsheet row ${DATA_START_ROW}) is missing.`);
+                    }
+                    const referenceCells = Array.from(referenceRowForColMapping.querySelectorAll('td'));
+
+                    const spreadsheetColLetterToHtmlTdIndex = {};
+                    let currentHtmlTdIndex = 0;
+                    let currentSpreadsheetCol = 0;
+
+                    for (let i = 0; i < referenceCells.length; i++) {
+                        const cell = referenceCells[i];
+                        const colSpan = parseInt(cell.getAttribute('colspan') || '1', 10);
+
+                        for (let s = 0; s < colSpan; s++) {
+                            let colLetter = '';
+                            let tempIndex = currentSpreadsheetCol + s;
+                            while (tempIndex >= 0) {
+                                colLetter = String.fromCharCode(65 + (tempIndex % 26)) + colLetter;
+                                tempIndex = Math.floor(tempIndex / 26) - 1;
+                            }
+                            if (colLetter === '') colLetter = 'A';
+                            spreadsheetColLetterToHtmlTdIndex[colLetter] = currentHtmlTdIndex;
+                        }
+                        currentSpreadsheetCol += colSpan;
+                        currentHtmlTdIndex++;
+                    }
+
+                    const categoryColHtmlIdx = spreadsheetColLetterToHtmlTdIndex[CATEGORY_NAME_COLUMN];
+                    if (categoryColHtmlIdx === undefined) {
+                        throw new Error(`Could not find HTML td index for category name column '${CATEGORY_NAME_COLUMN}'. Map: ${JSON.stringify(spreadsheetColLetterToHtmlTdIndex)}`);
+                    }
+
+                    // Initialize `parsedRanksData` with empty categories (no images array needed now)
+                    for (const rank of Object.keys(rankToDataColumn)) {
+                        parsedRanksData[rank] = {
+                            categories: {}
+                        };
+                    }
+
+                    // Step 1: Dynamically extract clothing category names and their row indices
+                    for (let i = (DATA_START_ROW - 1); i < DATA_END_ROW; i++) {
+                        const row = rows[i];
+                        if (!row) continue;
+
+                        const cellsInRow = Array.from(row.querySelectorAll('td'));
+                        if (cellsInRow[categoryColHtmlIdx]) {
+                            const categoryName = cellsInRow[categoryColHtmlIdx].textContent.trim();
+                            if (categoryName) {
+                                dynamicClothingCategories.push({
+                                    name: categoryName,
+                                    htmlRowIndex: i
+                                });
+                                // Initialize category for all ranks
+                                for (const rank of Object.keys(rankToDataColumn)) {
+                                    parsedRanksData[rank].categories[categoryName] = [];
+                                }
+                            }
+                        }
+                    }
+
+                    // Step 2: Extract clothing IDs for each rank and category
+                    for (const rankName of Object.keys(rankToDataColumn)) {
+                        const rankDataCol = rankToDataColumn[rankName];
+                        const rankHtmlColIdx = spreadsheetColLetterToHtmlTdIndex[rankDataCol];
+
+                        if (rankHtmlColIdx === undefined) {
+                            console.warn(`Could not find HTML td index for rank data column '${rankDataCol}' for rank '${rankName}'. Skipping data extraction for this rank.`);
+                            continue;
+                        }
+
+                        dynamicClothingCategories.forEach(category => {
+                            const categoryHtmlRowIndex = category.htmlRowIndex;
+                            const categoryName = category.name;
+
+                            const dataRow = rows[categoryHtmlRowIndex];
+                            if (!dataRow) return;
+
+                            const cellsInRow = Array.from(dataRow.querySelectorAll('td'));
+                            if (cellsInRow[rankHtmlColIdx]) {
+                                const fullItemText = cellsInRow[rankHtmlColIdx].textContent.trim();
+                                let displayId = fullItemText;
+                                const idMatch = fullItemText.match(/\(ID:\s*(.*?)\)/);
+                                if (idMatch && idMatch[1]) {
+                                    displayId = idMatch[1].trim();
+                                }
+                                if (displayId) {
+                                    parsedRanksData[rankName].categories[categoryName].push({ name: '', id: displayId });
+                                }
+                            }
+                        });
+                    }
+
+                    return parsedRanksData;
+
+                } catch (error) {
+                    console.error('Error fetching or parsing sheet:', error);
+                    errorText.textContent = `Failed to load data: ${error.message}. Please check your internet connection and ensure the Google Sheet URL is correct and publicly accessible.`;
+                    errorMessage.classList.remove('hidden');
+                    return null;
+                } finally {
+                    loadingIndicator.classList.add('hidden');
+                }
+            }
+
+            // Initial data fetch and populate selector
+            fetchAndParseSheet().then(data => {
+                if (data) {
+                    allFetchedData = data;
+                    populateRankSelector(allFetchedData);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
