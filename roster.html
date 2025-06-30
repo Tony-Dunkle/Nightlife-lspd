@@ -386,6 +386,17 @@
                 const gridContainer = document.createElement('div');
                 gridContainer.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full';
 
+                // Mapping for region abbreviations to full names
+                const regionMap = {
+                    'NA': 'North America',
+                    'EU': 'Europe',
+                    'ASIA': 'Asia',
+                    'SA': 'South America',
+                    'AF': 'Africa',
+                    'OC': 'Oceania',
+                    // Add more as needed
+                };
+
                 data.forEach((rowData) => {
                     // Get the 'Name' value (which is at index 2 in the `displayHeaders` array)
                     const nameValue = rowData[headers.indexOf('Name')];
@@ -440,6 +451,11 @@
                         let value = rowData[colIndex]; // Already processed in fetchRosterData
                         if (value === undefined || value === null || value.trim() === '') {
                             value = 'N/A';
+                        }
+
+                        // Apply region mapping if the header is 'Region'
+                        if (header === 'Region' && regionMap[value]) {
+                            value = regionMap[value];
                         }
 
                         const detailDiv = document.createElement('div');
