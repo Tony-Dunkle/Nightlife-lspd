@@ -426,7 +426,7 @@
             try {
                 let chatHistory = [];
                 // Construct a detailed prompt for the Gemini API, including all new fields
-                const prompt = `Generate a detailed and professional police report for the ${department} based on the following information. The output must strictly follow the format provided below, with no additional text, introductory phrases, or markdown formatting (like bold, italics, headers, or bullet points). Ensure all fields are populated appropriately based on the input. If a field is not directly deducible from the input, provide a reasonable placeholder or "N/A".
+                const prompt = `Generate a detailed and professional police report for the ${department} based on the following information. The output must strictly follow the format provided below, with no additional text, introductory phrases, or markdown formatting (like bold, italics, headers, or bullet points). Ensure all fields are populated appropriately based on the input. If a field is not directly deducible from the input, provide a reasonable placeholder or "N/A" Also ensure that your generated report is written as if you were the officer writing the report.
 
 Officer Information: ${officerInfo}
 Suspect Name: ${suspectName}
