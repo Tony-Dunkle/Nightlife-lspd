@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LSPD Police Information</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="LSPD.png">
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f2f5; /* Light gray background */
+            color: #333;
+        }
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #e2e8f0; /* Tailwind gray-200 */
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #94a3b8; /* Tailwind gray-400 */
+            border-radius: 10px;
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #64748b; /* Tailwind gray-500 */
+            }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen">
+    <!-- Header Section - Reused from hr.html -->
+    <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex flex-col md:flex-row items-center justify-between sticky top-0 z-50 rounded-b-lg">
+        <div class="flex items-center mb-4 md:mb-0">
+            <!-- Adjusted LSPD Logo: Removed border -->
+            <img src="LSPD.png" alt="LSPD Logo" class="mr-4 w-16 h-16 object-contain rounded-lg" onerror="this.onerror=null; this.src='https://placehold.co/64x64/0000FF/FFFFFF?text=LSPD';">
+            <h1 class="text-2xl md:text-3xl font-bold">LSPD Internal Portal</h1>
+        </div>
+        <nav class="w-full md:w-auto">
+            <ul class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-8 text-lg font-medium">
+                <li><a href="index.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Dashboard</a></li>
+                <li><a href="SOP.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">SOPs</a></li>
+                <li><a href="training.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Training</a></li>
+                <li><a href="forms.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Forms</a></li>
+                <li><a href="roster.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Roster</a></li>
+                <li><a href="hr.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">HR Info</a></li>
+                <li><a href="report.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Report Generator</a></li>
+                <li><a href="charges.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Charge Calculator</a></li>
+                <!-- New: Commonly Used PD INFO -->
+                <li><a href="info.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Common Information</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content Section -->
+    <main class="flex-grow container mx-auto p-6 md:p-10">
+        <section class="bg-white rounded-lg shadow-xl p-6 md:p-8 mb-8">
+            <h2 class="text-3xl md:text-4xl font-extrabold text-blue-800 mb-6 border-b-4 border-blue-500 pb-2">Commonly Used Police Information</h2>
+            <p class="text-lg text-gray-700 leading-relaxed mb-6">
+                This page provides essential information for officers while on duty, including 10-codes, speed limits, Miranda Rights, in-game commands, and more.
+            </p>
+
+            <!-- Useful 10 Codes - Moved to a horizontal box at the top -->
+            <div class="bg-blue-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 w-full mb-6">
+                <h3 class="text-2xl font-semibold text-blue-700 mb-3 flex items-center">
+                    <svg class="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.001 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                    Useful 10 Codes
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+                    <!-- Each 10-code in its own light box -->
+                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <strong class="text-blue-800">10-02:</strong> Clear Communication
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <strong class="text-blue-800">10-03:</strong> Stop Communication
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <strong class="text-blue-800">10-04:</strong> Affirmative / OK
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <strong class="text-blue-800">10-07:</strong> Taking a Break
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <strong class="text-blue-800">10-08:</strong> Back On Duty
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <strong class="text-blue-800">10-09:</strong> Repeat last.
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <strong class="text-blue-800">10-10:</strong> Fight in Progress
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <strong class="text-blue-800">10-11:</strong> Discharge of a firearm.
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <strong class="text-blue-800">10-13:</strong> Suspicious Handoff
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <strong class="text-blue-800">10-20:</strong> Location
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <strong class="text-blue-800">10-23:</strong> Arrived on scene.
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <strong class="text-blue-800">10-25:</strong> In person meeting.
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <strong class="text-blue-800">10-28:</strong> License/Registration Check
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <strong class="text-blue-800">10-29:</strong> Background Check
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <strong class="text-blue-800">10-32:</strong> Additional units
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <strong class="text-blue-800">10-35:</strong> Vehicle Theft
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <strong class="text-blue-800">10-38:</strong> Traffic stop.
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <strong class="text-blue-800">10-41:</strong> Beginning shift.
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <strong class="text-blue-800">10-42:</strong> Ending shift.
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <strong class="text-blue-800">10-50:</strong> Vehicle accident.
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <strong class="text-blue-800">10-51:</strong> Tow truck needed.
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <strong class="text-blue-800">10-52:</strong> Ambulance needed.
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <strong class="text-blue-800">10-60:</strong> Shots fired from a vehicle
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <strong class="text-blue-800">10-76:</strong> Enroute.
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <strong class="text-blue-800">10-77:</strong> Estimated Time of Arrival
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <strong class="text-blue-800">10-78:</strong> Need assistance.
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <strong class="text-blue-800">10-80:</strong> Vehicle pursuit.
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <strong class="text-blue-800">10-85:</strong> Supervisor needed.
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <strong class="text-blue-800">10-90:</strong> Robbery.
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <strong class="text-blue-800">10-95:</strong> Suspect in custody.
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <strong class="text-blue-800">10-98:</strong> Jail break.
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <strong class="text-blue-800">11-99:</strong> Officer in distress.
+                    </div>
+                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
+                        <strong class="text-blue-800">11-99b:</strong> Officer in distress. (Low Risk)
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+                <!-- Speed Limits -->
+                <div class="bg-green-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <h3 class="text-2xl font-semibold text-green-700 mb-3 flex items-center">
+                        <svg class="w-6 h-6 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                        Speed Limits
+                    </h3>
+                    <ul class="list-disc list-inside text-gray-600 space-y-2">
+                        <li>City: 50 MPH / 80 KPH</li>
+                        <li>Route 68 / Joshua Road: 60 MPH / 96 KPH</li>
+                        <li>Highway: 80 MPH / 129 KPH</li>
+                    </ul>
+                </div>
+
+                <!-- Miranda Rights -->
+                <div class="bg-yellow-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <h3 class="text-2xl font-semibold text-yellow-700 mb-3 flex items-center">
+                        <svg class="w-6 h-6 mr-2 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h10a2 2 0 002-2V8m-2 0V5a2 2 0 00-2-2H9a2 2 0 00-2 2v3m0 0h8m-8 0H5m3 4h.01M15 12h.01M12 12h.01M15 16h.01M12 16h.01M9 16h.01"></path></svg>
+                        Miranda Rights
+                    </h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        “You have the right to remain silent. Anything you say or do can and will be used against you in a court of law. You have the right to an attorney. If you cannot afford one, one will be provided to you by the state if available. Do you understand these rights as I have read them to you?"
+                    </p>
+                    <p class="text-gray-600 leading-relaxed mt-2 italic">
+                        (Optional) "If so, do you still wish to speak with me?"
+                    </p>
+                </div>
+
+                <!-- Ingame Commands -->
+                <div class="bg-red-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <h3 class="text-2xl font-semibold text-red-700 mb-3 flex items-center">
+                        <svg class="w-6 h-6 mr-2 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+                        Ingame Commands
+                    </h3>
+                    <ul class="list-disc list-inside text-gray-600 space-y-2">
+                        <li><strong class="font-semibold">F1:</strong> Radial menu for most police interactions</li>
+                        <li><strong class="font-semibold">K:</strong> Police database/Investlog</li>
+                        <li><strong class="font-semibold">/timer for cash/seizecash:</strong> Seizes cash of suspect</li>
+                        <li><strong class="font-semibold">/callsign:</strong> Sets callsign in MDT</li>
+                        <li><strong class="font-semibold">/map:</strong> Opens map</li>
+                        <li><strong class="font-semibold">/polcharge:</strong> Charge command</li>
+                    </ul>
+                </div>
+
+                <!-- Situation Codes -->
+                <div class="bg-purple-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <h3 class="text-2xl font-semibold text-purple-700 mb-3 flex items-center">
+                        <svg class="w-6 h-6 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                        Situation Codes
+                    </h3>
+                    <ul class="list-disc list-inside text-gray-600 space-y-2">
+                        <li><strong class="font-semibold">Code 0:</strong> Headpop/Crash</li>
+                        <li><strong class="font-semibold">Code 1:</strong> No Lights/Sirens</li>
+                        <li><strong class="font-semibold">Code 2:</strong> Lights Only</li>
+                        <li><strong class="font-semibold">Code 3:</strong> Lights and Sirens</li>
+                        <li><strong class="font-semibold">Code 4:</strong> Scene Clear</li>
+                        <li><strong class="font-semibold">Code 5:</strong> High Risk Stop</li>
+                        <li><strong class="font-semibold">Code 6:</strong> Investigating the Area</li>
+                    </ul>
+                </div>
+
+                <!-- Disclaimer -->
+                <div class="bg-indigo-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <h3 class="text-2xl font-semibold text-indigo-700 mb-3 flex items-center">
+                        <svg class="w-6 h-6 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                        Disclaimer
+                    </h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        Any legal weapon used in the facilitation of a crime becomes illegal and you can charge them with illegal possession of a weapon. You also revoke their weapon license if the legal weapon was used in the commission of the crime or have previous felonies.
+                    </p>
+                </div>
+
+                <!-- Frequencies -->
+                <div class="bg-pink-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <h3 class="text-2xl font-semibold text-pink-700 mb-3 flex items-center">
+                        <svg class="w-6 h-6 mr-2 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.001 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
+                        Frequencies
+                    </h3>
+                    <ul class="list-disc list-inside text-gray-600 space-y-2">
+                        <li><strong class="font-semibold">Ch. 1:</strong> LSPD</li>
+                        <li><strong class="font-semibold">Ch. 2:</strong> EMS</li>
+                        <li><strong class="font-semibold">Ch. 3:</strong> PD - Alternate 1</li>
+                        <li><strong class="font-semibold">Ch. 4:</strong> PD - Alternate 2</li>
+                        <li><strong class="font-semibold">Ch. 7:</strong> DOJ (Restricted)</li>
+                    </ul>
+                </div>
+
+                <!-- Guilty Plea -->
+                <div class="bg-teal-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <h3 class="text-2xl font-semibold text-teal-700 mb-3 flex items-center">
+                        <svg class="w-6 h-6 mr-2 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.001 12.001 0 002.92 12c0 3.072 1.47 5.862 3.813 7.758L12 22l5.267-3.692A12.001 12.001 0 0021.08 12c0-3.072-1.47-5.862-3.813-7.758z"></path></svg>
+                        Guilty Plea
+                    </h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        A person can enter a plea of "guilty' by admitting in court that he or she committed the offense for which he she is charged. The Jury can render a verdict of "guilty' if it finds beyond a reasonable doubt, based on the evidence, that the defendant committed the offense.
+                    </p>
+                </div>
+
+                <!-- Not Guilty Plea -->
+                <div class="bg-orange-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <h3 class="text-2xl font-semibold text-orange-700 mb-3 flex items-center">
+                        <svg class="w-6 h-6 mr-2 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                        Not Guilty Plea
+                    </h3>
+                    <p class="text-gray-600 leading-relaxed">
+                        A person can enter the plea of "not guilty" by contesting the charges brought against him or her by the prosecution. The court will then set up a trial date for both parties to decide the fate of the defense.
+                    </p>
+                </div>
+
+                <!-- Phonetic Alphabet -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
+                    <h3 class="text-2xl font-semibold text-gray-700 mb-3 flex items-center">
+                        <svg class="w-6 h-6 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                        Phonetic Alphabet
+                    </h3>
+                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 text-gray-600">
+                        <span><strong class="font-semibold">Alpha</strong></span>
+                        <span><strong class="font-semibold">Bravo</strong></span>
+                        <span><strong class="font-semibold">Charlie</strong></span>
+                        <span><strong class="font-semibold">Delta</strong></span>
+                        <span><strong class="font-semibold">Echo</strong></span>
+                        <span><strong class="font-semibold">Foxtrot</strong></span>
+                        <span><strong class="font-semibold">Golf</strong></span>
+                        <span><strong class="font-semibold">Hotel</strong></span>
+                        <span><strong class="font-semibold">India</strong></span>
+                        <span><strong class="font-semibold">Juliett</strong></span>
+                        <span><strong class="font-semibold">Kilo</strong></span>
+                        <span><strong class="font-semibold">Lima</strong></span>
+                        <span><strong class="font-semibold">Mike</strong></span>
+                        <span><strong class="font-semibold">November</strong></span>
+                        <span><strong class="font-semibold">Oscar</strong></span>
+                        <span><strong class="font-semibold">Papa</strong></span>
+                        <span><strong class="font-semibold">Quebec</strong></span>
+                        <span><strong class="font-semibold">Romeo</strong></span>
+                        <span><strong class="font-semibold">Sierra</strong></span>
+                        <span><strong class="font-semibold">Tango</strong></span>
+                        <span><strong class="font-semibold">Uniform</strong></span>
+                        <span><strong class="font-semibold">Victor</strong></span>
+                        <span><strong class="font-semibold">Whiskey</strong></span>
+                        <span><strong class="font-semibold">X-Ray</strong></span>
+                        <span><strong class="font-semibold">Yankee</strong></span>
+                        <span><strong class="font-semibold">Zulu</strong></span>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer Section - Reused from hr.html -->
+    <footer class="bg-gray-800 text-white py-10 px-6 md:px-12 rounded-t-lg">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Internal Contact Info -->
+            <div>
+                <h4 class="text-xl font-semibold mb-4 text-blue-300">Internal Contacts</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="https://discord.gg/7FwxdpfDTM" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Discord</a></li>
+                    <li><a href="https://discord.com/channels/1383775098464370768/1383775099777318972" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Chat</a></li>
+                    <li><a href="https://discord.com/channels/1383775098464370768/1383782578976456735" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Cadet Support</a></li>
+                </ul>
+            </div>
+            <!-- Internal Quick Links -->
+            <div>
+                <h4 class="text-xl font-semibold mb-4 text-blue-300">Quick Access</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="https://docs.google.com/document/d/1etjilZ1dAHGviw33MV5Zs-b5dXqcSHyoYIHvHiRIyy4/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">LSPD SOP</a></li>
+                    <li><a href="https://docs.google.com/document/d/1hKQ4fw9b1_yQELhPi1p1b4M6uiSaYb7bBp-9C6GVTdY/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Los Santos Police Department Interview Procedure & Questions</a></li>
+                    <li><a href="https://docs.google.com/document/d/1d004FfAhZBgESn88Mx21N3CGqXlcoNeP9_sadn_ePak/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Promotional Pathway & Subdivision Assignment Policy</a></li>
+                    <li><a href="https://docs.google.com/document/d/14QIEsYMWpTssti1xGbGWiMxQ2b0jbiYxuMmvV8XWUUo/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Highway Enforcement and Apprehension Team (HEAT) Activation Policy</a></li>
+                    <li><a href="https://docs.google.com/document/d/1Ggf7SS5voiIjr3iSLB3VtAc47JN3aDjm2J_gYnpoZ6s/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Disciplinary Guidelines</a></li>
+                    <li><a href="https://nlspd.net/" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">LSPD Website</a></li>
+                </ul>
+            </div>
+            <!-- Copyright & Internal System Info -->
+            <div>
+                <h4 class="text-xl font-semibold mb-4 text-blue-300">System Information</h4>
+                <p class="text-gray-500 text-sm mb-2">Unauthorized Access Strictly Prohibited</p>
+                <p class="text-gray-500 text-sm mb-2">For LSPD Personnel Use Only</p>
+                <p class="text-500 text-sm mb-2">Created and Maintained by FiveM "NightLife RP"</p>
+                <p class="text-gray-500 text-sm">&copy; 2025 Los Santos Police Department Internal Systems.</p>
+            </div>
+        </div>
+        <!-- Font Awesome for any potential internal icons (though less needed here) -->
+        <script src="https://kit.fontawesome.com/a076d05399.2js" crossorigin="anonymous"></script>
+    </footer>
+</body>
+</html>
