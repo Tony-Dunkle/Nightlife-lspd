@@ -254,7 +254,7 @@
                     const displayHeaders = [
                         'Badge No.', 'Name', 'Rank', 'Hire Date',
                         'Region', 'Divison Information', 'Specialization', 'FTO Status',
-                        'Discord Username', 'I.C. Phone Number'
+                        'Discord Username', 'I.C. Phone Number', 'Image Link' // Added Image Link
                     ];
 
                     // Process data to extract only the desired columns and map to display headers
@@ -285,6 +285,7 @@
                         'I.C. Phone Number': columnLetterToIndex('AA'), // Main I.C. Phone Number column
                         'CID': columnLetterToIndex('AC'), // Not displayed
                         'AI_Column_Data': columnLetterToIndex('AI'), // Column AI data (for combining with Discord)
+                        'Image Link': columnLetterToIndex('AJ'), // Column AJ for image link
                         'AK_Column_Data': columnLetterToIndex('AK')  // Column AK data (for combining with I.C. Phone Number)
                     };
 
@@ -392,11 +393,50 @@
                         return; // Skip this row if Name is empty or 'N/A'
                     }
 
+                    // Get the 'Image Link' value
+                    const imageLink = rowData[headers.indexOf('Image Link')];
+
                     const officerCard = document.createElement('div');
                     officerCard.className = 'bg-blue-50 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 ease-in-out flex flex-col items-start';
 
-                    // Iterate through headers and display corresponding data
+                    // Create a div to hold the name and image side-by-side
+                    const nameAndImageContainer = document.createElement('div');
+                    nameAndImageContainer.className = 'flex items-center mb-2 w-full'; // Added w-full for proper alignment
+
+                    // Create the name element
+                    const nameElement = document.createElement('h3');
+                    nameElement.className = 'text-xl font-semibold text-blue-800';
+                    nameElement.textContent = nameValue;
+                    nameAndImageContainer.appendChild(nameElement);
+
+                    // Add image if a valid link exists
+                    if (imageLink && imageLink !== 'N/A' && (imageLink.startsWith('http://') || imageLink.startsWith('https://'))) {
+                        const imgElement = document.createElement('img');
+                        imgElement.src = imageLink;
+                        imgElement.alt = `${nameValue}'s profile picture`;
+                        imgElement.className = 'w-16 h-16 rounded-full ml-4 object-cover'; // Tailwind classes for styling
+                        imgElement.onerror = function () {
+                            this.onerror = null; // Prevent infinite loop if fallback also fails
+                            this.src = 'LSPD.png'; // Changed to LSPD.png as requested
+                        };
+                        nameAndImageContainer.appendChild(imgElement);
+                    } else {
+                        // If no image, add a placeholder or simply leave empty space
+                        const placeholderImg = document.createElement('img');
+                        placeholderImg.src = 'LSPD.png'; // Changed to LSPD.png as requested
+                        placeholderImg.alt = 'No image available';
+                        placeholderImg.className = 'w-16 h-16 rounded-full ml-4 object-cover';
+                        nameAndImageContainer.appendChild(placeholderImg);
+                    }
+                    officerCard.appendChild(nameAndImageContainer);
+
+
+                    // Iterate through headers and display corresponding data, skipping 'Name' and 'Image Link'
                     headers.forEach((header, colIndex) => {
+                        if (header === 'Name' || header === 'Image Link') {
+                            return; // Skip these as they are handled above
+                        }
+
                         let value = rowData[colIndex]; // Already processed in fetchRosterData
                         if (value === undefined || value === null || value.trim() === '') {
                             value = 'N/A';
@@ -406,9 +446,7 @@
                         detailDiv.className = 'mb-2';
 
                         // Apply specific styling based on the header for better presentation
-                        if (header === 'Name') {
-                            detailDiv.innerHTML = `<h3 class="text-xl font-semibold text-blue-800">${value}</h3>`;
-                        } else if (header === 'Rank') {
+                        if (header === 'Rank') {
                             detailDiv.innerHTML = `<p class="text-md text-gray-700 font-medium"><span class="font-bold">${header}:</span> ${value}</p>`;
                         } else if (header === 'Badge No.' || header === 'I.C. Phone Number' || header === 'Discord Username') {
                             detailDiv.innerHTML = `<p class="text-md text-gray-700"><span class="font-bold">${header}:</span> <span class="font-mono">${value}</span></p>`;
