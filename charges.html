@@ -183,599 +183,591 @@
 
     <!-- Header Section -->
     <!-- Flexbox with `flex-col md:flex-row` makes it stack vertically on small screens and horizontally on medium screens and up -->
-    <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex flex-col md:flex-row items-center justify-between sticky top-0 z-50 rounded-b-lg">
+    <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex flex-col md:flex-row items-center justify-between sticky top-0 z-50 rounded-b-lg relative">
         <div class="flex items-center mb-4 md:mb-0">
             <!-- LSPD Logo - Local source updated to LSPD.png -->
             <img src="LSPD.png" alt="LSPD Logo" class="mr-4 w-16 h-16 object-contain" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
             <!-- Responsive font size: text-2xl for small screens, text-3xl for medium screens and up -->
             <h1 class="text-2xl md:text-3xl font-bold">LSPD Internal Portal</h1>
         </div>
-        <!-- Header Section -->
-        <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex items-center justify-between sticky top-0 z-50 rounded-b-lg relative">
-            <div class="flex items-center">
-                <!-- LSPD Logo -->
-                <img src="LSPD.png" alt="LSPD Logo" class="mr-4 w-16 h-16 object-contain" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
-                <!-- Responsive font size: text-2xl for small screens, text-3xl for medium screens and up -->
-                <h1 class="text-2xl md:text-3xl font-bold">Los Santos Police Department</h1>
-            </div>
 
-            <!-- Hamburger Menu Button for Mobile -->
-            <button id="hamburgerBtn" class="hamburger-menu text-white focus:outline-none md:hidden">
-                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-4 6h4"></path>
-                </svg>
-            </button>
+        <!-- Hamburger Menu Button for Mobile -->
+        <button id="hamburgerBtn" class="hamburger-menu text-white focus:outline-none md:hidden">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-4 6h4"></path>
+            </svg>
+        </button>
 
-            <!-- Navigation Menu -->
-            <!-- Added md:flex-grow to nav to allow it to take available space -->
-            <nav class="nav-links md:flex md:flex-grow md:justify-end">
-                <!-- Changed md:space-x-8 to md:space-x-4 and added md:flex-wrap for stacking -->
-                <ul class="flex flex-col md:flex-row md:flex-wrap md:justify-end space-y-2 md:space-y-0 md:space-x-4 text-sm font-medium">
-                    <li><a href="index.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700 current-page">Dashboard</a></li>
-                    <li><a href="SOP.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">SOPs</a></li>
-                    <li><a href="training.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Training</a></li>
-                    <li><a href="forms.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Forms</a></li>
-                    <li><a href="roster.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Roster</a></li>
-                    <li><a href="hr.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">HR Info</a></li>
-                    <li><a href="report.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Report Generator</a></li>
-                    <li><a href="charges.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Charge Calculator</a></li>
-                    <li><a href="info.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Common Information</a></li>
-                </ul>
-            </nav>
-        </header>
+        <!-- Navigation Menu -->
+        <!-- Added md:flex-grow to nav to allow it to take available space -->
+        <nav class="nav-links md:flex md:flex-grow md:justify-end">
+            <!-- Changed md:space-x-8 to md:space-x-4 and added md:flex-wrap for stacking -->
+            <ul class="flex flex-col md:flex-row md:flex-wrap md:justify-end space-y-2 md:space-y-0 md:space-x-4 text-sm font-medium">
+                <li><a href="index.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700 current-page">Dashboard</a></li>
+                <li><a href="SOP.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">SOPs</a></li>
+                <li><a href="training.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Training</a></li>
+                <li><a href="forms.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Forms</a></li>
+                <li><a href="roster.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Roster</a></li>
+                <li><a href="hr.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">HR Info</a></li>
+                <li><a href="report.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Report Generator</a></li>
+                <li><a href="charges.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Charge Calculator</a></li>
+                <li><a href="info.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Common Information</a></li>
+            </ul>
+        </nav>
+    </header>
 
-        <!-- Main Content Section - Charge Calculator -->
-        <main class="container mx-auto px-4 md:px-8 py-12 flex-grow">
-            <section class="bg-white p-6 md:p-8 rounded-lg shadow-xl mb-12">
-                <h2 class="text-3xl md:text-4xl font-extrabold text-gray-800 mb-6 text-center border-b-4 border-blue-500 pb-3">Charge Calculator</h2>
-                <p class="text-lg text-gray-700 text-center mb-8">
-                    Select charges to calculate fines and jail time.
-                </p>
+    <!-- Main Content Section - Charge Calculator -->
+    <main class="container mx-auto px-4 md:px-8 py-12 flex-grow">
+        <section class="bg-white p-6 md:p-8 rounded-lg shadow-xl mb-12">
+            <h2 class="text-3xl md:text-4xl font-extrabold text-gray-800 mb-6 text-center border-b-4 border-blue-500 pb-3">Charge Calculator</h2>
+            <p class="text-lg text-gray-700 text-center mb-8">
+                Select charges to calculate fines and jail time.
+            </p>
 
-                <div class="max-w-3xl mx-auto">
-                    <!-- Input for new charge - now triggers the modal -->
-                    <div class="mb-6">
-                        <label for="charge-input" class="block text-gray-700 text-lg font-medium mb-2">Click to Add/Select Charges:</label>
-                        <input type="text" id="charge-input" placeholder="Click here to open charge selection" readonly
-                               class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-800 cursor-pointer">
-                    </div>
+            <div class="max-w-3xl mx-auto">
+                <!-- Input for new charge - now triggers the modal -->
+                <div class="mb-6">
+                    <label for="charge-input" class="block text-gray-700 text-lg font-medium mb-2">Click to Add/Select Charges:</label>
+                    <input type="text" id="charge-input" placeholder="Click here to open charge selection" readonly
+                           class="w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-800 cursor-pointer">
+                </div>
 
-                    <!-- Main Clear All Charges button -->
-                    <div class="flex flex-wrap justify-center gap-4 mb-8">
-                        <button id="clear-all-main-charges-btn"
-                                class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-md transition duration-300 ease-in-out transform hover:scale-105">
-                            Clear All Current Charges
-                        </button>
-                    </div>
+                <!-- Main Clear All Charges button -->
+                <div class="flex flex-wrap justify-center gap-4 mb-8">
+                    <button id="clear-all-main-charges-btn"
+                            class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-6 rounded-md transition duration-300 ease-in-out transform hover:scale-105">
+                        Clear All Current Charges
+                    </button>
+                </div>
 
-                    <!-- Display area for added charges -->
-                    <div class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8 min-h-[150px] border border-gray-200">
-                        <h3 class="text-xl font-semibold text-gray-800 mb-4 text-center">Added Charges:</h3>
-                        <ul id="charges-list" class="space-y-2 text-gray-700">
-                            <!-- Charges will be dynamically added here -->
-                            <li class="text-center text-gray-500 italic" id="no-charges-message">No charges added yet.</li>
-                        </ul>
-                    </div>
+                <!-- Display area for added charges -->
+                <div class="bg-gray-50 p-6 rounded-lg shadow-inner mb-8 min-h-[150px] border border-gray-200">
+                    <h3 class="text-xl font-semibold text-gray-800 mb-4 text-center">Added Charges:</h3>
+                    <ul id="charges-list" class="space-y-2 text-gray-700">
+                        <!-- Charges will be dynamically added here -->
+                        <li class="text-center text-gray-500 italic" id="no-charges-message">No charges added yet.</li>
+                    </ul>
+                </div>
 
-                    <!-- Calculated totals display -->
-                    <div class="bg-blue-100 p-6 rounded-lg shadow-md border-2 border-blue-300">
-                        <h3 class="text-2xl font-bold text-blue-800 mb-4 text-center">Calculated Totals:</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
-                            <div>
-                                <p class="text-xl text-gray-700 font-semibold">Total Fine:</p>
-                                <p id="total-fine" class="text-3xl font-extrabold text-green-700">$0</p>
-                            </div>
-                            <div>
-                                <p class="text-xl text-gray-700 font-semibold">Total Jail Time:</p>
-                                <p id="total-jail-time" class="text-3xl font-extrabold text-red-700">0 Months</p>
-                            </div>
+                <!-- Calculated totals display -->
+                <div class="bg-blue-100 p-6 rounded-lg shadow-md border-2 border-blue-300">
+                    <h3 class="text-2xl font-bold text-blue-800 mb-4 text-center">Calculated Totals:</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-center">
+                        <div>
+                            <p class="text-xl text-gray-700 font-semibold">Total Fine:</p>
+                            <p id="total-fine" class="text-3xl font-extrabold text-green-700">$0</p>
+                        </div>
+                        <div>
+                            <p class="text-xl text-gray-700 font-semibold">Total Jail Time:</p>
+                            <p id="total-jail-time" class="text-3xl font-extrabold text-red-700">0 Months</p>
                         </div>
                     </div>
                 </div>
-
-                <p class="text-gray-600 text-sm mt-8 text-center">
-                    This calculator provides estimated values based on current LSPD guidelines. Always confirm with official documentation.
-                </p>
-            </section>
-        </main>
-
-        <!-- Footer Section - Internal Contacts -->
-        <!-- Grid layout that changes columns based on screen size: 1 column on small, 3 on medium screens and up -->
-        <footer class="bg-gray-800 text-white py-10 px-6 md:px-12 rounded-t-lg">
-            <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Internal Contact Info (content removed, titles remain) -->
-                <div>
-                    <h4 class="text-xl font-semibold mb-4 text-blue-300">Internal Contacts</h4>
-                    <ul class="space-y-2 text-sm">
-                        <li><a href="https://discord.gg/7FwxdpfDTM" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Discord</a></li>
-                        <li><a href="https://discord.com/channels/1383775098464370768/1383775099777318972" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Chat</a></li>
-                        <li><a href="https://discord.com/channels/1383775098464370768/1383782578976456735" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Cadet Support</a></li>
-                    </ul>
-                </div>
-                <!-- Internal Quick Links (text links added) -->
-                <div>
-                    <h4 class="text-xl font-semibold mb-4 text-blue-300">Quick Access</h4>
-                    <ul class="space-y-2 text-sm">
-                        <!-- Added text-sm here -->
-                        <li><a href="https://docs.google.com/document/d/1etjilZ1dAHGviw33MV5Zs-b5dXqcSHyoYIHvHiRIyy4/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">LSPD SOP</a></li>
-                        <li><a href="https://docs.google.com/document/d/1hKQ4fw9b1_yQELhPi1p1b4M6uiSaYb7bBp-9C6GVTdY/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Los Santos Police Department Interview Procedure & Questions</a></li>
-                        <li><a href="https://docs.google.com/document/d/1d004FfAhZBgESn88Mx21N3CGqXlcoNeP9_sadn_ePak/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Promotional Pathway & Subdivision Assignment Policy</a></li>
-                        <li><a href="https://docs.google.com/document/d/14QIEsYMWpTssti1xGbGWiMxQ2b0jbiYxuMmvV8XWUUo/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Highway Enforcement and Apprehension Team (HEAT) Activation Policy</a></li>
-                        <li><a href="https://docs.google.com/document/d/1Ggf7SS5voiIjr3iSLB3VtAc47JN3aDjm2J_gYnpoZ6s/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Disciplinary Guidelines</a></li>
-                        <li><a href="https://nlspd.net/" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">LSPD Website</a></li>
-                    </ul>
-                </div>
-                <!-- Copyright & Internal System Info (content removed, titles remain) -->
-                <div>
-                    <h4 class="text-xl font-semibold mb-4 text-blue-300">System Information</h4>
-                    <p class="text-gray-500 text-sm mb-2">Unauthorized Access Strictly Prohibited</p>
-                    <p class="text-gray-500 text-sm mb-2">For LSPD Personnel Use Only</p>
-                    <p class="text-500 text-sm mb-2">Created and Maintained by FiveM "NightLife RP"</p>
-                    <p class="text-gray-500 text-sm">&copy; 2025 Los Santos Police Department Internal Systems.</p>
-                </div>
             </div>
-            <!-- Font Awesome for any potential internal icons (though less needed here) -->
-            <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-        </footer>
 
-        <!-- Charge Selection Modal -->
-        <div id="chargeSelectionModal" class="modal-overlay hidden">
-            <div class="modal-content">
-                <button class="modal-close-btn" id="closeChargeModalBtn">&times;</button>
-                <h2 class="text-2xl font-bold text-blue-800 mb-4">Select Charges</h2>
+            <p class="text-gray-600 text-sm mt-8 text-center">
+                This calculator provides estimated values based on current LSPD guidelines. Always confirm with official documentation.
+            </p>
+        </section>
+    </main>
 
-                <input type="text" id="chargeSearchInput" placeholder="Search for charges..."
-                       class="mb-4 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-
-                <div id="available-charges-container" class="grid grid-cols-1 md:grid-cols-2 gap-3 overflow-y-auto max-h-96">
-                    <!-- Charges will be dynamically loaded here -->
-                </div>
-
-                <div id="modal-selected-charges" class="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                    <h3 class="text-lg font-semibold text-blue-700 mb-2">Selected Charges:</h3>
-                    <ul id="modal-selected-charges-list" class="space-y-2">
-                        <li class="text-center text-gray-500 italic" id="no-modal-selection-message">No charges selected in modal yet.</li>
-                    </ul>
-                </div>
-
-                <div class="flex justify-center gap-4 mt-6">
-                    <button id="clear-modal-selection-btn"
-                            class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out">
-                        Clear All Selections
-                    </button>
-                    <button id="add-selected-charges-btn"
-                            class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out">
-                        Add Selected Charges to List
-                    </button>
-                </div>
+    <!-- Footer Section - Internal Contacts -->
+    <!-- Grid layout that changes columns based on screen size: 1 column on small, 3 on medium screens and up -->
+    <footer class="bg-gray-800 text-white py-10 px-6 md:px-12 rounded-t-lg">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Internal Contact Info (content removed, titles remain) -->
+            <div>
+                <h4 class="text-xl font-semibold mb-4 text-blue-300">Internal Contacts</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="https://discord.gg/7FwxdpfDTM" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Discord</a></li>
+                    <li><a href="https://discord.com/channels/1383775098464370768/1383775099777318972" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Chat</a></li>
+                    <li><a href="https://discord.com/channels/1383775098464370768/1383782578976456735" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Cadet Support</a></li>
+                </ul>
+            </div>
+            <!-- Internal Quick Links (text links added) -->
+            <div>
+                <h4 class="text-xl font-semibold mb-4 text-blue-300">Quick Access</h4>
+                <ul class="space-y-2 text-sm">
+                    <!-- Added text-sm here -->
+                    <li><a href="https://docs.google.com/document/d/1etjilZ1dAHGviw33MV5Zs-b5dXqcSHyoYIHvHiRIyy4/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">LSPD SOP</a></li>
+                    <li><a href="https://docs.google.com/document/d/1hKQ4fw9b1_yQELhPi1p1b4M6uiSaYb7bBp-9C6GVTdY/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Los Santos Police Department Interview Procedure & Questions</a></li>
+                    <li><a href="https://docs.google.com/document/d/1d004FfAhZBgESn88Mx21N3CGqXlcoNeP9_sadn_ePak/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Promotional Pathway & Subdivision Assignment Policy</a></li>
+                    <li><a href="https://docs.google.com/document/d/14QIEsYMWpTssti1xGbGWiMxQ2b0jbiYxuMmvV8XWUUo/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Highway Enforcement and Apprehension Team (HEAT) Activation Policy</a></li>
+                    <li><a href="https://docs.google.com/document/d/1Ggf7SS5voiIjr3iSLB3VtAc47JN3aDjm2J_gYnpoZ6s/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Disciplinary Guidelines</a></li>
+                    <li><a href="https://nlspd.net/" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">LSPD Website</a></li>
+                </ul>
+            </div>
+            <!-- Copyright & Internal System Info (content removed, titles remain) -->
+            <div>
+                <h4 class="text-xl font-semibold mb-4 text-blue-300">System Information</h4>
+                <p class="text-gray-500 text-sm mb-2">Unauthorized Access Strictly Prohibited</p>
+                <p class="text-gray-500 text-sm mb-2">For LSPD Personnel Use Only</p>
+                <p class="text-500 text-sm mb-2">Created and Maintained by FiveM "NightLife RP"</p>
+                <p class="text-gray-500 text-sm">&copy; 2025 Los Santos Police Department Internal Systems.</p>
             </div>
         </div>
+        <!-- Font Awesome for any potential internal icons (though less needed here) -->
+        <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    </footer>
+
+    <!-- Charge Selection Modal -->
+    <div id="chargeSelectionModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button class="modal-close-btn" id="closeChargeModalBtn">&times;</button>
+            <h2 class="text-2xl font-bold text-blue-800 mb-4">Select Charges</h2>
+
+            <input type="text" id="chargeSearchInput" placeholder="Search for charges..."
+                   class="mb-4 p-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+
+            <div id="available-charges-container" class="grid grid-cols-1 md:grid-cols-2 gap-3 overflow-y-auto max-h-96">
+                <!-- Charges will be dynamically loaded here -->
+            </div>
+
+            <div id="modal-selected-charges" class="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
+                <h3 class="text-lg font-semibold text-blue-700 mb-2">Selected Charges:</h3>
+                <ul id="modal-selected-charges-list" class="space-y-2">
+                    <li class="text-center text-gray-500 italic" id="no-modal-selection-message">No charges selected in modal yet.</li>
+                </ul>
+            </div>
+
+            <div class="flex justify-center gap-4 mt-6">
+                <button id="clear-modal-selection-btn"
+                        class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out">
+                    Clear All Selections
+                </button>
+                <button id="add-selected-charges-btn"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition duration-300 ease-in-out">
+                    Add Selected Charges to List
+                </button>
+            </div>
+        </div>
+    </div>
 
 
-        <script>
-            document.addEventListener('DOMContentLoaded', () => {
-                // Removed devNoticeModal, closeDevModalBtn, acknowledgeBtn as they are no longer needed.
-                // Original line: const devNoticeModal = document.getElementById('devNoticeModal');
-                // Original line: const closeDevModalBtn = document.getElementById('closeModalBtn');
-                // Original line: const acknowledgeBtn = document.getElementById('acknowledgeBtn');
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Removed devNoticeModal, closeDevModalBtn, acknowledgeBtn as they are no longer needed.
+            // Original line: const devNoticeModal = document.getElementById('devNoticeModal');
+            // Original line: const closeDevModalBtn = document.getElementById('closeModalBtn');
+            // Original line: const acknowledgeBtn = document.getElementById('acknowledgeBtn');
 
-                const chargeInput = document.getElementById('charge-input');
-                const clearAllMainChargesBtn = document.getElementById('clear-all-main-charges-btn'); // Renamed for clarity
-                const chargesList = document.getElementById('charges-list');
-                const noChargesMessage = document.getElementById('no-charges-message');
-                const totalFineDisplay = document.getElementById('total-fine');
-                const totalJailTimeDisplay = document.getElementById('total-jail-time');
+            const chargeInput = document.getElementById('charge-input');
+            const clearAllMainChargesBtn = document.getElementById('clear-all-main-charges-btn'); // Renamed for clarity
+            const chargesList = document.getElementById('charges-list');
+            const noChargesMessage = document.getElementById('no-charges-message');
+            const totalFineDisplay = document.getElementById('total-fine');
+            const totalJailTimeDisplay = document.getElementById('total-jail-time');
 
-                // Charge Selection Modal elements
-                const chargeSelectionModal = document.getElementById('chargeSelectionModal');
-                const closeChargeModalBtn = document.getElementById('closeChargeModalBtn');
-                const chargeSearchInput = document.getElementById('chargeSearchInput');
-                const availableChargesContainer = document.getElementById('available-charges-container');
-                const modalSelectedChargesList = document.getElementById('modal-selected-charges-list');
-                const noModalSelectionMessage = document.getElementById('no-modal-selection-message');
-                const clearModalSelectionBtn = document.getElementById('clear-modal-selection-btn');
-                const addSelectedChargesBtn = document.getElementById('add-selected-charges-btn');
+            // Charge Selection Modal elements
+            const chargeSelectionModal = document.getElementById('chargeSelectionModal');
+            const closeChargeModalBtn = document.getElementById('closeChargeModalBtn');
+            const chargeSearchInput = document.getElementById('chargeSearchInput');
+            const availableChargesContainer = document.getElementById('available-charges-container');
+            const modalSelectedChargesList = document.getElementById('modal-selected-charges-list');
+            const noModalSelectionMessage = document.getElementById('no-modal-selection-message');
+            const clearModalSelectionBtn = document.getElementById('clear-modal-selection-btn');
+            const addSelectedChargesBtn = document.getElementById('add-selected-charges-btn');
 
-                // Global array to store charges currently in the main list
-                let charges = [];
-                // Temporary array to store selected charges within the modal
-                let modalSelectedCharges = {}; // Using an object for easier lookup/quantity management by charge name
+            // Global array to store charges currently in the main list
+            let charges = [];
+            // Temporary array to store selected charges within the modal
+            let modalSelectedCharges = {}; // Using an object for easier lookup/quantity management by charge name
 
 
-                // Define the charge data with fines and jail times (same as previous version)
-                const chargeData = {
-                    "first degree murder": { fine: 25000, jail: 70 },
-                    "association: first degree murder": { fine: 12500, jail: 35 },
-                    "murder of a public servant or peace officer": { fine: 30000, jail: 70 },
-                    "attempted murder of a public servant": { fine: 20000, jail: 60 },
-                    "association: attempted murder of a public servant": { fine: 10000, jail: 30 },
-                    "human trafficking": { fine: 25000, jail: 60 },
-                    "terrorism": { fine: 60000, jail: 120 },
-                    "rico act": { fine: 25000, jail: 70 },
-                    "association: rico activity": { fine: 12500, jail: 35 },
-                    "plane heist": { fine: 50000, jail: 65 },
-                    "major bank robbery": { fine: 30000, jail: 70 },
-                    "association: major robbery": { fine: 15000, jail: 35 },
-                    "contempt of court (general)": { fine: 2500, jail: 15 },
-                    "contempt of court order": { fine: 5000, jail: 30 },
-                    "aggravated contempt": { fine: 6000, jail: 35 },
-                    "obstruction of justice": { fine: 7500, jail: 40 },
-                    "impersonating a judge": { fine: 6000, jail: 30 },
-                    "impersonating a government official": { fine: 4000, jail: 25 },
-                    "government corruption / malfeasance": { fine: 25000, jail: 60 },
-                    "sexual harassment": { fine: 5500, jail: 30 },
-                    "sexual assault (non-penetrative)": { fine: 200000, jail: 999999 }, // Special large value
-                    "theft of government property": { fine: 2000, jail: 25 },
-                    "coercion": { fine: 6000, jail: 30 },
-                    "anarchism": { fine: 25000, jail: 25 },
-                    "false reporting": { fine: 2000, jail: 35 },
-                    "association: false reporting": { fine: 1000, jail: 17 },
-                    "obstruction of a public official": { fine: 5000, jail: 25 },
-                    "association: obstruction of a public official": { fine: 2500, jail: 12 },
-                    "inciting a riot": { fine: 2500, jail: 25 },
-                    "association: inciting a riot": { fine: 1250, jail: 12 },
-                    "tampering": { fine: 5000, jail: 30 },
-                    "association: tampering": { fine: 2500, jail: 15 },
-                    "vigilantism": { fine: 1500, jail: 35 },
-                    "association: vigilantism": { fine: 750, jail: 17 },
-                    "stalking": { fine: 5000, jail: 36 },
-                    "association: stalking": { fine: 2500, jail: 18 },
-                    "aiding and abetting": { fine: 5000, jail: 20 },
-                    "association: aiding and abetting": { fine: 2500, jail: 10 },
-                    "possession of stolen identification": { fine: 2500, jail: 10 },
-                    "association: possession of stolen identification": { fine: 1250, jail: 5 },
-                    "assault": { fine: 5000, jail: 30 },
-                    "association: assault": { fine: 2500, jail: 15 },
-                    "kidnapping": { fine: 5000, jail: 30 },
-                    "association: kidnapping": { fine: 2500, jail: 15 },
-                    "trespassing with intent to commit a crime": { fine: 2500, jail: 40 },
-                    "association: trespassing with intent to commit a crime": { fine: 1250, jail: 20 },
-                    "impersonation": { fine: 2500, jail: 20 },
-                    "association: impersonation": { fine: 1250, jail: 10 },
-                    "fraud": { fine: 2500, jail: 15 },
-                    "association: fraud": { fine: 1250, jail: 7 },
-                    "aggravated assault": { fine: 6000, jail: 50 },
-                    "association: aggravated assault": { fine: 3000, jail: 25 },
-                    "conspiracy": { fine: 4000, jail: 35 },
-                    "association: conspiracy": { fine: 2000, jail: 17 },
-                    "impersonating a police officer": { fine: 10000, jail: 40 },
-                    "association: impersonating a police officer": { fine: 5000, jail: 20 },
-                    "money laundering": { fine: 15000, jail: 45 },
-                    "association: money laundering": { fine: 7500, jail: 22 },
-                    "trespassing on government property": { fine: 1500, jail: 25 },
-                    "association: trespassing on government property": { fine: 750, jail: 12 },
-                    "involuntary manslaughter": { fine: 5000, jail: 35 },
-                    "association: involuntary manslaughter": { fine: 2500, jail: 17 },
-                    "vehicular manslaughter": { fine: 6000, jail: 50 },
-                    "association: vehicular manslaughter": { fine: 3000, jail: 25 },
-                    "accessory to second degree murder": { fine: 7000, jail: 45 },
-                    "association: accessory to second degree murder": { fine: 3500, jail: 22 },
-                    "warehouse heist": { fine: 25000, jail: 75 },
-                    "association: warehouse heist": { fine: 12500, jail: 37 },
-                    "store robbery": { fine: 15000, jail: 60 },
-                    "association: store robbery": { fine: 7500, jail: 30 },
-                    "harassment": { fine: 2500, jail: 15 },
-                    "association: harassment": { fine: 1250, jail: 7 },
-                    "attempted second degree murder": { fine: 5000, jail: 50 },
-                    "association: attempted second degree murder": { fine: 2500, jail: 25 },
-                    "possession of stolen property": { fine: 3500, jail: 25 },
-                    "association: possession of stolen property": { fine: 1750, jail: 12 },
-                    "possession of a stolen vehicle": { fine: 5000, jail: 30 },
-                    "association: possession of a stolen vehicle": { fine: 2500, jail: 15 },
-                    "attempted fraud": { fine: 3000, jail: 25 },
-                    "association: attempted fraud": { fine: 1500, jail: 12 },
-                    "misappropriation of lost property": { fine: 2500, jail: 25 },
-                    "association: misappropriation of lost property": { fine: 1250, jail: 12 },
-                    "extortion": { fine: 7000, jail: 35 },
-                    "association: extortion": { fine: 3500, jail: 17 },
-                    "grand theft auto": { fine: 5500, jail: 30 },
-                    "association: grand theft auto": { fine: 2750, jail: 15 },
-                    "attempted extortion": { fine: 4000, jail: 25 },
-                    "association: attempted extortion": { fine: 2000, jail: 12 },
-                    "criminal threats": { fine: 4500, jail: 28 },
-                    "association: criminal threats": { fine: 2250, jail: 14 },
-                    "felon in possession of a firearm": { fine: 7500, jail: 35 },
-                    "association: felon in possession of a firearm": { fine: 3750, jail: 17 },
-                    "escape from custody": { fine: 6000, jail: 32 },
-                    "association: escape from custody": { fine: 3000, jail: 16 },
-                    "assault on a peace officer": { fine: 6500, jail: 35 },
-                    "association: assault on a peace officer": { fine: 3250, jail: 17 },
-                    "schedule i substance possession": { fine: 6500, jail: 35 },
-                    "association: schedule i substance possession": { fine: 3250, jail: 17 },
-                    "schedule ii substance possession": { fine: 5500, jail: 30 },
-                    "association: schedule ii substance possession": { fine: 2750, jail: 15 },
-                    "schedule iii substance possession": { fine: 4500, jail: 28 },
-                    "association: schedule iii substance possession": { fine: 2250, jail: 14 },
-                    "schedule iv substance possession": { fine: 3500, jail: 25 },
-                    "association: schedule iv substance possession": { fine: 1750, jail: 12 },
-                    "negligent discharge of a firearm": { fine: 4000, jail: 25 },
-                    "association: negligent discharge of a firearm": { fine: 2000, jail: 12 },
-                    "gang-related shooting": { fine: 10000, jail: 35 },
-                    "association: gang-related shooting": { fine: 5000, jail: 17 },
-                    "animal cruelty": { fine: 5000, jail: 25 },
-                    "association: animal cruelty": { fine: 2500, jail: 12 },
-                    "resisting without violence": { fine: 4000, jail: 25 },
-                    "association: resisting without violence": { fine: 2000, jail: 12 },
-                    "resisting with violence": { fine: 5500, jail: 30 },
-                    "association: resisting with violence": { fine: 2750, jail: 15 },
-                    "house robbery": { fine: 4000, jail: 20 },
-                    "association: house robbery": { fine: 2000, jail: 10 },
-                    "failure to comply": { fine: 2500, jail: 15 },
-                    "association: failure to comply": { fine: 1250, jail: 7 },
-                    "felony destruction of property": { fine: 10000, jail: 30 },
-                    "association: felony destruction of property": { fine: 5000, jail: 15 },
-                    "arson": { fine: 15000, jail: 35 },
-                    "attempted murder of a civilian": { fine: 8000, jail: 45 },
-                    "association with attempted murder of a civilian": { fine: 4000, jail: 22 },
-                    "second degree murder": { fine: 8500, jail: 55 },
-                    "association with second degree murder": { fine: 4250, jail: 27 },
-                    "accessory to the murder of a public servant": { fine: 6500, jail: 40 },
-                    "fleeca bank heist": { fine: 10000, jail: 40 },
-                    "association with fleeca bank heist": { fine: 5000, jail: 20 },
-                    "armed robbery": { fine: 8000, jail: 40 },
-                    "association with armed robbery": { fine: 4000, jail: 20 },
-                    "misdemeanor assault": { fine: 1500, jail: 25 },
-                    "misdemeanor assault (moderate physical harm)": { fine: 5000, jail: 25 }, // Clarified from the duplicate "Assault" entry in Misdemeanor
-                    "evading": { fine: 4000, jail: 25 },
-                    "disobeying a police officer": { fine: 1000, jail: 25 },
-                    "harassment (misdemeanor)": { fine: 1000, jail: 25 }, // Clarified from duplicate "Harassment"
-                    "prostitution": { fine: 500, jail: 25 },
-                    "disorderly conduct": { fine: 750, jail: 25 },
-                    "failure to provide identification": { fine: 800, jail: 25 },
-                    "resisting arrest": { fine: 1500, jail: 25 },
-                    "disturbing the peace": { fine: 500, jail: 25 },
-                    "criminal trespassing": { fine: 1000, jail: 25 },
-                    "public urination": { fine: 3000, jail: 15 },
-                    "public defecation": { fine: 3000, jail: 15 },
-                    "attempted grand theft auto (misdemeanor)": { fine: 2500, jail: 15 }, // Clarified
-                    "vandalism": { fine: 2500, jail: 10 },
-                    "illegal possession of a firearm": { fine: 4500, jail: 25 },
-                    "brandishing": { fine: 3000, jail: 20 },
-                    "possession of illegal weapon attachments": { fine: 5000, jail: 30 },
-                    "illegal discharge of a firearm": { fine: 3500, jail: 20 },
-                    "possession of government-issued equipment or weapons": { fine: 6500, jail: 40 },
-                    "illegal possession of a weapon (class 2)": { fine: 5500, jail: 35 },
-                    "illegal possession of a weapon (class 3)": { fine: 7500, jail: 45 },
-                    "misdemeanor possession of marijuana": { fine: 1500, jail: 10 },
-                    "cultivation of marijuana (a)": { fine: 4000, jail: 25 },
-                    "cultivation of marijuana (b)": { fine: 6000, jail: 40 },
-                    "possession of marijuana with intent to distribute": { fine: 5500, jail: 35 },
-                    "possession of a controlled substance": { fine: 5000, jail: 30 },
-                    "possession of a controlled substance with intent to distribute": { fine: 7500, jail: 45 },
-                    "drug trafficking": { fine: 3000, jail: 60 },
-                    "possession of cocaine": { fine: 10000, jail: 15 },
-                    "possession of cocaine (large quantity)": { fine: 7500, jail: 36 },
-                    "possession with intent to distribute": { fine: 6000, jail: 30 },
-                    "possession with intent to distribute (large quantity)": { fine: 10000, jail: 45 },
-                    "manufacturing of cocaine": { fine: 15000, jail: 60 },
-                    "possession of cocaine manufacturing materials": { fine: 4500, jail: 20 },
-                    "drug trafficking � cocaine": { fine: 20000, jail: 75 },
-                    "loitering on government property": { fine: 750, jail: 5 },
-                    "jaywalking": { fine: 500, jail: 0 },
-                };
+            // Define the charge data with fines and jail times (same as previous version)
+            const chargeData = {
+                "first degree murder": { fine: 25000, jail: 70 },
+                "association: first degree murder": { fine: 12500, jail: 35 },
+                "murder of a public servant or peace officer": { fine: 30000, jail: 70 },
+                "attempted murder of a public servant": { fine: 20000, jail: 60 },
+                "association: attempted murder of a public servant": { fine: 10000, jail: 30 },
+                "human trafficking": { fine: 25000, jail: 60 },
+                "terrorism": { fine: 60000, jail: 120 },
+                "rico act": { fine: 25000, jail: 70 },
+                "association: rico activity": { fine: 12500, jail: 35 },
+                "plane heist": { fine: 50000, jail: 65 },
+                "major bank robbery": { fine: 30000, jail: 70 },
+                "association: major robbery": { fine: 15000, jail: 35 },
+                "contempt of court (general)": { fine: 2500, jail: 15 },
+                "contempt of court order": { fine: 5000, jail: 30 },
+                "aggravated contempt": { fine: 6000, jail: 35 },
+                "obstruction of justice": { fine: 7500, jail: 40 },
+                "impersonating a judge": { fine: 6000, jail: 30 },
+                "impersonating a government official": { fine: 4000, jail: 25 },
+                "government corruption / malfeasance": { fine: 25000, jail: 60 },
+                "sexual harassment": { fine: 5500, jail: 30 },
+                "sexual assault (non-penetrative)": { fine: 200000, jail: 999999 }, // Special large value
+                "theft of government property": { fine: 2000, jail: 25 },
+                "coercion": { fine: 6000, jail: 30 },
+                "anarchism": { fine: 25000, jail: 25 },
+                "false reporting": { fine: 2000, jail: 35 },
+                "association: false reporting": { fine: 1000, jail: 17 },
+                "obstruction of a public official": { fine: 5000, jail: 25 },
+                "association: obstruction of a public official": { fine: 2500, jail: 12 },
+                "inciting a riot": { fine: 2500, jail: 25 },
+                "association: inciting a riot": { fine: 1250, jail: 12 },
+                "tampering": { fine: 5000, jail: 30 },
+                "association: tampering": { fine: 2500, jail: 15 },
+                "vigilantism": { fine: 1500, jail: 35 },
+                "association: vigilantism": { fine: 750, jail: 17 },
+                "stalking": { fine: 5000, jail: 36 },
+                "association: stalking": { fine: 2500, jail: 18 },
+                "aiding and abetting": { fine: 5000, jail: 20 },
+                "association: aiding and abetting": { fine: 2500, jail: 10 },
+                "possession of stolen identification": { fine: 2500, jail: 10 },
+                "association: possession of stolen identification": { fine: 1250, jail: 5 },
+                "assault": { fine: 5000, jail: 30 },
+                "association: assault": { fine: 2500, jail: 15 },
+                "kidnapping": { fine: 5000, jail: 30 },
+                "association: kidnapping": { fine: 2500, jail: 15 },
+                "trespassing with intent to commit a crime": { fine: 2500, jail: 40 },
+                "association: trespassing with intent to commit a crime": { fine: 1250, jail: 20 },
+                "impersonation": { fine: 2500, jail: 20 },
+                "association: impersonation": { fine: 1250, jail: 10 },
+                "fraud": { fine: 2500, jail: 15 },
+                "association: fraud": { fine: 1250, jail: 7 },
+                "aggravated assault": { fine: 6000, jail: 50 },
+                "association: aggravated assault": { fine: 3000, jail: 25 },
+                "conspiracy": { fine: 4000, jail: 35 },
+                "association: conspiracy": { fine: 2000, jail: 17 },
+                "impersonating a police officer": { fine: 10000, jail: 40 },
+                "association: impersonating a police officer": { fine: 5000, jail: 20 },
+                "money laundering": { fine: 15000, jail: 45 },
+                "association: money laundering": { fine: 7500, jail: 22 },
+                "trespassing on government property": { fine: 1500, jail: 25 },
+                "association: trespassing on government property": { fine: 750, jail: 12 },
+                "involuntary manslaughter": { fine: 5000, jail: 35 },
+                "association: involuntary manslaughter": { fine: 2500, jail: 17 },
+                "vehicular manslaughter": { fine: 6000, jail: 50 },
+                "association: vehicular manslaughter": { fine: 3000, jail: 25 },
+                "accessory to second degree murder": { fine: 7000, jail: 45 },
+                "association: accessory to second degree murder": { fine: 3500, jail: 22 },
+                "warehouse heist": { fine: 25000, jail: 75 },
+                "association: warehouse heist": { fine: 12500, jail: 37 },
+                "store robbery": { fine: 15000, jail: 60 },
+                "association: store robbery": { fine: 7500, jail: 30 },
+                "harassment": { fine: 2500, jail: 15 },
+                "association: harassment": { fine: 1250, jail: 7 },
+                "attempted second degree murder": { fine: 5000, jail: 50 },
+                "association: attempted second degree murder": { fine: 2500, jail: 25 },
+                "possession of stolen property": { fine: 3500, jail: 25 },
+                "association: possession of stolen property": { fine: 1750, jail: 12 },
+                "possession of a stolen vehicle": { fine: 5000, jail: 30 },
+                "association: possession of a stolen vehicle": { fine: 2500, jail: 15 },
+                "attempted fraud": { fine: 3000, jail: 25 },
+                "association: attempted fraud": { fine: 1500, jail: 12 },
+                "misappropriation of lost property": { fine: 2500, jail: 25 },
+                "association: misappropriation of lost property": { fine: 1250, jail: 12 },
+                "extortion": { fine: 7000, jail: 35 },
+                "association: extortion": { fine: 3500, jail: 17 },
+                "grand theft auto": { fine: 5500, jail: 30 },
+                "association: grand theft auto": { fine: 2750, jail: 15 },
+                "attempted extortion": { fine: 4000, jail: 25 },
+                "association: attempted extortion": { fine: 2000, jail: 12 },
+                "criminal threats": { fine: 4500, jail: 28 },
+                "association: criminal threats": { fine: 2250, jail: 14 },
+                "felon in possession of a firearm": { fine: 7500, jail: 35 },
+                "association: felon in possession of a firearm": { fine: 3750, jail: 17 },
+                "escape from custody": { fine: 6000, jail: 32 },
+                "association: escape from custody": { fine: 3000, jail: 16 },
+                "assault on a peace officer": { fine: 6500, jail: 35 },
+                "association: assault on a peace officer": { fine: 3250, jail: 17 },
+                "schedule i substance possession": { fine: 6500, jail: 35 },
+                "association: schedule i substance possession": { fine: 3250, jail: 17 },
+                "schedule ii substance possession": { fine: 5500, jail: 30 },
+                "association: schedule ii substance possession": { fine: 2750, jail: 15 },
+                "schedule iii substance possession": { fine: 4500, jail: 28 },
+                "association: schedule iii substance possession": { fine: 2250, jail: 14 },
+                "schedule iv substance possession": { fine: 3500, jail: 25 },
+                "association: schedule iv substance possession": { fine: 1750, jail: 12 },
+                "negligent discharge of a firearm": { fine: 4000, jail: 25 },
+                "association: negligent discharge of a firearm": { fine: 2000, jail: 12 },
+                "gang-related shooting": { fine: 10000, jail: 35 },
+                "association: gang-related shooting": { fine: 5000, jail: 17 },
+                "animal cruelty": { fine: 5000, jail: 25 },
+                "association: animal cruelty": { fine: 2500, jail: 12 },
+                "resisting without violence": { fine: 4000, jail: 25 },
+                "association: resisting without violence": { fine: 2000, jail: 12 },
+                "resisting with violence": { fine: 5500, jail: 30 },
+                "association: resisting with violence": { fine: 2750, jail: 15 },
+                "house robbery": { fine: 4000, jail: 20 },
+                "association: house robbery": { fine: 2000, jail: 10 },
+                "failure to comply": { fine: 2500, jail: 15 },
+                "association: failure to comply": { fine: 1250, jail: 7 },
+                "felony destruction of property": { fine: 10000, jail: 30 },
+                "association: felony destruction of property": { fine: 5000, jail: 15 },
+                "arson": { fine: 15000, jail: 35 },
+                "attempted murder of a civilian": { fine: 8000, jail: 45 },
+                "association with attempted murder of a civilian": { fine: 4000, jail: 22 },
+                "second degree murder": { fine: 8500, jail: 55 },
+                "association with second degree murder": { fine: 4250, jail: 27 },
+                "accessory to the murder of a public servant": { fine: 6500, jail: 40 },
+                "fleeca bank heist": { fine: 10000, jail: 40 },
+                "association with fleeca bank heist": { fine: 5000, jail: 20 },
+                "armed robbery": { fine: 8000, jail: 40 },
+                "association with armed robbery": { fine: 4000, jail: 20 },
+                "misdemeanor assault": { fine: 1500, jail: 25 },
+                "misdemeanor assault (moderate physical harm)": { fine: 5000, jail: 25 }, // Clarified from the duplicate "Assault" entry in Misdemeanor
+                "evading": { fine: 4000, jail: 25 },
+                "disobeying a police officer": { fine: 1000, jail: 25 },
+                "harassment (misdemeanor)": { fine: 1000, jail: 25 }, // Clarified from duplicate "Harassment"
+                "prostitution": { fine: 500, jail: 25 },
+                "disorderly conduct": { fine: 750, jail: 25 },
+                "failure to provide identification": { fine: 800, jail: 25 },
+                "resisting arrest": { fine: 1500, jail: 25 },
+                "disturbing the peace": { fine: 500, jail: 25 },
+                "criminal trespassing": { fine: 1000, jail: 25 },
+                "public urination": { fine: 3000, jail: 15 },
+                "public defecation": { fine: 3000, jail: 15 },
+                "attempted grand theft auto (misdemeanor)": { fine: 2500, jail: 15 }, // Clarified
+                "vandalism": { fine: 2500, jail: 10 },
+                "illegal possession of a firearm": { fine: 4500, jail: 25 },
+                "brandishing": { fine: 3000, jail: 20 },
+                "possession of illegal weapon attachments": { fine: 5000, jail: 30 },
+                "illegal discharge of a firearm": { fine: 3500, jail: 20 },
+                "possession of government-issued equipment or weapons": { fine: 6500, jail: 40 },
+                "illegal possession of a weapon (class 2)": { fine: 5500, jail: 35 },
+                "illegal possession of a weapon (class 3)": { fine: 7500, jail: 45 },
+                "misdemeanor possession of marijuana": { fine: 1500, jail: 10 },
+                "cultivation of marijuana (a)": { fine: 4000, jail: 25 },
+                "cultivation of marijuana (b)": { fine: 6000, jail: 40 },
+                "possession of marijuana with intent to distribute": { fine: 5500, jail: 35 },
+                "possession of a controlled substance": { fine: 5000, jail: 30 },
+                "possession of a controlled substance with intent to distribute": { fine: 7500, jail: 45 },
+                "drug trafficking": { fine: 3000, jail: 60 },
+                "possession of cocaine": { fine: 10000, jail: 15 },
+                "possession of cocaine (large quantity)": { fine: 7500, jail: 36 },
+                "possession with intent to distribute": { fine: 6000, jail: 30 },
+                "possession with intent to distribute (large quantity)": { fine: 10000, jail: 45 },
+                "manufacturing of cocaine": { fine: 15000, jail: 60 },
+                "possession of cocaine manufacturing materials": { fine: 4500, jail: 20 },
+                "drug trafficking  cocaine": { fine: 20000, jail: 75 },
+                "loitering on government property": { fine: 750, jail: 5 },
+                "jaywalking": { fine: 500, jail: 0 },
+            };
 
-                // Dev Notice Modal Logic - REMOVED
-                // Original lines:
-                // devNoticeModal.classList.remove('hidden');
-                // const hideDevModal = () => { devNoticeModal.classList.add('hidden'); };
-                // closeDevModalBtn.addEventListener('click', hideDevModal);
-                // acknowledgeBtn.addEventListener('click', hideDevModal);
+            // Dev Notice Modal Logic - REMOVED
+            // Original lines:
+            // devNoticeModal.classList.remove('hidden');
+            // const hideDevModal = () => { devNoticeModal.classList.add('hidden'); };
+            // closeDevModalBtn.addEventListener('click', hideDevModal);
+            // acknowledgeBtn.addEventListener('click', hideDevModal);
 
-                // Charge Selection Modal Logic
-                chargeInput.addEventListener('click', () => {
-                    // Clear previous selections in modal and re-render available charges
-                    modalSelectedCharges = {};
-                    renderAvailableCharges();
-                    renderModalSelectedCharges();
-                    chargeSelectionModal.classList.remove('hidden');
-                    chargeSearchInput.value = ''; // Clear search on open
-                    chargeSearchInput.focus(); // Focus search input
-                });
+            // Charge Selection Modal Logic
+            chargeInput.addEventListener('click', () => {
+                // Clear previous selections in modal and re-render available charges
+                modalSelectedCharges = {};
+                renderAvailableCharges();
+                renderModalSelectedCharges();
+                chargeSelectionModal.classList.remove('hidden');
+                chargeSearchInput.value = ''; // Clear search on open
+                chargeSearchInput.focus(); // Focus search input
+            });
 
-                closeChargeModalBtn.addEventListener('click', () => {
-                    chargeSelectionModal.classList.add('hidden');
-                });
+            closeChargeModalBtn.addEventListener('click', () => {
+                chargeSelectionModal.classList.add('hidden');
+            });
 
-                chargeSearchInput.addEventListener('input', renderAvailableCharges);
+            chargeSearchInput.addEventListener('input', renderAvailableCharges);
 
-                function renderAvailableCharges() {
-                    availableChargesContainer.innerHTML = '';
-                    const searchTerm = chargeSearchInput.value.toLowerCase().trim();
-                    let filteredCharges = Object.keys(chargeData).sort(); // Sort alphabetically
+            function renderAvailableCharges() {
+                availableChargesContainer.innerHTML = '';
+                const searchTerm = chargeSearchInput.value.toLowerCase().trim();
+                let filteredCharges = Object.keys(chargeData).sort(); // Sort alphabetically
 
-                    if (searchTerm) {
-                        filteredCharges = filteredCharges.filter(chargeName =>
-                            chargeName.includes(searchTerm)
-                        );
-                    }
-
-                    if (filteredCharges.length === 0) {
-                        availableChargesContainer.innerHTML = '<p class="text-center text-gray-500 py-4">No charges found matching your search.</p>';
-                        return;
-                    }
-
-                    filteredCharges.forEach(chargeName => {
-                        const chargeItemDiv = document.createElement('div');
-                        chargeItemDiv.classList.add('charge-item', 'rounded-md', 'shadow-sm', 'text-gray-800');
-                        if (modalSelectedCharges[chargeName]) {
-                            chargeItemDiv.classList.add('selected');
-                        }
-                        chargeItemDiv.dataset.chargeName = chargeName;
-                        chargeItemDiv.textContent = chargeName.charAt(0).toUpperCase() + chargeName.slice(1); // Capitalize first letter
-
-                        chargeItemDiv.addEventListener('click', () => {
-                            toggleChargeSelection(chargeName);
-                        });
-                        availableChargesContainer.appendChild(chargeItemDiv);
-                    });
+                if (searchTerm) {
+                    filteredCharges = filteredCharges.filter(chargeName =>
+                        chargeName.includes(searchTerm)
+                    );
                 }
 
-                function toggleChargeSelection(chargeName) {
+                if (filteredCharges.length === 0) {
+                    availableChargesContainer.innerHTML = '<p class="text-center text-gray-500 py-4">No charges found matching your search.</p>';
+                    return;
+                }
+
+                filteredCharges.forEach(chargeName => {
+                    const chargeItemDiv = document.createElement('div');
+                    chargeItemDiv.classList.add('charge-item', 'rounded-md', 'shadow-sm', 'text-gray-800');
                     if (modalSelectedCharges[chargeName]) {
-                        // If already selected, unselect it
-                        delete modalSelectedCharges[chargeName];
-                    } else {
-                        // If not selected, add it with quantity 1
-                        modalSelectedCharges[chargeName] = { name: chargeName, quantity: 1 };
+                        chargeItemDiv.classList.add('selected');
                     }
-                    renderAvailableCharges(); // Re-render to update selected visual state
-                    renderModalSelectedCharges();
+                    chargeItemDiv.dataset.chargeName = chargeName;
+                    chargeItemDiv.textContent = chargeName.charAt(0).toUpperCase() + chargeName.slice(1); // Capitalize first letter
+
+                    chargeItemDiv.addEventListener('click', () => {
+                        toggleChargeSelection(chargeName);
+                    });
+                    availableChargesContainer.appendChild(chargeItemDiv);
+                });
+            }
+
+            function toggleChargeSelection(chargeName) {
+                if (modalSelectedCharges[chargeName]) {
+                    // If already selected, unselect it
+                    delete modalSelectedCharges[chargeName];
+                } else {
+                    // If not selected, add it with quantity 1
+                    modalSelectedCharges[chargeName] = { name: chargeName, quantity: 1 };
                 }
+                renderAvailableCharges(); // Re-render to update selected visual state
+                renderModalSelectedCharges();
+            }
 
-                function renderModalSelectedCharges() {
-                    modalSelectedChargesList.innerHTML = '';
-                    const selectedChargeNames = Object.keys(modalSelectedCharges).sort();
+            function renderModalSelectedCharges() {
+                modalSelectedChargesList.innerHTML = '';
+                const selectedChargeNames = Object.keys(modalSelectedCharges).sort();
 
-                    if (selectedChargeNames.length === 0) {
-                        noModalSelectionMessage.classList.remove('hidden');
-                    } else {
-                        noModalSelectionMessage.classList.add('hidden');
-                        selectedChargeNames.forEach(chargeName => {
-                            const charge = modalSelectedCharges[chargeName];
-                            const li = document.createElement('li');
-                            li.classList.add('modal-selected-charge-item');
-                            li.innerHTML = `
+                if (selectedChargeNames.length === 0) {
+                    noModalSelectionMessage.classList.remove('hidden');
+                } else {
+                    noModalSelectionMessage.classList.add('hidden');
+                    selectedChargeNames.forEach(chargeName => {
+                        const charge = modalSelectedCharges[chargeName];
+                        const li = document.createElement('li');
+                        li.classList.add('modal-selected-charge-item');
+                        li.innerHTML = `
                                                 <span class="flex-grow">${charge.name.charAt(0).toUpperCase() + charge.name.slice(1)}</span>
                                                 <input type="number" min="1" value="${charge.quantity}" data-charge-name="${charge.name}" class="quantity-input">
                                                 <button class="remove-modal-charge-btn text-red-500 hover:text-red-700 font-bold px-2 rounded-full ml-2" data-charge-name="${charge.name}">&times;</button>
                                             `;
-                            modalSelectedChargesList.appendChild(li);
-                        });
-
-                        // Add event listeners for quantity inputs and remove buttons
-                        modalSelectedChargesList.querySelectorAll('.quantity-input').forEach(input => {
-                            input.addEventListener('change', (event) => {
-                                const chargeName = event.target.dataset.chargeName;
-                                const newQuantity = parseInt(event.target.value);
-                                if (newQuantity > 0) {
-                                    modalSelectedCharges[chargeName].quantity = newQuantity;
-                                } else {
-                                    event.target.value = modalSelectedCharges[chargeName].quantity; // Revert to current if invalid
-                                }
-                            });
-                        });
-
-                        modalSelectedChargesList.querySelectorAll('.remove-modal-charge-btn').forEach(button => {
-                            button.addEventListener('click', (event) => {
-                                const chargeName = event.target.dataset.chargeName;
-                                toggleChargeSelection(chargeName); // Use toggle to remove
-                            });
-                        });
-                    }
-                }
-
-                clearModalSelectionBtn.addEventListener('click', () => {
-                    modalSelectedCharges = {};
-                    renderAvailableCharges();
-                    renderModalSelectedCharges();
-                });
-
-                addSelectedChargesBtn.addEventListener('click', () => {
-                    // Add selected charges from modal to the main list
-                    // For each selected charge in the modal, add it to the main 'charges' array
-                    // while accounting for quantity.
-                    Object.values(modalSelectedCharges).forEach(selectedCharge => {
-                        // Check if this charge already exists in the main 'charges' array
-                        const existingChargeIndex = charges.findIndex(c => c.name === selectedCharge.name);
-
-                        if (existingChargeIndex > -1) {
-                            // If it exists, update its quantity
-                            charges[existingChargeIndex].quantity += selectedCharge.quantity;
-                        } else {
-                            // If not, add it as a new entry
-                            charges.push({ ...selectedCharge }); // Push a copy to avoid reference issues
-                        }
+                        modalSelectedChargesList.appendChild(li);
                     });
 
-                    // Sort the charges array alphabetically by name for consistent display
-                    charges.sort((a, b) => a.name.localeCompare(b.name));
+                    // Add event listeners for quantity inputs and remove buttons
+                    modalSelectedChargesList.querySelectorAll('.quantity-input').forEach(input => {
+                        input.addEventListener('change', (event) => {
+                            const chargeName = event.target.dataset.chargeName;
+                            const newQuantity = parseInt(event.target.value);
+                            if (newQuantity > 0) {
+                                modalSelectedCharges[chargeName].quantity = newQuantity;
+                            } else {
+                                event.target.value = modalSelectedCharges[chargeName].quantity; // Revert to current if invalid
+                            }
+                        });
+                    });
 
-                    renderCharges(); // Render main charges list
-                    calculateTotals();
-                    chargeSelectionModal.classList.add('hidden'); // Close modal
-                });
+                    modalSelectedChargesList.querySelectorAll('.remove-modal-charge-btn').forEach(button => {
+                        button.addEventListener('click', (event) => {
+                            const chargeName = event.target.dataset.chargeName;
+                            toggleChargeSelection(chargeName); // Use toggle to remove
+                        });
+                    });
+                }
+            }
 
-                // Main List functionality
-                clearAllMainChargesBtn.addEventListener('click', () => {
-                    charges = [];
-                    renderCharges();
-                    calculateTotals();
-                    noChargesMessage.classList.remove('hidden'); // Show "No charges added yet." message
-                });
+            clearModalSelectionBtn.addEventListener('click', () => {
+                modalSelectedCharges = {};
+                renderAvailableCharges();
+                renderModalSelectedCharges();
+            });
 
-                function renderCharges() {
-                    chargesList.innerHTML = ''; // Clear existing list items
-                    if (charges.length === 0) {
-                        noChargesMessage.classList.remove('hidden');
+            addSelectedChargesBtn.addEventListener('click', () => {
+                // Add selected charges from modal to the main list
+                // For each selected charge in the modal, add it to the main 'charges' array
+                // while accounting for quantity.
+                Object.values(modalSelectedCharges).forEach(selectedCharge => {
+                    // Check if this charge already exists in the main 'charges' array
+                    const existingChargeIndex = charges.findIndex(c => c.name === selectedCharge.name);
+
+                    if (existingChargeIndex > -1) {
+                        // If it exists, update its quantity
+                        charges[existingChargeIndex].quantity += selectedCharge.quantity;
                     } else {
-                        noChargesMessage.classList.add('hidden');
-                        charges.forEach((charge, index) => {
-                            const li = document.createElement('li');
-                            li.className = 'flex items-center justify-between bg-white p-3 rounded-md shadow-sm border border-gray-100';
-                            li.innerHTML = `
+                        // If not, add it as a new entry
+                        charges.push({ ...selectedCharge }); // Push a copy to avoid reference issues
+                    }
+                });
+
+                // Sort the charges array alphabetically by name for consistent display
+                charges.sort((a, b) => a.name.localeCompare(b.name));
+
+                renderCharges(); // Render main charges list
+                calculateTotals();
+                chargeSelectionModal.classList.add('hidden'); // Close modal
+            });
+
+            // Main List functionality
+            clearAllMainChargesBtn.addEventListener('click', () => {
+                charges = [];
+                renderCharges();
+                calculateTotals();
+                noChargesMessage.classList.remove('hidden'); // Show "No charges added yet." message
+            });
+
+            function renderCharges() {
+                chargesList.innerHTML = ''; // Clear existing list items
+                if (charges.length === 0) {
+                    noChargesMessage.classList.remove('hidden');
+                } else {
+                    noChargesMessage.classList.add('hidden');
+                    charges.forEach((charge, index) => {
+                        const li = document.createElement('li');
+                        li.className = 'flex items-center justify-between bg-white p-3 rounded-md shadow-sm border border-gray-100';
+                        li.innerHTML = `
                                                 <span>${charge.name.charAt(0).toUpperCase() + charge.name.slice(1)} (x${charge.quantity})</span>
                                                 <button class="remove-main-charge-btn text-red-500 hover:text-red-700 font-bold px-2 rounded-full" data-index="${index}">&times;</button>
                                             `;
-                            chargesList.appendChild(li);
-                        });
-                    }
+                        chargesList.appendChild(li);
+                    });
                 }
+            }
 
-                // Event delegation for removing individual charges from the main list
-                chargesList.addEventListener('click', (event) => {
-                    if (event.target.classList.contains('remove-main-charge-btn')) {
-                        const indexToRemove = parseInt(event.target.dataset.index);
-                        charges.splice(indexToRemove, 1);
-                        renderCharges();
-                        calculateTotals();
+            // Event delegation for removing individual charges from the main list
+            chargesList.addEventListener('click', (event) => {
+                if (event.target.classList.contains('remove-main-charge-btn')) {
+                    const indexToRemove = parseInt(event.target.dataset.index);
+                    charges.splice(indexToRemove, 1);
+                    renderCharges();
+                    calculateTotals();
+                }
+            });
+
+            function calculateTotals() {
+                let totalFine = 0;
+                let totalJailTime = 0;
+
+                charges.forEach(chargeObj => {
+                    const normalizedChargeName = chargeObj.name.toLowerCase().trim();
+                    let chargeInfo = chargeData[normalizedChargeName];
+
+                    // Special handling for charges with similar names or variable statutes (same as before)
+                    if (!chargeInfo) {
+                        if (normalizedChargeName.includes('misdemeanor assault')) {
+                            chargeInfo = chargeData['misdemeanor assault'];
+                        } else if (normalizedChargeName.includes('misdemeanor harassment')) {
+                            chargeInfo = chargeData['harassment (misdemeanor)'];
+                        } else if (normalizedChargeName.includes('attempted grand theft auto')) {
+                            chargeInfo = chargeData['attempted grand theft auto (misdemeanor)'];
+                        } else if (normalizedChargeName.includes('assault') && !normalizedChargeName.includes('aggravated')) {
+                            chargeInfo = chargeData['assault'];
+                        } else if (normalizedChargeName.includes('harassment') && !normalizedChargeName.includes('misdemeanor')) {
+                            chargeInfo = chargeData['harassment'];
+                        }
+                    }
+
+                    if (chargeInfo) {
+                        totalFine += chargeInfo.fine * chargeObj.quantity;
+                        totalJailTime += chargeInfo.jail * chargeObj.quantity;
+                    } else {
+                        console.warn(`Charge "${chargeObj.name}" not found in data. Fine and jail time not added for this charge.`);
                     }
                 });
 
-                function calculateTotals() {
-                    let totalFine = 0;
-                    let totalJailTime = 0;
+                totalFineDisplay.textContent = `$${totalFine.toLocaleString()}`;
 
-                    charges.forEach(chargeObj => {
-                        const normalizedChargeName = chargeObj.name.toLowerCase().trim();
-                        let chargeInfo = chargeData[normalizedChargeName];
-
-                        // Special handling for charges with similar names or variable statutes (same as before)
-                        if (!chargeInfo) {
-                            if (normalizedChargeName.includes('misdemeanor assault')) {
-                                chargeInfo = chargeData['misdemeanor assault'];
-                            } else if (normalizedChargeName.includes('misdemeanor harassment')) {
-                                chargeInfo = chargeData['harassment (misdemeanor)'];
-                            } else if (normalizedChargeName.includes('attempted grand theft auto')) {
-                                chargeInfo = chargeData['attempted grand theft auto (misdemeanor)'];
-                            } else if (normalizedChargeName.includes('assault') && !normalizedChargeName.includes('aggravated')) {
-                                chargeInfo = chargeData['assault'];
-                            } else if (normalizedChargeName.includes('harassment') && !normalizedChargeName.includes('misdemeanor')) {
-                                chargeInfo = chargeData['harassment'];
-                            }
-                        }
-
-                        if (chargeInfo) {
-                            totalFine += chargeInfo.fine * chargeObj.quantity;
-                            totalJailTime += chargeInfo.jail * chargeObj.quantity;
-                        } else {
-                            console.warn(`Charge "${chargeObj.name}" not found in data. Fine and jail time not added for this charge.`);
-                        }
-                    });
-
-                    totalFineDisplay.textContent = `$${totalFine.toLocaleString()}`;
-
-                    if (totalJailTime >= 999999) {
-                        totalJailTimeDisplay.textContent = 'Life Sentence';
-                    } else if (totalJailTime > 0 && totalJailTime < 1) {
-                        totalJailTimeDisplay.textContent = '< 1 Month';
-                    } else {
-                        totalJailTimeDisplay.textContent = `${totalJailTime} Months`;
-                    }
+                if (totalJailTime >= 999999) {
+                    totalJailTimeDisplay.textContent = 'Life Sentence';
+                } else if (totalJailTime > 0 && totalJailTime < 1) {
+                    totalJailTimeDisplay.textContent = '< 1 Month';
+                } else {
+                    totalJailTimeDisplay.textContent = `${totalJailTime} Months`;
                 }
+            }
 
-                // The dev notice modal is now completely removed from the HTML and JavaScript.
-                // No need to explicitly call renderCharges or calculateTotals here, as they are triggered by user interaction.
-            });
-        </script>
+            // The dev notice modal is now completely removed from the HTML and JavaScript.
+            // No need to explicitly call renderCharges or calculateTotals here, as they are triggered by user interaction.
+        });
+    </script>
 </body>
 </html>

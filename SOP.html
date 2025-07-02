@@ -50,6 +50,14 @@
             font-weight: bold;
         }
 
+        .current-highlight {
+            background-color: #87CEEB; /* Sky Blue for current highlight */
+            font-weight: bold;
+            border: 1px solid #1e3a8a; /* Blue border for emphasis */
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
         .ten-code-table {
             width: 100%;
             border-collapse: collapse;
@@ -297,7 +305,7 @@
             width: 100%; /* Full width */
             height: 100%; /* Full height */
             overflow: hidden; /* Hide overflow from the modal itself */
-            background-color: rgba(0,0,0,0.8); /* Black w/ opacity */
+            background-color: rgba(0,0,0,0.6); /* Black w/ 60% opacity */
             justify-content: center;
             align-items: center;
             padding: 0; /* No padding on the modal itself */
@@ -454,9 +462,13 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2 id="modalTitle">Standard Operating Procedures</h2>
-                <!-- Search Bar inside the modal header -->
-                <div class="flex-grow mx-4 max-w-md">
-                    <input type="text" id="modalSearchInput" placeholder="Search document..." class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <!-- Search Bar and Navigation Buttons -->
+                <div class="flex items-center ml-auto">
+                    <!-- ml-auto pushes this div to the right -->
+                    <input type="text" id="modalSearchInput" placeholder="Search document..." class="w-48 p-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <button id="nextResultBtn" class="bg-blue-500 text-white px-3 py-2 rounded-r-md hover:bg-blue-600 transition duration-200 ease-in-out" title="Next Result">
+                        &raquo;
+                    </button>
                 </div>
                 <span class="close-button" id="closeSOPModal">&times;</span>
             </div>
@@ -509,6 +521,8 @@
     <script>
         (function () { // Start IIFE
             let originalSOPContentHtml = ''; // Global variable to store the original fetched HTML
+            let highlightedElements = []; // Stores references to all highlighted spans
+            let currentHighlightIndex = -1; // Tracks the currently visible highlight
 
             // Function to render content into the SOP container
             function renderContent(htmlContent) {
@@ -526,6 +540,14 @@
             async function fetchGoogleDocContent(url, title) {
                 const sopContainer = document.getElementById('sop-container');
                 const modalTitleElement = document.getElementById('modalTitle');
+                const nextResultBtn = document.getElementById('nextResultBtn');
+
+                // Reset search state when a new document is loaded
+                highlightedElements = [];
+                currentHighlightIndex = -1;
+                if (nextResultBtn) {
+                    nextResultBtn.style.display = 'none'; // Hide next button until search is performed
+                }
 
                 if (sopContainer) {
                     sopContainer.innerHTML = '<p class="text-center text-gray-500">Loading document content...</p>';
@@ -552,11 +574,7 @@
                         renderContent(originalSOPContentHtml);
                     } else {
                         // Fallback for when 'contents' ID is not found (e.g., non-published Google Docs links)
-                        // Attempt to get the body content or a significant part of it.
-                        // This is a more robust fallback but might include more unwanted elements.
-                        const bodyContent = doc.body.innerHTML;
-                        // Attempt to find a common wrapper for the main document content if 'contents' isn't there
-                        const mainContentDiv = doc.querySelector('.doc-content') || doc.querySelector('body > div:nth-child(2)'); // Common Google Docs class or typical wrapper div
+                        const mainContentDiv = doc.querySelector('.doc-content') || doc.querySelector('body > div:nth-child(2)');
 
                         if (mainContentDiv) {
                             originalSOPContentHtml = mainContentDiv.innerHTML;
@@ -572,80 +590,119 @@
                 }
             }
 
-            // Function to handle search and highlighting
-            function performSearch() {
+            // Function to clear existing highlights
+            function clearHighlights() {
+                highlightedElements.forEach(el => {
+                    el.classList.remove('current-highlight');
+                    el.classList.remove('highlight'); // Remove all highlight classes
+                    // Replace the span with its text content to remove the highlight entirely
+                    const parent = el.parentNode;
+                    if (parent) {
+                        parent.replaceChild(document.createTextNode(el.textContent), el);
+                    }
+                });
+                highlightedElements = [];
+                currentHighlightIndex = -1;
+            }
+
+            // Function to perform search and highlighting
+            function performSearch(scrollToFirst = false) {
                 const modalSearchInput = document.getElementById('modalSearchInput');
                 const searchTerm = modalSearchInput.value.toLowerCase();
                 const sopContainer = document.getElementById('sop-container');
+                const nextResultBtn = document.getElementById('nextResultBtn');
 
-                // Reset content to original before applying new highlights
-                sopContainer.innerHTML = originalSOPContentHtml;
+                // Clear previous highlights before re-rendering
+                clearHighlights();
+
+                // Re-render the original content to remove any old highlight spans
+                renderContent(originalSOPContentHtml);
 
                 if (searchTerm === '') {
+                    if (nextResultBtn) nextResultBtn.style.display = 'none';
                     return; // If search term is empty, just show original content
                 }
 
-                // Create a temporary div to manipulate the DOM without affecting the live page until ready
+                // Use a temporary div to perform highlighting without affecting the live DOM until ready
                 const tempDiv = document.createElement('div');
                 tempDiv.innerHTML = originalSOPContentHtml; // Start with the clean, original content
 
-                // Use a TreeWalker to efficiently traverse all text nodes
                 const walker = document.createTreeWalker(
                     tempDiv,
-                    NodeFilter.SHOW_TEXT, // Only show text nodes
-                    null, // No custom filter function
-                    false // Don't expand entity references
+                    NodeFilter.SHOW_TEXT,
+                    null,
+                    false
                 );
 
                 let node;
                 const nodesToProcess = [];
-
-                // Collect all text nodes first to avoid issues with live NodeList during modification
                 while ((node = walker.nextNode())) {
-                    // Exclude text nodes that are inside script or style tags to prevent breaking them
                     if (node.parentNode.nodeName !== 'SCRIPT' && node.parentNode.nodeName !== 'STYLE') {
                         nodesToProcess.push(node);
                     }
                 }
 
-                // Process each collected text node
                 nodesToProcess.forEach(textNode => {
                     const text = textNode.nodeValue;
                     const lowerCaseText = text.toLowerCase();
                     let lastIndex = 0;
-                    const fragment = document.createDocumentFragment(); // Use a document fragment for efficient DOM manipulation
-
-                    const regex = new RegExp(searchTerm, 'gi'); // 'g' for global, 'i' for case-insensitive
-
+                    const fragment = document.createDocumentFragment();
+                    const regex = new RegExp(searchTerm, 'gi');
                     let match;
+
                     while ((match = regex.exec(lowerCaseText)) !== null) {
-                        // Add the text before the current match
                         if (match.index > lastIndex) {
                             fragment.appendChild(document.createTextNode(text.substring(lastIndex, match.index)));
                         }
-
-                        // Create a span for the highlighted text
                         const highlightSpan = document.createElement('span');
                         highlightSpan.className = 'highlight';
-                        highlightSpan.textContent = text.substring(match.index, regex.lastIndex); // Use original case for display
+                        highlightSpan.textContent = text.substring(match.index, regex.lastIndex);
                         fragment.appendChild(highlightSpan);
-
-                        lastIndex = regex.lastIndex; // Update lastIndex for the next iteration
+                        lastIndex = regex.lastIndex;
                     }
-
-                    // Add any remaining text after the last match
                     if (lastIndex < text.length) {
                         fragment.appendChild(document.createTextNode(text.substring(lastIndex)));
                     }
-
-                    // Replace the original text node with the new fragment (which contains text and highlight spans)
                     if (fragment.childNodes.length > 0) {
                         textNode.parentNode.replaceChild(fragment, textNode);
                     }
                 });
 
-                // Finally, update the live SOP container with the modified HTML from the temporary div
+                // Update the live SOP container with the newly highlighted content
                 sopContainer.innerHTML = tempDiv.innerHTML;
+
+                // Now, collect references to the actual highlighted elements in the live DOM
+                highlightedElements = Array.from(sopContainer.querySelectorAll('.highlight'));
+
+                if (highlightedElements.length > 0) {
+                    if (nextResultBtn) nextResultBtn.style.display = 'inline-block'; // Show next button
+                    currentHighlightIndex = 0;
+                    highlightedElements[currentHighlightIndex].classList.add('current-highlight');
+                    if (scrollToFirst) {
+                        highlightedElements[currentHighlightIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                } else {
+                    if (nextResultBtn) nextResultBtn.style.display = 'none';
+                }
+            }
+
+            // Function to navigate to the next highlight
+            function navigateToNextResult() {
+                if (highlightedElements.length === 0) return;
+
+                // Remove highlight from current element
+                if (currentHighlightIndex !== -1 && highlightedElements[currentHighlightIndex]) {
+                    highlightedElements[currentHighlightIndex].classList.remove('current-highlight');
+                }
+
+                currentHighlightIndex++;
+                if (currentHighlightIndex >= highlightedElements.length) {
+                    currentHighlightIndex = 0; // Loop back to the first result
+                }
+
+                // Add highlight to the new current element and scroll to it
+                highlightedElements[currentHighlightIndex].classList.add('current-highlight');
+                highlightedElements[currentHighlightIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
             }
 
 
@@ -656,6 +713,12 @@
                 const docButtons = document.querySelectorAll('.doc-button'); // Select all buttons with class 'doc-button'
                 const closeSOPModal = document.getElementById('closeSOPModal');
                 const modalSearchInput = document.getElementById('modalSearchInput');
+                const nextResultBtn = document.getElementById('nextResultBtn');
+
+                // Initially hide the next result button
+                if (nextResultBtn) {
+                    nextResultBtn.style.display = 'none';
+                }
 
                 // Add event listeners to all document buttons
                 docButtons.forEach(button => {
@@ -678,7 +741,10 @@
                         if (modalSearchInput) {
                             modalSearchInput.value = '';
                         }
-                        // No need to renderContent(originalSOPContentHtml) here as modal will re-fetch on next open
+                        clearHighlights(); // Clear all highlights and reset state
+                        if (nextResultBtn) {
+                            nextResultBtn.style.display = 'none';
+                        }
                     });
                 }
 
@@ -690,13 +756,29 @@
                         if (modalSearchInput) {
                             modalSearchInput.value = '';
                         }
-                        // No need to renderContent(originalSOPContentHtml) here as modal will re-fetch on next open
+                        clearHighlights(); // Clear all highlights and reset state
+                        if (nextResultBtn) {
+                            nextResultBtn.style.display = 'none';
+                        }
                     }
                 });
 
                 // Search functionality inside the modal
                 if (modalSearchInput) {
-                    modalSearchInput.addEventListener('input', performSearch); // Live search as user types
+                    // Trigger search on input change (live search)
+                    modalSearchInput.addEventListener('input', () => performSearch(false));
+                    // Trigger search and scroll to first result on Enter key press
+                    modalSearchInput.addEventListener('keydown', (event) => {
+                        if (event.key === 'Enter') {
+                            event.preventDefault(); // Prevent default form submission
+                            performSearch(true); // Perform search and scroll to first result
+                        }
+                    });
+                }
+
+                // Next Result Button
+                if (nextResultBtn) {
+                    nextResultBtn.addEventListener('click', navigateToNextResult);
                 }
 
                 // Hamburger menu functionality (retained from original)
