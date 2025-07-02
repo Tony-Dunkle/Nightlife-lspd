@@ -105,6 +105,26 @@
                 Below is the official Los Santos Police Department roster. This data is dynamically loaded and updated regularly by the HR division.
             </p>
 
+            <!-- Officer Count Summary Section -->
+            <div id="officer-summary" class="bg-blue-100 p-4 md:p-6 rounded-lg shadow-md mb-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-center">
+                <div class="p-2 bg-blue-200 rounded-md">
+                    <p class="text-lg font-semibold text-blue-800">High Command Officers:</p>
+                    <p id="high-command-officers" class="text-2xl font-bold text-blue-900">0</p>
+                </div>
+                <div class="p-2 bg-blue-200 rounded-md">
+                    <p class="text-lg font-semibold text-blue-800">Command Officers:</p>
+                    <p id="command-officers" class="text-2xl font-bold text-blue-900">0</p>
+                </div>
+                <div class="p-2 bg-blue-200 rounded-md">
+                    <p class="text-lg font-semibold text-blue-800">Cadets:</p>
+                    <p id="cadets" class="text-2xl font-bold text-blue-900">0</p>
+                </div>
+                <div class="p-2 bg-blue-200 rounded-md">
+                    <p class="text-lg font-semibold text-blue-800">Total Officers:</p>
+                    <p id="total-officers" class="text-2xl font-bold text-blue-900">0</p>
+                </div>
+            </div>
+
             <div id="roster-display" class="w-full flex justify-center items-center min-h-[300px]">
                 <!-- Roster data will be loaded here dynamically -->
                 <div class="loader" id="roster-loader"></div>
@@ -159,6 +179,10 @@
         document.addEventListener('DOMContentLoaded', () => {
             const rosterDisplay = document.getElementById('roster-display');
             const rosterLoader = document.getElementById('roster-loader');
+            const totalOfficersEl = document.getElementById('total-officers');
+            const commandOfficersEl = document.getElementById('command-officers');
+            const highCommandOfficersEl = document.getElementById('high-command-officers');
+            const cadetsEl = document.getElementById('cadets');
 
             // Directly fetch roster data on page load since the modal is removed
             fetchRosterData();
@@ -214,6 +238,8 @@
 
                     targetSpreadsheetRows.add(6);
                     targetSpreadsheetRows.add(9);
+                    targetSpreadsheetRows.add(10); // Explicitly added row 10
+                    targetSpreadsheetRows.add(11); // Explicitly added row 11
                     addRange(12, 16);
                     addRange(18, 22);
                     addRange(24, 27);
@@ -370,7 +396,7 @@
             }
 
             /**
-             * Renders the roster data into the DOM.
+             * Renders the roster data into the DOM and updates officer counts.
              * @param {Array<Array<string>>} data - The processed data (array of rows, each row is an array of cells).
              * @param {Array<string>} headers - An array of header names, used for displaying labels.
              */
@@ -379,7 +405,23 @@
 
                 if (data.length === 0) {
                     rosterDisplay.innerHTML = '<p class="text-gray-600">No roster entries found for the specified filters.</p>';
+                    // Reset counts if no data
+                    totalOfficersEl.textContent = 0;
+                    commandOfficersEl.textContent = 0;
+                    highCommandOfficersEl.textContent = 0;
+                    cadetsEl.textContent = 0;
                     return;
+                }
+
+                let totalOfficers = 0;
+                let commandOfficers = 0;
+                let highCommandOfficers = 0;
+                let cadets = 0;
+
+                const rankIndex = headers.indexOf('Rank');
+                if (rankIndex === -1) {
+                    console.error("Rank column not found in headers.");
+                    return; // Cannot calculate counts without rank
                 }
 
                 // Create a container for the grid layout of officer cards
@@ -403,6 +445,25 @@
                     if (!nameValue || nameValue.trim() === 'N/A') {
                         return; // Skip this row if Name is empty or 'N/A'
                     }
+
+                    totalOfficers++; // Count all valid entries
+
+                    const rank = rowData[rankIndex].trim(); // Trim whitespace from the rank
+                    console.log(`Processing officer: ${nameValue}, Rank: '${rank}'`); // Log the exact rank string
+
+                    // Define ranks for each category based on user's updated request
+                    const highCommandRanks = ['Commissioner', 'Dpt. Commissioner', 'Chief of Police', 'Deputy Chief', 'Captain'];
+                    const commandRanks = ['Lieutenant', 'Master Sergeant'];
+                    const cadetRanks = ['Cadet']; // Assuming 'Cadet' remains the rank for cadets
+
+                    if (highCommandRanks.includes(rank)) {
+                        highCommandOfficers++;
+                    } else if (commandRanks.includes(rank)) {
+                        commandOfficers++;
+                    } else if (cadetRanks.includes(rank)) {
+                        cadets++;
+                    }
+
 
                     // Get the 'Image Link' value
                     const imageLink = rowData[headers.indexOf('Image Link')];
@@ -428,13 +489,13 @@
                         imgElement.className = 'w-16 h-16 rounded-full ml-4 object-cover'; // Tailwind classes for styling
                         imgElement.onerror = function () {
                             this.onerror = null; // Prevent infinite loop if fallback also fails
-                            this.src = 'LSPD.png'; // Changed to LSPD.png as requested
+                            this.src = 'https://placehold.co/64x64/aabbcc/ffffff?text=LSPD'; // Placeholder if image fails
                         };
                         nameAndImageContainer.appendChild(imgElement);
                     } else {
                         // If no image, add a placeholder or simply leave empty space
                         const placeholderImg = document.createElement('img');
-                        placeholderImg.src = 'LSPD.png'; // Changed to LSPD.png as requested
+                        placeholderImg.src = 'https://placehold.co/64x64/aabbcc/ffffff?text=LSPD'; // Placeholder if no image link
                         placeholderImg.alt = 'No image available';
                         placeholderImg.className = 'w-16 h-16 rounded-full ml-4 object-cover';
                         nameAndImageContainer.appendChild(placeholderImg);
@@ -478,6 +539,12 @@
                     gridContainer.appendChild(officerCard);
                 });
                 rosterDisplay.appendChild(gridContainer);
+
+                // Update the summary counts
+                totalOfficersEl.textContent = totalOfficers;
+                commandOfficersEl.textContent = commandOfficers;
+                highCommandOfficersEl.textContent = highCommandOfficers;
+                cadetsEl.textContent = cadets;
             }
         });
     </script>
