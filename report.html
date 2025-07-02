@@ -395,6 +395,12 @@
             const weaponsReturnable = weaponsReturnableSelect.value;
             const pleaType = pleaTypeSelect.value;
 
+            // Get current local date, time, and timezone
+            const now = new Date();
+            const localDate = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+            const localTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+            const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
 
             // Clear previous generated report value and ensure it's truly empty
             generatedReportTextarea.value = '';
@@ -428,9 +434,13 @@
             try {
                 let chatHistory = [];
                 // Construct a detailed prompt for the Gemini API, including all new fields
-                const prompt = `Generate a detailed and professional police report for the ${department} based on the following information. The output must strictly follow the format provided below, with no additional text, introductory phrases, or markdown formatting (like bold, italics, headers, or bullet points). Ensure all fields are populated appropriately based on the input. If a field is not directly deducible from the input, provide a reasonable placeholder or "N/A" Also ensure that your generated report is written as if you were the officer writing the report.
+                const prompt = `${localDate}, ${localTime} ${timeZone}
 
-Officer Information: ${officerInfo}
+Officer: ${officerInfo} ${department}
+City/State: Los Santos, San Andreas (SA)
+
+Generate a detailed, professional, and concise police report. The report must strictly adhere to the information provided in the "Officer Narrative" and other text fields. Do not include any information that is not directly deducible from the provided inputs. The output must strictly follow the format provided below, with no additional text, introductory phrases, or markdown formatting (like bold, italics, headers, or bullet points). Ensure all fields are populated appropriately based on the input. If a field is not directly deducible from the input, provide a reasonable placeholder or "N/A". The report should be written as if you were the officer writing it.
+
 Suspect Name: ${suspectName}
 Charges: ${charges}
 Officer Narrative: ${narrative}
@@ -451,7 +461,7 @@ Debrief: [Detailed summary of the incident based on the narrative and provided i
 Justification of Charges:
 ${charges.split(',').map(charge => `(${charge.trim()}): [Reason for this specific charge based on the narrative and incident details]`).join('\n')}
 
-Postal/Location: [Location of the incident, if mentioned in narrative, otherwise provide a general placeholder like "Not specified in narrative" or "Los Santos, CA"]
+Postal/Location: [Location of the incident, if mentioned in narrative, otherwise provide a general placeholder like "Los Santos, SA"]
 
 Evidence/Items Seized: ${itemsSeized || 'None'}
 
