@@ -74,41 +74,38 @@
 <body class="min-h-screen flex flex-col">
 
     <!-- Header Section -->
-    <!-- Flexbox with `flex-col md:flex-row` makes it stack vertically on small screens and horizontally on medium screens and up -->
-    <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex flex-col md:flex-row items-center justify-between sticky top-0 z-50 rounded-b-lg">
-        <div class="flex items-center mb-4 md:mb-0">
-            <!-- LSPD Logo - Local source updated to LSPD.png -->
+    <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex items-center justify-between sticky top-0 z-50 rounded-b-lg relative">
+        <div class="flex items-center">
+            <!-- LSPD Logo -->
             <img src="LSPD.png" alt="LSPD Logo" class="mr-4 w-16 h-16 object-contain" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
             <!-- Responsive font size: text-2xl for small screens, text-3xl for medium screens and up -->
             <h1 class="text-2xl md:text-3xl font-bold">Los Santos Police Department</h1>
         </div>
+
+        <!-- Hamburger Menu Button for Mobile -->
+        <button id="hamburgerBtn" class="hamburger-menu text-white focus:outline-none md:hidden">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-4 6h4"></path>
+            </svg>
+        </button>
+
         <!-- Navigation Menu -->
-        <nav class="w-full md:w-auto">
-            <!-- Flexbox with `flex-col md:flex-row` for navigation items -->
-            <ul class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-8 text-lg font-medium">
-                <!-- Dashboard link updated to index.html -->
-                <li><a href="index.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Dashboard</a></li>
-                <!-- SOPs link updated to SOP.html -->
-                <li><a href="SOP.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">SOPs</a></li>
-                <!-- Training link updated to training.html -->
-                <li><a href="training.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Training</a></li>
-                <!-- Forms link updated to forms.html -->
-                <li><a href="forms.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Forms</a></li>
-                <!-- Roster link updated to roster.html -->
-                <li><a href="roster.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Roster</a></li>
-                <!-- HR Info link updated to hr.html -->
-                <li><a href="hr.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">HR Info</a></li>
-                <!-- Report Generator link updated to report.html -->
-                <li><a href="report.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Report Generator</a></li>
-                <!-- New: Charge Calculator button -->
-                <li><a href="charges.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Charge Calculator</a></li>
-                <!-- New: Commonly Used PD INFO -->
-                <li><a href="info.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Common Information</a></li>
+        <!-- Added md:flex-grow to nav to allow it to take available space -->
+        <nav class="nav-links md:flex md:flex-grow md:justify-end">
+            <!-- Changed md:space-x-8 to md:space-x-4 and added md:flex-wrap for stacking -->
+            <ul class="flex flex-col md:flex-row md:flex-wrap md:justify-end space-y-2 md:space-y-0 md:space-x-4 text-sm font-medium">
+                <li><a href="index.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700 current-page">Dashboard</a></li>
+                <li><a href="SOP.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">SOPs</a></li>
+                <li><a href="training.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Training</a></li>
+                <li><a href="forms.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Forms</a></li>
+                <li><a href="roster.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Roster</a></li>
+                <li><a href="hr.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">HR Info</a></li>
+                <li><a href="report.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Report Generator</a></li>
+                <li><a href="charges.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Charge Calculator</a></li>
+                <li><a href="info.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Common Information</a></li>
             </ul>
         </nav>
-        <!-- Search Bar removed from here -->
     </header>
-
     <main id="data-section" class="container mx-auto p-6 flex-grow">
         <div id="loading-indicator" class="text-center text-gray-600 text-xl font-semibold mt-10">
             <div class="flex items-center justify-center space-x-2">
@@ -267,10 +264,10 @@
                         const categoryTitle = document.createElement('h3');
                         categoryTitle.className = 'text-xl font-semibold text-gray-700 mb-2 flex items-center';
                         categoryTitle.innerHTML = `<span class="mr-2 text-blue-500">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-                                <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                            </svg>
-                        </span> ${categoryName}`;
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                                </svg>
+                            </span> ${categoryName}`;
                         categorySection.appendChild(categoryTitle);
 
                         const itemList = document.createElement('ul');
