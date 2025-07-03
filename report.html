@@ -177,6 +177,7 @@
                         <option value="Use of Force">Use of Force</option>
                         <option value="Trespass Notice">Trespass Notice</option>
                         <option value="Business Incident">Business Incident</option>
+                        <option value="Incident Report">Incident Report</option> <!-- New Incident Report Option -->
                     </select>
                 </div>
 
@@ -497,6 +498,52 @@
                     </div>
                 </div>
 
+                <!-- Incident Report Fields (NEW) -->
+                <div id="incidentReportFields" class="report-fields hidden">
+                    <div class="mb-6">
+                        <label for="incidentLocation" class="block text-gray-700 text-sm font-semibold mb-2">
+                            Location of Incident
+                        </label>
+                        <input type="text" id="incidentLocation" name="incidentLocation" placeholder="Enter location of incident" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400 text-gray-800">
+                    </div>
+                    <div class="mb-6">
+                        <label for="incidentDate" class="block text-gray-700 text-sm font-semibold mb-2">
+                            Date of Incident
+                        </label>
+                        <input type="date" id="incidentDate" name="incidentDate" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm text-gray-800">
+                    </div>
+                    <div class="mb-6">
+                        <label for="incidentTime" class="block text-gray-700 text-sm font-semibold mb-2">
+                            Time of Incident
+                        </label>
+                        <input type="time" id="incidentTime" name="incidentTime" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm text-gray-800">
+                    </div>
+                    <div class="mb-6">
+                        <label for="primaryIncidentType" class="block text-gray-700 text-sm font-semibold mb-2">
+                            Primary Incident Type
+                        </label>
+                        <input type="text" id="primaryIncidentType" name="primaryIncidentType" placeholder="e.g., Theft, Assault, Vandalism, Missing Person" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400 text-gray-800">
+                    </div>
+                    <div class="mb-6">
+                        <label for="affectedParties" class="block text-gray-700 text-sm font-semibold mb-2">
+                            Affected Parties (Names/Roles)
+                        </label>
+                        <textarea id="affectedParties" name="affectedParties" rows="3" placeholder="List names and roles of affected parties (e.g., Victim, Witness, Reporting Party)" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400 text-gray-800"></textarea>
+                    </div>
+                    <div class="mb-6">
+                        <label for="incidentDescription" class="block text-gray-700 text-sm font-semibold mb-2">
+                            Incident Description
+                        </label>
+                        <textarea id="incidentDescription" name="incidentDescription" rows="5" placeholder="Provide a detailed description of the incident, including what happened, when, where, and who was involved." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400 text-gray-800"></textarea>
+                    </div>
+                    <div class="mb-6">
+                        <label for="actionsTaken" class="block text-gray-700 text-sm font-semibold mb-2">
+                            Actions Taken by Officer
+                        </label>
+                        <textarea id="actionsTaken" name="actionsTaken" rows="3" placeholder="Describe the actions taken by the officer(s) at the scene (e.g., interviewed witnesses, secured scene, referred to detective)." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400 text-gray-800"></textarea>
+                    </div>
+                </div>
+
                 <!-- Evidence Collected (New Section) -->
                 <div class="mb-6">
                     <label for="evidenceCollectedInput" class="block text-gray-700 text-sm font-semibold mb-2">
@@ -702,6 +749,7 @@
         const useOfForceFields = document.getElementById('useOfForceFields');
         const trespassNoticeFields = document.getElementById('trespassNoticeFields');
         const businessIncidentFields = document.getElementById('businessIncidentFields');
+        const incidentReportFields = document.getElementById('incidentReportFields'); // NEW Incident Report Fields
 
         // Get references to Arrest Report specific elements
         const suspectNameInput = document.getElementById('suspectName');
@@ -746,6 +794,16 @@
         const involvedPartiesTextarea = document.getElementById('involvedParties');
         const damagesTheftTextarea = document.getElementById('damagesTheft');
         const bizNarrativeTextarea = document.getElementById('bizNarrative');
+
+        // Get references to Incident Report specific elements (NEW)
+        const incidentLocationInput = document.getElementById('incidentLocation');
+        const incidentDateInput = document.getElementById('incidentDate');
+        const incidentTimeInput = document.getElementById('incidentTime');
+        const primaryIncidentTypeInput = document.getElementById('primaryIncidentType');
+        const affectedPartiesTextarea = document.getElementById('affectedParties');
+        const incidentDescriptionTextarea = document.getElementById('incidentDescription');
+        const actionsTakenTextarea = document.getElementById('actionsTaken');
+
 
         // Evidence Collection Elements
         const evidenceCollectedInput = document.getElementById('evidenceCollectedInput');
@@ -916,9 +974,9 @@
                 const div = document.createElement('div');
                 div.className = 'evidence-item flex items-center p-2 rounded-md hover:bg-blue-100 cursor-pointer';
                 div.innerHTML = `
-                        <input type="checkbox" id="evidence-${item.name.replace(/\s/g, '-')}" value="${item.name}" class="form-checkbox h-5 w-5 text-blue-600 rounded-md">
-                        <label for="evidence-${item.name.replace(/\s/g, '-')}" class="ml-2 text-gray-800 text-sm font-medium flex-grow">${item.name}</label>
-                    `;
+                            <input type="checkbox" id="evidence-${item.name.replace(/\s/g, '-')}" value="${item.name}" class="form-checkbox h-5 w-5 text-blue-600 rounded-md">
+                            <label for="evidence-${item.name.replace(/\s/g, '-')}" class="ml-2 text-gray-800 text-sm font-medium flex-grow">${item.name}</label>
+                        `;
                 div.setAttribute('data-description', item.description);
                 div.setAttribute('data-type', item.type);
                 if (item.linkProviders) {
@@ -1039,6 +1097,7 @@
             useOfForceFields.classList.add('hidden');
             trespassNoticeFields.classList.add('hidden');
             businessIncidentFields.classList.add('hidden');
+            incidentReportFields.classList.add('hidden'); // NEW Incident Report Fields
 
             // Hide all statement containers
             victimStatementsContainer.classList.add('hidden');
@@ -1061,6 +1120,9 @@
                     break;
                 case 'Business Incident':
                     businessIncidentFields.classList.remove('hidden');
+                    break;
+                case 'Incident Report': // NEW Case
+                    incidentReportFields.classList.remove('hidden');
                     break;
                 default:
                     // No default action, all fields remain hidden
@@ -1579,6 +1641,66 @@ Narrative: [Detailed account of the business incident, based on the officer narr
 Evidence Collected:
 ${evidenceForPrompt}
 Action Taken: [Describe actions taken by law enforcement, e.g., Report filed, Investigation initiated, Parties warned/advised.]
+`;
+                    }
+                    break;
+
+                case 'Incident Report': // NEW Incident Report Case
+                    const incidentLocation = incidentLocationInput.value.trim();
+                    const incidentDate = incidentDateInput.value.trim();
+                    const incidentTime = incidentTimeInput.value.trim();
+                    const primaryIncidentType = primaryIncidentTypeInput.value.trim();
+                    const affectedParties = affectedPartiesTextarea.value.trim();
+                    const incidentDescription = incidentDescriptionTextarea.value.trim();
+                    const actionsTaken = actionsTakenTextarea.value.trim();
+
+                    if (!officerInfo || !incidentLocation || !incidentDate || !incidentTime || !primaryIncidentType || !affectedParties || !incidentDescription || !actionsTaken) {
+                        requiredFieldsFilled = false;
+                    }
+
+                    if (requiredFieldsFilled) {
+                        prompt = `${localDate}, ${localTime} ${timeZone}
+
+Officer: ${officerInfo} ${department}
+City/State: Los Santos, San Andreas (SA)
+
+Generate a detailed, professional, and concise Incident Report. The report must strictly adhere to the information provided in the "Incident Description" and other text fields. Do not include any information that is not directly deducible from the provided inputs. The output must strictly follow the format provided below, with no additional text, introductory phrases, or markdown formatting (like bold, italics, headers, or bullet points). Ensure all fields are populated appropriately based on the input. If a field is not directly deducible from the input, provide a reasonable placeholder or "N/A". The report should be written as if you were the officer writing it. Make sure to include the officer's name, rank if included, and badge number.
+
+Location of Incident: ${incidentLocation}
+Date of Incident: ${incidentDate}
+Time of Incident: ${incidentTime}
+Primary Incident Type: ${primaryIncidentType}
+Affected Parties (Names/Roles): ${affectedParties}
+Incident Description: ${incidentDescription}
+Actions Taken by Officer: ${actionsTaken}
+Evidence Collected:
+${evidenceForPrompt}
+
+---
+Strict Output Format:
+INCIDENT REPORT
+
+Reporting Officer: ${officerInfo}
+Department: ${department}
+Date of Report: ${localDate}
+Time of Report: ${localTime} ${timeZone}
+
+Incident Details:
+Location: ${incidentLocation}
+Date: ${incidentDate}
+Time: ${incidentTime}
+Primary Type: ${primaryIncidentType}
+
+Involved Parties:
+${affectedParties}
+
+Incident Narrative: [Detailed description of the incident, based on the incident description provided.]
+
+Actions Taken: [Detailed description of actions taken by the officer, based on the actions taken provided.]
+
+Evidence Collected:
+${evidenceForPrompt}
+Status: Report Filed.
 `;
                     }
                     break;
