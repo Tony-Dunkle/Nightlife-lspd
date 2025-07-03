@@ -7,8 +7,10 @@
     <title>Police Report Generator</title>
     <!-- Favicon link updated with a fallback URL for robustness -->
     <link rel="icon" type="image/png" href="LSPD.png" onerror="this.href='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
-    <!-- Tailwind CSS CDN - provides responsive utility classes out of the box -->
+    <!-- Tailwind CSS CDN - provides responsive utility classes out of the out of the box -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- jsPDF CDN for generating PDF documents -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         /* Custom font for a clean, modern look */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -597,12 +599,27 @@
                     <label for="generatedReport" class="block text-gray-700 text-sm font-semibold mb-2">
                         Generated Report
                     </label>
-                    <button type="button"
-                            id="copyReportBtn"
-                            class="absolute top-0 right-0 mt-2 mr-2 bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold py-1 px-3 rounded-lg shadow-md transition duration-200 ease-in-out hidden"
-                            title="Copy report to clipboard">
-                        Copy Report
-                    </button>
+                    <div class="absolute top-0 right-0 mt-2 mr-2 flex space-x-2">
+                        <button type="button"
+                                id="copyReportBtn"
+                                class="bg-blue-500 hover:bg-blue-600 text-white text-xs font-bold py-1 px-3 rounded-lg shadow-md transition duration-200 ease-in-out hidden"
+                                title="Copy report to clipboard">
+                            Copy Report
+                        </button>
+                        <button type="button"
+                                id="downloadReportBtn"
+                                class="bg-green-500 hover:bg-green-600 text-white text-xs font-bold py-1 px-3 rounded-lg shadow-md transition duration-200 ease-in-out hidden"
+                                title="Download report as PDF">
+                            Download Report
+                        </button>
+                        <!-- NEW: View Report Button -->
+                        <button type="button"
+                                id="viewReportBtn"
+                                class="bg-purple-500 hover:bg-purple-600 text-white text-xs font-bold py-1 px-3 rounded-lg shadow-md transition duration-200 ease-in-out hidden"
+                                title="View report in new tab">
+                            View Report
+                        </button>
+                    </div>
                     <textarea id="generatedReport"
                               name="generatedReport"
                               rows="10"
@@ -741,6 +758,8 @@
         const generatedReportTextarea = document.getElementById('generatedReport');
         const generateReportBtn = document.getElementById('generateReportBtn');
         const copyReportBtn = document.getElementById('copyReportBtn');
+        const downloadReportBtn = document.getElementById('downloadReportBtn'); // NEW Download Report Button
+        const viewReportBtn = document.getElementById('viewReportBtn'); // NEW View Report Button
         const loadingIndicator = document.getElementById('loadingIndicator');
 
         // Get references to report-specific field containers
@@ -775,7 +794,7 @@
         const subjectNameInput = document.getElementById('subjectName');
         const uofLevelOfForceSelect = document.getElementById('uofLevelOfForce');
         const uofReasonTextarea = document.getElementById('uofReason');
-        const uofInjuriesTextarea = document.getElementById('uofInjuries');
+        const uofInjuriesTextarea = document = document.getElementById('uofInjuries');
         const uofMedicalTreatmentSelect = document.getElementById('uofMedicalTreatment');
         const uofNarrativeTextarea = document.getElementById('uofNarrative');
 
@@ -1063,29 +1082,38 @@
             }
         }
 
-        // Function to update the main evidence input field summary
+        // Function to update the main evidence input field summary and its title attribute for hover
         function updateEvidenceCollectedInputSummary() {
             const summaryParts = [];
+            const hoverTextParts = []; // To store text for the title attribute
+
             for (const itemName in selectedEvidenceDetails) {
                 const item = selectedEvidenceDetails[itemName];
                 if (item.type === 'statement') {
                     if (item.text.trim() !== '') {
-                        summaryParts.push(`${itemName} (details added)`);
+                        summaryParts.push(`${itemName} (D)`); // (D) for details
+                        hoverTextParts.push(`${itemName}: ${item.text.trim()}`);
                     } else {
                         summaryParts.push(itemName);
+                        hoverTextParts.push(`${itemName}: No details provided.`);
                     }
                 } else if (item.type === 'image' || item.type === 'video') {
                     if (item.links.length > 0) {
-                        summaryParts.push(`${itemName} (${item.links.length} link${item.links.length > 1 ? 's' : ''})`);
+                        summaryParts.push(`${itemName} (L)`); // (L) for links
+                        hoverTextParts.push(`${itemName}: ${item.links.join(', ')}`);
                     } else {
                         summaryParts.push(itemName);
+                        hoverTextParts.push(`${itemName}: No links provided.`);
                     }
                 } else {
                     summaryParts.push(itemName);
+                    hoverTextParts.push(itemName); // Fallback for other types
                 }
             }
             evidenceCollectedInput.value = summaryParts.join(', ');
+            evidenceCollectedInput.title = hoverTextParts.join('\n'); // Set the title attribute for hover
         }
+
 
         // Function to show/hide fields based on report type
         function toggleReportFields() {
@@ -1231,29 +1259,30 @@
                 }
             }
             evidenceUrlInput.value = ''; // Clear input after adding
-            updateEvidenceCollectedInputSummary();
+            updateEvidenceCollectedInputSummary(); // Update summary immediately after adding a link
         });
 
         closeUrlModalBtn.addEventListener('click', () => {
             urlInputModal.classList.add('hidden');
             evidenceModal.classList.remove('hidden'); // Bring back the evidence selection modal
+            updateEvidenceCollectedInputSummary(); // Ensure summary is updated when done
         });
 
         urlInputModal.addEventListener('click', (e) => {
             if (e.target === urlInputModal) {
                 urlInputModal.classList.add('hidden');
                 evidenceModal.classList.remove('hidden'); // Bring back the evidence selection modal
-            }
-            // If the URL modal is closed without adding a link, and the corresponding checkbox is checked,
-            // uncheck it to reflect that no links were added.
-            const currentItemName = urlInputModal.dataset.currentItem;
-            if (selectedEvidenceDetails[currentItemName] && selectedEvidenceDetails[currentItemName].links.length === 0) {
-                const checkbox = document.getElementById(`evidence-${currentItemName.replace(/\s/g, '-')}`);
-                if (checkbox) {
-                    checkbox.checked = false;
-                    delete selectedEvidenceDetails[currentItemName]; // Remove from details if no links
-                    updateEvidenceCollectedInputSummary();
+                // This block handles the case where the user closes the URL modal by clicking outside
+                // If no links were added for the current item, uncheck its checkbox and remove it from selectedEvidenceDetails
+                const currentItemName = urlInputModal.dataset.currentItem;
+                if (selectedEvidenceDetails[currentItemName] && selectedEvidenceDetails[currentItemName].links.length === 0) {
+                    const checkbox = document.getElementById(`evidence-${currentItemName.replace(/\s/g, '-')}`);
+                    if (checkbox) {
+                        checkbox.checked = false;
+                        delete selectedEvidenceDetails[currentItemName]; // Remove from details if no links
+                    }
                 }
+                updateEvidenceCollectedInputSummary(); // Ensure summary is updated after any modal closure
             }
         });
 
@@ -1321,6 +1350,8 @@
 
             generatedReportTextarea.value = '';
             copyReportBtn.classList.add('hidden');
+            downloadReportBtn.classList.add('hidden'); // Hide download button on new generation
+            viewReportBtn.classList.add('hidden'); // Hide view button on new generation
             loadingIndicator.classList.remove('hidden');
 
             let prompt = '';
@@ -1384,7 +1415,7 @@
 Officer: ${officerInfo} ${department}
 City/State: Los Santos, San Andreas (SA)
 
-Generate a detailed, professional, and concise police report. The report must strictly adhere to the information provided in the "Officer Narrative" and other text fields. Do not include any information that is not directly deducible from the provided inputs. The output must strictly follow the format provided below, with no additional text, introductory phrases, or markdown formatting (like bold, italics, headers, or bullet points). Ensure all fields are populated appropriately based on the input. If a field is not directly deducible from the input, provide a reasonable placeholder or "N/A". The report should be written as if you were the officer writing it. Make sure to include the officers name, rank if included and badge number.
+Generate a detailed, professional, and concise police report. The report must strictly adhere to the information provided in the "Officer Narrative" and other text fields. Do not include any information that is not directly deducible from the provided inputs. The output must strictly follow the format provided below, with no additional text, introductory phrases, or markdown formatting (like bold, italics, headers, or bullet points). Ensure all fields are populated appropriately based on the input. If a field is not directly deducible from the input, provide a reasonable placeholder or "N/A". The report should be written as if you were the officer writing it. Make sure to include the officers name, rank if included and badge number. Also, explicitly mention the suspect's name in the debrief.
 
 Suspect Name: ${suspectName}
 Charges: ${charges}
@@ -1400,7 +1431,7 @@ ${evidenceForPrompt}
 
 ---
 Strict Output Format:
-Debrief: [Detailed summary of the incident based on the narrative and provided information. Focus on the factual account of events, what happened, and actions taken by law enforcement.]
+Debrief: [Detailed summary of the incident based on the narrative and provided information, explicitly mentioning the suspect's name: ${suspectName}. Focus on the factual account of events, what happened, and actions taken by law enforcement.]
 
 Justification of Charges:
 ${charges.split(',').map(charge => `(${charge.trim()}): [Reason for this specific charge based on the narrative and incident details]`).join('\n')}
@@ -1497,7 +1528,7 @@ Action Taken: Citation Issued.
 Officer: ${officerInfo} ${department}
 City/State: Los Santos, San Andreas (SA)
 
-Generate a detailed, professional, and concise Use of Force report. The report must strictly adhere to the information provided in the "Officer Narrative" and other text fields. Do not include any information that is not directly deducible from the provided inputs. The output must strictly follow the format provided below, with no additional text, introductory phrases, or markdown formatting (like bold, italics, headers, or bullet points). Ensure all fields are populated appropriately based on the input. If a field is not directly deducible from the input, provide a reasonable placeholder or "N/A". The report should be written as if you were the officer writing it. Make sure to include the officer's name, rank if included, and badge number.
+Generate a detailed, professional, and concise Use of Force report. The report must strictly adhere to the information provided in the "Officer Narrative" and other text fields. Do not include any information that is not directly deducible from the provided inputs. The output must strictly follow the format provided below, with no additional text, introductory phrases, or markdown formatting (like bold, italics, headers, or bullet points). Ensure all fields are populated appropriately based on the input. If a field is not directly deducible from the input, provide a reasonable placeholder or "N/A". The report should be written as if you were the officer writing it. Make sure to include the officer's name, rank if included, and badge number. Also, explicitly mention the subject's name in the narrative.
 
 Subject's Full Name: ${subjectName}
 Level of Force Used: ${uofLevelOfForce}
@@ -1523,7 +1554,7 @@ Name: ${subjectName}
 Incident Details:
 Level of Force Used: ${uofLevelOfForce}
 Reason for Use of Force: ${uofReason}
-Narrative: [Detailed account of the incident leading to and including the use of force, based on the officer narrative.]
+Narrative: [Detailed account of the incident leading to and including the use of force, explicitly mentioning the subject's name: ${subjectName}, based on the officer narrative.]
 
 Injuries:
 Officer Injuries: [Description of officer injuries, if any, based on input]
@@ -1553,7 +1584,7 @@ ${evidenceForPrompt}
 Officer: ${officerInfo} ${department}
 City/State: Los Santos, San Andreas (SA)
 
-Generate a detailed, professional, and concise Trespass Notice report. The report must strictly adhere to the information provided in the "Officer Narrative" and other text fields. Do not include any information that is not directly deducible from the provided inputs. The output must strictly follow the format provided below, with no additional text, introductory phrases, or markdown formatting (like bold, italics, headers, or bullet points). Ensure all fields are populated appropriately based on the input. If a field is not directly deducible from the input, provide a reasonable placeholder or "N/A". The report should be written as if you were the officer writing it. Make sure to include the officer's name, rank if included, and badge number.
+Generate a detailed, professional, and concise Trespass Notice report. The report must strictly adhere to the information provided in the "Officer Narrative" and other text fields. Do not include any information that is not directly deducible from the provided inputs. The output must strictly follow the format provided below, with no additional text, introductory phrases, or markdown formatting (like bold, italics, headers, or bullet points). Ensure all fields are populated appropriately based on the input. If a field is not directly deducible from the input, provide a reasonable placeholder or "N/A". The report should be written as if you were the officer writing it. Make sure to include the officer's name, rank if included, and badge number. Also, explicitly mention the trespasser's name in the narrative.
 
 Trespasser's Full Name: ${trespasserName}
 Property Address: ${trespassLocation}
@@ -1582,7 +1613,7 @@ Owner/Manager: ${propertyOwner}
 Notice Details:
 Reason for Notice: ${trespassReason}
 Duration of Ban: ${trespassDuration}
-Narrative: [Detailed description of the incident leading to the trespass notice, based on the officer narrative.]
+Narrative: [Detailed description of the incident leading to the trespass notice, explicitly mentioning the trespasser's name: ${trespasserName}, based on the officer narrative.]
 
 Evidence Collected:
 ${evidenceForPrompt}
@@ -1609,7 +1640,7 @@ Warning: Failure to comply with this notice may result in arrest and prosecution
 Officer: ${officerInfo} ${department}
 City/State: Los Santos, San Andreas (SA)
 
-Generate a detailed, professional, and concise Business Incident report. The report must strictly adhere to the information provided in the "Officer Narrative" and other text fields. Do not include any information that is not directly deducible from the provided inputs. The output must strictly follow the format provided below, with no additional text, introductory phrases, or markdown formatting (like bold, italics, headers, or bullet points). Ensure all fields are populated appropriately based on the input. If a field is not directly deducible from the input, provide a reasonable placeholder or "N/A". The report should be written as if you were the officer writing it. Make sure to include the officer's name, rank if included, and badge number.
+Generate a detailed, professional, and concise Business Incident report. The report must strictly adhere to the information provided in the "Officer Narrative" and other text fields. Do not include any information that is not directly deducible from the provided inputs. The output must strictly follow the format provided below, with no additional text, introductory phrases, or markdown formatting (like bold, italics, headers, or bullet points). Ensure all fields are populated appropriately based on the input. If a field is not directly deducible from the input, provide a reasonable placeholder or "N/A". The report should be written as if you were the officer writing it. Make sure to include the officer's name, rank if included, and badge number. Also, explicitly mention the involved parties in the narrative.
 
 Business Name: ${businessName}
 Business Address: ${businessAddress}
@@ -1636,7 +1667,7 @@ Incident Details:
 Type of Incident: ${incidentType}
 Involved Parties: ${involvedParties}
 Damages/Theft: ${damagesTheft || 'None'}
-Narrative: [Detailed account of the business incident, based on the officer narrative.]
+Narrative: [Detailed account of the business incident, explicitly mentioning the involved parties: ${involvedParties}, based on the officer narrative.]
 
 Evidence Collected:
 ${evidenceForPrompt}
@@ -1664,7 +1695,7 @@ Action Taken: [Describe actions taken by law enforcement, e.g., Report filed, In
 Officer: ${officerInfo} ${department}
 City/State: Los Santos, San Andreas (SA)
 
-Generate a detailed, professional, and concise Incident Report. The report must strictly adhere to the information provided in the "Incident Description" and other text fields. Do not include any information that is not directly deducible from the provided inputs. The output must strictly follow the format provided below, with no additional text, introductory phrases, or markdown formatting (like bold, italics, headers, or bullet points). Ensure all fields are populated appropriately based on the input. If a field is not directly deducible from the input, provide a reasonable placeholder or "N/A". The report should be written as if you were the officer writing it. Make sure to include the officer's name, rank if included, and badge number.
+Generate a detailed, professional, and concise Incident Report. The report must strictly adhere to the information provided in the "Incident Description" and other text fields. Do not include any information that is not directly deducible from the provided inputs. The output must strictly follow the format provided below, with no additional text, introductory phrases, or markdown formatting (like bold, italics, headers, or bullet points). Ensure all fields are populated appropriately based on the input. If a field is not directly deducible from the input, provide a reasonable placeholder or "N/A". The report should be written as if you were the officer writing it. Make sure to include the officer's name, rank if included, and badge number. Also, explicitly mention the affected parties in the narrative.
 
 Location of Incident: ${incidentLocation}
 Date of Incident: ${incidentDate}
@@ -1694,7 +1725,7 @@ Primary Type: ${primaryIncidentType}
 Involved Parties:
 ${affectedParties}
 
-Incident Narrative: [Detailed description of the incident, based on the incident description provided.]
+Incident Narrative: [Detailed description of the incident, explicitly mentioning the affected parties: ${affectedParties}, based on the incident description provided.]
 
 Actions Taken: [Detailed description of actions taken by the officer, based on the actions taken provided.]
 
@@ -1714,6 +1745,9 @@ Status: Report Filed.
             if (!requiredFieldsFilled) {
                 generatedReportTextarea.value = 'Please fill in all required fields for the selected report type to generate the report.';
                 loadingIndicator.classList.add('hidden');
+                // Ensure download button is hidden if required fields are not filled
+                downloadReportBtn.classList.add('hidden');
+                viewReportBtn.classList.add('hidden'); // Hide view button if fields are not filled
                 return;
             }
 
@@ -1735,6 +1769,8 @@ Status: Report Filed.
                     generatedReportTextarea.value = `Error: API call failed with status ${response.status}. Details: ${errorBody}`;
                     console.error('API Error Response:', response.status, errorBody);
                     loadingIndicator.classList.add('hidden');
+                    downloadReportBtn.classList.add('hidden'); // Hide download button on API error
+                    viewReportBtn.classList.add('hidden'); // Hide view button on API error
                     return;
                 }
 
@@ -1747,15 +1783,21 @@ Status: Report Filed.
                     generatedText = generatedText.replace(/[<>]/g, '').trim();
                     generatedReportTextarea.value = generatedText;
                     copyReportBtn.classList.remove('hidden');
+                    downloadReportBtn.classList.remove('hidden'); // Show download button after successful generation
+                    viewReportBtn.classList.remove('hidden'); // Show view button after successful generation
                 } else {
                     generatedReportTextarea.value = 'Failed to generate report. Gemini API returned an unexpected structure or no content.';
                     console.error('Gemini API returned an unexpected structure or no content:', result);
                     copyReportBtn.classList.add('hidden');
+                    downloadReportBtn.classList.add('hidden');
+                    viewReportBtn.classList.add('hidden');
                 }
             } catch (error) {
                 generatedReportTextarea.value = `An error occurred: ${error.message}. Please check your network connection and try again.`;
                 console.error('Error during API call or processing:', error);
                 copyReportBtn.classList.add('hidden');
+                downloadReportBtn.classList.add('hidden');
+                viewReportBtn.classList.add('hidden');
             } finally {
                 loadingIndicator.classList.add('hidden');
             }
@@ -1779,6 +1821,115 @@ Status: Report Filed.
             setTimeout(() => {
                 copyReportBtn.textContent = originalText;
             }, 1500);
+        });
+
+        // Function to generate PDF content (reused for both download and view)
+        const generatePdfContent = async () => {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+
+            const department = departmentSelect.value;
+            const officerInfo = officerInfoInput.value.trim();
+            const generatedReportText = generatedReportTextarea.value.trim();
+            const now = new Date();
+            const reportDate = now.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
+            const currentYear = now.getFullYear();
+            const currentMonth = now.toLocaleString('en-US', { month: 'long' });
+            const currentDay = now.getDate();
+            const selectedReportType = reportTypeSelect.value; // Get the selected report type
+
+            // Function to load image as base64
+            const getImageBase64 = (url) => {
+                return new Promise((resolve, reject) => {
+                    const img = new Image();
+                    img.crossOrigin = 'Anonymous'; // Required for CORS if image is from another domain
+                    img.onload = () => {
+                        const canvas = document.createElement('canvas');
+                        canvas.width = img.width;
+                        canvas.height = img.height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0);
+                        resolve(canvas.toDataURL('image/png')); // Convert to PNG for transparency
+                    };
+                    img.onerror = (error) => reject(error);
+                    img.src = url;
+                });
+            };
+
+            let lspdLogoBase64 = '';
+            try {
+                // Use the onerror fallback URL for LSPD.png if the direct path fails
+                const imgElement = document.querySelector('img[alt="LSPD Logo"]');
+                const logoUrl = imgElement.src || 'https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';
+                lspdLogoBase64 = await getImageBase64(logoUrl);
+            } catch (error) {
+                console.error('Error loading LSPD logo for PDF:', error);
+                // Optionally, you can add a placeholder text or simply skip the image if it fails to load
+            }
+
+
+            // Set font and size for the main title
+            doc.setFontSize(16);
+            // Modified to include the report type
+            doc.text(`${department} ${selectedReportType}`, 20, 20);
+
+            // Add LSPD logo if available
+            if (lspdLogoBase64) {
+                doc.addImage(lspdLogoBase64, 'PNG', 170, 10, 25, 25); // Adjust position and size as needed
+            }
+
+            // Case Number and Date
+            doc.setFontSize(10);
+            doc.text(`Case Number: ${Math.floor(Math.random() * 1000000)}`, 20, 40); // Placeholder case number
+            doc.text(`Date: ${reportDate}`, 150, 40);
+
+            // Add a line separator
+            doc.line(20, 45, 190, 45); // x1, y1, x2, y2
+
+            // Report Body (Generated Report Text)
+            doc.setFontSize(10);
+            const splitText = doc.splitTextToSize(generatedReportText, 170); // Max width 170mm
+            let currentY = 55; // Starting Y position for the report text
+            doc.text(splitText, 20, currentY);
+
+            // Get the current Y position after adding the report text
+            // Calculate finalY based on the last line of text added
+            let finalY = currentY + (splitText.length * doc.internal.getLineHeight());
+
+            // Add a line separator before footer
+            doc.line(20, finalY + 10, 190, finalY + 10);
+
+            // Footer information
+            finalY += 20;
+            doc.text(`Reporting Officer: ${officerInfo}`, 20, finalY);
+            finalY += 7;
+            doc.text(`Date: ${currentMonth} ${currentDay}, ${currentYear}`, 20, finalY);
+            finalY += 7;
+            doc.text(`Sworn to and subscribed before me this ________ day of __________, ${currentYear}.`, 20, finalY);
+            finalY += 7;
+            doc.text(`Notary/Law Enforcement Officer: _____________________________________`, 20, finalY);
+            finalY += 7;
+            doc.text(`Supervisor Approval: _____________________________________`, 20, finalY);
+
+            return doc; // Return the jsPDF document object
+        };
+
+        // Event listener for the Download Report button
+        downloadReportBtn.addEventListener('click', async () => {
+            const doc = await generatePdfContent();
+            const department = departmentSelect.value;
+            const selectedReportType = reportTypeSelect.value;
+            const now = new Date();
+            const reportDate = now.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
+            doc.save(`${department.replace(/\s/g, '_')}_${selectedReportType.replace(/\s/g, '_')}_Report_${reportDate}.pdf`);
+        });
+
+        // NEW: Event listener for the View Report button
+        viewReportBtn.addEventListener('click', async () => {
+            const doc = await generatePdfContent();
+            const pdfBlob = doc.output('blob');
+            const pdfUrl = URL.createObjectURL(pdfBlob);
+            window.open(pdfUrl, '_blank');
         });
     </script>
 </body>
