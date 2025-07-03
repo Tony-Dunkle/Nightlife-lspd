@@ -327,19 +327,21 @@
 
         .modal-header {
             display: flex;
-            justify-content: space-between;
+            justify-content: space-between; /* Distribute items with space between them */
             align-items: center;
             padding: 15px 20px; /* Padding for header */
             border-bottom: 1px solid #eee;
             background-color: #fff; /* White background for header */
             box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for header */
             flex-shrink: 0; /* Prevent header from shrinking */
+            gap: 1rem; /* Add gap between header items */
         }
 
             .modal-header h2 {
                 margin: 0;
                 font-size: 1.8rem;
                 color: #ffffff; /* Changed to white */
+                flex-shrink: 0; /* Prevent title from shrinking */
             }
 
         .close-button {
@@ -350,6 +352,7 @@
             transition: 0.3s;
             padding: 5px 10px; /* Make close button easier to click */
             border-radius: 4px;
+            flex-shrink: 0; /* Prevent close button from shrinking */
         }
 
             .close-button:hover,
@@ -461,11 +464,11 @@
     <div id="sopModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 id="modalTitle">Standard Operating Procedures</h2>
+                <h2 id="modalTitle" class="flex-shrink-0">Standard Operating Procedures</h2>
                 <!-- Search Bar and Navigation Buttons -->
-                <div class="flex items-center ml-auto">
-                    <!-- ml-auto pushes this div to the right -->
-                    <input type="text" id="modalSearchInput" placeholder="Search document..." class="w-48 p-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <div class="flex items-center flex-grow max-w-xs">
+                    <!-- Removed ml-auto, added flex-grow and max-w-xs -->
+                    <input type="text" id="modalSearchInput" placeholder="Search document..." class="w-full p-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                     <button id="nextResultBtn" class="bg-blue-500 text-white px-3 py-2 rounded-r-md hover:bg-blue-600 transition duration-200 ease-in-out" title="Next Result">
                         &raquo;
                     </button>
