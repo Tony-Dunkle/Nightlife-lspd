@@ -88,6 +88,26 @@
             color: #6b7280; /* text-gray-500 */
             min-height: 1.5rem; /* To prevent layout shift when description appears */
         }
+
+        /* Loading indicator styles */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -571,6 +591,7 @@
                    class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4">
             <div id="officerList" class="max-h-64 overflow-y-auto border border-gray-200 rounded-lg p-2 mb-4">
                 <!-- Officer list will be populated here -->
+                <div class="loader mx-auto my-4"></div> <!-- Loader for officer list -->
             </div>
             <div class="flex justify-end space-x-4">
                 <button id="closeOfficerModalBtn"
@@ -760,35 +781,107 @@
         // Global object to store selected evidence and their details (including links/text)
         let selectedEvidenceDetails = {};
 
-        // Mock roster data (replace this with data fetched from roster.html)
-        // In a real scenario, you would fetch roster.html content and parse it here.
-        // Example:
-        // fetch('roster.html')
-        // .then(response => response.text())
-        // .then(html => {
-        //     const parser = new DOMParser();
-        //     const doc = parser.parseFromString(html, 'text/html');
-        //     // Assuming roster.html has a structure like:
-        //     // <div class="officer-entry" data-name="Officer John Doe" data-badge="LSPD-1001">Officer John Doe (LSPD-1001)</div>
-        //     const officers = Array.from(doc.querySelectorAll('.officer-entry')).map(div => ({
-        //         name: div.dataset.name,
-        //         badge: div.dataset.badge
-        //     }));
-        //     officerRosterData = officers;
-        //     populateOfficerList(officerRosterData);
-        // });
-        let officerRosterData = [
-            { name: "Officer John Doe", badge: "LSPD-1001" },
-            { name: "Officer Jane Smith", badge: "LSPD-1002" },
-            { name: "Sergeant Mike Johnson", badge: "LSPD-S101" },
-            { name: "Detective Emily White", badge: "LSPD-D201" },
-            { name: "Officer David Lee", badge: "LSCSO-5001" },
-            { name: "Corporal Sarah Brown", badge: "LSCSO-C502" },
-            { name: "Officer Alex Green", badge: "LSPD-1003" },
-            { name: "Sergeant Chris Red", badge: "LSPD-S102" },
-            { name: "Detective Laura Blue", badge: "LSPD-D202" },
-            { name: "Officer Michael Black", badge: "LSCSO-5003" }
-        ];
+        // Global variable to store fetched officer roster data
+        let officerRosterData = [];
+
+        /**
+         * Converts an Excel-style column letter (e.g., 'A', 'B', 'AA') to a 0-based index.
+         * @param {string} columnLetter - The column letter (e.g., 'C').
+         * @returns {number} The 0-based column index (e.g., 'C' returns 2).
+         */
+        function columnLetterToIndex(columnLetter) {
+            let index = 0;
+            for (let i = 0; i < columnLetter.length; i++) {
+                index = index * 26 + (columnLetter.charCodeAt(i) - 'A'.charCodeAt(0) + 1);
+            }
+            return index - 1; // Convert to 0-based index
+        }
+
+        /**
+         * Fetches CSV data from a Google Sheet, parses it, and populates the officerRosterData.
+         * This function is called when the officer selection modal is opened.
+         */
+        async function fetchAndSetOfficerRosterData() {
+            officerListDiv.innerHTML = '<div class="loader mx-auto my-4"></div>'; // Show loader
+
+            const sheetId = '1o4Xw8GSQBp6brMfGo_ubYngnhWJU_f8AhyUIftAlT1Y';
+            const gid = '0'; // Assuming gid=0 for the primary sheet tab
+            const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
+
+            try {
+                const response = await fetch(csvUrl);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const csvText = await response.text();
+
+                const rawRows = csvText.trim().split('\n');
+                if (rawRows.length === 0) {
+                    console.warn('No roster data available from Google Sheet.');
+                    officerRosterData = []; // Ensure it's empty
+                    officerListDiv.innerHTML = '<p class="text-gray-500 text-center py-4">No officers found.</p>';
+                    return;
+                }
+
+                // Define the target spreadsheet row numbers (1-indexed)
+                const targetSpreadsheetRows = new Set();
+                const addRange = (start, end) => {
+                    for (let i = start; i <= end; i++) {
+                        targetSpreadsheetRows.add(i);
+                    }
+                };
+
+                targetSpreadsheetRows.add(6);
+                targetSpreadsheetRows.add(9);
+                targetSpreadsheetRows.add(10);
+                targetSpreadsheetRows.add(11);
+                addRange(12, 16);
+                addRange(18, 22);
+                addRange(24, 27);
+                addRange(29, 32);
+                addRange(34, 43);
+                addRange(45, 54);
+                addRange(56, 65);
+                addRange(67, 78);
+                addRange(80, 96);
+                addRange(98, 117);
+                addRange(119, 148);
+
+                const filteredRowsData = [];
+                const regex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/; // Regex to split by comma, ignoring commas in double quotes
+
+                rawRows.forEach((rowString, index) => {
+                    const spreadsheetRowNumber = index + 1; // CSV rows are 0-indexed, spreadsheet rows are 1-indexed
+                    if (targetSpreadsheetRows.has(spreadsheetRowNumber)) {
+                        // Parse each cell, removing quotes if present
+                        const parsedCells = rowString.split(regex).map(cell => cell.replace(/^"(.*)"$/, '$1').trim());
+                        filteredRowsData.push(parsedCells);
+                    }
+                });
+
+                // Define the mapping from desired fields to their original column indices
+                const headerToColIndexMap = {
+                    'Badge No.': columnLetterToIndex('C'),
+                    'Name': columnLetterToIndex('D'),
+                };
+
+                const tempOfficerRoster = [];
+                filteredRowsData.forEach(rowData => {
+                    const name = rowData[headerToColIndexMap['Name']] ? rowData[headerToColIndexMap['Name']].trim() : '';
+                    const badge = rowData[headerToColIndexMap['Badge No.']] ? rowData[headerToColIndexMap['Badge No.']].trim() : '';
+
+                    // Only add if both name and badge are present and not 'N/A' or empty
+                    if (name && name !== 'N/A' && badge && badge !== 'N/A') {
+                        tempOfficerRoster.push({ name: name, badge: badge });
+                    }
+                });
+                officerRosterData = tempOfficerRoster; // Update the global roster data
+                populateOfficerList(officerRosterData); // Populate the modal list with fetched data
+            } catch (error) {
+                console.error('Error fetching or parsing roster data:', error);
+                officerListDiv.innerHTML = '<p class="text-red-500 text-center py-4">Failed to load officer roster. Please try again later.</p>';
+            }
+        }
 
 
         // Array of evidence items with descriptions, types, and allowed link providers
@@ -1023,7 +1116,7 @@
         document.addEventListener('DOMContentLoaded', () => {
             toggleReportFields();
             populateEvidenceList();
-            populateOfficerList(officerRosterData); // Populate officer list on load
+            // Initial fetch of roster data is now triggered by clicking the officerInfoInput
         });
 
         // Event listeners for opening and closing the evidence modal
@@ -1089,13 +1182,25 @@
                 urlInputModal.classList.add('hidden');
                 evidenceModal.classList.remove('hidden'); // Bring back the evidence selection modal
             }
+            // If the URL modal is closed without adding a link, and the corresponding checkbox is checked,
+            // uncheck it to reflect that no links were added.
+            const currentItemName = urlInputModal.dataset.currentItem;
+            if (selectedEvidenceDetails[currentItemName] && selectedEvidenceDetails[currentItemName].links.length === 0) {
+                const checkbox = document.getElementById(`evidence-${currentItemName.replace(/\s/g, '-')}`);
+                if (checkbox) {
+                    checkbox.checked = false;
+                    delete selectedEvidenceDetails[currentItemName]; // Remove from details if no links
+                    updateEvidenceCollectedInputSummary();
+                }
+            }
         });
 
         // Officer Selection Modal Logic
-        officerInfoInput.addEventListener('click', () => {
+        officerInfoInput.addEventListener('click', async () => {
             officerSelectionModal.classList.remove('hidden');
             officerSearchInput.value = ''; // Clear search input
-            populateOfficerList(officerRosterData); // Repopulate with full list
+            officerListDiv.innerHTML = '<div class="loader mx-auto my-4"></div>'; // Show loader inside modal
+            await fetchAndSetOfficerRosterData(); // Fetch and populate
         });
 
         officerSearchInput.addEventListener('input', (e) => {
