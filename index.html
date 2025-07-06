@@ -94,7 +94,7 @@
                 color: #333;
             }
 
-        /* Style for the YouTube player as a background */
+        /* Style for the video player as a background */
         .background-video-container {
             position: absolute;
             top: 0;
@@ -105,12 +105,11 @@
             z-index: 0; /* Place behind content */
         }
 
-            .background-video-container iframe {
+            .background-video-container video {
                 /* This ensures the video always covers the container, even if it means cropping */
-                width: 100vw; /* Set width to 100% of viewport width */
-                height: 56.25vw; /* 16:9 aspect ratio (9/16 = 0.5625) */
-                min-height: 100%; /* Ensure it covers the height of the container */
-                min-width: 177.77vh; /* 16:9 aspect ratio (16/9 = 1.7777) */
+                width: 100%;
+                height: 100%;
+                object-fit: cover; /* Ensures the video covers the entire area without distortion */
                 position: absolute;
                 top: 50%;
                 left: 50%;
@@ -184,10 +183,13 @@
     </header>
     <!-- Hero Section - Internal Focus -->
     <section class="relative bg-gradient-to-r from-blue-700 to-blue-900 text-white py-20 px-6 md:px-12 rounded-lg m-4 md:m-8 overflow-hidden shadow-xl">
-        <!-- YouTube IFrame Player for Background Music -->
+        <!-- Local Video Player for Background -->
         <div class="background-video-container">
-            <div id="background-video"></div>
-            <div class="video-overlay"></div> <!-- Added overlay for readability -->
+            <video autoplay loop muted playsinline>
+                <source src="index.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="video-overlay"></div> <!-- Overlay for readability -->
         </div>
         <div class="relative z-10 text-center max-w-4xl mx-auto">
             <h2 class="text-4xl md:text-6xl font-extrabold leading-tight mb-6">Empowering Our Officers</h2>
@@ -286,46 +288,6 @@
     </footer>
 
     <script>
-        // Load the YouTube IFrame Player API asynchronously
-        var tag = document.createElement('script');
-        tag.src = "https://www.youtube.com/iframe_api";
-        var firstScriptTag = document.getElementsByTagName('script')[0];
-        firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-
-        var player;
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('background-video', {
-                videoId: 'HRRJykryvzk', // The video ID from your YouTube URL
-                playerVars: {
-                    'autoplay': 1,      // Autoplay the video
-                    'controls': 0,      // Hide player controls
-                    'mute': 1,          // Mute the video
-                    'loop': 1,          // Loop the video
-                    'playlist': 'HRRJykryvzk', // Required for looping a single video
-                    'showinfo': 0,      // Hide video title and uploader info
-                    'modestbranding': 1, // Remove YouTube logo
-                    'iv_load_policy': 3 // Hide annotations
-                },
-                events: {
-                    'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange
-                }
-            });
-        }
-
-        function onPlayerReady(event) {
-            event.target.playVideo(); // Ensure video plays
-            event.target.mute();      // Ensure video is muted
-        }
-
-        function onPlayerStateChange(event) {
-            // If video ends, play it again to loop
-            if (event.data === YT.PlayerState.ENDED) {
-                player.playVideo();
-            }
-        }
-
-
         document.addEventListener('DOMContentLoaded', () => {
             const modal = document.getElementById('devNoticeModal');
             const closeModalBtn = document.getElementById('closeModalBtn');
