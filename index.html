@@ -253,23 +253,13 @@
             </div>
         </section>
 
-        <!-- New Updates Section -->
-        <section class="bg-gray-100 p-8 rounded-lg shadow-lg mb-12">
+        <!-- Dynamic Updates Section -->
+        <section id="updatesSection" class="bg-gray-100 p-8 rounded-lg shadow-lg mb-12 hidden">
             <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Recent Website Updates</h2>
-            <div class="space-y-4">
-                <div class="bg-white p-4 rounded-md shadow-sm">
-                    <p class="text-gray-800 font-semibold">July 11, 2025: Privacy Policy Added</p>
-                    <p class="text-gray-600 text-sm">A new Privacy Policy page has been added to provide transparency on data handling. You can find the link in the footer.</p>
-                </div>
-                    <div class="bg-white p-4 rounded-md shadow-sm">
-                        <p class="text-gray-800 font-semibold">July 11, 2025: Training Page Updated</p>
-                        <p class="text-gray-600 text-sm">
-                            The training page has been updated to match the design and functionality of the SOP.html page. Key changes include:
-                            Interactive Document Viewer: The page now uses a dynamic modal to display the training document, complete with search and highlighting capabilities, similar to how SOPs are viewed..
-                        </p>
-                    </div>
-                </div>
-</section>
+            <div id="updatesContent" class="space-y-4">
+                <!-- Updates will be loaded here dynamically from CSV -->
+            </div>
+        </section>
 
     </main>
 
@@ -291,7 +281,7 @@
                     <li><a href="https://docs.google.com/document/d/1hKQ4fw9b1_yQELhPi1p1b4M6uiSaYb7bBp-9C6GVTdY/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Los Santos Police Department Interview Procedure & Questions</a></li>
                     <li><a href="https://docs.google.com/document/d/1d004FfAhZBgESn88Mx21N3CGqXlcoNeP9_sadn_ePak/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Promotional Pathway & Subdivision Assignment Policy</a></li>
                     <li><a href="https://docs.google.com/document/d/14QIEsYMWpTssti1xGbGWiMxQ2b0jbiYxuMmvV8XWUUo/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Highway Enforcement and Apprehension Team (HEAT) Activation Policy</a></li>
-                    <li><a href="https://docs.google.com/document/d/1Ggf7SS5voiIjr3iSLB3VtAc47JN3aDjm2J_gYnpoZ6s/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Disciplinary Guidelines</a></li>
+                    <li><a href="https://docs.google.com/document/d/1Ggf7SS5voiIjr3iSLB3VtAc47JN3aDjm2J_gYnpoZ6s/edit?blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Disciplinary Guidelines</a></li>
                     <li><a href="privacypolicy.html" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Privacy Policy</a></li>
                 </ul>
             </div>
@@ -327,6 +317,100 @@
 
             // Event listener for closing the banner
             closeBannerBtn.addEventListener('click', hideBanner);
+
+            // Function to fetch and display updates from CSV
+            const loadUpdates = async () => {
+                const updatesSection = document.getElementById('updatesSection');
+                const updatesContent = document.getElementById('updatesContent');
+                const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQxN1ZQBPqwqLxvr_T1tQ2TVwHuy0d2jainTySsbsSxMBl6ukf5R3Di6SGO3sHA3CD-1uSBgp_qPtJA/pub?output=csv';
+                const fourteenDaysAgo = new Date();
+                fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
+
+                console.log('--- Starting loadUpdates ---');
+                console.log('Current Date:', new Date().toLocaleDateString());
+                console.log('14 Days Ago Date:', fourteenDaysAgo.toLocaleDateString());
+
+                try {
+                    const response = await fetch(csvUrl);
+                    console.log('Fetch response status:', response.status);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const csvText = await response.text();
+                    console.log('Fetched CSV Text (first 200 chars):', csvText.substring(0, 200));
+
+                    // Simple CSV parsing (assuming format: Date,Type,Description)
+                    const lines = csvText.trim().split('\n');
+                    const updates = [];
+
+                    console.log('Total CSV lines (including header):', lines.length);
+
+                    // Skip header row
+                    for (let i = 1; i < lines.length; i++) {
+                        const parts = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/); // Split by comma, but not inside quotes
+                        console.log(`Processing line ${i}:`, lines[i]);
+                        console.log('Parts (after regex split):', parts);
+
+                        if (parts.length >= 3) {
+                            // Remove leading/trailing quotes from date and description
+                            const dateStr = parts[0].trim().replace(/"/g, '');
+                            const title = parts[1].trim().replace(/"/g, ''); // Also remove quotes from title
+                            const description = parts[2].trim().replace(/"/g, '');
+
+                            const updateDate = new Date(dateStr);
+
+                            console.log(`Date string (cleaned): "${dateStr}", Parsed Date:`, updateDate);
+                            console.log('Is Date Valid (isNaN):', isNaN(updateDate));
+                            console.log('Is updateDate >= fourteenDaysAgo:', updateDate >= fourteenDaysAgo);
+
+                            // Check if the date is valid and within the last 14 days
+                            if (!isNaN(updateDate) && updateDate >= fourteenDaysAgo) {
+                                updates.push({ date: updateDate, title, description });
+                                console.log('Update added:', { date: updateDate, title, description });
+                            } else {
+                                console.log('Update skipped (invalid date or too old):', { dateStr, title });
+                            }
+                        } else {
+                            console.log('Skipping malformed line (less than 3 parts):', lines[i]);
+                        }
+                    }
+
+                    // Sort updates by date in descending order (most recent first)
+                    updates.sort((a, b) => b.date - a.date);
+
+                    // Limit to 10 updates
+                    const recentUpdates = updates.slice(0, 10);
+                    console.log('Number of recent updates after filtering and slicing:', recentUpdates.length);
+                    console.log('Recent Updates Array:', recentUpdates);
+
+                    updatesContent.innerHTML = ''; // Clear existing content
+
+                    if (recentUpdates.length > 0) {
+                        recentUpdates.forEach(update => {
+                            const updateDiv = document.createElement('div');
+                            updateDiv.className = 'bg-white p-4 rounded-md shadow-sm';
+                            updateDiv.innerHTML = `
+                                    <p class="text-gray-800 font-semibold">${update.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}: ${update.title}</p>
+                                    <p class="text-gray-600 text-sm">${update.description}</p>
+                                `;
+                            updatesContent.appendChild(updateDiv);
+                        });
+                        updatesSection.classList.remove('hidden'); // Show the section
+                        console.log('Updates section is now visible.');
+                    } else {
+                        updatesSection.classList.add('hidden'); // Hide the section if no recent updates
+                        console.log('No recent updates found. Updates section is hidden.');
+                    }
+
+                } catch (error) {
+                    console.error('Error fetching or parsing updates CSV:', error);
+                    updatesSection.classList.add('hidden'); // Hide the section on error
+                }
+                console.log('--- Finished loadUpdates ---');
+            };
+
+            // Load updates when the page loads
+            loadUpdates();
         });
     </script>
 </body>
