@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- Viewport meta tag is crucial for responsive behavior across devices -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LSPD Internal Portal - Privacy Policy</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="LSPD.png">
+
+    <!-- Tailwind CSS CDN - provides responsive utility classes out of the box -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter for a clean, modern look -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Custom font for a clean, modern look */
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f8f8; /* Light gray background */
+            color: #333;
+            /* Flexbox to push footer to the bottom */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensure body takes full viewport height */
+        }
+
+        main {
+            flex-grow: 1; /* Allow main content to grow and push footer down */
+        }
+
+        /* Custom scrollbar for better aesthetics */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 5px;
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #555;
+            }
+
+        /* Styling for policy content */
+        .policy-section h2 {
+            font-size: 1.75rem; /* text-3xl */
+            font-weight: 700; /* font-bold */
+            margin-bottom: 1rem;
+            color: #1e3a8a; /* Darker blue for headings */
+        }
+
+        .policy-section h3 {
+            font-size: 1.25rem; /* text-xl */
+            font-weight: 600; /* font-semibold */
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: #1e40af; /* Blue for subheadings */
+        }
+
+        .policy-section p {
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            color: #4b5563; /* Gray-700 */
+        }
+
+        .policy-section ul {
+            list-style-type: disc;
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+            color: #4b5563; /* Gray-700 */
+        }
+
+            .policy-section ul li {
+                margin-bottom: 0.5rem;
+            }
+
+        .policy-section strong {
+            font-weight: 600;
+            color: #1f2937; /* Gray-800 */
+        }
+    </style>
+</head>
+<body class="bg-gray-100 text-gray-800">
+    <!-- Header Section -->
+    <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex items-center justify-between sticky top-0 z-50 rounded-b-lg relative">
+        <div class="flex items-center">
+            <!-- LSPD Logo -->
+            <img src="LSPD.png" alt="LSPD Logo" class="mr-4 w-16 h-16 object-contain" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
+            <!-- Responsive font size: text-2xl for small screens, text-3xl for medium screens and up -->
+            <h1 class="text-2xl md:text-3xl font-bold">Los Santos Police Department</h1>
+        </div>
+
+        <!-- Hamburger Menu Button for Mobile -->
+        <button id="hamburgerBtn" class="hamburger-menu text-white focus:outline-none md:hidden">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-4 6h4"></path>
+            </svg>
+        </button>
+
+        <!-- Navigation Menu -->
+        <!-- Added md:flex-grow to nav to allow it to take available space -->
+        <nav class="nav-links md:flex md:flex-grow md:justify-end">
+            <!-- Changed md:space-x-8 to md:space-x-4 and added md:flex-wrap for stacking -->
+            <ul class="flex flex-col md:flex-row md:flex-wrap md:justify-end space-y-2 md:space-y-0 md:space-x-4 text-sm font-medium">
+                <li><a href="index.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700 current-page">Dashboard</a></li>
+                <li><a href="SOP.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">SOPs</a></li>
+                <li><a href="training.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Training</a></li>
+                <li><a href="forms.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Forms</a></li>
+                <li><a href="roster.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Roster</a></li>
+                <li><a href="hr.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">HR Info</a></li>
+                <li><a href="report.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Report Generator</a></li>
+                <li><a href="charges.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Charge Calculator</a></li>
+                <li><a href="info.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Common Information</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <!-- Main Content Area -->
+    <main class="container mx-auto px-4 py-8 flex-grow">
+        <div class="bg-white rounded-lg shadow-xl p-8 mb-8 max-w-4xl mx-auto policy-section">
+            <h1 class="text-4xl font-extrabold text-center text-blue-900 mb-8">LSPD Internal Portal Privacy Policy</h1>
+            <p class="text-center text-gray-600 mb-6"><strong>Effective Date: July 11, 2025</strong></p>
+
+            <p>This Privacy Policy describes how the Los Santos Police Department (LSPD) Internal Portal ("the Portal") handles information. This Portal is designed exclusively for internal LSPD personnel use and is not intended for public access or general data collection from external users.</p>
+
+            <h2 class="text-3xl font-bold text-blue-800 mb-4 mt-6">1. Nature of the Portal</h2>
+            <p>The LSPD Internal Portal is an internal tool providing access to resources, forms, and calculators for LSPD personnel. It is designed to facilitate internal operations and documentation.</p>
+
+            <h2 class="text-3xl font-bold text-blue-800 mb-4 mt-6">2. Information We Do Not Collect (Server-Side)</h2>
+            <p>Based on the current implementation of this Portal's front-end code, the LSPD Internal Portal <strong>does not currently collect, store, or transmit any personally identifiable information (PII) or sensitive data entered into its forms (e.g., Application Forms, Report Generators) to any server-side database or external backend system.</strong></p>
+            <p>Specifically:</p>
+            <ul class="list-disc ml-6 mb-4">
+                <li><strong>Application Forms (<code>forms.html</code>):</strong> The code explicitly states that applications submitted through these forms "do not currently submit to anything." This means information entered into HEAT, CID, SWAT, ASU, and K9 application forms is <em>not</em> sent to or stored on a server by this application.</li>
+                <li><strong>Report Generators (<code>report.html</code>, <code>admin.html</code>):</strong> Data entered into the Police Report Generator and Administrative Report Generator forms is processed <strong>client-side within your web browser</strong> to generate PDF documents. This data is not transmitted to or stored on a server by this application.</li>
+            </ul>
+
+            <h2 class="text-3xl font-bold text-blue-800 mb-4 mt-6">3. Information Processing (Client-Side)</h2>
+            <p>All data entered into the application and report forms (e.g., names, IDs, incident details, interview responses, charges) is processed <em>locally within your web browser</em>. This processing is temporary and occurs solely for the purpose of generating reports or calculating values (e.g., charge calculations).</p>
+            <ul class="list-disc ml-6 mb-4">
+                <li><strong>No Persistent Storage (by the Portal):</strong> Unless you explicitly download a generated PDF report or copy text from the Portal, the data you enter is not persistently stored by the Portal itself. Closing your browser or navigating away from the page will typically clear any unsaved information.</li>
+            </ul>
+
+            <h2 class="text-3xl font-bold text-blue-800 mb-4 mt-6">4. User Responsibility for Data Handling</h2>
+            <p>Since the Portal processes data client-side, you, as the user, are responsible for the handling and security of any information once it leaves the Portal's immediate browser environment. This includes:</p>
+            <ul class="list-disc ml-6 mb-4">
+                <li><strong>Downloaded Reports:</strong> If you download a generated PDF report, the responsibility for storing, securing, and sharing that document rests with you.</li>
+                <li><strong>Copied Information:</strong> If you copy any text or data from the Portal, you are responsible for how that information is used, stored, or transmitted outside of the Portal.</li>
+            </ul>
+
+            <h2 class="text-3xl font-bold text-blue-800 mb-4 mt-6">5. External Links</h2>
+            <p>The Portal contains links to external websites and resources, such as Google Docs for SOPs and Discord channels. These external sites are not governed by this Privacy Policy. We encourage you to review the privacy policies of any third-party sites you visit.</p>
+
+            <h2 class="text-3xl font-bold text-blue-800 mb-4 mt-6">6. No Tracking Technologies</h2>
+            <p>The Portal does not use cookies, web beacons, or other tracking technologies to collect personal information or monitor your activity on the Portal. Standard content delivery networks (CDNs) are used for libraries (e.g., Tailwind CSS, jsPDF, Google Fonts, Font Awesome), which are common web practices and do not involve personal data collection by the Portal owner.</p>
+
+            <h2 class="text-3xl font-bold text-blue-800 mb-4 mt-6">7. Security Measures</h2>
+            <p>While the Portal does not store your data, we utilize standard web security practices (e.g., HTTPS for secure communication where hosted) to protect the integrity of the Portal's content and your connection to it. However, no internet transmission or electronic storage is 100% secure.</p>
+
+            <h2 class="text-3xl font-bold text-blue-800 mb-4 mt-6">8. Changes to This Privacy Policy</h2>
+            <p>We may update this Privacy Policy from time to time to reflect changes in our practices or for other operational, legal, or regulatory reasons. We will notify you of any changes by posting the new Privacy Policy on this page.</p>
+
+            <h2 class="text-3xl font-bold text-blue-800 mb-4 mt-6">9. Contact Information</h2>
+            <p>If you have any questions about this Privacy Policy or the Portal's data handling practices, please contact the LSPD Human Resources Department or syntaxsamurai on Discord.</p>
+        </div>
+    </main>
+
+    <!-- Footer Section - Internal Contacts -->
+    <footer class="bg-gray-800 text-white py-10 px-6 md:px-12 rounded-t-lg">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+                <h4 class="text-xl font-semibold mb-4 text-blue-300">Internal Contacts</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="https://discord.gg/7FwxdpfDTM" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Discord</a></li>
+                    <li><a href="https://discord.com/channels/1383775098464370768/1383775099777318972" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Chat</a></li>
+                    <li><a href="https://discord.com/channels/1383775098464370768/1383782578976456735" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Cadet Support</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-xl font-semibold mb-4 text-blue-300">Quick Access</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="https://docs.google.com/document/d/1etjilZ1dAHGviw33MV5Zs-b5dXqcSHyoYIHvHiRIyy4/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">LSPD SOP</a></li>
+                    <li><a href="https://docs.google.com/document/d/1hKQ4fw9b1_yQELhPi1p1b4M6uiSaYb7bBp-9C6GVTdY/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Los Santos Police Department Interview Procedure & Questions</a></li>
+                    <li><a href="https://docs.google.com/document/d/1d004FfAhZBgESn88Mx21N3CGqXlcoNeP9_sadn_ePak/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Promotional Pathway & Subdivision Assignment Policy</a></li>
+                    <li><a href="https://docs.google.com/document/d/14QIEsYMWpTssti1xGbGWiMxQ2b0jbiYxuMmvV8XWUUo/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Highway Enforcement and Apprehension Team (HEAT) Activation Policy</a></li>
+                    <li><a href="https://docs.google.com/document/d/1Ggf7SS5voiIjr3iSLB3VtAc47JN3aDjm2J_gYnpoZ6s/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Disciplinary Guidelines</a></li>
+                    <li><a href="https://nlspd.net/" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">LSPD Website</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-xl font-semibold mb-4 text-blue-300">System Information</h4>
+                <p class="text-gray-500 text-sm mb-2">Unauthorized Access Strictly Prohibited</p>
+                <p class="text-gray-500 text-sm mb-2">For LSPD Personnel Use Only</p>
+                <p class="text-500 text-sm mb-2">Created and Maintained by FiveM "NightLife RP"</p>
+                <p class="text-gray-500 text-sm">&copy; 2025 Los Santos Police Department Internal Systems.</p>
+            </div>
+        </div>
+        <!-- Font Awesome for any potential internal icons (though less needed here) -->
+        <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    </footer>
