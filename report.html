@@ -153,7 +153,7 @@
         <a href="!.png" target="_blank">
             <img src="!.png" alt="Warning Icon" class="w-8 h-8">
         </a>
-        <p class="text-sm font-medium">Warning: Reloading or navigating away will wipe all data!</p>
+        <p class="text-sm font-medium">Data is automatically saved locally. It will persist across sessions until you clear it manually or browser data is cleared.</p>
         <button id="closeNotification" class="text-white hover:text-gray-200 focus:outline-none">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
         </button>
@@ -649,6 +649,15 @@
                     </button>
                 </div>
 
+                <!-- Clear Saved Data Button -->
+                <div class="mt-4">
+                    <button type="button"
+                            id="clearSavedDataBtn"
+                            class="w-full bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-4 rounded-lg shadow-md transition duration-300 ease-in-out hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-400 focus:ring-opacity-50">
+                        Clear Saved Data
+                    </button>
+                </div>
+
                 <!-- Loading Indicator for AI Generation -->
                 <div id="loadingIndicator" class="hidden text-center text-blue-600 mt-4 font-semibold">
                     Generating report... Please wait.
@@ -768,6 +777,7 @@
         const downloadReportBtn = document.getElementById('downloadReportBtn'); // NEW Download Report Button
         const viewReportBtn = document.getElementById('viewReportBtn'); // NEW View Report Button
         const loadingIndicator = document.getElementById('loadingIndicator');
+        const clearSavedDataBtn = document.getElementById('clearSavedDataBtn'); // NEW Clear Saved Data Button
 
         // Get references to report-specific field containers
         const arrestReportFields = document.getElementById('arrestReportFields');
@@ -1050,6 +1060,7 @@
                         }
                     }
                     updateEvidenceCollectedInputSummary();
+                    saveFormData(); // Save data after evidence selection changes
                 });
 
                 evidenceListDiv.appendChild(div);
@@ -1175,6 +1186,7 @@
                     }
                 }
             }
+            saveFormData(); // Save data after toggling fields
         }
 
         // Function to populate the officer list in the modal
@@ -1200,20 +1212,186 @@
                 div.addEventListener('click', () => {
                     officerInfoInput.value = `${officer.name} (${officer.badge})`;
                     officerSelectionModal.classList.add('hidden');
+                    saveFormData(); // Save data after officer selection
                 });
                 officerListDiv.appendChild(div);
             });
         }
 
+        // Function to gather all form data
+        function getFormData() {
+            return {
+                department: departmentSelect.value,
+                reportType: reportTypeSelect.value,
+                officerInfo: officerInfoInput.value,
+                suspectName: suspectNameInput.value,
+                charges: chargesInput.value,
+                mirandized: mirandizedSelect.value,
+                gsrTest: gsrTestSelect.value,
+                legalRepresentation: legalRepresentationInput.value,
+                levelOfForce: levelOfForceSelect.value,
+                medicalTreatment: medicalTreatmentSelect.value,
+                pleaType: pleaTypeSelect.value,
+                arrestNarrative: arrestNarrativeTextarea.value,
+                driverName: driverNameInput.value,
+                driverLicense: driverLicenseInput.value,
+                vehicleMakeModel: vehicleMakeModelInput.value,
+                vehiclePlate: vehiclePlateInput.value,
+                violation: violationInput.value,
+                citationLocation: citationLocationInput.value,
+                citationNarrative: citationNarrativeTextarea.value,
+                subjectName: subjectNameInput.value,
+                uofLevelOfForce: uofLevelOfForceSelect.value,
+                uofReason: uofReasonTextarea.value,
+                uofInjuries: uofInjuriesTextarea.value,
+                uofMedicalTreatment: uofMedicalTreatmentSelect.value,
+                uofNarrative: uofNarrativeTextarea.value,
+                trespasserName: trespasserNameInput.value,
+                trespassLocation: trespassLocationInput.value,
+                propertyOwner: propertyOwnerInput.value,
+                trespassReason: trespassReasonTextarea.value,
+                trespassDuration: trespassDurationInput.value,
+                trespassNarrative: trespassNarrativeTextarea.value,
+                businessName: businessNameInput.value,
+                businessAddress: businessAddressInput.value,
+                incidentType: incidentTypeInput.value,
+                involvedParties: involvedPartiesTextarea.value,
+                damagesTheft: damagesTheftTextarea.value,
+                bizNarrative: bizNarrativeTextarea.value,
+                incidentLocation: incidentLocationInput.value,
+                incidentDate: incidentDateInput.value,
+                incidentTime: incidentTimeInput.value,
+                primaryIncidentType: primaryIncidentTypeInput.value,
+                affectedParties: affectedPartiesTextarea.value,
+                incidentDescription: incidentDescriptionTextarea.value,
+                actionsTaken: actionsTakenTextarea.value,
+                selectedEvidenceDetails: selectedEvidenceDetails, // Save the entire object
+                victimStatementsText: victimStatementsTextarea.value,
+                witnessStatementsText: witnessStatementsTextarea.value,
+                suspectStatementsText: suspectStatementsTextarea.value,
+            };
+        }
+
+        // Function to save form data to local storage
+        function saveFormData() {
+            const data = getFormData();
+            localStorage.setItem('reportGeneratorData', JSON.stringify(data));
+        }
+
+        // Function to load form data from local storage
+        function loadFormData() {
+            const savedData = localStorage.getItem('reportGeneratorData');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+
+                departmentSelect.value = data.department || '';
+                reportTypeSelect.value = data.reportType || 'Arrest Report'; // Default if not found
+                officerInfoInput.value = data.officerInfo || '';
+                suspectNameInput.value = data.suspectName || '';
+                chargesInput.value = data.charges || '';
+                mirandizedSelect.value = data.mirandized || '';
+                gsrTestSelect.value = data.gsrTest || '';
+                legalRepresentationInput.value = data.legalRepresentation || '';
+                levelOfForceSelect.value = data.levelOfForce || '';
+                medicalTreatmentSelect.value = data.medicalTreatment || '';
+                pleaTypeSelect.value = data.pleaType || '';
+                arrestNarrativeTextarea.value = data.arrestNarrative || '';
+                driverNameInput.value = data.driverName || '';
+                driverLicenseInput.value = data.driverLicense || '';
+                vehicleMakeModelInput.value = data.vehicleMakeModel || '';
+                vehiclePlateInput.value = data.vehiclePlate || '';
+                violationInput.value = data.violation || '';
+                citationLocationInput.value = data.citationLocation || '';
+                citationNarrativeTextarea.value = data.citationNarrative || '';
+                subjectNameInput.value = data.subjectName || '';
+                uofLevelOfForceSelect.value = data.uofLevelOfForce || '';
+                uofReasonTextarea.value = data.uofReason || '';
+                uofInjuriesTextarea.value = data.uofInjuries || '';
+                uofMedicalTreatmentSelect.value = data.uofMedicalTreatment || '';
+                uofNarrativeTextarea.value = data.uofNarrative || '';
+                trespasserNameInput.value = data.trespasserName || '';
+                trespassLocationInput.value = data.trespassLocation || '';
+                propertyOwnerInput.value = data.propertyOwner || '';
+                trespassReasonTextarea.value = data.trespassReason || '';
+                trespassDurationInput.value = data.trespassDuration || '';
+                trespassNarrativeTextarea.value = data.trespassNarrative || '';
+                businessNameInput.value = data.businessName || '';
+                businessAddressInput.value = data.businessAddress || '';
+                incidentTypeInput.value = data.incidentType || '';
+                involvedPartiesTextarea.value = data.involvedParties || '';
+                damagesTheftTextarea.value = data.damagesTheft || '';
+                bizNarrativeTextarea.value = data.bizNarrative || '';
+                incidentLocationInput.value = data.incidentLocation || '';
+                incidentDateInput.value = data.incidentDate || '';
+                incidentTimeInput.value = data.incidentTime || '';
+                primaryIncidentTypeInput.value = data.primaryIncidentType || '';
+                affectedPartiesTextarea.value = data.affectedParties || '';
+                incidentDescriptionTextarea.value = data.incidentDescription || '';
+                actionsTakenTextarea.value = data.actionsTaken || '';
+
+                // Restore selectedEvidenceDetails and update related UI
+                selectedEvidenceDetails = data.selectedEvidenceDetails || {};
+                updateEvidenceCollectedInputSummary();
+                victimStatementsTextarea.value = data.victimStatementsText || '';
+                witnessStatementsTextarea.value = data.witnessStatementsText || '';
+                suspectStatementsTextarea.value = data.suspectStatementsText || '';
+
+                // After loading, ensure correct fields are shown
+                toggleReportFields();
+            }
+        }
+
+        // Function to clear all form data and local storage
+        function clearAllFormData() {
+            localStorage.removeItem('reportGeneratorData');
+
+            // Clear all input fields
+            document.querySelectorAll('input[type="text"], input[type="date"], input[type="time"], input[type="url"], textarea').forEach(input => {
+                input.value = '';
+            });
+            document.querySelectorAll('select').forEach(select => {
+                select.value = select.options[0].value; // Reset to first option
+            });
+
+            // Clear officer info and evidence display
+            officerInfoInput.value = '';
+            evidenceCollectedInput.value = '';
+            evidenceCollectedInput.title = '';
+
+            // Clear selected evidence details object
+            selectedEvidenceDetails = {};
+
+            // Hide all statement containers
+            victimStatementsContainer.classList.add('hidden');
+            witnessStatementsContainer.classList.add('hidden');
+            suspectStatementsContainer.classList.add('hidden');
+
+            // Reset report type to default and toggle fields
+            reportTypeSelect.value = 'Arrest Report';
+            toggleReportFields(); // This will also hide other report fields
+
+            generatedReportTextarea.value = ''; // Clear generated report
+            copyReportBtn.classList.add('hidden');
+            downloadReportBtn.classList.add('hidden');
+            viewReportBtn.classList.add('hidden');
+
+            alert('All saved data has been cleared!');
+        }
 
         // Add event listener to report type dropdown to toggle fields
         reportTypeSelect.addEventListener('change', toggleReportFields);
 
         // Initialize fields visibility and populate evidence list on page load
         document.addEventListener('DOMContentLoaded', () => {
-            toggleReportFields();
-            populateEvidenceList();
+            populateEvidenceList(); // Populate evidence options first
+            loadFormData(); // Then load saved data
             // Initial fetch of roster data is now triggered by clicking the officerInfoInput
+        });
+
+        // Add event listeners to all form fields for saving data
+        document.querySelectorAll('input, select, textarea').forEach(element => {
+            element.addEventListener('input', saveFormData);
+            element.addEventListener('change', saveFormData); // For select elements
         });
 
         // Event listeners for opening and closing the evidence modal
@@ -1228,12 +1406,14 @@
 
         closeEvidenceModalBtn.addEventListener('click', () => {
             evidenceModal.classList.add('hidden');
+            saveFormData(); // Save data when evidence modal is closed
         });
 
         // Close modal when clicking outside of it
         evidenceModal.addEventListener('click', (e) => {
             if (e.target === evidenceModal) {
                 evidenceModal.classList.add('hidden');
+                saveFormData(); // Save data when evidence modal is closed by clicking outside
             }
         });
 
@@ -1267,12 +1447,14 @@
             }
             evidenceUrlInput.value = ''; // Clear input after adding
             updateEvidenceCollectedInputSummary(); // Update summary immediately after adding a link
+            saveFormData(); // Save data after adding a URL
         });
 
         closeUrlModalBtn.addEventListener('click', () => {
             urlInputModal.classList.add('hidden');
             evidenceModal.classList.remove('hidden'); // Bring back the evidence selection modal
             updateEvidenceCollectedInputSummary(); // Ensure summary is updated when done
+            saveFormData(); // Save data when URL modal is closed
         });
 
         urlInputModal.addEventListener('click', (e) => {
@@ -1290,6 +1472,7 @@
                     }
                 }
                 updateEvidenceCollectedInputSummary(); // Ensure summary is updated after any modal closure
+                saveFormData(); // Save data when URL modal is closed by clicking outside
             }
         });
 
@@ -1307,11 +1490,13 @@
 
         closeOfficerModalBtn.addEventListener('click', () => {
             officerSelectionModal.classList.add('hidden');
+            saveFormData(); // Save data when officer modal is closed
         });
 
         officerSelectionModal.addEventListener('click', (e) => {
             if (e.target === officerSelectionModal) {
                 officerSelectionModal.classList.add('hidden');
+                saveFormData(); // Save data when officer modal is closed by clicking outside
             }
         });
 
@@ -1321,19 +1506,25 @@
                 selectedEvidenceDetails['Victim Statements'].text = e.target.value;
             }
             updateEvidenceCollectedInputSummary();
+            saveFormData();
         });
         witnessStatementsTextarea.addEventListener('input', (e) => {
             if (selectedEvidenceDetails['Witness Statements']) {
                 selectedEvidenceDetails['Witness Statements'].text = e.target.value;
             }
             updateEvidenceCollectedInputSummary();
+            saveFormData();
         });
         suspectStatementsTextarea.addEventListener('input', (e) => {
             if (selectedEvidenceDetails['Suspect Statements/Confessions']) {
                 selectedEvidenceDetails['Suspect Statements/Confessions'].text = e.target.value;
             }
             updateEvidenceCollectedInputSummary();
+            saveFormData();
         });
+
+        // Event listener for Clear Saved Data button
+        clearSavedDataBtn.addEventListener('click', clearAllFormData);
 
 
         // IMPORTANT: Gemini API Key Configuration
