@@ -34,7 +34,14 @@
             font-family: 'Inter', sans-serif;
             background-color: #f8f8f8; /* Light gray background */
             color: #333; /* Dark gray text */
+            opacity: 0; /* Start with body invisible for fade-in */
+            transition: opacity 1s ease-in; /* Smooth transition for fade-in */
         }
+
+            body.fade-in {
+                opacity: 1; /* Fade in to full visibility */
+            }
+
         /* Custom scrollbar for better aesthetics */
         ::-webkit-scrollbar {
             width: 10px;
@@ -60,8 +67,13 @@
             right: 1rem;
             z-index: 999; /* Ensure it's on top, but below the sticky header */
             max-width: 300px; /* Limit banner width */
+            transform: translateX(100%); /* Start off-screen for slide-in */
             transition: transform 0.3s ease-in-out; /* Smooth transition for showing/hiding */
         }
+
+            .banner-container.show {
+                transform: translateX(0); /* Slide in */
+            }
 
         .banner-content {
             background-color: #fff;
@@ -278,15 +290,20 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Fade in the body content
+            document.body.classList.add('fade-in');
+
             const banner = document.getElementById('devNoticeBanner');
             const closeBannerBtn = document.getElementById('closeBannerBtn');
 
-            // Show the banner when the page loads
-            banner.style.transform = 'translateX(0)'; // Ensure it's visible
+            // Show the banner after a short delay to allow body fade-in
+            setTimeout(() => {
+                banner.classList.add('show');
+            }, 500); // Adjust delay as needed
 
             // Function to hide the banner
             const hideBanner = () => {
-                banner.style.transform = 'translateX(100%)'; // Slide out to the right
+                banner.classList.remove('show'); // Hide by removing 'show' class
             };
 
             // Event listener for closing the banner
