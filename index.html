@@ -53,44 +53,37 @@
             ::-webkit-scrollbar-thumb:hover {
                 background: #555;
             }
-        /* Styles for the modal pop-up */
-        .modal-overlay {
+        /* Styles for the banner */
+        .banner-container {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7); /* Dim background */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000; /* Ensure it's on top */
+            top: 4rem; /* Adjust based on header height */
+            right: 1rem;
+            z-index: 999; /* Ensure it's on top, but below the sticky header */
+            max-width: 300px; /* Limit banner width */
+            transition: transform 0.3s ease-in-out; /* Smooth transition for showing/hiding */
         }
 
-        .modal-content {
+        .banner-content {
             background-color: #fff;
-            padding: 2.5rem; /* Increased padding */
-            border-radius: 0.75rem; /* Rounded corners */
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3); /* Stronger shadow */
-            max-width: 90%;
-            width: 450px; /* Fixed width for better appearance */
-            text-align: center;
-            position: relative; /* For positioning the close button */
+            padding: 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
         }
 
-        .modal-close-btn {
+        .banner-close-btn {
             position: absolute;
-            top: 0.75rem;
-            right: 0.75rem;
+            top: 0.5rem;
+            right: 0.5rem;
             background: none;
             border: none;
-            font-size: 1.5rem;
+            font-size: 1.25rem;
             cursor: pointer;
             color: #666;
             transition: color 0.2s;
         }
 
-            .modal-close-btn:hover {
+            .banner-close-btn:hover {
                 color: #333;
             }
 
@@ -130,21 +123,17 @@
 </head>
 <body class="antialiased">
 
-    <!-- Development Notice Pop-up Modal -->
-    <div id="devNoticeModal" class="modal-overlay hidden">
-        <div class="modal-content">
-            <button class="modal-close-btn" id="closeModalBtn">&times;</button>
-            <h2 class="text-2xl font-bold text-blue-800 mb-4">Website Under Development</h2>
-            <div class="flex items-center justify-center space-x-4 mb-6">
-                <p class="text-gray-700 text-lg">
-                    This website is currently under development. Some features or content may not work as expected or may be missing.
+    <!-- Development Notice Banner -->
+    <div id="devNoticeBanner" class="banner-container">
+        <div class="banner-content">
+            <button class="banner-close-btn" id="closeBannerBtn">&times;</button>
+            <h3 class="text-lg font-bold text-blue-800 mb-2">Website Under Development</h3>
+            <div class="flex items-center space-x-2">
+                <img src="LSPD.png" alt="LSPD Logo" class="w-10 h-10 object-contain" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
+                <p class="text-gray-700 text-sm">
+                    Some features may not work as expected or may be missing.
                 </p>
-                <!-- LSPD Logo added to the right of the text and made slightly bigger (w-20 h-20) -->
-                <img src="LSPD.png" alt="LSPD Logo" class="w-20 h-20 object-contain" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
             </div>
-            <button id="acknowledgeBtn" class="bg-blue-700 hover:bg-blue-800 text-white font-bold py-2 px-5 rounded-md transition duration-300 ease-in-out">
-                Acknowledge
-            </button>
         </div>
     </div>
 
@@ -289,21 +278,19 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            const modal = document.getElementById('devNoticeModal');
-            const closeModalBtn = document.getElementById('closeModalBtn');
-            const acknowledgeBtn = document.getElementById('acknowledgeBtn');
+            const banner = document.getElementById('devNoticeBanner');
+            const closeBannerBtn = document.getElementById('closeBannerBtn');
 
-            // Show the modal when the page loads
-            modal.classList.remove('hidden');
+            // Show the banner when the page loads
+            banner.style.transform = 'translateX(0)'; // Ensure it's visible
 
-            // Function to hide the modal
-            const hideModal = () => {
-                modal.classList.add('hidden');
+            // Function to hide the banner
+            const hideBanner = () => {
+                banner.style.transform = 'translateX(100%)'; // Slide out to the right
             };
 
-            // Event listeners for closing the modal
-            closeModalBtn.addEventListener('click', hideModal);
-            acknowledgeBtn.addEventListener('click', hideModal);
+            // Event listener for closing the banner
+            closeBannerBtn.addEventListener('click', hideBanner);
         });
     </script>
 </body>
