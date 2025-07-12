@@ -110,6 +110,10 @@
                 transform: rotate(360deg);
             }
         }
+        /* Custom styles for the warning notification */
+        #notification-popup.show {
+            transform: translateX(0);
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -124,9 +128,7 @@
 
         <!-- Hamburger Menu Button for Mobile -->
         <button id="hamburgerBtn" class="hamburger-menu text-white focus:outline-none md:hidden">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-4 6h4"></path>
-            </svg>
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-4 6h4"></path></svg>
         </button>
 
         <!-- Navigation Menu -->
@@ -146,6 +148,16 @@
             </ul>
         </nav>
     </header>
+    <!-- Notification Popup -->
+    <div id="notification-popup" class="fixed top-24 right-4 bg-red-600 text-white p-4 rounded-lg shadow-lg flex items-center space-x-3 transform transition-transform duration-500 ease-out translate-x-full z-40">
+        <a href="!.png" target="_blank">
+            <img src="!.png" alt="Warning Icon" class="w-8 h-8">
+        </a>
+        <p class="text-sm font-medium">Warning: Reloading or navigating away will wipe all data!</p>
+        <button id="closeNotification" class="text-white hover:text-gray-200 focus:outline-none">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+        </button>
+    </div>
     <!-- Main Content Section -->
     <main class="w-full px-4 md:px-8 py-12 flex justify-center items-start">
         <!-- Police Report Generator Section -->
@@ -988,9 +1000,9 @@
                 const div = document.createElement('div');
                 div.className = 'evidence-item flex items-center p-2 rounded-md hover:bg-blue-100 cursor-pointer';
                 div.innerHTML = `
-                                <input type="checkbox" id="evidence-${item.name.replace(/\s/g, '-')}" value="${item.name}" class="form-checkbox h-5 w-5 text-blue-600 rounded-md">
-                                <label for="evidence-${item.name.replace(/\s/g, '-')}" class="ml-2 text-gray-800 text-sm font-medium flex-grow">${item.name}</label>
-                            `;
+                                    <input type="checkbox" id="evidence-${item.name.replace(/\s/g, '-')}" value="${item.name}" class="form-checkbox h-5 w-5 text-blue-600 rounded-md">
+                                    <label for="evidence-${item.name.replace(/\s/g, '-')}" class="ml-2 text-gray-800 text-sm font-medium flex-grow">${item.name}</label>
+                                `;
                 div.setAttribute('data-description', item.description);
                 div.setAttribute('data-type', item.type);
                 if (item.linkProviders) {
@@ -1466,6 +1478,7 @@ Officer: ${officerInfo} ${department}
 City/State: Los Santos, San Andreas (SA)
 
 Generate a detailed, professional, and concise Traffic Citation report. The report must strictly adhere to the information provided in the "Officer Narrative" and other text fields. Do not include any information that is not directly deducible from the provided inputs. The output must strictly follow the format provided below, with no additional text, introductory phrases, or markdown formatting (like bold, italics, headers, or bullet points). Ensure all fields are populated appropriately based on the input. If a field is not directly deducible from the input, provide a reasonable placeholder or "N/A". The report should be written as if you were the officer writing it. Make sure to include the officer's name, rank if included, and badge number.
+The output format must be exact.
 
 Driver's Full Name: ${driverName}
 Driver's License: ${driverLicense}
@@ -1925,6 +1938,22 @@ Status: Report Filed.
             const pdfBlob = doc.output('blob');
             const pdfUrl = URL.createObjectURL(pdfBlob);
             window.open(pdfUrl, '_blank');
+        });
+
+        // Notification Popup Logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const notificationPopup = document.getElementById('notification-popup');
+            const closeNotificationBtn = document.getElementById('closeNotification');
+
+            // Show the notification after a short delay
+            setTimeout(() => {
+                notificationPopup.classList.add('show');
+            }, 1000); // Show after 1 second
+
+            // Hide the notification when the close button is clicked
+            closeNotificationBtn.addEventListener('click', () => {
+                notificationPopup.classList.remove('show');
+            });
         });
     </script>
 </body>
