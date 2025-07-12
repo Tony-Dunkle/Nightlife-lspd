@@ -111,9 +111,13 @@
             }
         }
         /* Custom styles for the warning notification */
-        #notification-popup.show {
-            transform: translateX(0);
+        #notification-popup {
+            transition: transform 0.5s ease-out; /* Keep the transition */
         }
+
+            #notification-popup.show {
+                transform: translateX(0);
+            }
     </style>
 </head>
 <body class="antialiased">
@@ -1375,8 +1379,37 @@
             downloadReportBtn.classList.add('hidden');
             viewReportBtn.classList.add('hidden');
 
-            alert('All saved data has been cleared!');
+            // Using a custom modal for alert
+            showCustomAlert('All saved data has been cleared!');
         }
+
+        // Function to show a custom alert modal
+        function showCustomAlert(message) {
+            const modalOverlay = document.createElement('div');
+            modalOverlay.className = 'modal-overlay'; // Re-use modal-overlay styles
+            modalOverlay.id = 'customAlertModal';
+            modalOverlay.innerHTML = `
+                    <div class="modal-content text-center">
+                        <p class="text-lg font-semibold mb-6">${message}</p>
+                        <button id="closeCustomAlertBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">
+                            OK
+                        </button>
+                    </div>
+                `;
+            document.body.appendChild(modalOverlay);
+
+            document.getElementById('closeCustomAlertBtn').addEventListener('click', () => {
+                modalOverlay.remove();
+            });
+
+            // Close if clicking outside the modal content
+            modalOverlay.addEventListener('click', (e) => {
+                if (e.target === modalOverlay) {
+                    modalOverlay.remove();
+                }
+            });
+        }
+
 
         // Add event listener to report type dropdown to toggle fields
         reportTypeSelect.addEventListener('change', toggleReportFields);
@@ -2136,10 +2169,12 @@ Status: Report Filed.
             const notificationPopup = document.getElementById('notification-popup');
             const closeNotificationBtn = document.getElementById('closeNotification');
 
-            // Show the notification after a short delay
+            // Show the notification after a short delay and force reflow
             setTimeout(() => {
+                // Force a reflow to ensure the transition starts from the correct initial state
+                notificationPopup.offsetHeight; // Accessing offsetHeight forces the browser to recalculate layout
                 notificationPopup.classList.add('show');
-            }, 1000); // Show after 1 second
+            }, 500); // Reduced delay to 0.5 seconds
 
             // Hide the notification when the close button is clicked
             closeNotificationBtn.addEventListener('click', () => {
