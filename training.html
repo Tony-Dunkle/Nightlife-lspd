@@ -2,23 +2,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- Viewport meta tag is crucial for responsive behavior across devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LSPD Training Manual</title>
-    <!-- Favicon link: Using LSPD.png for the favicon -->
-    <link rel="icon" href="LSPD.png" type="image/png" onerror="this.onerror=null; this.href='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
-    <!-- Tailwind CSS CDN - provides responsive utility classes out of the box -->
+    <link rel="icon" href="LSPD.png" type="image/png" onerror="this.onerror=null; this.href='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';"> <!-- Favicon added -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Custom font for a clean, modern look */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        /* Universal box-sizing for easier layout calculations */
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8f8f8; /* Light gray background */
-            color: #333; /* Dark gray text */
+            background-color: #f8f8f8;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Changed to 100vh to ensure footer sticks to bottom */
         }
-        /* Custom scrollbar for better aesthetics */
+
+        main {
+            flex-grow: 1;
+        }
+
         ::-webkit-scrollbar {
             width: 10px;
         }
@@ -35,31 +43,346 @@
 
             ::-webkit-scrollbar-thumb:hover {
                 background: #555;
-                border-radius: 5px;
             }
-        /* Ensure the iframe itself is responsive within its container */
-        .iframe-container {
-            width: 100%;
-            padding-bottom: 75%; /* Aspect ratio 4:3 (height/width * 100%). Adjust as needed. */
-            position: relative;
-            height: 0;
-            overflow: hidden;
-            background-color: #fff; /* Background for loading */
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+        .highlight {
+            background-color: yellow;
+            font-weight: bold;
         }
 
-            .iframe-container iframe {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                border: none; /* Remove iframe default border */
+        .current-highlight {
+            background-color: #87CEEB; /* Sky Blue for current highlight */
+            font-weight: bold;
+            border: 1px solid #1e3a8a; /* Blue border for emphasis */
+            padding: 2px 4px;
+            border-radius: 3px;
+        }
+
+        .ten-code-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+            .ten-code-table th, .ten-code-table td {
+                border: 1px solid #ccc;
+                padding: 0.5rem;
+                text-align: left;
             }
+
+            .ten-code-table th {
+                background-color: #e0e7ff;
+                color: #1e3a8a;
+            }
+
+            .ten-code-table tr:nth-child(even) {
+                background-color: #f8f8f8;
+            }
+
+        /* Styles to make the fetched Google Doc content look better */
+        /* This container is inside the modal-body and holds the actual document content */
+        #sop-container {
+            max-width: 800px; /* Max width for content within the modal body */
+            margin: 0 auto; /* Center the content horizontally */
+            padding: 0; /* Padding handled by modal-body */
+            box-sizing: border-box; /* Include padding in the width calculation */
+            text-align: left; /* Ensure text alignment is consistent by default */
+            word-wrap: break-word; /* Break long words */
+            overflow-x: hidden; /* Prevent horizontal scroll within content if something is too wide */
+        }
+
+            /* Aggressive resets for ALL elements within sop-container to strip Google Docs' inline styles */
+            /* Target common Google Docs elements and force styles */
+            #sop-container div,
+            #sop-container span,
+            #sop-container p,
+            #sop-container ul,
+            #sop-container ol,
+            #sop-container li,
+            #sop-container h1,
+            #sop-container h2,
+            #sop-container h3,
+            #sop-container h4,
+            #sop-container h5,
+            #sop-container h6,
+            #sop-container table,
+            #sop-container tr,
+            #sop-container th,
+            #sop-container td {
+                margin: 0 !important;
+                padding: 0 !important;
+                border: none !important;
+                outline: none !important;
+                width: auto !important;
+                min-width: auto !important;
+                max-width: 100% !important;
+                height: auto !important;
+                position: static !important; /* Remove any absolute/relative positioning */
+                float: none !important; /* Remove floats */
+                clear: both !important; /* Clear any floats */
+                background: transparent !important; /* Remove background colors */
+                text-decoration: none !important; /* Remove underlines by default */
+                vertical-align: baseline !important; /* Reset vertical alignment */
+                box-shadow: none !important; /* Remove shadows */
+                text-indent: 0 !important; /* Remove text indent */
+                word-break: break-word; /* Ensure words break to prevent overflow */
+                white-space: normal; /* Ensure normal white-space handling */
+                display: revert; /* Revert display property to its default for the tag */
+                /* Revert font properties to allow Google Docs' inline styles to take over */
+                font-size: revert;
+                line-height: revert;
+                font-weight: revert;
+                color: revert;
+                text-align: revert; /* Revert text-align to allow specific rules below to apply */
+            }
+
+            /* Specific display overrides for common tags */
+            #sop-container div {
+                display: block !important;
+            }
+
+            #sop-container span {
+                display: inline !important;
+            }
+            /* Spans should be inline */
+            #sop-container p {
+                display: block !important;
+                margin-bottom: 1rem !important;
+            }
+            /* Paragraphs are blocks with margin */
+            #sop-container ul {
+                display: block !important;
+                list-style-type: none !important;
+                margin-left: 1.5rem !important;
+                padding-left: 0.5rem !important;
+            }
+
+            #sop-container ol {
+                display: block !important;
+                list-style-type: decimal !important;
+                margin-left: 1.5rem !important;
+                padding-left: 0.5rem !important;
+            }
+
+            #sop-container li {
+                display: list-item !important;
+                margin-bottom: 0.5rem !important;
+            }
+
+            #sop-container table {
+                display: table !important;
+                border-collapse: collapse !important;
+            }
+
+            #sop-container tr {
+                display: table-row !important;
+            }
+
+            #sop-container th, #sop-container td {
+                display: table-cell !important;
+                border: 1px solid #ccc !important;
+                padding: 0.5rem !important;
+            }
+
+            /* Re-apply specific styles for semantic elements, allowing Google Docs' font properties */
+            /* These rules are less aggressive on font properties to allow original formatting to show */
+            #sop-container h1, #sop-container h2, #sop-container h3, #sop-container h4, #sop-container h5, #sop-container h6 {
+                font-weight: 600; /* Allow Google Docs' font-weight */
+                color: #1e3a8a; /* Allow Google Docs' color */
+                margin-top: 1.5rem !important;
+                margin-bottom: 0.75rem !important;
+                line-height: 1.3; /* Allow Google Docs' line-height */
+            }
+            /* Specific font sizes for headings, allowing Google Docs to override if its !important */
+            #sop-container h1 {
+                font-size: 2.25rem;
+            }
+
+            #sop-container h2 {
+                font-size: 2rem;
+            }
+
+            #sop-container h3 {
+                font-size: 1.75rem;
+            }
+
+            #sop-container h4 {
+                font-size: 1.5rem;
+            }
+
+            #sop-container h5 {
+                font-size: 1.25rem;
+            }
+
+            #sop-container h6 {
+                font-size: 1rem;
+            }
+
+            #sop-container p {
+                margin-bottom: 1rem !important;
+                line-height: 1.6 !important;
+                color: #333 !important;
+                text-align: left !important; /* Ensure paragraphs are left-aligned by default */
+            }
+
+            #sop-container ul {
+                list-style-type: none !important;
+                margin-left: 1.5rem !important;
+                margin-bottom: 1rem !important;
+                text-align: left !important;
+                padding-left: 0.5rem !important;
+            }
+
+            #sop-container ol {
+                list-style-type: decimal !important;
+                margin-left: 1.5rem !important;
+                margin-bottom: 1rem !important;
+                text-align: left !important;
+                padding-left: 0.5rem !important;
+            }
+
+            #sop-container li {
+                margin-bottom: 0.5rem !important;
+                line-height: 1.5 !important;
+            }
+
+            #sop-container pre {
+                background-color: #f0f0f0 !important;
+                padding: 1rem !important;
+                border-radius: 0.5rem !important;
+                overflow-x: auto !important;
+                margin-bottom: 1rem !important;
+                color: #333 !important; /* Ensure preformatted text is readable */
+                text-align: left !important; /* Ensure preformatted text is left-aligned */
+                white-space: pre-wrap !important; /* Allow text to wrap within pre tags */
+            }
+
+            /* Centering and sizing images within the fetched content */
+            #sop-container img {
+                display: block !important;
+                margin: 1.5rem auto !important;
+                max-width: 100% !important;
+                height: auto !important;
+                box-sizing: border-box !important;
+            }
+
+            /* Re-introduce specific formatting like bold/italic that might be stripped by 'all: unset' or aggressive resets */
+            #sop-container b, #sop-container strong {
+                font-weight: bold !important;
+            }
+
+            #sop-container i, #sop-container em {
+                font-style: italic !important;
+            }
+
+            #sop-container u {
+                text-decoration: underline !important;
+            }
+
+            #sop-container a {
+                color: #1e3a8a !important; /* Blue for links */
+                text-decoration: underline !important;
+            }
+
+                #sop-container a:hover {
+                    color: #0056b3 !important;
+                }
+
+            /* Highlight for search */
+            #sop-container .highlight {
+                background-color: yellow !important;
+                font-weight: bold !important;
+                color: #333 !important; /* Ensure highlight text is visible */
+            }
+
+        /* Full-screen Modal Styles */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1000; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: hidden; /* Hide overflow from the modal itself */
+            background-color: rgba(0,0,0,0.6); /* Black w/ 60% opacity */
+            justify-content: center;
+            align-items: center;
+            padding: 0; /* No padding on the modal itself */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            width: 100%; /* Take full width of parent (modal) */
+            height: 100%; /* Take full height of parent (modal) */
+            margin: 0; /* Remove margin */
+            padding: 0; /* Remove padding here, will apply to header/body */
+            border-radius: 0; /* Remove border-radius for full screen */
+            overflow: hidden; /* Control internal scrolling with modal-body */
+            position: relative;
+            box-shadow: none; /* No shadow for full screen */
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between; /* Distribute items with space between them */
+            align-items: center;
+            padding: 15px 20px; /* Padding for header */
+            border-bottom: 1px solid #eee;
+            background-color: #fff; /* White background for header */
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for header */
+            flex-shrink: 0; /* Prevent header from shrinking */
+            gap: 1rem; /* Add gap between header items */
+        }
+
+            .modal-header h2 {
+                margin: 0;
+                font-size: 1.8rem;
+                color: #ffffff; /* Changed to white */
+                flex-shrink: 0; /* Prevent title from shrinking */
+            }
+
+        .close-button {
+            color: #aaa;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            padding: 5px 10px; /* Make close button easier to click */
+            border-radius: 4px;
+            flex-shrink: 0; /* Prevent close button from shrinking */
+        }
+
+            .close-button:hover,
+            .close-button:focus {
+                color: #333;
+                background-color: #f0f0f0;
+                text-decoration: none;
+            }
+
+        .modal-body {
+            flex-grow: 1; /* Allows body to take remaining space and be scrollable */
+            overflow-y: auto; /* Enable vertical scroll */
+            overflow-x: hidden; /* Hide horizontal scroll */
+            padding: 20px 40px; /* Added generous padding to the modal body */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+        /* Media queries for responsive padding on modal-body */
+        @media (max-width: 768px) {
+            .modal-body {
+                padding: 15px 20px; /* Less padding on smaller screens */
+            }
+        }
+        /* Ensure the main header title is white */
+        header h1 {
+            color: #ffffff !important;
+        }
     </style>
 </head>
 <body class="antialiased">
+
     <!-- Header Section -->
     <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex items-center justify-between sticky top-0 z-50 rounded-b-lg relative">
         <div class="flex items-center">
@@ -94,21 +417,52 @@
         </nav>
     </header>
 
-    <!-- Main Content Section - Now embedding the Google Document -->
-    <main class="container mx-auto px-4 md:px-8 py-12">
-        <h2 class="text-4xl md:text-5xl font-extrabold text-blue-800 mb-8 text-center">LSPD Training Manual</h2>
 
-        <!-- Embedded Google Document -->
-        <div class="iframe-container">
-            <iframe src="https://docs.google.com/document/d/1RdaCbbjqkr5u8OUI-RvaDTKhmKy2lE-JAIE1EclLCgw/edit?usp=sharing"
-                    frameborder="0"
-                    allowfullscreen></iframe>
+    <!-- Hero Section for Training -->
+    <section class="relative bg-gradient-to-r from-blue-700 to-blue-900 text-white py-16 px-6 md:px-12 rounded-lg m-4 md:m-8 overflow-hidden shadow-xl text-center">
+        <div class="absolute inset-0 bg-cover bg-center opacity-30"></div>
+        <div class="relative z-10 max-w-4xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-extrabold leading-tight mb-4 text-white">LSPD Training Manual</h2>
+            <p class="text-lg md:text-xl mb-6 text-white">Access all LSPD training materials and guides. Click the button below to view the document.</p>
         </div>
+    </section>
 
-        <p class="mt-8 text-gray-600 text-sm text-center">
-            If the document does not load, please ensure you have permission to view the Google Document at the provided link.
-        </p>
+    <!-- Main Content Section - Buttons for Documents -->
+    <main class="container mx-auto px-4 md:px-8 py-12">
+        <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">LSPD Training Documents</h2>
+        <div class="flex justify-center gap-6">
+            <!-- Changed to flex and justify-center -->
+            <button class="doc-button bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold shadow-lg hover:bg-blue-700 transition duration-300 ease-in-out transform hover:scale-105"
+                    data-doc-url="https://docs.google.com/document/d/e/2PACX-1vRDAwW9qJOXBT2On5CSW_Mkp709a5tlDQ96jxfvPI-G--w6gFF7Iel7pxJigCzy3yWkrdKuZtpWeAm2/pub"
+                    data-doc-title="LSPD Basic Training">
+                LSPD Basic Training
+            </button>
+            <!-- Add more training document buttons here if needed -->
+        </div>
     </main>
+
+    <!-- The Modal for Training Document -->
+    <div id="sopModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle" class="flex-shrink-0">LSPD Training Document</h2>
+                <!-- Search Bar and Navigation Buttons -->
+                <div class="flex items-center flex-grow max-w-xs">
+                    <input type="text" id="modalSearchInput" placeholder="Search document..." class="w-full p-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <button id="nextResultBtn" class="bg-blue-500 text-white px-3 py-2 rounded-r-md hover:bg-blue-600 transition duration-200 ease-in-out" title="Next Result">
+                        &raquo;
+                    </button>
+                </div>
+                <span class="close-button" id="closeSOPModal">&times;</span>
+            </div>
+            <div class="modal-body">
+                <div id="sop-container">
+                    <!-- Training Content will be dynamically inserted here by JavaScript -->
+                    <p class="text-center text-gray-500">Loading document content...</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Footer Section - Internal Contacts -->
     <footer class="bg-gray-800 text-white py-10 px-6 md:px-12 rounded-t-lg">
@@ -143,5 +497,315 @@
         <!-- Font Awesome for any potential internal icons (though less needed here) -->
         <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     </footer>
+
+    <script>
+        (function () { // Start IIFE
+            let originalSOPContentHtml = ''; // Global variable to store the original fetched HTML
+            let highlightedElements = []; // Stores references to all highlighted spans
+            let currentHighlightIndex = -1; // Tracks the currently visible highlight
+
+            // Function to render content into the SOP container
+            function renderContent(htmlContent) {
+                const sopContainer = document.getElementById('sop-container');
+                if (sopContainer) {
+                    sopContainer.innerHTML = htmlContent;
+                    // Apply Tailwind classes to Google Doc tables if any
+                    sopContainer.querySelectorAll('table').forEach(table => {
+                        table.classList.add('ten-code-table'); // Reuse existing table style
+                    });
+                }
+            }
+
+            // Function to fetch content from a given Google Document URL
+            async function fetchGoogleDocContent(url, title) {
+                const sopContainer = document.getElementById('sop-container');
+                const modalTitleElement = document.getElementById('modalTitle');
+                const nextResultBtn = document.getElementById('nextResultBtn');
+
+                // Reset search state when a new document is loaded
+                highlightedElements = [];
+                currentHighlightIndex = -1;
+                if (nextResultBtn) {
+                    nextResultBtn.style.display = 'none'; // Hide next button until search is performed
+                }
+
+                if (sopContainer) {
+                    sopContainer.innerHTML = '<p class="text-center text-gray-500">Loading document content...</p>';
+                }
+                if (modalTitleElement) {
+                    modalTitleElement.textContent = title; // Set modal title
+                }
+
+                try {
+                    const response = await fetch(url);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const text = await response.text();
+
+                    // Parse the fetched HTML
+                    const parser = new DOMParser();
+                    const doc = parser.parseFromString(text, 'text/html');
+
+                    // Extract the main content. Google Docs typically put content in a div with id="contents"
+                    const contentElement = doc.getElementById('contents');
+                    if (contentElement) {
+                        originalSOPContentHtml = contentElement.innerHTML;
+                        renderContent(originalSOPContentHtml);
+                    } else {
+                        // Fallback for when 'contents' ID is not found (e.g., non-published Google Docs links)
+                        const mainContentDiv = doc.querySelector('.doc-content') || doc.querySelector('body > div:nth-child(2)');
+
+                        if (mainContentDiv) {
+                            originalSOPContentHtml = mainContentDiv.innerHTML;
+                            renderContent(originalSOPContentHtml);
+                        } else {
+                            sopContainer.innerHTML = '<p class="text-center text-red-500">Error: Could not find main content in the Google Document. Please ensure it is published for web.</p>';
+                            console.error('Could not find element with id="contents" or a suitable main content div in the fetched Google Doc.');
+                        }
+                    }
+                } catch (error) {
+                    sopContainer.innerHTML = `<p class="text-center text-red-500">Error loading document content: ${error.message}. Please try again later.</p>`;
+                    console.error('Fetch error:', error);
+                }
+            }
+
+            // Function to clear existing highlights
+            function clearHighlights() {
+                highlightedElements.forEach(el => {
+                    el.classList.remove('current-highlight');
+                    el.classList.remove('highlight'); // Remove all highlight classes
+                    // Replace the span with its text content to remove the highlight entirely
+                    const parent = el.parentNode;
+                    if (parent) {
+                        parent.replaceChild(document.createTextNode(el.textContent), el);
+                    }
+                });
+                highlightedElements = [];
+                currentHighlightIndex = -1;
+            }
+
+            // Function to perform search and highlighting
+            function performSearch(scrollToFirst = false) {
+                const modalSearchInput = document.getElementById('modalSearchInput');
+                const searchTerm = modalSearchInput.value.toLowerCase();
+                const sopContainer = document.getElementById('sop-container');
+                const nextResultBtn = document.getElementById('nextResultBtn');
+
+                // Clear previous highlights before re-rendering
+                clearHighlights();
+
+                // Re-render the original content to remove any old highlight spans
+                renderContent(originalSOPContentHtml);
+
+                if (searchTerm === '') {
+                    if (nextResultBtn) nextResultBtn.style.display = 'none';
+                    return; // If search term is empty, just show original content
+                }
+
+                // Use a temporary div to perform highlighting without affecting the live DOM until ready
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = originalSOPContentHtml; // Start with the clean, original content
+
+                const walker = document.createTreeWalker(
+                    tempDiv,
+                    NodeFilter.SHOW_TEXT,
+                    null,
+                    false
+                );
+
+                let node;
+                const nodesToProcess = [];
+                while ((node = walker.nextNode())) {
+                    if (node.parentNode.nodeName !== 'SCRIPT' && node.parentNode.nodeName !== 'STYLE') {
+                        nodesToProcess.push(node);
+                    }
+                }
+
+                nodesToProcess.forEach(textNode => {
+                    const text = textNode.nodeValue;
+                    const lowerCaseText = text.toLowerCase();
+                    let lastIndex = 0;
+                    const fragment = document.createDocumentFragment();
+                    const regex = new RegExp(searchTerm, 'gi');
+                    let match;
+
+                    while ((match = regex.exec(lowerCaseText)) !== null) {
+                        if (match.index > lastIndex) {
+                            fragment.appendChild(document.createTextNode(text.substring(lastIndex, match.index)));
+                        }
+                        const highlightSpan = document.createElement('span');
+                        highlightSpan.className = 'highlight';
+                        highlightSpan.textContent = text.substring(match.index, regex.lastIndex);
+                        fragment.appendChild(highlightSpan);
+                        lastIndex = regex.lastIndex;
+                    }
+                    if (lastIndex < text.length) {
+                        fragment.appendChild(document.createTextNode(text.substring(lastIndex)));
+                    }
+                    if (fragment.childNodes.length > 0) {
+                        textNode.parentNode.replaceChild(fragment, textNode);
+                    }
+                });
+
+                // Update the live SOP container with the newly highlighted content
+                sopContainer.innerHTML = tempDiv.innerHTML;
+
+                // Now, collect references to the actual highlighted elements in the live DOM
+                highlightedElements = Array.from(sopContainer.querySelectorAll('.highlight'));
+
+                if (highlightedElements.length > 0) {
+                    if (nextResultBtn) nextResultBtn.style.display = 'inline-block'; // Show next button
+                    currentHighlightIndex = 0;
+                    highlightedElements[currentHighlightIndex].classList.add('current-highlight');
+                    if (scrollToFirst) {
+                        highlightedElements[currentHighlightIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                } else {
+                    if (nextResultBtn) {
+                        nextResultBtn.style.display = 'none';
+                    }
+                }
+            }
+
+            // Function to navigate to the next highlight
+            function navigateToNextResult() {
+                if (highlightedElements.length === 0) return;
+
+                // Remove highlight from current element
+                if (currentHighlightIndex !== -1 && highlightedElements[currentHighlightIndex]) {
+                    highlightedElements[currentHighlightIndex].classList.remove('current-highlight');
+                }
+
+                currentHighlightIndex++;
+                if (currentHighlightIndex >= highlightedElements.length) {
+                    currentHighlightIndex = 0; // Loop back to the first result
+                }
+
+                // Add highlight to the new current element and scroll to it
+                highlightedElements[currentHighlightIndex].classList.add('current-highlight');
+                highlightedElements[currentHighlightIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+
+
+            // Event Listeners
+            document.addEventListener('DOMContentLoaded', () => {
+                // Get modal elements
+                const sopModal = document.getElementById('sopModal');
+                const docButtons = document.querySelectorAll('.doc-button'); // Select all buttons with class 'doc-button'
+                const closeSOPModal = document.getElementById('closeSOPModal');
+                const modalSearchInput = document.getElementById('modalSearchInput');
+                const nextResultBtn = document.getElementById('nextResultBtn');
+
+                // Initially hide the next result button
+                if (nextResultBtn) {
+                    nextResultBtn.style.display = 'none';
+                }
+
+                // Add event listeners to all document buttons
+                docButtons.forEach(button => {
+                    button.addEventListener('click', (event) => {
+                        const docUrl = event.currentTarget.dataset.docUrl;
+                        const docTitle = event.currentTarget.dataset.docTitle;
+                        sopModal.style.display = 'flex'; // Use flex to center content
+                        fetchGoogleDocContent(docUrl, docTitle); // Fetch content for the clicked document
+                        if (modalSearchInput) {
+                            modalSearchInput.value = ''; // Clear search input when new doc opens
+                        }
+                    });
+                });
+
+                // Close Modal
+                if (closeSOPModal) {
+                    closeSOPModal.addEventListener('click', () => {
+                        sopModal.style.display = 'none';
+                        // Clear search input and reset content when closing
+                        if (modalSearchInput) {
+                            modalSearchInput.value = '';
+                        }
+                        clearHighlights(); // Clear all highlights and reset state
+                        if (nextResultBtn) {
+                            nextResultBtn.style.display = 'none';
+                        }
+                    });
+                }
+
+                // Close modal if user clicks outside of it
+                window.addEventListener('click', (event) => {
+                    if (event.target === sopModal) {
+                        sopModal.style.display = 'none';
+                        // Clear search input and reset content when closing
+                        if (modalSearchInput) {
+                            modalSearchInput.value = '';
+                        }
+                        clearHighlights(); // Clear all highlights and reset state
+                        if (nextResultBtn) {
+                            nextResultBtn.style.display = 'none';
+                        }
+                    }
+                });
+
+                // Search functionality inside the modal
+                if (modalSearchInput) {
+                    // Trigger search on input change (live search)
+                    modalSearchInput.addEventListener('input', () => performSearch(false));
+                    // Trigger search and scroll to first result on Enter key press
+                    modalSearchInput.addEventListener('keydown', (event) => {
+                        if (event.key === 'Enter') {
+                            event.preventDefault(); // Prevent default form submission
+                            performSearch(true); // Perform search and scroll to first result
+                        }
+                    });
+                }
+
+                // Next Result Button
+                if (nextResultBtn) {
+                    nextResultBtn.addEventListener('click', navigateToNextResult);
+                }
+
+                // Hamburger menu functionality (retained from original)
+                const hamburgerBtn = document.getElementById('hamburgerBtn');
+                const navLinks = document.querySelector('.nav-links ul');
+
+                if (hamburgerBtn && navLinks) {
+                    hamburgerBtn.addEventListener('click', function () {
+                        navLinks.classList.toggle('hidden'); // Toggle Tailwind's hidden class
+                        navLinks.classList.toggle('flex'); // Ensure it becomes flex when visible
+                        navLinks.classList.toggle('flex-col'); // Ensure it stacks vertically on mobile
+                        navLinks.classList.toggle('absolute'); // Make it absolute for overlay
+                        navLinks.classList.toggle('bg-blue-800'); // Add background for visibility
+                        navLinks.classList.toggle('w-full'); // Take full width
+                        navLinks.classList.toggle('left-0'); // Align to left
+                        navLinks.classList.toggle('py-4'); // Add padding
+                        navLinks.classList.toggle('top-full'); // Position below header
+                        navLinks.classList.toggle('rounded-b-lg'); // Rounded bottom corners
+                        navLinks.classList.toggle('shadow-lg'); // Add shadow
+                    });
+
+                    // Close menu when a nav link is clicked (for mobile)
+                    navLinks.querySelectorAll('a').forEach(link => {
+                        link.addEventListener('click', () => {
+                            if (window.innerWidth < 768) { // Only close on mobile
+                                navLinks.classList.add('hidden');
+                                navLinks.classList.remove('flex', 'flex-col', 'absolute', 'bg-blue-800', 'w-full', 'left-0', 'py-4', 'top-full', 'rounded-b-lg', 'shadow-lg');
+                            }
+                        });
+                    });
+
+                    // Adjust menu display on resize
+                    window.addEventListener('resize', () => {
+                        if (window.innerWidth >= 768) {
+                            navLinks.classList.remove('hidden', 'flex-col', 'absolute', 'bg-blue-800', 'w-full', 'left-0', 'py-4', 'top-full', 'rounded-b-lg', 'shadow-lg');
+                            navLinks.classList.add('flex'); // Ensure it's flex for desktop
+                        } else {
+                            // Ensure it's hidden on mobile if resized from desktop
+                            navLinks.classList.add('hidden');
+                            navLinks.classList.remove('flex');
+                        }
+                    });
+                }
+            });
+        })(); // End IIFE
+    </script>
 </body>
 </html>

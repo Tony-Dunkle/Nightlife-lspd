@@ -20,7 +20,7 @@
             color: #333;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
+            min-height: 10vh;
         }
 
         main {
@@ -460,6 +460,13 @@
                     data-doc-title="LSPD Disciplinary Guidelines">
                 View Disciplinary Guidelines
             </button>
+
+            <!-- New Button for Bonus Distribution Program -->
+            <button class="doc-button bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold shadow-lg hover:bg-blue-700 transition duration-300 ease-in-out transform hover:scale-105"
+                    data-doc-url="https://docs.google.com/document/d/e/2PACX-1vTyfcTo8MFKRbi9YhttnDnV5uWYAbAvf-NYpVPy4q2hiUF3oH6xLOA4b3CpjECW-H8oqqC5962SBgIG/pub"
+                    data-doc-title="LSPD Bonus Distribution Program">
+                View Bonus Distribution Program
+            </button>
         </div>
     </main>
 
@@ -685,7 +692,9 @@
                         highlightedElements[currentHighlightIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }
                 } else {
-                    if (nextResultBtn) nextResultBtn.style.display = 'none';
+                    if (nextResultBtn) {
+                        nextResultBtn.style.display = 'none';
+                    }
                 }
             }
 
