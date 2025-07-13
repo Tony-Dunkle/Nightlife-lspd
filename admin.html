@@ -767,7 +767,7 @@
                 if (rawRows.length === 0) {
                     console.warn('No roster data available from Google Sheet.');
                     officerRosterData = []; // Ensure it's empty
-                    officerListDiv.innerHTML = '<p class="text-gray-500 text-center py-4">No officers found.</p>';
+                    officerListDiv.innerHTML = '<p class="text-gray-500 text-center py-4">No officers/staff found.</p>';
                     return;
                 }
 
@@ -859,9 +859,9 @@
                 const div = document.createElement('div');
                 div.className = 'evidence-item flex items-center p-2 rounded-md hover:bg-blue-100 cursor-pointer';
                 div.innerHTML = `
-                                        <input type="checkbox" id="evidence-${item.name.replace(/\s/g, '-')}" value="${item.name}" class="form-checkbox h-5 w-5 text-blue-600 rounded-md">
-                                        <label for="evidence-${item.name.replace(/\s/g, '-')}" class="ml-2 text-gray-800 text-sm font-medium flex-grow">${item.name}</label>
-                                    `;
+                                            <input type="checkbox" id="evidence-${item.name.replace(/\s/g, '-')}" value="${item.name}" class="form-checkbox h-5 w-5 text-blue-600 rounded-md">
+                                            <label for="evidence-${item.name.replace(/\s/g, '-')}" class="ml-2 text-gray-800 text-sm font-medium flex-grow">${item.name}</label>
+                                        `;
                 div.setAttribute('data-description', item.description);
                 div.setAttribute('data-type', item.type);
                 if (item.linkProviders) {
@@ -909,6 +909,7 @@
                         }
                     }
                     updateEvidenceCollectedInputSummary();
+                    saveFormData(); // Save data after evidence selection changes
                 });
 
                 evidenceListDiv.appendChild(div);
@@ -1026,6 +1027,7 @@
                     }
                 }
             }
+            saveFormData(); // Save data after toggling fields
         }
 
         // Function to populate the officer/staff list in the modal
@@ -1051,11 +1053,118 @@
                 div.addEventListener('click', () => {
                     officerInfoInput.value = `${officer.name} (${officer.badge})`;
                     officerSelectionModal.classList.add('hidden');
+                    saveFormData(); // Save data after officer selection
                 });
                 officerListDiv.appendChild(div);
             });
         }
 
+        // Function to gather all form data
+        function getFormData() {
+            return {
+                department: departmentSelect.value,
+                reportType: reportTypeSelect.value,
+                officerInfo: officerInfoInput.value,
+                applicantName: applicantNameInput.value,
+                positionApplied: positionAppliedInput.value,
+                applicationDate: applicationDateInput.value,
+                applicationStatus: applicationStatusSelect.value,
+                applicationNotes: applicationNotesTextarea.value,
+                intervieweeName: intervieweeNameInput.value,
+                interviewDate: interviewDateInput.value,
+                interviewTime: interviewTimeInput.value,
+                interviewerNames: interviewerNamesInput.value,
+                q1Experience: q1ExperienceTextarea.value,
+                q2Professionalism: q2ProfessionalismTextarea.value,
+                q3PersonalStrengths: q3PersonalStrengthsTextarea.value,
+                q4ReportCommitment: q4ReportCommitmentTextarea.value,
+                q5ConflictOfInterest: q5ConflictOfInterestTextarea.value,
+                q6FelonyStop: q6FelonyStopTextarea.value,
+                q7OfficerMisconduct: q7OfficerMisconductTextarea.value,
+                q8ConflictingOrders: q8ConflictingOrdersTextarea.value,
+                q9ComposureUnderPressure: q9ComposureUnderPressureTextarea.value,
+                q10OfficerExpectations: q10OfficerExpectationsTextarea.value,
+                interviewOutcome: interviewOutcomeSelect.value,
+                interviewNotes: interviewNotesTextarea.value,
+                employeeName: employeeNameInput.value,
+                employeeID: employeeIDInput.value,
+                disciplinaryDate: disciplinaryDateInput.value,
+                disciplinaryReason: disciplinaryReasonTextarea.value,
+                actionTaken: actionTakenSelect.value,
+                disciplinaryNotes: disciplinaryNotesTextarea.value,
+                meetingTitle: meetingTitleInput.value,
+                meetingDate: meetingDateInput.value,
+                meetingTime: meetingTimeInput.value,
+                attendees: attendeesTextarea.value,
+                discussionPoints: discussionPointsTextarea.value,
+                actionItems: actionItemsTextarea.value,
+                selectedEvidenceDetails: selectedEvidenceDetails, // Save the entire object
+                applicantIntervieweeNotes: victimStatementsTextarea.value, // Re-purposed
+                witnessObserverNotes: witnessStatementsTextarea.value, // Re-purposed
+                employeeResponseStatementNotes: suspectStatementsTextarea.value, // Re-purposed
+            };
+        }
+
+        // Function to save form data to local storage
+        function saveFormData() {
+            const data = getFormData();
+            localStorage.setItem('adminReportGeneratorData', JSON.stringify(data));
+        }
+
+        // Function to load form data from local storage
+        function loadFormData() {
+            const savedData = localStorage.getItem('adminReportGeneratorData');
+            if (savedData) {
+                const data = JSON.parse(savedData);
+
+                departmentSelect.value = data.department || '';
+                reportTypeSelect.value = data.reportType || 'Application'; // Default if not found
+                officerInfoInput.value = data.officerInfo || '';
+                applicantNameInput.value = data.applicantName || '';
+                positionAppliedInput.value = data.positionApplied || '';
+                applicationDateInput.value = data.applicationDate || '';
+                applicationStatusSelect.value = data.applicationStatus || '';
+                applicationNotesTextarea.value = data.applicationNotes || '';
+                intervieweeNameInput.value = data.intervieweeName || '';
+                interviewDateInput.value = data.interviewDate || '';
+                interviewTimeInput.value = data.interviewTime || '';
+                interviewerNamesInput.value = data.interviewerNames || '';
+                q1ExperienceTextarea.value = data.q1Experience || '';
+                q2ProfessionalismTextarea.value = data.q2Professionalism || '';
+                q3PersonalStrengthsTextarea.value = data.q3PersonalStrengths || '';
+                q4ReportCommitmentTextarea.value = data.q4ReportCommitment || '';
+                q5ConflictOfInterestTextarea.value = data.q5ConflictOfInterest || '';
+                q6FelonyStopTextarea.value = data.q6FelonyStop || '';
+                q7OfficerMisconductTextarea.value = data.q7OfficerMisconduct || '';
+                q8ConflictingOrdersTextarea.value = data.q8ConflictingOrders || '';
+                q9ComposureUnderPressureTextarea.value = data.q9ComposureUnderPressure || '';
+                q10OfficerExpectationsTextarea.value = data.q10OfficerExpectations || '';
+                interviewOutcomeSelect.value = data.interviewOutcome || '';
+                interviewNotesTextarea.value = data.interviewNotes || '';
+                employeeNameInput.value = data.employeeName || '';
+                employeeIDInput.value = data.employeeID || '';
+                disciplinaryDateInput.value = data.disciplinaryDate || '';
+                disciplinaryReasonTextarea.value = data.disciplinaryReason || '';
+                actionTakenSelect.value = data.actionTaken || '';
+                disciplinaryNotesTextarea.value = data.disciplinaryNotes || '';
+                meetingTitleInput.value = data.meetingTitle || '';
+                meetingDateInput.value = data.meetingDate || '';
+                meetingTimeInput.value = data.meetingTime || '';
+                attendeesTextarea.value = data.attendees || '';
+                discussionPointsTextarea.value = data.discussionPoints || '';
+                actionItemsTextarea.value = data.actionItems || '';
+
+                // Restore selectedEvidenceDetails and update related UI
+                selectedEvidenceDetails = data.selectedEvidenceDetails || {};
+                updateEvidenceCollectedInputSummary();
+                victimStatementsTextarea.value = data.applicantIntervieweeNotes || '';
+                witnessStatementsTextarea.value = data.witnessObserverNotes || '';
+                suspectStatementsTextarea.value = data.employeeResponseStatementNotes || '';
+
+                // After loading, ensure correct fields are shown
+                toggleReportFields();
+            }
+        }
 
         // Add event listener to report type dropdown to toggle fields
         reportTypeSelect.addEventListener('change', toggleReportFields);
@@ -1064,7 +1173,26 @@
         document.addEventListener('DOMContentLoaded', () => {
             toggleReportFields();
             populateEvidenceList();
-            // Initial fetch of roster data is now triggered by clicking the officerInfoInput
+            loadFormData(); // Load saved data
+
+            // Check for loggedInOfficer in local storage and pre-fill officerInfoInput
+            const loggedInOfficer = localStorage.getItem('loggedInOfficer');
+            if (loggedInOfficer) {
+                try {
+                    const officer = JSON.parse(loggedInOfficer);
+                    officerInfoInput.value = `${officer.name} (${officer.badge})`;
+                    saveFormData(); // Save this pre-filled data to adminReportGeneratorData
+                } catch (e) {
+                    console.error('Error parsing loggedInOfficer from localStorage:', e);
+                    localStorage.removeItem('loggedInOfficer'); // Clear corrupted data
+                }
+            }
+        });
+
+        // Add event listeners to all form fields for saving data
+        document.querySelectorAll('input, select, textarea').forEach(element => {
+            element.addEventListener('input', saveFormData);
+            element.addEventListener('change', saveFormData); // For select elements
         });
 
         // Event listeners for opening and closing the evidence modal
@@ -1079,12 +1207,14 @@
 
         closeEvidenceModalBtn.addEventListener('click', () => {
             evidenceModal.classList.add('hidden');
+            saveFormData(); // Save data when evidence modal is closed
         });
 
         // Close modal when clicking outside of it
         evidenceModal.addEventListener('click', (e) => {
             if (e.target === evidenceModal) {
                 evidenceModal.classList.add('hidden');
+                saveFormData(); // Save data when evidence modal is closed by clicking outside
             }
         });
 
@@ -1118,12 +1248,14 @@
             }
             evidenceUrlInput.value = ''; // Clear input after adding
             updateEvidenceCollectedInputSummary(); // Update summary immediately after adding a link
+            saveFormData(); // Save data after adding a URL
         });
 
         closeUrlModalBtn.addEventListener('click', () => {
             urlInputModal.classList.add('hidden');
             evidenceModal.classList.remove('hidden'); // Bring back the evidence selection modal
             updateEvidenceCollectedInputSummary(); // Ensure summary is updated when done
+            saveFormData(); // Save data when URL modal is closed
         });
 
         urlInputModal.addEventListener('click', (e) => {
@@ -1141,6 +1273,7 @@
                     }
                 }
                 updateEvidenceCollectedInputSummary(); // Ensure summary is updated after any modal closure
+                saveFormData(); // Save data when URL modal is closed by clicking outside
             }
         });
 
@@ -1158,11 +1291,13 @@
 
         closeOfficerModalBtn.addEventListener('click', () => {
             officerSelectionModal.classList.add('hidden');
+            saveFormData(); // Save data when officer modal is closed
         });
 
         officerSelectionModal.addEventListener('click', (e) => {
             if (e.target === officerSelectionModal) {
                 officerSelectionModal.classList.add('hidden');
+                saveFormData(); // Save data when officer modal is closed by clicking outside
             }
         });
 
@@ -1172,18 +1307,21 @@
                 selectedEvidenceDetails['Applicant/Interviewee Notes'].text = e.target.value;
             }
             updateEvidenceCollectedInputSummary();
+            saveFormData();
         });
         witnessStatementsTextarea.addEventListener('input', (e) => {
             if (selectedEvidenceDetails['Witness Statements (Admin)']) {
                 selectedEvidenceDetails['Witness Statements (Admin)'].text = e.target.value;
             }
             updateEvidenceCollectedInputSummary();
+            saveFormData();
         });
         suspectStatementsTextarea.addEventListener('input', (e) => {
             if (selectedEvidenceDetails['Employee Response/Statement']) {
                 selectedEvidenceDetails['Employee Response/Statement'].text = e.target.value;
             }
             updateEvidenceCollectedInputSummary();
+            saveFormData();
         });
 
 

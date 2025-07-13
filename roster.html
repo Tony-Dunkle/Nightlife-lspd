@@ -175,6 +175,18 @@
             const highCommandOfficersEl = document.getElementById('high-command-officers');
             const cadetsEl = document.getElementById('cadets');
 
+            // Retrieve logged-in officer data from local storage
+            let loggedInOfficer = null;
+            try {
+                const storedOfficer = localStorage.getItem('loggedInOfficer');
+                if (storedOfficer) {
+                    loggedInOfficer = JSON.parse(storedOfficer);
+                }
+            } catch (e) {
+                console.error('Error parsing loggedInOfficer from localStorage:', e);
+                localStorage.removeItem('loggedInOfficer'); // Clear corrupted data
+            }
+
             // Directly fetch roster data on page load since the modal is removed
             fetchRosterData();
 
@@ -410,9 +422,10 @@
                 let cadets = 0;
 
                 const rankIndex = headers.indexOf('Rank');
-                if (rankIndex === -1) {
-                    console.error("Rank column not found in headers.");
-                    return; // Cannot calculate counts without rank
+                const badgeNoIndex = headers.indexOf('Badge No.'); // Get index for Badge No.
+                if (rankIndex === -1 || badgeNoIndex === -1) {
+                    console.error("Rank or Badge No. column not found in headers.");
+                    return; // Cannot calculate counts or highlight without these
                 }
 
                 // Create a container for the grid layout of officer cards
@@ -458,9 +471,18 @@
 
                     // Get the 'Image Link' value
                     const imageLink = rowData[headers.indexOf('Image Link')];
+                    const officerBadgeNo = rowData[badgeNoIndex].trim(); // Get the badge number for comparison
 
                     const officerCard = document.createElement('div');
-                    officerCard.className = 'bg-blue-50 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 ease-in-out flex flex-col items-start';
+                    // Base classes for the officer card
+                    let cardClasses = 'bg-blue-50 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 ease-in-out flex flex-col items-start';
+
+                    // Add highlighting class if this officer is the logged-in officer
+                    if (loggedInOfficer && loggedInOfficer.badge === officerBadgeNo) {
+                        cardClasses += ' border-4 border-yellow-500 ring-4 ring-yellow-300'; // Add highlighting classes
+                    }
+                    officerCard.className = cardClasses;
+
 
                     // Create a div to hold the name and image side-by-side
                     const nameAndImageContainer = document.createElement('div');
