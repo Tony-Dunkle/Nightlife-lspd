@@ -151,6 +151,15 @@
             <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Police Report Generator</h2>
             <div class="bg-white p-8 rounded-xl shadow-2xl w-full">
 
+                <!-- Clear Report Button - Added here -->
+                <div class="mb-6 text-right">
+                    <button type="button"
+                            id="clearReportBtn"
+                            class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">
+                        Clear Report
+                    </button>
+                </div>
+
                 <!-- Department Dropdown -->
                 <div class="mb-6">
                     <label for="department" class="block text-gray-700 text-sm font-semibold mb-2">
@@ -635,14 +644,6 @@
                     </button>
                 </div>
 
-                <!-- Removed Clear Saved Data Button -->
-                <!-- <div class="mt-4">
-                    <button type="button"
-                            id="clearSavedDataBtn"
-                            class="w-full bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-4 rounded-lg shadow-md transition duration-300 ease-in-out hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-400 focus:ring-opacity-50">
-                        Clear Saved Data
-                    </button>
-                </div> -->
                 <!-- Loading Indicator for AI Generation -->
                 <div id="loadingIndicator" class="hidden text-center text-blue-600 mt-4 font-semibold">
                     Generating report... Please wait.
@@ -762,7 +763,7 @@
         const downloadReportBtn = document.getElementById('downloadReportBtn'); // NEW Download Report Button
         const viewReportBtn = document.getElementById('viewReportBtn'); // NEW View Report Button
         const loadingIndicator = document.getElementById('loadingIndicator');
-        // Removed clearSavedDataBtn as it's no longer needed
+        const clearReportBtn = document.getElementById('clearReportBtn'); // NEW Clear Report Button
 
         // Get references to report-specific field containers
         const arrestReportFields = document.getElementById('arrestReportFields');
@@ -995,9 +996,9 @@
                 const div = document.createElement('div');
                 div.className = 'evidence-item flex items-center p-2 rounded-md hover:bg-blue-100 cursor-pointer';
                 div.innerHTML = `
-                                        <input type="checkbox" id="evidence-${item.name.replace(/\s/g, '-')}" value="${item.name}" class="form-checkbox h-5 w-5 text-blue-600 rounded-md">
-                                        <label for="evidence-${item.name.replace(/\s/g, '-')}" class="ml-2 text-gray-800 text-sm font-medium flex-grow">${item.name}</label>
-                                    `;
+                                            <input type="checkbox" id="evidence-${item.name.replace(/\s/g, '-')}" value="${item.name}" class="form-checkbox h-5 w-5 text-blue-600 rounded-md">
+                                            <label for="evidence-${item.name.replace(/\s/g, '-')}" class="ml-2 text-gray-800 text-sm font-medium flex-grow">${item.name}</label>
+                                        `;
                 div.setAttribute('data-description', item.description);
                 div.setAttribute('data-type', item.type);
                 if (item.linkProviders) {
@@ -1197,18 +1198,19 @@
                 div.addEventListener('click', () => {
                     officerInfoInput.value = `${officer.name} (${officer.badge})`;
                     officerSelectionModal.classList.add('hidden');
-                    saveFormData(); // Save data after officer selection
+                    // No longer saving officerInfo directly here, as it's handled by login
+                    // saveFormData();
                 });
                 officerListDiv.appendChild(div);
             });
         }
 
-        // Function to gather all form data
+        // Function to gather all form data (excluding officerInfo)
         function getFormData() {
             return {
                 department: departmentSelect.value,
                 reportType: reportTypeSelect.value,
-                officerInfo: officerInfoInput.value,
+                // officerInfo is intentionally excluded as it's handled by login
                 suspectName: suspectNameInput.value,
                 charges: chargesInput.value,
                 mirandized: mirandizedSelect.value,
@@ -1271,7 +1273,7 @@
 
                 departmentSelect.value = data.department || '';
                 reportTypeSelect.value = data.reportType || 'Arrest Report'; // Default if not found
-                officerInfoInput.value = data.officerInfo || '';
+                // officerInfoInput.value = data.officerInfo || ''; // Removed: officerInfo is now handled by login
                 suspectNameInput.value = data.suspectName || '';
                 chargesInput.value = data.charges || '';
                 mirandizedSelect.value = data.mirandized || '';
@@ -1326,19 +1328,60 @@
             }
         }
 
+        // Function to clear all form data and local storage for the report
+        function clearReportData() {
+            // Clear all input fields, textareas, and select elements
+            document.querySelectorAll('input, select, textarea').forEach(element => {
+                if (element.type === 'checkbox' || element.type === 'radio') {
+                    element.checked = false;
+                } else if (element.tagName === 'SELECT') {
+                    element.value = element.options[0] ? element.options[0].value : ''; // Reset to first option
+                } else {
+                    element.value = '';
+                }
+            });
+
+            // Specific reset for officerInfoInput, as it's pre-filled from login
+            officerInfoInput.value = ''; // Clear it manually
+
+            // Clear generated report area
+            generatedReportTextarea.value = '';
+            copyReportBtn.classList.add('hidden');
+            downloadReportBtn.classList.add('hidden');
+            viewReportBtn.classList.add('hidden');
+
+            // Reset selected evidence details
+            selectedEvidenceDetails = {};
+            updateEvidenceCollectedInputSummary();
+            populateEvidenceList(); // Re-populate to reset checkboxes
+
+            // Hide all statement containers
+            victimStatementsContainer.classList.add('hidden');
+            witnessStatementsContainer.classList.add('hidden');
+            suspectStatementsContainer.classList.add('hidden');
+
+            // Clear local storage for this report
+            localStorage.removeItem('reportGeneratorData');
+            console.log('Report data cleared from local storage.');
+
+            // Reset report type to default and toggle fields
+            reportTypeSelect.value = 'Arrest Report';
+            toggleReportFields();
+        }
+
         // Function to show a custom alert modal
         function showCustomAlert(message) {
             const modalOverlay = document.createElement('div');
             modalOverlay.className = 'modal-overlay'; // Re-use modal-overlay styles
             modalOverlay.id = 'customAlertModal';
             modalOverlay.innerHTML = `
-                        <div class="modal-content text-center">
-                            <p class="text-lg font-semibold mb-6">${message}</p>
-                            <button id="closeCustomAlertBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">
-                                OK
-                            </button>
-                        </div>
-                    `;
+                            <div class="modal-content text-center">
+                                <p class="text-lg font-semibold mb-6">${message}</p>
+                                <button id="closeCustomAlertBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">
+                                    OK
+                                </button>
+                            </div>
+                        `;
             document.body.appendChild(modalOverlay);
 
             document.getElementById('closeCustomAlertBtn').addEventListener('click', () => {
@@ -1368,7 +1411,7 @@
                 try {
                     const officer = JSON.parse(loggedInOfficer);
                     officerInfoInput.value = `${officer.name} (${officer.badge})`;
-                    saveFormData(); // Save this pre-filled data to reportGeneratorData
+                    // No need to call saveFormData here as officerInfo is not saved to reportGeneratorData
                 } catch (e) {
                     console.error('Error parsing loggedInOfficer from localStorage:', e);
                     localStorage.removeItem('loggedInOfficer'); // Clear corrupted data
@@ -1377,7 +1420,7 @@
         });
 
         // Add event listeners to all form fields for saving data
-        document.querySelectorAll('input, select, textarea').forEach(element => {
+        document.querySelectorAll('input:not(#officerInfo), select, textarea').forEach(element => {
             element.addEventListener('input', saveFormData);
             element.addEventListener('change', saveFormData); // For select elements
         });
@@ -1478,13 +1521,15 @@
 
         closeOfficerModalBtn.addEventListener('click', () => {
             officerSelectionModal.classList.add('hidden');
-            saveFormData(); // Save data when officer modal is closed
+            // No longer saving officerInfo directly here, as it's handled by login
+            // saveFormData();
         });
 
         officerSelectionModal.addEventListener('click', (e) => {
             if (e.target === officerSelectionModal) {
                 officerSelectionModal.classList.add('hidden');
-                saveFormData(); // Save data when officer modal is closed by clicking outside
+                // No longer saving officerInfo directly here, as it's handled by login
+                // saveFormData();
             }
         });
 
@@ -1511,8 +1556,8 @@
             saveFormData();
         });
 
-        // Removed Event listener for Clear Saved Data button
-        // clearSavedDataBtn.addEventListener('click', clearAllFormData);
+        // Event listener for the new Clear Report button
+        clearReportBtn.addEventListener('click', clearReportData);
 
 
         // IMPORTANT: Gemini API Key Configuration
@@ -1591,7 +1636,7 @@
                     const medicalTreatment = medicalTreatmentSelect.value;
                     const pleaType = pleaTypeSelect.value;
 
-                    if (!officerInfo || !suspectName || !charges || !reportNarrative || mirandized === "" || gsrTest === "" || medicalTreatment === "" || pleaType === "" || levelOfForce === "") {
+                    if (!officerInfo || !suspectName || !charges || !reportNarrative || mirandized === "" || gsrTest === "" || medicalTreatment === "" || pleaOfForce === "" || levelOfForce === "") {
                         requiredFieldsFilled = false;
                     }
 
@@ -2106,26 +2151,6 @@ Status: Report Filed.
             const pdfUrl = URL.createObjectURL(pdfBlob);
             window.open(pdfUrl, '_blank');
         });
-
-        // Removed Notification Popup Logic
-        /*
-        document.addEventListener('DOMContentLoaded', () => {
-            const notificationPopup = document.getElementById('notification-popup');
-            const closeNotificationBtn = document.getElementById('closeNotification');
-
-            // Show the notification after a short delay and force reflow
-            setTimeout(() => {
-                // Force a reflow to ensure the transition starts from the correct initial state
-                notificationPopup.offsetHeight; // Accessing offsetHeight forces the browser to recalculate layout
-                notificationPopup.classList.add('show');
-            }, 500); // Reduced delay to 0.5 seconds
-
-            // Hide the notification when the close button is clicked
-            closeNotificationBtn.addEventListener('click', () => {
-                notificationPopup.classList.remove('show');
-            });
-        });
-        */
     </script>
 </body>
 </html>
