@@ -131,6 +131,144 @@
             background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent dark overlay */
             z-index: 1; /* Above the video, below the text content */
         }
+
+        /* Cookie Consent Banner Styles */
+        #cookieConsentBanner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #2d3748; /* bg-gray-800 */
+            color: white;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000; /* Ensure it's on top of everything */
+            transform: translateY(100%); /* Start off-screen */
+            transition: transform 0.3s ease-in-out;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+        }
+
+            #cookieConsentBanner.show {
+                transform: translateY(0); /* Slide in */
+            }
+
+            #cookieConsentBanner p {
+                margin-bottom: 1rem;
+                text-align: center;
+            }
+
+            #cookieConsentBanner button {
+                padding: 0.5rem 1rem;
+                border-radius: 0.375rem; /* rounded-md */
+                font-weight: 600; /* font-semibold */
+                transition: background-color 0.2s ease-in-out;
+            }
+
+        #acceptCookies {
+            background-color: #48bb78; /* bg-green-500 */
+            color: white;
+            margin-right: 0.5rem;
+        }
+
+            #acceptCookies:hover {
+                background-color: #38a169; /* bg-green-600 */
+            }
+
+        #declineCookies {
+            background-color: #f56565; /* bg-red-500 */
+            color: white;
+        }
+
+            #declineCookies:hover {
+                background-color: #e53e3e; /* bg-red-600 */
+            }
+
+        /* Login Button Styling */
+        #loginButtonContainer {
+            margin-top: 1rem; /* Space below nav */
+            margin-left: 1rem; /* Align with left content */
+            position: absolute; /* Position relative to header */
+            top: 100%; /* Below the header */
+            left: 0;
+            z-index: 40; /* Below header, above main content */
+        }
+
+        #loginButton {
+            background-color: #3182ce; /* bg-blue-600 */
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem; /* rounded-lg */
+            font-weight: 700; /* font-bold */
+            transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
+        }
+
+            #loginButton:hover {
+                background-color: #2b6cb0; /* bg-blue-700 */
+                transform: translateY(-2px); /* Slight lift on hover */
+            }
+
+        /* Modal specific styles (copied from report.html) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* shadow-2xl */
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+            position: relative;
+            width: 500px; /* Adjusted width for better readability */
+        }
+
+        .officer-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+            .officer-item:hover {
+                background-color: #f0f4f8; /* Light blue-gray hover */
+            }
+
+        /* Loading indicator styles (copied from report.html) */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -181,6 +319,13 @@
                 <li><a href="info.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Common Information</a></li>
             </ul>
         </nav>
+
+        <!-- Login Button Container - Initially hidden -->
+        <div id="loginButtonContainer" class="absolute top-full left-0 mt-4 ml-4 hidden">
+            <button id="loginButton" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
+                Login
+            </button>
+        </div>
     </header>
     <!-- Hero Section - Internal Focus -->
     <section class="relative bg-gradient-to-r from-blue-700 to-blue-900 text-white py-20 px-6 md:px-12 rounded-lg m-4 md:m-8 overflow-hidden shadow-xl">
@@ -297,6 +442,40 @@
         <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     </footer>
 
+    <!-- Cookie Consent Banner -->
+    <div id="cookieConsentBanner" class="hidden">
+        <p>This website uses cookies to enhance user experience. By continuing to use this site, you agree to our use of cookies. For more information, please see our <a href="privacypolicy.html" class="text-blue-300 hover:underline">Privacy Policy</a>.</p>
+        <div class="flex">
+            <button id="acceptCookies">Accept</button>
+            <button id="declineCookies">Decline</button>
+        </div>
+    </div>
+
+    <!-- Officer Selection Modal (Copied from report.html) -->
+    <div id="officerSelectionModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Select Officer</h3>
+            <input type="text"
+                   id="officerSearchInput"
+                   placeholder="Search officer name or badge..."
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4">
+            <div id="officerList" class="max-h-64 overflow-y-auto border border-gray-200 rounded-lg p-2 mb-4">
+                <!-- Officer list will be populated here -->
+                <div class="loader mx-auto my-4"></div> <!-- Loader for officer list -->
+            </div>
+            <div class="flex justify-end space-x-4">
+                <button id="logoutButton"
+                        class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">
+                    Logout
+                </button>
+                <button id="closeOfficerModalBtn"
+                        class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // Fade in the body content
@@ -304,19 +483,291 @@
 
             const banner = document.getElementById('devNoticeBanner');
             const closeBannerBtn = document.getElementById('closeBannerBtn');
+            const cookieConsentBanner = document.getElementById('cookieConsentBanner');
+            const acceptCookiesBtn = document.getElementById('acceptCookies');
+            const declineCookiesBtn = document.getElementById('declineCookies');
+            const loginButtonContainer = document.getElementById('loginButtonContainer');
+            const loginButton = document.getElementById('loginButton');
 
-            // Show the banner after a short delay to allow body fade-in
+            // Officer Selection Modal Elements
+            const officerSelectionModal = document.getElementById('officerSelectionModal');
+            const officerSearchInput = document.getElementById('officerSearchInput');
+            const officerListDiv = document.getElementById('officerList');
+            const closeOfficerModalBtn = document.getElementById('closeOfficerModalBtn');
+            const logoutButton = document.getElementById('logoutButton'); // New logout button
+
+            // Global variable to store fetched officer roster data
+            let officerRosterData = [];
+
+            // Show the development notice banner after a short delay
             setTimeout(() => {
                 banner.classList.add('show');
             }, 500); // Adjust delay as needed
 
-            // Function to hide the banner
+            // Function to hide the development notice banner
             const hideBanner = () => {
                 banner.classList.remove('show'); // Hide by removing 'show' class
             };
 
-            // Event listener for closing the banner
+            // Event listener for closing the development notice banner
             closeBannerBtn.addEventListener('click', hideBanner);
+
+            /**
+             * Converts an Excel-style column letter (e.g., 'A', 'B', 'AA') to a 0-based index.
+             * @param {string} columnLetter - The column letter (e.g., 'C').
+             * @returns {number} The 0-based column index (e.g., 'C' returns 2).
+             */
+            function columnLetterToIndex(columnLetter) {
+                let index = 0;
+                for (let i = 0; i < columnLetter.length; i++) {
+                    index = index * 26 + (columnLetter.charCodeAt(i) - 'A'.charCodeAt(0) + 1);
+                }
+                return index - 1; // Convert to 0-based index
+            }
+
+            /**
+             * Fetches CSV data from a Google Sheet, parses it, and populates the officerRosterData.
+             * This function is called when the officer selection modal is opened.
+             */
+            async function fetchAndSetOfficerRosterData() {
+                officerListDiv.innerHTML = '<div class="loader mx-auto my-4"></div>'; // Show loader
+
+                const sheetId = '1o4Xw8GSQBp6brMfGo_ubYngnhWJU_f8AhyUIftAlT1Y';
+                const gid = '0'; // Assuming gid=0 for the primary sheet tab
+                const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
+
+                try {
+                    const response = await fetch(csvUrl);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const csvText = await response.text();
+
+                    const rawRows = csvText.trim().split('\n');
+                    if (rawRows.length === 0) {
+                        console.warn('No roster data available from Google Sheet.');
+                        officerRosterData = []; // Ensure it's empty
+                        officerListDiv.innerHTML = '<p class="text-gray-500 text-center py-4">No officers found.</p>';
+                        return;
+                    }
+
+                    // Define the target spreadsheet row numbers (1-indexed)
+                    const targetSpreadsheetRows = new Set();
+                    const addRange = (start, end) => {
+                        for (let i = start; i <= end; i++) {
+                            targetSpreadsheetRows.add(i);
+                        }
+                    };
+
+                    targetSpreadsheetRows.add(6);
+                    targetSpreadsheetRows.add(9);
+                    targetSpreadsheetRows.add(10);
+                    targetSpreadsheetRows.add(11);
+                    addRange(12, 16);
+                    addRange(18, 22);
+                    addRange(24, 27);
+                    addRange(29, 32);
+                    addRange(34, 43);
+                    addRange(45, 54);
+                    addRange(56, 65);
+                    addRange(67, 78);
+                    addRange(80, 96);
+                    addRange(98, 117);
+                    addRange(119, 148);
+
+                    const filteredRowsData = [];
+                    const regex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/; // Regex to split by comma, ignoring commas in double quotes
+
+                    rawRows.forEach((rowString, index) => {
+                        const spreadsheetRowNumber = index + 1; // CSV rows are 0-indexed, spreadsheet rows are 1-indexed
+                        if (targetSpreadsheetRows.has(spreadsheetRowNumber)) {
+                            // Parse each cell, removing quotes if present
+                            const parsedCells = rowString.split(regex).map(cell => cell.replace(/^"(.*)"$/, '$1').trim());
+                            filteredRowsData.push(parsedCells);
+                        }
+                    });
+
+                    // Define the mapping from desired fields to their original column indices
+                    const headerToColIndexMap = {
+                        'Badge No.': columnLetterToIndex('C'),
+                        'Name': columnLetterToIndex('D'),
+                    };
+
+                    const tempOfficerRoster = [];
+                    filteredRowsData.forEach(rowData => {
+                        const name = rowData[headerToColIndexMap['Name']] ? rowData[headerToColIndexMap['Name']].trim() : '';
+                        const badge = rowData[headerToColIndexMap['Badge No.']] ? rowData[headerToColIndexMap['Badge No.']].trim() : '';
+
+                        // Only add if both name and badge are present and not 'N/A' or empty
+                        if (name && name !== 'N/A' && badge && badge !== 'N/A') {
+                            tempOfficerRoster.push({ name: name, badge: badge });
+                        }
+                    });
+                    officerRosterData = tempOfficerRoster; // Update the global roster data
+                    populateOfficerList(officerRosterData); // Populate the modal list with fetched data
+                } catch (error) {
+                    console.error('Error fetching or parsing roster data:', error);
+                    officerListDiv.innerHTML = '<p class="text-red-500 text-center py-4">Failed to load officer roster. Please try again later.</p>';
+                }
+            }
+
+            // Function to populate the officer list in the modal
+            function populateOfficerList(officers, searchTerm = '') {
+                officerListDiv.innerHTML = ''; // Clear existing list
+                const filteredOfficers = officers.filter(officer =>
+                    officer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    officer.badge.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+
+                if (filteredOfficers.length === 0) {
+                    officerListDiv.innerHTML = '<p class="text-gray-500 text-center py-4">No officers found.</p>';
+                    return;
+                }
+
+                filteredOfficers.forEach(officer => {
+                    const div = document.createElement('div');
+                    div.className = 'officer-item p-2 rounded-md hover:bg-blue-100 cursor-pointer text-gray-800 text-sm font-medium';
+                    div.textContent = `${officer.name} (${officer.badge})`;
+                    div.dataset.name = officer.name;
+                    div.dataset.badge = officer.badge;
+
+                    div.addEventListener('click', () => {
+                        localStorage.setItem('loggedInOfficer', JSON.stringify(officer));
+                        updateLoginButton();
+                        officerSelectionModal.classList.add('hidden');
+                        console.log('Officer selected and saved to local storage:', officer);
+                    });
+                    officerListDiv.appendChild(div);
+                });
+            }
+
+            // Function to update the login button text based on stored officer info
+            const updateLoginButton = () => {
+                const loggedInOfficer = localStorage.getItem('loggedInOfficer');
+                if (loggedInOfficer) {
+                    const officer = JSON.parse(loggedInOfficer);
+                    loginButton.textContent = `Logged In: ${officer.name}`;
+                    loginButton.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+                    loginButton.classList.add('bg-green-600', 'hover:bg-green-700');
+                } else {
+                    loginButton.textContent = 'Login';
+                    loginButton.classList.remove('bg-green-600', 'hover:bg-green-700');
+                    loginButton.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                }
+            };
+
+            // --- Cookie Consent and Local Storage Logic ---
+
+            // Function to enable local storage features
+            const enableLocalStorageFeatures = () => {
+                console.log('Local storage features enabled.');
+                if (loginButtonContainer) {
+                    loginButtonContainer.classList.remove('hidden');
+                }
+                updateLoginButton(); // Update login button state immediately
+                // Add any other local storage dependent features here
+            };
+
+            // Function to disable local storage features
+            const disableLocalStorageFeatures = () => {
+                console.log('Local storage features disabled.');
+                if (loginButtonContainer) {
+                    loginButtonContainer.classList.add('hidden');
+                }
+                localStorage.removeItem('loggedInOfficer'); // Clear any stored login info
+                updateLoginButton(); // Reset login button state
+                // Hide or disable any other local storage dependent features here
+            };
+
+            // Function to check cookie consent status
+            const checkCookieConsent = () => {
+                const consent = localStorage.getItem('cookieConsent');
+                if (consent === 'accepted') {
+                    console.log('Cookie consent: Accepted. Enabling local storage features.');
+                    enableLocalStorageFeatures();
+                    cookieConsentBanner.classList.add('hidden'); // Hide banner if already accepted
+                } else if (consent === 'declined') {
+                    console.log('Cookie consent: Declined. Disabling local storage features.');
+                    disableLocalStorageFeatures();
+                    cookieConsentBanner.classList.add('hidden'); // Hide banner if declined
+                } else {
+                    console.log('Cookie consent: Not set. Showing banner.');
+                    // Show the cookie banner after a slight delay to ensure other elements are loaded
+                    setTimeout(() => {
+                        cookieConsentBanner.classList.remove('hidden');
+                        cookieConsentBanner.classList.add('show');
+                    }, 1000);
+                }
+            };
+
+            // Event listener for accepting cookies
+            if (acceptCookiesBtn) {
+                acceptCookiesBtn.addEventListener('click', () => {
+                    localStorage.setItem('cookieConsent', 'accepted');
+                    cookieConsentBanner.classList.remove('show');
+                    setTimeout(() => {
+                        cookieConsentBanner.classList.add('hidden');
+                    }, 300); // Allow transition to finish before hiding completely
+                    enableLocalStorageFeatures();
+                    console.log('Cookies accepted.');
+                });
+            }
+
+            // Event listener for declining cookies
+            if (declineCookiesBtn) {
+                declineCookiesBtn.addEventListener('click', () => {
+                    localStorage.setItem('cookieConsent', 'declined');
+                    cookieConsentBanner.classList.remove('show');
+                    setTimeout(() => {
+                        cookieConsentBanner.classList.add('hidden');
+                    }, 300); // Allow transition to finish before hiding completely
+                    disableLocalStorageFeatures();
+                    console.log('Cookies declined.');
+                });
+            }
+
+            // Initial check for cookie consent when the page loads
+            checkCookieConsent();
+
+            // Event listener for Login Button
+            if (loginButton) {
+                loginButton.addEventListener('click', async () => {
+                    officerSelectionModal.classList.remove('hidden');
+                    officerSearchInput.value = ''; // Clear search input
+                    officerListDiv.innerHTML = '<div class="loader mx-auto my-4"></div>'; // Show loader inside modal
+                    await fetchAndSetOfficerRosterData(); // Fetch and populate
+                });
+            }
+
+            // Officer Search Input Listener
+            officerSearchInput.addEventListener('input', (e) => {
+                populateOfficerList(officerRosterData, e.target.value);
+            });
+
+            // Close Officer Modal Button
+            if (closeOfficerModalBtn) {
+                closeOfficerModalBtn.addEventListener('click', () => {
+                    officerSelectionModal.classList.add('hidden');
+                });
+            }
+
+            // Logout Button
+            if (logoutButton) {
+                logoutButton.addEventListener('click', () => {
+                    localStorage.removeItem('loggedInOfficer');
+                    updateLoginButton(); // Reset button text
+                    officerSelectionModal.classList.add('hidden');
+                    console.log('Logged out. Officer data cleared from local storage.');
+                });
+            }
+
+            // Close officer modal when clicking outside of it
+            officerSelectionModal.addEventListener('click', (e) => {
+                if (e.target === officerSelectionModal) {
+                    officerSelectionModal.classList.add('hidden');
+                }
+            });
+
 
             // Function to fetch and display updates from CSV
             const loadUpdates = async () => {
@@ -390,9 +841,9 @@
                             const updateDiv = document.createElement('div');
                             updateDiv.className = 'bg-white p-4 rounded-md shadow-sm';
                             updateDiv.innerHTML = `
-                                    <p class="text-gray-800 font-semibold">${update.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}: ${update.title}</p>
-                                    <p class="text-gray-600 text-sm">${update.description}</p>
-                                `;
+                                        <p class="text-gray-800 font-semibold">${update.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}: ${update.title}</p>
+                                        <p class="text-gray-600 text-sm">${update.description}</p>
+                                    `;
                             updatesContent.appendChild(updateDiv);
                         });
                         updatesSection.classList.remove('hidden'); // Show the section

@@ -110,14 +110,6 @@
                 transform: rotate(360deg);
             }
         }
-        /* Custom styles for the warning notification */
-        #notification-popup {
-            transition: transform 0.5s ease-out; /* Keep the transition */
-        }
-
-            #notification-popup.show {
-                transform: translateX(0);
-            }
     </style>
 </head>
 <body class="antialiased">
@@ -152,16 +144,6 @@
             </ul>
         </nav>
     </header>
-    <!-- Notification Popup -->
-    <div id="notification-popup" class="fixed top-24 right-4 bg-red-600 text-white p-4 rounded-lg shadow-lg flex items-center space-x-3 transform transition-transform duration-500 ease-out translate-x-full z-40">
-        <a href="!.png" target="_blank">
-            <img src="!.png" alt="Warning Icon" class="w-8 h-8">
-        </a>
-        <p class="text-sm font-medium">Data is automatically saved locally. It will persist across sessions until you clear it manually or browser data is cleared.</p>
-        <button id="closeNotification" class="text-white hover:text-gray-200 focus:outline-none">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-        </button>
-    </div>
     <!-- Main Content Section -->
     <main class="w-full px-4 md:px-8 py-12 flex justify-center items-start">
         <!-- Police Report Generator Section -->
@@ -653,15 +635,14 @@
                     </button>
                 </div>
 
-                <!-- Clear Saved Data Button -->
-                <div class="mt-4">
+                <!-- Removed Clear Saved Data Button -->
+                <!-- <div class="mt-4">
                     <button type="button"
                             id="clearSavedDataBtn"
                             class="w-full bg-gray-500 hover:bg-gray-600 text-white font-bold py-3 px-4 rounded-lg shadow-md transition duration-300 ease-in-out hover:scale-105 focus:outline-none focus:ring-4 focus:ring-gray-400 focus:ring-opacity-50">
                         Clear Saved Data
                     </button>
-                </div>
-
+                </div> -->
                 <!-- Loading Indicator for AI Generation -->
                 <div id="loadingIndicator" class="hidden text-center text-blue-600 mt-4 font-semibold">
                     Generating report... Please wait.
@@ -781,7 +762,7 @@
         const downloadReportBtn = document.getElementById('downloadReportBtn'); // NEW Download Report Button
         const viewReportBtn = document.getElementById('viewReportBtn'); // NEW View Report Button
         const loadingIndicator = document.getElementById('loadingIndicator');
-        const clearSavedDataBtn = document.getElementById('clearSavedDataBtn'); // NEW Clear Saved Data Button
+        // Removed clearSavedDataBtn as it's no longer needed
 
         // Get references to report-specific field containers
         const arrestReportFields = document.getElementById('arrestReportFields');
@@ -1014,9 +995,9 @@
                 const div = document.createElement('div');
                 div.className = 'evidence-item flex items-center p-2 rounded-md hover:bg-blue-100 cursor-pointer';
                 div.innerHTML = `
-                                    <input type="checkbox" id="evidence-${item.name.replace(/\s/g, '-')}" value="${item.name}" class="form-checkbox h-5 w-5 text-blue-600 rounded-md">
-                                    <label for="evidence-${item.name.replace(/\s/g, '-')}" class="ml-2 text-gray-800 text-sm font-medium flex-grow">${item.name}</label>
-                                `;
+                                        <input type="checkbox" id="evidence-${item.name.replace(/\s/g, '-')}" value="${item.name}" class="form-checkbox h-5 w-5 text-blue-600 rounded-md">
+                                        <label for="evidence-${item.name.replace(/\s/g, '-')}" class="ml-2 text-gray-800 text-sm font-medium flex-grow">${item.name}</label>
+                                    `;
                 div.setAttribute('data-description', item.description);
                 div.setAttribute('data-type', item.type);
                 if (item.linkProviders) {
@@ -1345,57 +1326,19 @@
             }
         }
 
-        // Function to clear all form data and local storage
-        function clearAllFormData() {
-            localStorage.removeItem('reportGeneratorData');
-
-            // Clear all input fields
-            document.querySelectorAll('input[type="text"], input[type="date"], input[type="time"], input[type="url"], textarea').forEach(input => {
-                input.value = '';
-            });
-            document.querySelectorAll('select').forEach(select => {
-                select.value = select.options[0].value; // Reset to first option
-            });
-
-            // Clear officer info and evidence display
-            officerInfoInput.value = '';
-            evidenceCollectedInput.value = '';
-            evidenceCollectedInput.title = '';
-
-            // Clear selected evidence details object
-            selectedEvidenceDetails = {};
-
-            // Hide all statement containers
-            victimStatementsContainer.classList.add('hidden');
-            witnessStatementsContainer.classList.add('hidden');
-            suspectStatementsContainer.classList.add('hidden');
-
-            // Reset report type to default and toggle fields
-            reportTypeSelect.value = 'Arrest Report';
-            toggleReportFields(); // This will also hide other report fields
-
-            generatedReportTextarea.value = ''; // Clear generated report
-            copyReportBtn.classList.add('hidden');
-            downloadReportBtn.classList.add('hidden');
-            viewReportBtn.classList.add('hidden');
-
-            // Using a custom modal for alert
-            showCustomAlert('All saved data has been cleared!');
-        }
-
         // Function to show a custom alert modal
         function showCustomAlert(message) {
             const modalOverlay = document.createElement('div');
             modalOverlay.className = 'modal-overlay'; // Re-use modal-overlay styles
             modalOverlay.id = 'customAlertModal';
             modalOverlay.innerHTML = `
-                    <div class="modal-content text-center">
-                        <p class="text-lg font-semibold mb-6">${message}</p>
-                        <button id="closeCustomAlertBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">
-                            OK
-                        </button>
-                    </div>
-                `;
+                        <div class="modal-content text-center">
+                            <p class="text-lg font-semibold mb-6">${message}</p>
+                            <button id="closeCustomAlertBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">
+                                OK
+                            </button>
+                        </div>
+                    `;
             document.body.appendChild(modalOverlay);
 
             document.getElementById('closeCustomAlertBtn').addEventListener('click', () => {
@@ -1418,7 +1361,19 @@
         document.addEventListener('DOMContentLoaded', () => {
             populateEvidenceList(); // Populate evidence options first
             loadFormData(); // Then load saved data
-            // Initial fetch of roster data is now triggered by clicking the officerInfoInput
+
+            // Check for loggedInOfficer in local storage and pre-fill officerInfoInput
+            const loggedInOfficer = localStorage.getItem('loggedInOfficer');
+            if (loggedInOfficer) {
+                try {
+                    const officer = JSON.parse(loggedInOfficer);
+                    officerInfoInput.value = `${officer.name} (${officer.badge})`;
+                    saveFormData(); // Save this pre-filled data to reportGeneratorData
+                } catch (e) {
+                    console.error('Error parsing loggedInOfficer from localStorage:', e);
+                    localStorage.removeItem('loggedInOfficer'); // Clear corrupted data
+                }
+            }
         });
 
         // Add event listeners to all form fields for saving data
@@ -1556,8 +1511,8 @@
             saveFormData();
         });
 
-        // Event listener for Clear Saved Data button
-        clearSavedDataBtn.addEventListener('click', clearAllFormData);
+        // Removed Event listener for Clear Saved Data button
+        // clearSavedDataBtn.addEventListener('click', clearAllFormData);
 
 
         // IMPORTANT: Gemini API Key Configuration
@@ -1704,18 +1659,6 @@ City/State: Los Santos, San Andreas (SA)
 Generate a detailed, professional, and concise Traffic Citation report. The report must strictly adhere to the information provided in the "Officer Narrative" and other text fields. Do not include any information that is not directly deducible from the provided inputs. The output must strictly follow the format provided below, with no additional text, introductory phrases, or markdown formatting (like bold, italics, headers, or bullet points). Ensure all fields are populated appropriately based on the input. If a field is not directly deducible from the input, provide a reasonable placeholder or "N/A". The report should be written as if you were the officer writing it. Make sure to include the officer's name, rank if included, and badge number.
 The output format must be exact.
 
-Driver's Full Name: ${driverName}
-Driver's License: ${driverLicense}
-Vehicle Make/Model: ${vehicleMakeModel}
-Vehicle Plate Number: ${vehiclePlate}
-Violation: ${violation}
-Location of Violation: ${citationLocation}
-Officer Narrative: ${reportNarrative}
-Evidence Collected:
-${evidenceForPrompt}
-
----
-Strict Output Format:
 TRAFFIC CITATION REPORT
 
 Issuing Officer: ${officerInfo}
@@ -2164,7 +2107,8 @@ Status: Report Filed.
             window.open(pdfUrl, '_blank');
         });
 
-        // Notification Popup Logic
+        // Removed Notification Popup Logic
+        /*
         document.addEventListener('DOMContentLoaded', () => {
             const notificationPopup = document.getElementById('notification-popup');
             const closeNotificationBtn = document.getElementById('closeNotification');
@@ -2181,6 +2125,7 @@ Status: Report Filed.
                 notificationPopup.classList.remove('show');
             });
         });
+        */
     </script>
 </body>
 </html>
