@@ -42,6 +42,166 @@
                 opacity: 1; /* Fade in to full visibility */
             }
 
+            /* Light Mode */
+            body.light-mode {
+                background-color: #f8f8f8;
+                color: #333;
+            }
+
+                body.light-mode .bg-blue-900 {
+                    background-color: #1e3a8a; /* Darker blue for header */
+                }
+
+                body.light-mode .text-white {
+                    color: #ffffff;
+                }
+
+                body.light-mode .bg-gradient-to-r {
+                    background-image: linear-gradient(to right, #1e3a8a, #102a43); /* Darker blue gradient */
+                }
+
+                body.light-mode .bg-blue-50 {
+                    background-color: #e0f2fe; /* Light blue */
+                }
+
+                body.light-mode .bg-gray-100 {
+                    background-color: #f3f4f6;
+                }
+
+                body.light-mode .bg-white {
+                    background-color: #ffffff;
+                }
+
+                body.light-mode .text-blue-700 {
+                    color: #1d4ed8;
+                }
+
+                body.light-mode .text-blue-800 {
+                    color: #1e40af;
+                }
+
+                body.light-mode .text-gray-800 {
+                    color: #1f2937;
+                }
+
+                body.light-mode .text-gray-600 {
+                    color: #4b5563;
+                }
+
+                body.light-mode .text-gray-700 {
+                    color: #374151;
+                }
+
+                body.light-mode .text-blue-500 {
+                    color: #3b82f6;
+                }
+
+                body.light-mode .bg-gray-800 {
+                    background-color: #1f2937;
+                }
+
+                body.light-mode .text-blue-300 {
+                    color: #93c5fd;
+                }
+
+                body.light-mode .text-gray-400 {
+                    color: #9ca3af;
+                }
+
+                body.light-mode .text-gray-500 {
+                    color: #6b7280;
+                }
+
+
+            /* Dark Mode */
+            body.dark-mode {
+                background-color: #1a202c; /* bg-gray-900 */
+                color: #e2e8f0; /* text-gray-200 */
+            }
+
+                body.dark-mode .bg-blue-900 {
+                    background-color: #2d3748; /* Darker header */
+                }
+
+                body.dark-mode .text-white {
+                    color: #e2e8f0;
+                }
+
+                body.dark-mode .bg-gradient-to-r {
+                    background-image: linear-gradient(to right, #2d3748, #1a202c);
+                }
+
+                body.dark-mode .bg-blue-50 {
+                    background-color: #2f3e58; /* Darker light blue */
+                }
+
+                body.dark-mode .bg-gray-100 {
+                    background-color: #2d3748;
+                }
+
+                body.dark-mode .bg-white {
+                    background-color: #2d3748;
+                }
+
+                body.dark-mode .text-blue-700 {
+                    color: #90cdf4;
+                }
+
+                body.dark-mode .text-blue-800 {
+                    color: #a7d9ff;
+                }
+
+                body.dark-mode .text-gray-800 {
+                    color: #e2e8f0;
+                }
+
+                body.dark-mode .text-gray-600 {
+                    color: #a0aec0;
+                }
+
+                body.dark-mode .text-gray-700 {
+                    color: #cbd5e0;
+                }
+
+                body.dark-mode .text-blue-500 {
+                    color: #63b3ed;
+                }
+
+                body.dark-mode .bg-gray-800 {
+                    background-color: #1a202c;
+                }
+
+                body.dark-mode .text-blue-300 {
+                    color: #90cdf4;
+                }
+
+                body.dark-mode .text-gray-400 {
+                    color: #a0aec0;
+                }
+
+                body.dark-mode .text-gray-500 {
+                    color: #cbd5e0;
+                }
+
+                body.dark-mode .shadow-lg,
+                body.dark-mode .shadow-xl,
+                body.dark-mode .shadow-inner {
+                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2);
+                }
+
+                body.dark-mode .modal-content {
+                    background-color: #2d3748;
+                }
+
+                body.dark-mode .modal-overlay {
+                    background-color: rgba(0, 0, 0, 0.8);
+                }
+
+                body.dark-mode .border {
+                    border-color: #4a5568;
+                }
+
+
         /* Custom scrollbar for better aesthetics */
         ::-webkit-scrollbar {
             width: 10px;
@@ -52,6 +212,11 @@
             border-radius: 5px;
         }
 
+        body.dark-mode ::-webkit-scrollbar-track {
+            background: #2d3748;
+        }
+
+
         ::-webkit-scrollbar-thumb {
             background: #888;
             border-radius: 5px;
@@ -60,6 +225,16 @@
             ::-webkit-scrollbar-thumb:hover {
                 background: #555;
             }
+
+        body.dark-mode ::-webkit-scrollbar-thumb {
+            background: #a0aec0;
+        }
+
+            body.dark-mode ::-webkit-scrollbar-thumb:hover {
+                background: #cbd5e0;
+            }
+
+
         /* Styles for the banner */
         .banner-container {
             position: fixed;
@@ -269,6 +444,112 @@
                 transform: rotate(360deg);
             }
         }
+
+        /* Settings icon styles */
+        #settingsIcon {
+            width: 28px; /* Slightly larger icon */
+            height: 28px;
+            cursor: pointer;
+            margin-left: 1.5rem; /* Space from navigation links */
+            transition: transform 0.2s ease-in-out;
+            filter: brightness(0) invert(1); /* Makes the icon white */
+        }
+
+            #settingsIcon:hover {
+                transform: rotate(15deg);
+            }
+
+        body.dark-mode #settingsIcon {
+            filter: none; /* Keep original color or adjust if necessary for dark mode */
+        }
+
+        /* Settings modal specific styles */
+        #settingsModal .modal-content {
+            width: 350px; /* Adjust width for settings modal */
+        }
+
+        #settingsModal .radio-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+            #settingsModal .radio-option input[type="radio"] {
+                margin-right: 0.5rem;
+            }
+
+            #settingsModal .radio-option label {
+                font-size: 1rem;
+                color: #333;
+            }
+
+        body.dark-mode #settingsModal .radio-option label {
+            color: #e2e8f0;
+        }
+
+        #settingsModal button {
+            margin-top: 1rem;
+            width: 100%;
+        }
+
+        /* Data Viewer Modal Styles */
+        #dataViewerModal .modal-content {
+            width: 600px;
+            max-width: 95%;
+        }
+
+        #dataViewerContent {
+            /* Removed pre-wrap and monospace for formatted list */
+            background-color: #f4f4f4;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+        }
+
+        body.dark-mode #dataViewerContent {
+            background-color: #1f2937;
+            border-color: #4a5568;
+            color: #e2e8f0;
+        }
+
+        /* Styles for data viewer items, similar to updates */
+        .data-viewer-item {
+            background-color: #ffffff;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 0.75rem;
+        }
+
+        body.dark-mode .data-viewer-item {
+            background-color: #2d3748;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .data-viewer-item p {
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .data-viewer-item .title {
+            font-weight: 600; /* font-semibold */
+            color: #1f2937; /* text-gray-800 */
+        }
+
+        body.dark-mode .data-viewer-item .title {
+            color: #e2e8f0;
+        }
+
+        .data-viewer-item .description {
+            font-size: 0.875rem; /* text-sm */
+            color: #4b5563; /* text-gray-600 */
+        }
+
+        body.dark-mode .data-viewer-item .description {
+            color: #a0aec0;
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -319,6 +600,9 @@
                 <li><a href="info.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Common Information</a></li>
             </ul>
         </nav>
+
+        <!-- Settings Icon -->
+        <img src="settings.png" alt="Settings" id="settingsIcon" class="ml-4 cursor-pointer">
 
         <!-- Login Button Container - Initially hidden -->
         <div id="loginButtonContainer" class="absolute top-full left-0 mt-4 ml-4 hidden">
@@ -436,10 +720,6 @@
                 <p class="text-gray-500 text-sm mb-2">For LSPD Personnel Use Only</p>
                 <p class="text-500 text-sm mb-2">Created and Maintained by FiveM "NightLife RP"</p>
                 <p class="text-gray-500 text-sm">&copy; 2025 Los Santos Police Department Internal Systems.</p>
-                <!-- New Delete All Data Button -->
-                <button id="deleteAllDataBtn" class="mt-4 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out text-sm">
-                    Delete All Local Data
-                </button>
             </div>
         </div>
         <!-- Font Awesome for any potential internal icons (though less needed here) -->
@@ -480,7 +760,58 @@
         </div>
     </div>
 
-    <!-- Delete All Data Confirmation Modal -->
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Settings</h3>
+
+            <div class="mb-6">
+                <h4 class="text-lg font-semibold text-gray-700 mb-2">Website Theme</h4>
+                <div class="radio-option">
+                    <input type="radio" id="lightMode" name="theme" value="light" class="text-blue-600">
+                    <label for="lightMode">Light Mode</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="darkMode" name="theme" value="dark" class="text-blue-600">
+                    <label for="darkMode">Dark Mode</label>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <h4 class="text-lg font-semibold text-gray-700 mb-2">Data Management</h4>
+                <button id="clearAllDataBtn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md w-full mb-2">
+                    Clear All Local Data
+                </button>
+                <button id="viewDataBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md w-full">
+                    View Stored Data
+                </button>
+            </div>
+
+            <div class="flex justify-end mt-4">
+                <button id="closeSettingsModalBtn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Viewer Modal -->
+    <div id="dataViewerModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Local Storage Data</h3>
+            <div id="dataViewerContent" class="space-y-4">
+                <!-- Data will be loaded here dynamically -->
+            </div>
+            <div class="flex justify-end mt-4">
+                <button id="closeDataViewerModalBtn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Delete All Data Confirmation Modal (Now used by Clear All Local Data in Settings) -->
     <div id="confirmDeleteModal" class="modal-overlay hidden">
         <div class="modal-content text-center">
             <h3 class="text-xl font-bold text-gray-800 mb-4">Confirm Data Deletion</h3>
@@ -522,8 +853,22 @@
             const closeOfficerModalBtn = document.getElementById('closeOfficerModalBtn');
             const logoutButton = document.getElementById('logoutButton'); // New logout button
 
-            // Delete All Data Elements
-            const deleteAllDataBtn = document.getElementById('deleteAllDataBtn');
+            // Settings Modal Elements
+            const settingsIcon = document.getElementById('settingsIcon');
+            const settingsModal = document.getElementById('settingsModal');
+            const closeSettingsModalBtn = document.getElementById('closeSettingsModalBtn');
+            const lightModeRadio = document.getElementById('lightMode');
+            const darkModeRadio = document.getElementById('darkMode');
+            const clearAllDataBtn = document.getElementById('clearAllDataBtn');
+            const viewDataBtn = document.getElementById('viewDataBtn');
+
+            // Data Viewer Modal Elements
+            const dataViewerModal = document.getElementById('dataViewerModal');
+            const dataViewerContent = document.getElementById('dataViewerContent');
+            const closeDataViewerModalBtn = document.getElementById('closeDataViewerModalBtn');
+
+
+            // Delete All Data Confirmation Modal Elements
             const confirmDeleteModal = document.getElementById('confirmDeleteModal');
             const confirmDeleteYesBtn = document.getElementById('confirmDeleteYesBtn');
             const confirmDeleteNoBtn = document.getElementById('confirmDeleteNoBtn');
@@ -801,9 +1146,54 @@
                 }
             });
 
-            // --- Delete All Data Logic ---
-            deleteAllDataBtn.addEventListener('click', () => {
-                confirmDeleteModal.classList.remove('hidden');
+
+            // --- Theme Switching Logic ---
+            const applyTheme = (theme) => {
+                if (theme === 'dark') {
+                    document.body.classList.add('dark-mode');
+                    document.body.classList.remove('light-mode');
+                    darkModeRadio.checked = true;
+                } else {
+                    document.body.classList.remove('dark-mode');
+                    document.body.classList.add('light-mode');
+                    lightModeRadio.checked = true;
+                }
+                localStorage.setItem('theme', theme);
+            };
+
+            // Initialize theme based on local storage or default to light
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            applyTheme(savedTheme);
+
+            lightModeRadio.addEventListener('change', () => applyTheme('light'));
+            darkModeRadio.addEventListener('change', () => applyTheme('dark'));
+
+            // --- Settings Modal Logic ---
+            settingsIcon.addEventListener('click', () => {
+                settingsModal.classList.remove('hidden');
+                // Ensure correct radio button is checked when opening modal
+                const currentTheme = localStorage.getItem('theme') || 'light';
+                if (currentTheme === 'dark') {
+                    darkModeRadio.checked = true;
+                } else {
+                    lightModeRadio.checked = true;
+                }
+            });
+
+            closeSettingsModalBtn.addEventListener('click', () => {
+                settingsModal.classList.add('hidden');
+            });
+
+            settingsModal.addEventListener('click', (e) => {
+                if (e.target === settingsModal) {
+                    settingsModal.classList.add('hidden');
+                }
+            });
+
+            // --- Clear All Data Logic (now inside settings modal) ---
+            clearAllDataBtn.addEventListener('click', () => {
+                settingsModal.classList.add('hidden'); // Hide settings modal first
+                confirmDeleteModal.classList.remove('hidden'); // Show confirmation modal
             });
 
             confirmDeleteYesBtn.addEventListener('click', () => {
@@ -815,21 +1205,124 @@
 
             confirmDeleteNoBtn.addEventListener('click', () => {
                 confirmDeleteModal.classList.add('hidden');
+                settingsModal.classList.remove('hidden'); // Show settings modal again
             });
 
             // Close delete confirmation modal if clicking outside
             confirmDeleteModal.addEventListener('click', (e) => {
                 if (e.target === confirmDeleteModal) {
                     confirmDeleteModal.classList.add('hidden');
+                    settingsModal.classList.remove('hidden'); // Show settings modal again
                 }
             });
+
+
+            // --- Data Viewer Logic ---
+            viewDataBtn.addEventListener('click', () => {
+                settingsModal.classList.add('hidden'); // Hide settings modal
+                dataViewerModal.classList.remove('hidden');
+                displayLocalStorageData();
+            });
+
+            closeDataViewerModalBtn.addEventListener('click', () => {
+                dataViewerModal.classList.add('hidden');
+                settingsModal.classList.remove('hidden'); // Show settings modal again
+            });
+
+            dataViewerModal.addEventListener('click', (e) => {
+                if (e.target === dataViewerModal) {
+                    dataViewerModal.classList.add('hidden');
+                    settingsModal.classList.remove('hidden'); // Show settings modal again
+                }
+            });
+
+            function displayLocalStorageData() {
+                dataViewerContent.innerHTML = ''; // Clear existing content
+
+                let hasData = false;
+
+                // Display Logged In Officer
+                const loggedInOfficer = localStorage.getItem('loggedInOfficer');
+                if (loggedInOfficer) {
+                    try {
+                        const officer = JSON.parse(loggedInOfficer);
+                        const officerDiv = document.createElement('div');
+                        officerDiv.className = 'data-viewer-item';
+                        officerDiv.innerHTML = `
+                                <p class="title">Officer Logged In</p>
+                                <p class="description">${officer.name} (Badge: ${officer.badge})</p>
+                            `;
+                        dataViewerContent.appendChild(officerDiv);
+                        hasData = true;
+                    } catch (e) {
+                        console.error("Error parsing loggedInOfficer from local storage:", e);
+                    }
+                }
+
+                // Display Website Theme
+                const currentTheme = localStorage.getItem('theme');
+                if (currentTheme) {
+                    const themeDiv = document.createElement('div');
+                    themeDiv.className = 'data-viewer-item';
+                    themeDiv.innerHTML = `
+                            <p class="title">Website Theme</p>
+                            <p class="description">${currentTheme.charAt(0).toUpperCase() + currentTheme.slice(1)} Mode</p>
+                        `;
+                    dataViewerContent.appendChild(themeDiv);
+                    hasData = true;
+                }
+
+                // Display Other Stored Data
+                let otherDataCount = 0;
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    // Skip keys already displayed
+                    if (key === 'loggedInOfficer' || key === 'theme' || key === 'cookieConsent') {
+                        continue;
+                    }
+
+                    let value;
+                    try {
+                        // Try to parse as JSON, otherwise keep as string
+                        value = JSON.parse(localStorage.getItem(key));
+                        // If it's an object/array, stringify it nicely
+                        if (typeof value === 'object' && value !== null) {
+                            value = JSON.stringify(value, null, 2);
+                        }
+                    } catch (e) {
+                        value = localStorage.getItem(key);
+                    }
+
+                    if (otherDataCount === 0) {
+                        const otherDataHeader = document.createElement('div');
+                        otherDataHeader.className = 'data-viewer-item mt-4';
+                        otherDataHeader.innerHTML = `<p class="title">Other Stored Data</p>`;
+                        dataViewerContent.appendChild(otherDataHeader);
+                    }
+
+                    const dataDiv = document.createElement('div');
+                    dataDiv.className = 'data-viewer-item';
+                    dataDiv.innerHTML = `
+                            <p class="title">${key}</p>
+                            <p class="description">${value}</p>
+                        `;
+                    dataViewerContent.appendChild(dataDiv);
+                    hasData = true;
+                    otherDataCount++;
+                }
+
+                if (!hasData) {
+                    dataViewerContent.innerHTML = '<p class="text-gray-500 text-center py-4">No user-specific data currently stored in local storage.</p>';
+                }
+            }
 
 
             // Function to fetch and display updates from CSV
             const loadUpdates = async () => {
                 const updatesSection = document.getElementById('updatesSection');
                 const updatesContent = document.getElementById('updatesContent');
-                const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQxN1ZQBPqwqLxvr_T1tQ2TVwHuy0d2jainTySsbsSxMBl6ukf5R3Di6SGO3sHA3CD-1uSBgp_qPtJA/pub?output=csv';
+                // Corrected CSV URL: changed 'MBl3ukf5R3Di6SGO3sHA3CD-1uSBgp_qPtJA' to 'MBl2ukf5R3Di6SGO3sHA3CD-1uSBgp_qPtJA'
+                const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQxN1ZQBPqwqLxvr_T1tQ2TVwHuy0d2jainTySsbsSxMBl2ukf5R3Di6SGO3sHA3CD-1uSBgp_qPtJA/pub?output=csv';
                 const fourteenDaysAgo = new Date();
                 fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
 
@@ -896,9 +1389,9 @@
                             const updateDiv = document.createElement('div');
                             updateDiv.className = 'bg-white p-4 rounded-md shadow-sm';
                             updateDiv.innerHTML = `
-                                        <p class="text-gray-800 font-semibold">${update.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}: ${update.title}</p>
-                                        <p class="text-gray-600 text-sm">${update.description}</p>
-                                    `;
+                                            <p class="text-gray-800 font-semibold">${update.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}: ${update.title}</p>
+                                            <p class="text-gray-600 text-sm">${update.description}</p>
+                                        `;
                             updatesContent.appendChild(updateDiv);
                         });
                         updatesSection.classList.remove('hidden'); // Show the section
