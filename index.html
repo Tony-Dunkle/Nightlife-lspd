@@ -112,6 +112,22 @@
                     color: #6b7280;
                 }
 
+                /* Light mode input specific styles */
+                body.light-mode input[type="text"],
+                body.light-mode input[type="date"],
+                body.light-mode input[type="time"],
+                body.light-mode input[type="url"],
+                body.light-mode select,
+                body.light-mode textarea {
+                    color: #1f2937; /* Dark gray text */
+                    background-color: #ffffff; /* White background */
+                }
+
+                    body.light-mode input::placeholder,
+                    body.light-mode textarea::placeholder {
+                        color: #9ca3af; /* text-gray-400 */
+                    }
+
 
             /* Dark Mode */
             body.dark-mode {
@@ -200,6 +216,29 @@
                 body.dark-mode .border {
                     border-color: #4a5568;
                 }
+
+                /* Dark mode specific footer styling for distinct separation */
+                body.dark-mode footer {
+                    border-top: 2px solid #4a5568; /* A subtle border for separation */
+                    box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.5); /* Stronger shadow at the top */
+                }
+
+                /* Force input text color and background for dark mode */
+                body.dark-mode input[type="text"],
+                body.dark-mode input[type="date"],
+                body.dark-mode input[type="time"],
+                body.dark-mode input[type="url"],
+                body.dark-mode select,
+                body.dark-mode textarea {
+                    color: #e2e8f0; /* Light gray text */
+                    background-color: #4a5568; /* Darker gray background */
+                    border-color: #6b7280; /* Slightly lighter border for visibility */
+                }
+                    /* Adjust placeholder color for dark mode inputs */
+                    body.dark-mode input::placeholder,
+                    body.dark-mode textarea::placeholder {
+                        color: #a0aec0; /* Lighter gray for placeholder */
+                    }
 
 
         /* Custom scrollbar for better aesthetics */
@@ -1249,9 +1288,9 @@
                         const officerDiv = document.createElement('div');
                         officerDiv.className = 'data-viewer-item';
                         officerDiv.innerHTML = `
-                                <p class="title">Officer Logged In</p>
-                                <p class="description">${officer.name} (Badge: ${officer.badge})</p>
-                            `;
+                                    <p class="title">Officer Logged In</p>
+                                    <p class="description">${officer.name} (Badge: ${officer.badge})</p>
+                                `;
                         dataViewerContent.appendChild(officerDiv);
                         hasData = true;
                     } catch (e) {
@@ -1265,9 +1304,9 @@
                     const themeDiv = document.createElement('div');
                     themeDiv.className = 'data-viewer-item';
                     themeDiv.innerHTML = `
-                            <p class="title">Website Theme</p>
-                            <p class="description">${currentTheme.charAt(0).toUpperCase() + currentTheme.slice(1)} Mode</p>
-                        `;
+                                <p class="title">Website Theme</p>
+                                <p class="description">${currentTheme.charAt(0).toUpperCase() + currentTheme.slice(1)} Mode</p>
+                            `;
                     dataViewerContent.appendChild(themeDiv);
                     hasData = true;
                 }
@@ -1303,9 +1342,9 @@
                     const dataDiv = document.createElement('div');
                     dataDiv.className = 'data-viewer-item';
                     dataDiv.innerHTML = `
-                            <p class="title">${key}</p>
-                            <p class="description">${value}</p>
-                        `;
+                                <p class="title">${key}</p>
+                                <p class="description">${value}</p>
+                            `;
                     dataViewerContent.appendChild(dataDiv);
                     hasData = true;
                     otherDataCount++;
@@ -1389,9 +1428,9 @@
                             const updateDiv = document.createElement('div');
                             updateDiv.className = 'bg-white p-4 rounded-md shadow-sm';
                             updateDiv.innerHTML = `
-                                            <p class="text-gray-800 font-semibold">${update.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}: ${update.title}</p>
-                                            <p class="text-gray-600 text-sm">${update.description}</p>
-                                        `;
+                                                <p class="text-gray-800 font-semibold">${update.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}: ${update.title}</p>
+                                                <p class="text-gray-600 text-sm">${update.description}</p>
+                                            `;
                             updatesContent.appendChild(updateDiv);
                         });
                         updatesSection.classList.remove('hidden'); // Show the section

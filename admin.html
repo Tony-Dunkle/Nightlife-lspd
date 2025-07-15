@@ -11,6 +11,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- jsPDF CDN for generating PDF documents -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- jsPDF-AutoTable CDN for generating tables in PDF documents -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.14/jspdf.plugin.autotable.min.js"></script>
     <style>
         /* Custom font for a clean, modern look */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -181,6 +183,22 @@
                 color: #6b7280;
             }
 
+            /* Light mode input specific styles */
+            body.light-mode input[type="text"],
+            body.light-mode input[type="date"],
+            body.light-mode input[type="time"],
+            body.light-mode input[type="url"],
+            body.light-mode select,
+            body.light-mode textarea {
+                color: #1f2937; /* Dark gray text */
+                background-color: #ffffff; /* White background */
+            }
+
+                body.light-mode input::placeholder,
+                body.light-mode textarea::placeholder {
+                    color: #9ca3af; /* text-gray-400 */
+                }
+
 
         /* Dark Mode */
         body.dark-mode {
@@ -237,7 +255,7 @@
             }
 
             body.dark-mode .bg-gray-800 {
-                background-color: #1a202c;
+                background-color: #1f2937;
             }
 
             body.dark-mode .text-blue-300 {
@@ -269,6 +287,30 @@
             body.dark-mode .border {
                 border-color: #4a5568;
             }
+
+            /* Dark mode specific footer styling for distinct separation */
+            body.dark-mode footer {
+                border-top: 2px solid #4a5568; /* A subtle border for separation */
+                box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.5); /* Stronger shadow at the top */
+            }
+
+            /* Force input text color and background for dark mode */
+            body.dark-mode input[type="text"],
+            body.dark-mode input[type="date"],
+            body.dark-mode input[type="time"],
+            body.dark-mode input[type="url"],
+            body.dark-mode select,
+            body.dark-mode textarea {
+                color: #e2e8f0; /* Light gray text */
+                background-color: #4a5568; /* Darker gray background */
+                border-color: #6b7280; /* Slightly lighter border for visibility */
+            }
+                /* Adjust placeholder color for dark mode inputs */
+                body.dark-mode input::placeholder,
+                body.dark-mode textarea::placeholder {
+                    color: #a0aec0; /* Lighter gray for placeholder */
+                }
+
 
         /* Settings icon styles */
         #settingsIcon {
@@ -426,7 +468,7 @@
                     </label>
                     <select id="department"
                             name="department"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm text-gray-800">
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm">
                         <option value="LSPD">Los Santos Police Department</option>
                         <option value="LSCSO">Los Santos County Sheriff's Office</option>
                         <option value="HR">Human Resources</option>
@@ -442,7 +484,7 @@
                     </label>
                     <select id="reportType"
                             name="reportType"
-                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm text-gray-800">
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm">
                         <option value="Application">Application Report</option>
                         <option value="Interview">Interview Report</option>
                         <option value="Disciplinary">Disciplinary Report</option>
@@ -460,7 +502,7 @@
                            name="officerInfo"
                            placeholder="Click to select your information..."
                            readonly
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400 text-gray-800 cursor-pointer">
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400 cursor-pointer">
                 </div>
 
                 <!-- Application Report Fields -->
@@ -469,25 +511,25 @@
                         <label for="applicantName" class="block text-gray-700 text-sm font-semibold mb-2">
                             Applicant's Full Name
                         </label>
-                        <input type="text" id="applicantName" name="applicantName" placeholder="Enter applicant's full name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400 text-gray-800">
+                        <input type="text" id="applicantName" name="applicantName" placeholder="Enter applicant's full name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400">
                     </div>
                     <div class="mb-6">
                         <label for="positionApplied" class="block text-gray-700 text-sm font-semibold mb-2">
                             Position Applied For
                         </label>
-                        <input type="text" id="positionApplied" name="positionApplied" placeholder="e.g., Police Officer, Dispatcher" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400 text-gray-800">
+                        <input type="text" id="positionApplied" name="positionApplied" placeholder="e.g., Police Officer, Dispatcher" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400">
                     </div>
                     <div class="mb-6">
                         <label for="applicationDate" class="block text-gray-700 text-sm font-semibold mb-2">
                             Application Date
                         </label>
-                        <input type="date" id="applicationDate" name="applicationDate" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm text-gray-800">
+                        <input type="date" id="applicationDate" name="applicationDate" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm">
                     </div>
                     <div class="mb-6">
                         <label for="applicationStatus" class="block text-gray-700 text-sm font-semibold mb-2">
                             Application Status
                         </label>
-                        <select id="applicationStatus" name="applicationStatus" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm text-gray-800">
+                        <select id="applicationStatus" name="applicationStatus" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm">
                             <option value="">Select Status</option>
                             <option value="Under Review">Under Review</option>
                             <option value="Interview Scheduled">Interview Scheduled</option>
@@ -501,7 +543,7 @@
                         <label for="applicationNotes" class="block text-gray-700 text-sm font-semibold mb-2">
                             Notes on Application
                         </label>
-                        <textarea id="applicationNotes" name="applicationNotes" rows="5" placeholder="Enter any notes or observations about the application..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400 text-gray-800"></textarea>
+                        <textarea id="applicationNotes" name="applicationNotes" rows="5" placeholder="Enter any notes or observations about the application..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400"></textarea>
                     </div>
                 </div>
 
@@ -511,92 +553,92 @@
                         <label for="intervieweeName" class="block text-gray-700 text-sm font-semibold mb-2">
                             Interviewee's Full Name
                         </label>
-                        <input type="text" id="intervieweeName" name="intervieweeName" placeholder="Enter interviewee's full name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400 text-gray-800">
+                        <input type="text" id="intervieweeName" name="intervieweeName" placeholder="Enter interviewee's full name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400">
                     </div>
                     <div class="mb-6">
                         <label for="interviewDate" class="block text-gray-700 text-sm font-semibold mb-2">
                             Interview Date
                         </label>
-                        <input type="date" id="interviewDate" name="interviewDate" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm text-gray-800">
+                        <input type="date" id="interviewDate" name="interviewDate" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm">
                     </div>
                     <div class="mb-6">
                         <label for="interviewTime" class="block text-gray-700 text-sm font-semibold mb-2">
                             Interview Time
                         </label>
-                        <input type="time" id="interviewTime" name="interviewTime" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm text-gray-800">
+                        <input type="time" id="interviewTime" name="interviewTime" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm">
                     </div>
                     <div class="mb-6">
                         <label for="interviewerNames" class="block text-gray-700 text-sm font-semibold mb-2">
                             Interviewer(s) Name(s)
                         </label>
-                        <input type="text" id="interviewerNames" name="interviewerNames" placeholder="Enter interviewer(s) full name(s)" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400 text-gray-800">
+                        <input type="text" id="interviewerNames" name="interviewerNames" placeholder="Enter interviewer(s) full name(s)" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400">
                     </div>
                     <!-- New Interview Questions Fields -->
                     <div class="mb-6">
                         <label for="q1Experience" class="block text-gray-700 text-sm font-semibold mb-2">
                             "Tell me about your prior experience—whether in law enforcement, the military, or security. What tools, skills, or principles from that experience do you believe will serve you best in this department?"
                         </label>
-                        <textarea id="q1Experience" name="q1Experience" rows="3" placeholder="Enter applicant's response here..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400 text-gray-800"></textarea>
+                        <textarea id="q1Experience" name="q1Experience" rows="3" placeholder="Enter applicant's response here..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400"></textarea>
                     </div>
                     <div class="mb-6">
                         <label for="q2Professionalism" class="block text-gray-700 text-sm font-semibold mb-2">
                             "Professionalism isn't just about looking sharp in uniform—it's about how you carry yourself when no one's watching. In your own words, what does being professional mean to you, and how will you uphold that on and off duty?"
                         </label>
-                        <textarea id="q2Professionalism" name="q2Professionalism" rows="3" placeholder="Enter applicant's response here..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400 text-gray-800"></textarea>
+                        <textarea id="q2Professionalism" name="q2Professionalism" rows="3" placeholder="Enter applicant's response here..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400"></textarea>
                     </div>
                     <div class="mb-6">
                         <label for="q3PersonalStrengths" class="block text-gray-700 text-sm font-semibold mb-2">
                             "Let's set aside the badge for a moment—tell me who you are as a person. What drives you? What strengths you bring to a team, and what's something you're working to improve?"
                         </label>
-                        <textarea id="q3PersonalStrengths" name="q3PersonalStrengths" rows="3" placeholder="Enter applicant's response here..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400 text-gray-800"></textarea>
+                        <textarea id="q3PersonalStrengths" name="q3PersonalStrengths" rows="3" placeholder="Enter applicant's response here..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400"></textarea>
                     </div>
                     <div class="mb-6">
                         <label for="q4ReportCommitment" class="block text-gray-700 text-sm font-semibold mb-2">
                             "This department demands more than just patrol presence. You'll be expected to submit detailed reports, conduct in-depth investigations, and appear in court with maturity and precision. Can you speak to your ability—and commitment—to meet these standards consistently?"
                         </label>
-                        <textarea id="q4ReportCommitment" name="q4ReportCommitment" rows="3" placeholder="Enter applicant's response here..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400 text-gray-800"></textarea>
+                        <textarea id="q4ReportCommitment" name="q4ReportCommitment" rows="3" placeholder="Enter applicant's response here..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400"></textarea>
                     </div>
                     <div class="mb-6">
                         <label for="q5ConflictOfInterest" class="block text-gray-700 text-sm font-semibold mb-2">
                             "Do you currently have—or plan to portray—a criminal cousin, family member, or close associate? If so, how do you plan to manage potential conflicts of interest and maintain the integrity of your badge?"
                         </label>
-                        <textarea id="q5ConflictOfInterest" name="q5ConflictOfInterest" rows="3" placeholder="Enter applicant's response here..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400 text-gray-800"></textarea>
+                        <textarea id="q5ConflictOfInterest" name="q5ConflictOfInterest" rows="3" placeholder="Enter applicant's response here..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400"></textarea>
                     </div>
                     <div class="mb-6">
                         <label for="q6FelonyStop" class="block text-gray-700 text-sm font-semibold mb-2">
                             "You're conducting a high-risk felony stop—suspect is wanted, armed, and potentially dangerous. You've got two other officers on scene. Walk me through, step-by-step, how you would handle this situation."
                         </label>
-                        <textarea id="q6FelonyStop" name="q6FelonyStop" rows="3" placeholder="Enter applicant's response here..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400 text-gray-800"></textarea>
+                        <textarea id="q6FelonyStop" name="q6FelonyStop" rows="3" placeholder="Enter applicant's response here..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400"></textarea>
                     </div>
                     <div class="mb-6">
                         <label for="q7OfficerMisconduct" class="block text-gray-700 text-sm font-semibold mb-2">
                             "Imagine you witness a fellow officer break the law while on duty—something serious, not a minor policy slip. What do you do? And how do you reconcile loyalty to the department with doing what's right?"
                         </label>
-                        <textarea id="q7OfficerMisconduct" name="q7OfficerMisconduct" rows="3" placeholder="Enter applicant's response here..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400 text-gray-800"></textarea>
+                        <textarea id="q7OfficerMisconduct" name="q7OfficerMisconduct" rows="3" placeholder="Enter applicant's response here..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400"></textarea>
                     </div>
                     <div class="mb-6">
                         <label for="q8ConflictingOrders" class="block text-gray-700 text-sm font-semibold mb-2">
                             "You receive conflicting instructions: a Sergeant tells you to break off pursuit, while a Lieutenant tells you to continue. Both gave their order at the same time. How do you handle it, and what's your reasoning?"
                         </label>
-                        <textarea id="q8ConflictingOrders" name="q8ConflictingOrders" rows="3" placeholder="Enter applicant's response here..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400 text-gray-800"></textarea>
+                        <textarea id="q8ConflictingOrders" name="q8ConflictingOrders" rows="3" placeholder="Enter applicant's response here..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400"></textarea>
                     </div>
                     <div class="mb-6">
                         <label for="q9ComposureUnderPressure" class="block text-gray-700 text-sm font-semibold mb-2">
                             "Policing in Los Santos can be mentally and emotionally taxing. Tell me about a time—real or fictional—when you had to stay composed under pressure. What did you learn from that moment?"
                         </label>
-                        <textarea id="q9ComposureUnderPressure" name="q9ComposureUnderPressure" rows="3" placeholder="Enter applicant's response here..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400 text-gray-800"></textarea>
+                        <textarea id="q9ComposureUnderPressure" name="q9ComposureUnderPressure" rows="3" placeholder="Enter applicant's response here..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400"></textarea>
                     </div>
                     <div class="mb-6">
                         <label for="q10OfficerExpectations" class="block text-gray-700 text-sm font-semibold mb-2">
                             "If you're selected to join this department, what kind of officer should we expect you to be six months from now? What do you hope your fellow officers, supervisors, and the community say about you?"
                         </label>
-                        <textarea id="q10OfficerExpectations" name="q10OfficerExpectations" rows="3" placeholder="Enter applicant's response here..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400 text-gray-800"></textarea>
+                        <textarea id="q10OfficerExpectations" name="q10OfficerExpectations" rows="3" placeholder="Enter applicant's response here..." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400"></textarea>
                     </div>
                     <div class="mb-6">
                         <label for="interviewOutcome" class="block text-gray-700 text-sm font-semibold mb-2">
-                            Interview Outcome
+                            Interview Outcome <span class="text-gray-500 text-xs">(Optional: Only make a determination if you don't plan on using the recommendation of the scoring system)</span>
                         </label>
-                        <select id="interviewOutcome" name="interviewOutcome" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm text-gray-800">
+                        <select id="interviewOutcome" name="interviewOutcome" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm">
                             <option value="">Select Outcome</option>
                             <option value="Recommended for Hire">Recommended for Hire</option>
                             <option value="Further Interview Required">Further Interview Required</option>
@@ -608,7 +650,7 @@
                         <label for="interviewNotes" class="block text-gray-700 text-sm font-semibold mb-2">
                             Overall Interview Notes/Summary
                         </label>
-                        <textarea id="interviewNotes" name="interviewNotes" rows="5" placeholder="Summarize the interview, key responses, and observations." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400 text-gray-800"></textarea>
+                        <textarea id="interviewNotes" name="interviewNotes" rows="5" placeholder="Summarize the interview, key responses, and observations." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400"></textarea>
                     </div>
                 </div>
 
@@ -618,31 +660,31 @@
                         <label for="employeeName" class="block text-gray-700 text-sm font-semibold mb-2">
                             Employee's Full Name
                         </label>
-                        <input type="text" id="employeeName" name="employeeName" placeholder="Enter employee's full name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400 text-gray-800">
+                        <input type="text" id="employeeName" name="employeeName" placeholder="Enter employee's full name" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400">
                     </div>
                     <div class="mb-6">
                         <label for="employeeID" class="block text-gray-700 text-sm font-semibold mb-2">
                             Employee ID
                         </label>
-                        <input type="text" id="employeeID" name="employeeID" placeholder="Enter employee ID" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400 text-gray-800">
+                        <input type="text" id="employeeID" name="employeeID" placeholder="Enter employee ID" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400">
                     </div>
                     <div class="mb-6">
                         <label for="disciplinaryDate" class="block text-gray-700 text-sm font-semibold mb-2">
                             Date of Incident
                         </label>
-                        <input type="date" id="disciplinaryDate" name="disciplinaryDate" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm text-gray-800">
+                        <input type="date" id="disciplinaryDate" name="disciplinaryDate" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm">
                     </div>
                     <div class="mb-6">
                         <label for="disciplinaryReason" class="block text-gray-700 text-sm font-semibold mb-2">
                             Reason for Disciplinary Action
                         </label>
-                        <textarea id="disciplinaryReason" name="disciplinaryReason" rows="3" placeholder="Describe the reason for disciplinary action (e.g., Policy Violation, Misconduct, Performance Issue)." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400 text-gray-800"></textarea>
+                        <textarea id="disciplinaryReason" name="disciplinaryReason" rows="3" placeholder="Describe the reason for disciplinary action (e.g., Policy Violation, Misconduct, Performance Issue)." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400"></textarea>
                     </div>
                     <div class="mb-6">
                         <label for="actionTaken" class="block text-gray-700 text-sm font-semibold mb-2">
                             Action Taken
                         </label>
-                        <select id="actionTaken" name="actionTaken" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm text-gray-800">
+                        <select id="actionTaken" name="actionTaken" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm">
                             <option value="">Select Action</option>
                             <option value="Verbal Warning">Verbal Warning</option>
                             <option value="Written Warning">Written Warning</option>
@@ -655,7 +697,7 @@
                         <label for="disciplinaryNotes" class="block text-gray-700 text-sm font-semibold mb-2">
                             Disciplinary Notes
                         </label>
-                        <textarea id="disciplinaryNotes" name="disciplinaryNotes" rows="5" placeholder="Provide detailed notes on the disciplinary action, including any discussions, evidence, and next steps." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400 text-gray-800"></textarea>
+                        <textarea id="disciplinaryNotes" name="disciplinaryNotes" rows="5" placeholder="Provide detailed notes on the disciplinary action, including any discussions, evidence, and next steps." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400"></textarea>
                     </div>
                 </div>
 
@@ -665,37 +707,37 @@
                         <label for="meetingTitle" class="block text-gray-700 text-sm font-semibold mb-2">
                             Meeting Title/Subject
                         </label>
-                        <input type="text" id="meetingTitle" name="meetingTitle" placeholder="Enter meeting title or subject" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400 text-gray-800">
+                        <input type="text" id="meetingTitle" name="meetingTitle" placeholder="Enter meeting title or subject" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400">
                     </div>
                     <div class="mb-6">
                         <label for="meetingDate" class="block text-gray-700 text-sm font-semibold mb-2">
                             Meeting Date
                         </label>
-                        <input type="date" id="meetingDate" name="meetingDate" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm text-gray-800">
+                        <input type="date" id="meetingDate" name="meetingDate" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm">
                     </div>
                     <div class="mb-6">
                         <label for="meetingTime" class="block text-gray-700 text-sm font-semibold mb-2">
                             Meeting Time
                         </label>
-                        <input type="time" id="meetingTime" name="meetingTime" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm text-gray-800">
+                        <input type="time" id="meetingTime" name="meetingTime" class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm">
                     </div>
                     <div class="mb-6">
                         <label for="attendees" class="block text-gray-700 text-sm font-semibold mb-2">
                             Attendees (Names/Roles)
                         </label>
-                        <textarea id="attendees" name="attendees" rows="3" placeholder="List attendees and their roles (e.g., John Doe - HR Manager, Jane Smith - Team Lead)." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400 text-gray-800"></textarea>
+                        <textarea id="attendees" name="attendees" rows="3" placeholder="List attendees and their roles (e.g., John Doe - HR Manager, Jane Smith - Team Lead)." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400"></textarea>
                     </div>
                     <div class="mb-6">
                         <label for="discussionPoints" class="block text-gray-700 text-sm font-semibold mb-2">
                             Key Discussion Points
                         </label>
-                        <textarea id="discussionPoints" name="discussionPoints" rows="5" placeholder="Summarize the main topics discussed during the meeting." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400 text-gray-800"></textarea>
+                        <textarea id="discussionPoints" name="discussionPoints" rows="5" placeholder="Summarize the main topics discussed during the meeting." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400"></textarea>
                     </div>
                     <div class="mb-6">
                         <label for="actionItems" class="block text-gray-700 text-sm font-semibold mb-2">
                             Action Items/Decisions
                         </label>
-                        <textarea id="actionItems" name="actionItems" rows="3" placeholder="List any decisions made or action items assigned, including who is responsible and by when." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400 text-gray-800"></textarea>
+                        <textarea id="actionItems" name="actionItems" rows="3" placeholder="List any decisions made or action items assigned, including who is responsible and by when." class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400"></textarea>
                     </div>
                 </div>
 
@@ -709,7 +751,7 @@
                            name="evidenceCollectedInput"
                            readonly
                            placeholder="Click to select supporting documents/evidence..."
-                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400 text-gray-800 cursor-pointer">
+                           class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400 cursor-pointer">
                 </div>
 
                 <!-- Conditional Text Areas for Statements (renamed to Notes for admin reports) -->
@@ -721,7 +763,7 @@
                               name="victimStatementsText"
                               rows="3"
                               placeholder="Enter details of applicant/interviewee notes..."
-                              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400 text-gray-800"></textarea>
+                              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400"></textarea>
                 </div>
 
                 <div id="witnessStatementsContainer" class="mb-6 hidden">
@@ -732,7 +774,7 @@
                               name="witnessStatementsText"
                               rows="3"
                               placeholder="Enter details of witness/observer notes..."
-                              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400 text-gray-800"></textarea>
+                              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400"></textarea>
                 </div>
 
                 <div id="suspectStatementsContainer" class="mb-6 hidden">
@@ -743,7 +785,7 @@
                               name="suspectStatementsText"
                               rows="3"
                               placeholder="Enter details of employee response/statement notes..."
-                              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400 text-gray-800"></textarea>
+                              class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y placeholder-gray-400"></textarea>
                 </div>
 
 
@@ -778,14 +820,14 @@
                               rows="10"
                               readonly
                               placeholder="Your generated report will appear here..."
-                              class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y text-gray-800 pt-10"></textarea>
+                              class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y pt-10"></textarea>
                 </div>
 
                 <!-- Submit Button -->
                 <div class="mt-8">
                     <button type="button"
                             id="generateReportBtn"
-                            class="w-full bg-gradient-to-r from-blue-500 to-indigo-600 text-white font-bold py-3 px-4 rounded-lg hover:from-blue-600 hover:to-indigo-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-300 ease-in-out shadow-md">
+                            class="w-full bg-blue-500 text-white font-bold py-3 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-300 ease-in-out shadow-md">
                         Generate Report
                     </button>
                 </div>
@@ -845,7 +887,7 @@
                    id="evidenceUrlInput"
                    name="evidenceUrlInput"
                    placeholder="Enter URL here..."
-                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400 text-gray-800 mb-2">
+                   class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400 mb-2">
             <p id="urlValidationError" class="text-red-600 text-sm mb-4 hidden"></p>
             <div id="currentLinksDisplay" class="mb-4 text-sm text-gray-700">
                 <!-- Added links will appear here -->
@@ -998,7 +1040,7 @@
 
         // Get references to Interview Report specific elements
         const intervieweeNameInput = document.getElementById('intervieweeName');
-        const interviewDateInput = document.getElementById('interviewDate');
+        const interviewDateInput = document = document.getElementById('interviewDate');
         const interviewTimeInput = document.getElementById('interviewTime');
         const interviewerNamesInput = document.getElementById('interviewerNames');
         const interviewOutcomeSelect = document.getElementById('interviewOutcome');
@@ -1218,9 +1260,9 @@
                 const div = document.createElement('div');
                 div.className = 'evidence-item flex items-center p-2 rounded-md hover:bg-blue-100 cursor-pointer';
                 div.innerHTML = `
-                                                <input type="checkbox" id="evidence-${item.name.replace(/\s/g, '-')}" value="${item.name}" class="form-checkbox h-5 w-5 text-blue-600 rounded-md">
-                                                <label for="evidence-${item.name.replace(/\s/g, '-')}" class="ml-2 text-gray-800 text-sm font-medium flex-grow">${item.name}</label>
-                                            `;
+                                                    <input type="checkbox" id="evidence-${item.name.replace(/\s/g, '-')}" value="${item.name}" class="form-checkbox h-5 w-5 text-blue-600 rounded-md">
+                                                    <label for="evidence-${item.name.replace(/\s/g, '-')}" class="ml-2 text-gray-800 text-sm font-medium flex-grow">${item.name}</label>
+                                                `;
                 div.setAttribute('data-description', item.description);
                 div.setAttribute('data-type', item.type);
                 if (item.linkProviders) {
@@ -1806,6 +1848,7 @@ ${evidenceForPrompt}
                     const interviewDate = interviewDateInput.value.trim();
                     const interviewTime = interviewTimeInput.value.trim();
                     const interviewerNames = interviewerNamesInput.value.trim();
+                    // interviewOutcome is now optional
                     const interviewOutcome = interviewOutcomeSelect.value;
                     const q1Experience = q1ExperienceTextarea.value.trim();
                     const q2Professionalism = q2ProfessionalismTextarea.value.trim();
@@ -1819,7 +1862,8 @@ ${evidenceForPrompt}
                     const q10OfficerExpectations = q10OfficerExpectationsTextarea.value.trim();
                     reportNarrative = interviewNotesTextarea.value.trim();
 
-                    if (!officerInfo || !intervieweeName || !interviewDate || !interviewTime || !interviewerNames || interviewOutcome === "" || !reportNarrative) {
+                    // Removed interviewOutcome === "" from required fields check
+                    if (!officerInfo || !intervieweeName || !interviewDate || !interviewTime || !interviewerNames || !reportNarrative) {
                         requiredFieldsFilled = false;
                     }
 
@@ -1829,13 +1873,21 @@ ${evidenceForPrompt}
 Reporting Staff: ${officerInfo}
 Department: ${department}
 
-Generate a detailed, professional, and concise Interview Report. The report must strictly adhere to the information provided in the "Interview Notes/Summary" and other text fields. Do not include any information that is not directly deducible from the provided inputs. The output must strictly follow the format provided below, with no additional text, introductory phrases, or markdown formatting (like bold, italics, headers, or bullet points). Ensure all fields are populated appropriately based on the input. If a field is not directly deducible from the input, provide a reasonable placeholder or "N/A". The report should be written as if you were the staff member writing it. Make sure to include your name and ID. Explicitly mention the interviewee's name in the report.
+You are an AI assistant tasked with generating a detailed, professional, and concise Interview Report.
+For each question, you must provide a score from 1 to 5 (1 = Poor, 2 = Fair, 3 = Good, 4 = Very Good, 5 = Excellent) based on the following metrics:
+- Depth: How thoroughly the response addresses the question.
+- Reasoning: The logical coherence and justification behind the response.
+- Maturity: The level of professionalism, judgment, and emotional intelligence demonstrated.
+- Problem Solving: The ability to analyze situations and propose effective solutions.
+- Understanding of basic law enforcement skills: Demonstrated knowledge of fundamental police procedures, protocols, and legal principles.
+
+The report must strictly adhere to the information provided in the "Interview Notes/Summary" and other text fields. Do not include any information that is not directly deducible from the provided inputs. The output must strictly follow the format provided below, with no additional text, introductory phrases, or markdown formatting (like bold, italics, headers, or bullet points), EXCEPT for the table for scoring. Ensure all fields are populated appropriately based on the input. If a field is not directly deducible from the input, provide a reasonable placeholder or "N/A". The report should be written as if you were the staff member writing it. Make sure to include your name and ID. Explicitly mention the interviewee's name in the report.
 
 Interviewee's Full Name: ${intervieweeName}
 Interview Date: ${interviewDate}
 Interview Time: ${interviewTime}
 Interviewer(s) Name(s): ${interviewerNames}
-Interview Outcome: ${interviewOutcome}
+Interview Outcome: ${interviewOutcome || 'N/A'}
 
 --- Interview Questions ---
 Q1: Experience: ${q1Experience || 'N/A'}
@@ -1868,7 +1920,7 @@ Interviewee: ${intervieweeName}
 Date: ${interviewDate}
 Time: ${interviewTime}
 Interviewer(s): ${interviewerNames}
-Outcome: ${interviewOutcome}
+Outcome: ${interviewOutcome || 'N/A'}
 
 Interview Questions & Responses:
 Q1: Experience: [Summary of applicant's response to Q1]
@@ -1882,6 +1934,20 @@ Q8: Conflicting Orders Scenario: [Summary of applicant's response to Q8]
 Q9: Composure Under Pressure: [Summary of applicant's response to Q9]
 Q10: Officer Expectations: [Summary of applicant's response to Q10]
 
+Interview Question Scoring (1-5, 5 being excellent):
+| Question | Depth | Reasoning | Maturity | Problem Solving | Understanding of basic law enforcement skills |
+|---|---|---|---|---|---|
+| Q1: Experience | [Score] | [Score] | [Score] | [Score] | [Score] |
+| Q2: Professionalism | [Score] | [Score] | [Score] | [Score] | [Score] |
+| Q3: Personal Strengths | [Score] | [Score] | [Score] | [Score] | [Score] |
+| Q4: Report Commitment | [Score] | [Score] | [Score] | [Score] | [Score] |
+| Q5: Conflict of Interest | [Score] | [Score] | [Score] | [Score] | [Score] |
+| Q6: Felony Stop Scenario | [Score] | [Score] | [Score] | [Score] | [Score] |
+| Q7: Officer Misconduct Scenario | [Score] | [Score] | [Score] | [Score] | [Score] |
+| Q8: Conflicting Orders Scenario | [Score] | [Score] | [Score] | [Score] | [Score] |
+| Q9: Composure Under Pressure | [Score] | [Score] | [Score] | [Score] | [Score] |
+| Q10: Officer Expectations | [Score] | [Score] | [Score] | [Score] | [Score] |
+
 Overall Interview Summary: [Detailed summary of the interview, explicitly mentioning the interviewee's name: ${intervieweeName}, based on the notes provided.]
 
 Supporting Documents/Evidence:
@@ -1894,7 +1960,7 @@ ${evidenceForPrompt}
                     const employeeName = employeeNameInput.value.trim();
                     const employeeID = employeeIDInput.value.trim();
                     const disciplinaryDate = disciplinaryDateInput.value.trim();
-                    const disciplinaryReason = disciplinaryTextarea.value.trim(); // Changed to disciplinaryTextarea
+                    const disciplinaryReason = disciplinaryReasonTextarea.value.trim();
                     const actionTaken = actionTakenSelect.value;
                     reportNarrative = disciplinaryNotesTextarea.value.trim();
 
@@ -2148,28 +2214,164 @@ ${evidenceForPrompt}
             // Add a line separator
             doc.line(20, 45, 190, 45); // x1, y1, x2, y2
 
-            // Report Body (Generated Report Text)
-            doc.setFontSize(10);
-            const splitText = doc.splitTextToSize(generatedReportText, 170); // Max width 170mm
             let currentY = 55; // Starting Y position for the report text
-            doc.text(splitText, 20, currentY);
 
-            // Get the current Y position after adding the report text
-            // Calculate finalY based on the last line of text added
-            let finalY = currentY + (splitText.length * doc.internal.getLineHeight());
+            // Handle Interview Report PDF generation specifically for questions and scoring
+            if (selectedReportType === 'Interview') {
+                const intervieweeName = intervieweeNameInput.value.trim();
+                const interviewDate = interviewDateInput.value.trim();
+                const interviewTime = interviewTimeInput.value.trim();
+                const interviewerNames = interviewerNamesInput.value.trim();
+                const interviewOutcome = interviewOutcomeSelect.value;
+                const interviewNotes = interviewNotesTextarea.value.trim();
+
+                doc.setFontSize(12);
+                doc.text('Interview Details:', 20, currentY);
+                currentY += 7;
+                doc.setFontSize(10);
+                doc.text(`Interviewee: ${intervieweeName}`, 20, currentY);
+                currentY += 5;
+                doc.text(`Date: ${interviewDate}`, 20, currentY);
+                currentY += 5;
+                doc.text(`Time: ${interviewTime}`, 20, currentY);
+                currentY += 5;
+                doc.text(`Interviewer(s): ${interviewerNames}`, 20, currentY);
+                currentY += 5;
+                doc.text(`Outcome: ${interviewOutcome || 'N/A'}`, 20, currentY); // Use N/A if not selected
+                currentY += 10;
+
+                doc.setFontSize(12);
+                doc.text('Interview Questions & Responses:', 20, currentY);
+                currentY += 7;
+                doc.setFontSize(10);
+
+                const questions = [
+                    { q: "Q1: Experience", a: q1ExperienceTextarea.value.trim() },
+                    { q: "Q2: Professionalism", a: q2ProfessionalismTextarea.value.trim() },
+                    { q: "Q3: Personal Strengths", a: q3PersonalStrengthsTextarea.value.trim() },
+                    { q: "Q4: Report Commitment", a: q4ReportCommitmentTextarea.value.trim() },
+                    { q: "Q5: Conflict of Interest", a: q5ConflictOfInterestTextarea.value.trim() },
+                    { q: "Q6: Felony Stop Scenario", a: q6FelonyStopTextarea.value.trim() },
+                    { q: "Q7: Officer Misconduct Scenario", a: q7OfficerMisconductTextarea.value.trim() },
+                    { q: "Q8: Conflicting Orders Scenario", a: q8ConflictingOrdersTextarea.value.trim() },
+                    { q: "Q9: Composure Under Pressure", a: q9ComposureUnderPressureTextarea.value.trim() },
+                    { q: "Q10: Officer Expectations", a: q10OfficerExpectationsTextarea.value.trim() },
+                ];
+
+                questions.forEach(item => {
+                    const questionText = doc.splitTextToSize(`${item.q}:`, 170);
+                    const answerText = doc.splitTextToSize(`Response: ${item.a || 'N/A'}`, 170);
+
+                    doc.text(questionText, 20, currentY);
+                    currentY += (questionText.length * doc.internal.getLineHeight());
+                    doc.text(answerText, 25, currentY); // Indent response
+                    currentY += (answerText.length * doc.internal.getLineHeight()) + 5; // Add space after each Q&A
+                    if (currentY > 280) { // Check for page break
+                        doc.addPage();
+                        currentY = 20;
+                    }
+                });
+
+                currentY += 10; // Add some space before the scoring table
+                doc.setFontSize(12);
+                doc.text('Interview Question Scoring (1-5, 5 being excellent):', 20, currentY);
+                currentY += 7;
+
+                // Extract scoring from the generated report text
+                const scoringStartIndex = generatedReportText.indexOf('Interview Question Scoring (1-5, 5 being excellent):');
+                if (scoringStartIndex !== -1) {
+                    const scoringTableText = generatedReportText.substring(scoringStartIndex);
+                    const lines = scoringTableText.split('\n').map(line => line.trim()).filter(line => line.length > 0);
+
+                    if (lines.length > 2) { // Check if there are header and at least one data row
+                        const headers = lines[1].split('|').map(h => h.trim()).filter(h => h.length > 0);
+                        const tableData = [];
+                        for (let i = 3; i < lines.length; i++) { // Start from the first data row
+                            if (lines[i].startsWith('| Q')) { // Only process lines that start with '| Q'
+                                const row = lines[i].split('|').map(cell => cell.trim()).filter(cell => cell.length > 0);
+                                if (row.length === headers.length) {
+                                    tableData.push(row);
+                                }
+                            } else {
+                                // Stop processing if the line is not a table row
+                                break;
+                            }
+                        }
+
+                        if (tableData.length > 0) {
+                            doc.autoTable({
+                                startY: currentY,
+                                head: [headers],
+                                body: tableData,
+                                theme: 'grid',
+                                styles: {
+                                    fontSize: 8,
+                                    cellPadding: 2,
+                                    valign: 'middle',
+                                    halign: 'center'
+                                },
+                                headStyles: {
+                                    fillColor: [46, 116, 181], // A shade of blue
+                                    textColor: [255, 255, 255],
+                                    fontStyle: 'bold'
+                                },
+                                alternateRowStyles: {
+                                    fillColor: [240, 248, 255] // Light blue for alternate rows
+                                },
+                                columnStyles: {
+                                    0: { halign: 'left' } // Align question text to left
+                                },
+                                didDrawPage: function (data) {
+                                    currentY = data.cursor.y; // Update currentY after table
+                                }
+                            });
+                            currentY = doc.autoTable.previous.finalY + 10; // Update currentY based on table's final Y position
+                        }
+                    }
+                }
+
+                doc.setFontSize(12);
+                doc.text('Overall Interview Summary:', 20, currentY);
+                currentY += 7;
+                doc.setFontSize(10);
+                const summaryText = generatedReportText.substring(
+                    generatedReportText.indexOf('Overall Interview Summary:') + 'Overall Interview Summary:'.length
+                ).split('Supporting Documents/Evidence:')[0].trim();
+                const splitSummary = doc.splitTextToSize(summaryText, 170);
+                doc.text(splitSummary, 20, currentY);
+                currentY += (splitSummary.length * doc.internal.getLineHeight()) + 10;
+
+                doc.setFontSize(12);
+                doc.text('Supporting Documents/Evidence:', 20, currentY);
+                currentY += 7;
+                doc.setFontSize(10);
+                const evidenceText = generatedReportText.substring(
+                    generatedReportText.indexOf('Supporting Documents/Evidence:') + 'Supporting Documents/Evidence:'.length
+                ).trim();
+                const splitEvidence = doc.splitTextToSize(evidenceText, 170);
+                doc.text(splitEvidence, 20, currentY);
+                currentY += (splitEvidence.length * doc.internal.getLineHeight()) + 10;
+
+
+            } else {
+                // For other report types, just add the generated text as before
+                const splitText = doc.splitTextToSize(generatedReportText, 170); // Max width 170mm
+                doc.text(splitText, 20, currentY);
+                currentY += (splitText.length * doc.internal.getLineHeight());
+            }
 
             // Add a line separator before footer
-            doc.line(20, finalY + 10, 190, finalY + 10);
+            doc.line(20, currentY + 10, 190, currentY + 10);
 
             // Footer information
-            finalY += 20;
-            doc.text(`Reporting Staff: ${officerInfo}`, 20, finalY);
-            finalY += 7;
-            doc.text(`Date: ${currentMonth} ${currentDay}, ${currentYear}`, 20, finalY);
-            finalY += 7;
-            doc.text(`Reviewed By: _____________________________________`, 20, finalY);
-            finalY += 7;
-            doc.text(`Approval: _____________________________________`, 20, finalY);
+            currentY += 20;
+            doc.text(`Reporting Staff: ${officerInfo}`, 20, currentY);
+            currentY += 7;
+            doc.text(`Date: ${currentMonth} ${currentDay}, ${currentYear}`, 20, currentY);
+            currentY += 7;
+            doc.text(`Reviewed By: _____________________________________`, 20, currentY);
+            currentY += 7;
+            doc.text(`Approval: _____________________________________`, 20, currentY);
 
             return doc; // Return the jsPDF document object
         };
@@ -2313,9 +2515,9 @@ ${evidenceForPrompt}
                     const officerDiv = document.createElement('div');
                     officerDiv.className = 'data-viewer-item';
                     officerDiv.innerHTML = `
-                            <p class="title">Officer Logged In</p>
-                            <p class="description">${officer.name} (Badge: ${officer.badge})</p>
-                        `;
+                                <p class="title">Officer Logged In</p>
+                                <p class="description">${officer.name} (Badge: ${officer.badge})</p>
+                            `;
                     dataViewerContent.appendChild(officerDiv);
                     hasData = true;
                 } catch (e) {
@@ -2329,9 +2531,9 @@ ${evidenceForPrompt}
                 const themeDiv = document.createElement('div');
                 themeDiv.className = 'data-viewer-item';
                 themeDiv.innerHTML = `
-                        <p class="title">Website Theme</p>
-                        <p class="description">${currentTheme.charAt(0).toUpperCase() + currentTheme.slice(1)} Mode</p>
-                    `;
+                            <p class="title">Website Theme</p>
+                            <p class="description">${currentTheme.charAt(0).toUpperCase() + currentTheme.slice(1)} Mode</p>
+                        `;
                 dataViewerContent.appendChild(themeDiv);
                 hasData = true;
             }
@@ -2344,11 +2546,11 @@ ${evidenceForPrompt}
                     const adminReportDiv = document.createElement('div');
                     adminReportDiv.className = 'data-viewer-item mt-4';
                     adminReportDiv.innerHTML = `
-                            <p class="title">Administrative Report Generator Data</p>
-                            <p class="description">Last saved report type: ${data.reportType || 'N/A'}</p>
-                            <p class="description">Last saved officer info: ${data.officerInfo || 'N/A'}</p>
-                            <p class="description">Other form fields saved. (Too detailed to list all here)</p>
-                        `;
+                                <p class="title">Administrative Report Generator Data</p>
+                                <p class="description">Last saved report type: ${data.reportType || 'N/A'}</p>
+                                <p class="description">Last saved officer info: ${data.officerInfo || 'N/A'}</p>
+                                <p class="description">Other form fields saved. (Too detailed to list all here)</p>
+                            `;
                     dataViewerContent.appendChild(adminReportDiv);
                     hasData = true;
                 } catch (e) {
@@ -2388,9 +2590,9 @@ ${evidenceForPrompt}
                 const dataDiv = document.createElement('div');
                 dataDiv.className = 'data-viewer-item';
                 dataDiv.innerHTML = `
-                        <p class="title">${key}</p>
-                        <p class="description">${value}</p>
-                    `;
+                            <p class="title">${key}</p>
+                            <p class="description">${value}</p>
+                        `;
                 dataViewerContent.appendChild(dataDiv);
                 hasData = true;
                 otherDataCount++;
