@@ -1288,9 +1288,9 @@
                         const officerDiv = document.createElement('div');
                         officerDiv.className = 'data-viewer-item';
                         officerDiv.innerHTML = `
-                                    <p class="title">Officer Logged In</p>
-                                    <p class="description">${officer.name} (Badge: ${officer.badge})</p>
-                                `;
+                                        <p class="title">Officer Logged In</p>
+                                        <p class="description">${officer.name} (Badge: ${officer.badge})</p>
+                                    `;
                         dataViewerContent.appendChild(officerDiv);
                         hasData = true;
                     } catch (e) {
@@ -1304,9 +1304,9 @@
                     const themeDiv = document.createElement('div');
                     themeDiv.className = 'data-viewer-item';
                     themeDiv.innerHTML = `
-                                <p class="title">Website Theme</p>
-                                <p class="description">${currentTheme.charAt(0).toUpperCase() + currentTheme.slice(1)} Mode</p>
-                            `;
+                                    <p class="title">Website Theme</p>
+                                    <p class="description">${currentTheme.charAt(0).toUpperCase() + currentTheme.slice(1)} Mode</p>
+                                `;
                     dataViewerContent.appendChild(themeDiv);
                     hasData = true;
                 }
@@ -1342,9 +1342,9 @@
                     const dataDiv = document.createElement('div');
                     dataDiv.className = 'data-viewer-item';
                     dataDiv.innerHTML = `
-                                <p class="title">${key}</p>
-                                <p class="description">${value}</p>
-                            `;
+                                    <p class="title">${key}</p>
+                                    <p class="description">${value}</p>
+                                `;
                     dataViewerContent.appendChild(dataDiv);
                     hasData = true;
                     otherDataCount++;
@@ -1360,8 +1360,8 @@
             const loadUpdates = async () => {
                 const updatesSection = document.getElementById('updatesSection');
                 const updatesContent = document.getElementById('updatesContent');
-                // Corrected CSV URL: changed 'MBl3ukf5R3Di6SGO3sHA3CD-1uSBgp_qPtJA' to 'MBl2ukf5R3Di6SGO3sHA3CD-1uSBgp_qPtJA'
-                const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQxN1ZQBPqwqLxvr_T1tQ2TVwHuy0d2jainTySsbsSxMBl2ukf5R3Di6SGO3sHA3CD-1uSBgp_qPtJA/pub?output=csv';
+                // Updated CSV URL to the new link provided by the user, ensuring it outputs as CSV
+                const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQxN1ZQBPqwqLxvr_T1tQ2TVwHuy0d2jainTySsbsSxMBl6ukf5R3Di6SGO3sHA3CD-1uSBgp_qPtJA/pub?output=csv';
                 const fourteenDaysAgo = new Date();
                 fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
 
@@ -1428,9 +1428,9 @@
                             const updateDiv = document.createElement('div');
                             updateDiv.className = 'bg-white p-4 rounded-md shadow-sm';
                             updateDiv.innerHTML = `
-                                                <p class="text-gray-800 font-semibold">${update.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}: ${update.title}</p>
-                                                <p class="text-gray-600 text-sm">${update.description}</p>
-                                            `;
+                                                    <p class="text-gray-800 font-semibold">${update.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}: ${update.title}</p>
+                                                    <p class="text-gray-600 text-sm">${update.description}</p>
+                                                `;
                             updatesContent.appendChild(updateDiv);
                         });
                         updatesSection.classList.remove('hidden'); // Show the section
