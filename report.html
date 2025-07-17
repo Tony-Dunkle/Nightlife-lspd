@@ -412,7 +412,7 @@
     <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex items-center justify-between sticky top-0 z-50 rounded-b-lg relative">
         <div class="flex items-center">
             <!-- LSPD Logo -->
-            <img src="settings.png" alt="LSPD Logo" class="mr-4 w-16 h-16 object-contain" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
+            <img src="LSPD.png" alt="LSPD Logo" class="mr-4 w-16 h-16 object-contain" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
             <!-- Responsive font size: text-2xl for small screens, text-3xl for medium screens and up -->
             <h1 class="text-2xl md:text-3xl font-bold">Los Santos Police Department</h1>
         </div>
@@ -1057,7 +1057,8 @@
                 <!-- Data will be loaded here dynamically -->
             </div>
             <div class="flex justify-end mt-4">
-                <button id="closeDataViewerModalBtn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">
+                <button id="closeDataViewerModalBtn"
+                        class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">
                     Close
                 </button>
             </div>
@@ -1282,7 +1283,7 @@
         // Configuration for different department sheets
         const departmentSheetConfig = {
             "LSPD": {
-                sheetId: '1o4Xw8GSQBp6brMfGo_ubYngnhJYU_f8AhyUIftAlT1Y', // Existing LSPD sheet
+                sheetId: '2PACX-1vT8yueJjp9o-XVH1_RXPji6N_IAP1DDbNLZ8l4__IqGCvVEUWscsdsJ6uNHZ8u6kDhhXkSxcdkdeDJi', // Corrected LSPD sheetId
                 gid: '0',
                 rowRanges: [
                     { start: 6, end: 6 },
@@ -1321,7 +1322,8 @@
                 return;
             }
 
-            const csvUrl = `https://docs.google.com/spreadsheets/d/e/${config.sheetId}/export?format=csv&gid=${config.gid}`;
+            // Construct the CSV URL using the sheetId and gid, ensuring output=csv
+            const csvUrl = `https://docs.google.com/spreadsheets/d/e/${config.sheetId}/pub?gid=${config.gid}&single=true&output=csv`;
 
             try {
                 const response = await fetch(csvUrl);
@@ -1433,9 +1435,9 @@
                 const div = document.createElement('div');
                 div.className = 'evidence-item flex items-center p-2 rounded-md hover:bg-blue-100 cursor-pointer';
                 div.innerHTML = `
-                                                <input type="checkbox" id="evidence-${item.name.replace(/\s/g, '-')}" value="${item.name}" class="form-checkbox h-5 w-5 text-blue-600 rounded-md">
-                                                <label for="evidence-${item.name.replace(/\s/g, '-')}" class="ml-2 text-gray-800 text-sm font-medium flex-grow">${item.name}</label>
-                                            `;
+                                                    <input type="checkbox" id="evidence-${item.name.replace(/\s/g, '-')}" value="${item.name}" class="form-checkbox h-5 w-5 text-blue-600 rounded-md">
+                                                    <label for="evidence-${item.name.replace(/\s/g, '-')}" class="ml-2 text-gray-800 text-sm font-medium flex-grow">${item.name}</label>
+                                                `;
                 div.setAttribute('data-description', item.description);
                 div.setAttribute('data-type', item.type);
                 if (item.linkProviders) {
@@ -1813,13 +1815,13 @@
             modalOverlay.className = 'modal-overlay'; // Re-use modal-overlay styles
             modalOverlay.id = 'customAlertModal';
             modalOverlay.innerHTML = `
-                                <div class="modal-content text-center">
-                                    <p class="text-lg font-semibold mb-6">${message}</p>
-                                    <button id="closeCustomAlertBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">
-                                        OK
-                                    </button>
-                                </div>
-                            `;
+                                    <div class="modal-content text-center">
+                                        <p class="text-lg font-semibold mb-6">${message}</p>
+                                        <button id="closeCustomAlertBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">
+                                            OK
+                                        </button>
+                                    </div>
+                                `;
             document.body.appendChild(modalOverlay);
 
             document.getElementById('closeCustomAlertBtn').addEventListener('click', () => {
@@ -2710,9 +2712,9 @@ Status: Report Filed.
                     const officerDiv = document.createElement('div');
                     officerDiv.className = 'data-viewer-item';
                     officerDiv.innerHTML = `
-                            <p class="title">Officer Logged In</p>
-                            <p class="description">${officer.name} (Badge: ${officer.badge}, Department: ${officer.department || 'N/A'})</p>
-                        `;
+                                <p class="title">Officer Logged In</p>
+                                <p class="description">${officer.name} (Badge: ${officer.badge}, Department: ${officer.department || 'N/A'})</p>
+                            `;
                     dataViewerContent.appendChild(officerDiv);
                     hasData = true;
                 } catch (e) {
@@ -2726,9 +2728,9 @@ Status: Report Filed.
                 const themeDiv = document.createElement('div');
                 themeDiv.className = 'data-viewer-item';
                 themeDiv.innerHTML = `
-                        <p class="title">Website Theme</p>
-                        <p class="description">${currentTheme.charAt(0).toUpperCase() + currentTheme.slice(1)} Mode</p>
-                    `;
+                            <p class="title">Website Theme</p>
+                            <p class="description">${currentTheme.charAt(0).toUpperCase() + currentTheme.slice(1)} Mode</p>
+                        `;
                 dataViewerContent.appendChild(themeDiv);
                 hasData = true;
             }
@@ -2741,11 +2743,11 @@ Status: Report Filed.
                     const reportDiv = document.createElement('div');
                     reportDiv.className = 'data-viewer-item mt-4';
                     reportDiv.innerHTML = `
-                            <p class="title">Report Generator Data</p>
-                            <p class="description">Last saved report type: ${data.reportType || 'N/A'}</p>
-                            <p class="description">Last saved suspect name: ${data.suspectName || 'N/A'}</p>
-                            <p class="description">Other form fields saved. (Too detailed to list all here)</p>
-                        `;
+                                <p class="title">Report Generator Data</p>
+                                <p class="description">Last saved report type: ${data.reportType || 'N/A'}</p>
+                                <p class="description">Last saved suspect name: ${data.suspectName || 'N/A'}</p>
+                                <p class="description">Other form fields saved. (Too detailed to list all here)</p>
+                            `;
                     dataViewerContent.appendChild(reportDiv);
                     hasData = true;
                 } catch (e) {
@@ -2784,9 +2786,9 @@ Status: Report Filed.
                 const dataDiv = document.createElement('div');
                 dataDiv.className = 'data-viewer-item';
                 dataDiv.innerHTML = `
-                        <p class="title">${key}</p>
-                        <p class="description">${value}</p>
-                    `;
+                            <p class="title">${key}</p>
+                            <p class="description">${value}</p>
+                        `;
                 dataViewerContent.appendChild(dataDiv);
                 hasData = true;
                 otherDataCount++;
