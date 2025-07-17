@@ -778,6 +778,20 @@
     <div id="officerSelectionModal" class="modal-overlay hidden">
         <div class="modal-content">
             <h3 class="text-xl font-bold text-gray-800 mb-4">Select Officer</h3>
+
+            <!-- Department Selection for Login -->
+            <div class="mb-4">
+                <label for="loginDepartmentSelect" class="block text-gray-700 text-sm font-semibold mb-2">
+                    Department
+                </label>
+                <select id="loginDepartmentSelect"
+                        name="loginDepartmentSelect"
+                        class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm text-gray-800">
+                    <option value="LSPD">Los Santos Police Department</option>
+                    <option value="LSCSO">Los Santos County Sheriff's Office</option>
+                </select>
+            </div>
+
             <input type="text"
                    id="officerSearchInput"
                    placeholder="Search officer name or badge..."
@@ -887,6 +901,7 @@
 
             // Officer Selection Modal Elements
             const officerSelectionModal = document.getElementById('officerSelectionModal');
+            const loginDepartmentSelect = document.getElementById('loginDepartmentSelect'); // NEW Department select for login
             const officerSearchInput = document.getElementById('officerSearchInput');
             const officerListDiv = document.getElementById('officerList');
             const closeOfficerModalBtn = document.getElementById('closeOfficerModalBtn');
@@ -916,6 +931,34 @@
             // Global variable to store fetched officer roster data
             let officerRosterData = [];
 
+            // Configuration for different department sheets (same as report.html)
+            const departmentSheetConfig = {
+                "LSPD": {
+                    sheetId: '1o4Xw8GSQBp6brMfGo_ubYngnhJYU_f8AhyUIftAlT1Y', // Existing LSPD sheet
+                    gid: '0',
+                    rowRanges: [
+                        { start: 6, end: 6 },
+                        { start: 9, end: 16 },
+                        { start: 18, end: 22 },
+                        { start: 24, end: 27 },
+                        { start: 29, end: 32 },
+                        { start: 34, end: 43 },
+                        { start: 45, end: 54 },
+                        { start: 56, end: 65 },
+                        { start: 67, end: 78 },
+                        { start: 80, end: 96 },
+                        { start: 98, end: 117 },
+                        { start: 119, end: 148 }
+                    ]
+                },
+                "LSCSO": {
+                    sheetId: '2PACX-1vT8yueJjp9o-XVH1_RXPji6N_IAP1DDbNLZ8l4__IqGCvVEUWscsdsJ6uNHZ8u6kDhhXkSxcdkdeDJi',
+                    gid: '1747285908',
+                    rowRanges: null // Indicates generic filtering for this sheet
+                }
+            };
+
+
             // Show the development notice banner after a short delay
             setTimeout(() => {
                 banner.classList.add('show');
@@ -944,14 +987,20 @@
 
             /**
              * Fetches CSV data from a Google Sheet, parses it, and populates the officerRosterData.
-             * This function is called when the officer selection modal is opened.
+             * @param {string} department - The department for which to fetch the roster (e.g., "LSPD", "LSCSO").
              */
-            async function fetchAndSetOfficerRosterData() {
+            async function fetchAndSetOfficerRosterData(department) {
                 officerListDiv.innerHTML = '<div class="loader mx-auto my-4"></div>'; // Show loader
 
-                const sheetId = '1o4Xw8GSQBp6brMfGo_ubYngnhWJU_f8AhyUIftAlT1Y';
-                const gid = '0'; // Assuming gid=0 for the primary sheet tab
-                const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
+                const config = departmentSheetConfig[department];
+                if (!config) {
+                    console.error(`Configuration not found for department: ${department}`);
+                    officerListDiv.innerHTML = '<p class="text-red-500 text-center py-4">Department roster configuration missing.</p>';
+                    officerRosterData = [];
+                    return;
+                }
+
+                const csvUrl = `https://docs.google.com/spreadsheets/d/e/${config.sheetId}/export?format=csv&gid=${config.gid}`;
 
                 try {
                     const response = await fetch(csvUrl);
@@ -962,49 +1011,51 @@
 
                     const rawRows = csvText.trim().split('\n');
                     if (rawRows.length === 0) {
-                        console.warn('No roster data available from Google Sheet.');
-                        officerRosterData = []; // Ensure it's empty
-                        officerListDiv.innerHTML = '<p class="text-gray-500 text-center py-4">No officers found.</p>';
+                        console.warn(`No roster data available for ${department} from Google Sheet.`);
+                        officerRosterData = [];
+                        officerListDiv.innerHTML = '<p class="text-gray-500 text-center py-4">No officers found for this department.</p>';
                         return;
                     }
 
-                    // Define the target spreadsheet row numbers (1-indexed)
-                    const targetSpreadsheetRows = new Set();
-                    const addRange = (start, end) => {
-                        for (let i = start; i <= end; i++) {
-                            targetSpreadsheetRows.add(i);
-                        }
-                    };
-
-                    targetSpreadsheetRows.add(6);
-                    targetSpreadsheetRows.add(9);
-                    targetSpreadsheetRows.add(10);
-                    targetSpreadsheetRows.add(11);
-                    addRange(12, 16);
-                    addRange(18, 22);
-                    addRange(24, 27);
-                    addRange(29, 32);
-                    addRange(34, 43);
-                    addRange(45, 54);
-                    addRange(56, 65);
-                    addRange(67, 78);
-                    addRange(80, 96);
-                    addRange(98, 117);
-                    addRange(119, 148);
-
                     const filteredRowsData = [];
-                    const regex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/; // Regex to split by comma, ignoring commas in double quotes
+                    // Regex to split by comma, ignoring commas inside double quotes
+                    const regex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
 
-                    rawRows.forEach((rowString, index) => {
-                        const spreadsheetRowNumber = index + 1; // CSV rows are 0-indexed, spreadsheet rows are 1-indexed
-                        if (targetSpreadsheetRows.has(spreadsheetRowNumber)) {
-                            // Parse each cell, removing quotes if present
+                    if (config.rowRanges) {
+                        // Use specific row ranges if provided (e.g., for LSPD)
+                        const targetSpreadsheetRows = new Set();
+                        config.rowRanges.forEach(range => {
+                            for (let i = range.start; i <= range.end; i++) {
+                                targetSpreadsheetRows.add(i);
+                            }
+                        });
+
+                        rawRows.forEach((rowString, index) => {
+                            const spreadsheetRowNumber = index + 1;
+                            if (targetSpreadsheetRows.has(spreadsheetRowNumber)) {
+                                const parsedCells = rowString.split(regex).map(cell => cell.replace(/^"(.*)"$/, '$1').trim());
+                                filteredRowsData.push(parsedCells);
+                            }
+                        });
+                    } else {
+                        // Generic filtering for sheets without specific row ranges (e.g., LSCSO)
+                        // Skip the first row (assuming it's a header) and filter out empty rows
+                        const nameColIndex = columnLetterToIndex('D'); // Assuming 'D' for Name
+                        const badgeColIndex = columnLetterToIndex('C'); // Assuming 'C' for Badge No.
+
+                        rawRows.slice(1).forEach(rowString => { // Start from the second row
                             const parsedCells = rowString.split(regex).map(cell => cell.replace(/^"(.*)"$/, '$1').trim());
-                            filteredRowsData.push(parsedCells);
-                        }
-                    });
+                            const name = parsedCells[nameColIndex] ? parsedCells[nameColIndex].trim() : '';
+                            const badge = parsedCells[badgeColIndex] ? parsedCells[badgeColIndex].trim() : '';
 
-                    // Define the mapping from desired fields to their original column indices
+                            // Only add if both name and badge are present and not 'N/A' or header-like strings
+                            if (name && name !== 'N/A' && name.toLowerCase() !== 'name' && name.toLowerCase() !== 'full name' &&
+                                badge && badge !== 'N/A' && badge.toLowerCase() !== 'badge no.' && badge.toLowerCase() !== 'badge number') {
+                                filteredRowsData.push(parsedCells);
+                            }
+                        });
+                    }
+
                     const headerToColIndexMap = {
                         'Badge No.': columnLetterToIndex('C'),
                         'Name': columnLetterToIndex('D'),
@@ -1017,14 +1068,14 @@
 
                         // Only add if both name and badge are present and not 'N/A' or empty
                         if (name && name !== 'N/A' && badge && badge !== 'N/A') {
-                            tempOfficerRoster.push({ name: name, badge: badge });
+                            tempOfficerRoster.push({ name: name, badge: badge, department: department });
                         }
                     });
                     officerRosterData = tempOfficerRoster; // Update the global roster data
                     populateOfficerList(officerRosterData); // Populate the modal list with fetched data
                 } catch (error) {
-                    console.error('Error fetching or parsing roster data:', error);
-                    officerListDiv.innerHTML = '<p class="text-red-500 text-center py-4">Failed to load officer roster. Please try again later.</p>';
+                    console.error(`Error fetching or parsing roster data for ${department}:`, error);
+                    officerListDiv.innerHTML = `<p class="text-red-500 text-center py-4">Failed to load officer roster for ${department}. Please try again later.</p>`;
                 }
             }
 
@@ -1047,6 +1098,7 @@
                     div.textContent = `${officer.name} (${officer.badge})`;
                     div.dataset.name = officer.name;
                     div.dataset.badge = officer.badge;
+                    div.dataset.department = officer.department; // Store department
 
                     div.addEventListener('click', () => {
                         localStorage.setItem('loggedInOfficer', JSON.stringify(officer));
@@ -1063,7 +1115,7 @@
                 const loggedInOfficer = localStorage.getItem('loggedInOfficer');
                 if (loggedInOfficer) {
                     const officer = JSON.parse(loggedInOfficer);
-                    loginButton.textContent = `Logged In: ${officer.name}`;
+                    loginButton.textContent = `Logged In: ${officer.name} (${officer.department})`; // Show department
                     loginButton.classList.remove('bg-blue-600', 'hover:bg-blue-700');
                     loginButton.classList.add('bg-green-600', 'hover:bg-green-700');
                 } else {
@@ -1134,6 +1186,7 @@
             if (declineCookiesBtn) {
                 declineCookiesBtn.addEventListener('click', () => {
                     localStorage.setItem('cookieConsent', 'declined');
+                    localStorage.removeItem('loggedInOfficer'); // Clear login info if cookies declined
                     cookieConsentBanner.classList.remove('show');
                     setTimeout(() => {
                         cookieConsentBanner.classList.add('hidden');
@@ -1152,9 +1205,30 @@
                     officerSelectionModal.classList.remove('hidden');
                     officerSearchInput.value = ''; // Clear search input
                     officerListDiv.innerHTML = '<div class="loader mx-auto my-4"></div>'; // Show loader inside modal
-                    await fetchAndSetOfficerRosterData(); // Fetch and populate
+
+                    // Set initial department in login modal based on logged-in officer or default
+                    const loggedInOfficer = localStorage.getItem('loggedInOfficer');
+                    let initialLoginDepartment = 'LSPD';
+                    if (loggedInOfficer) {
+                        try {
+                            const officer = JSON.parse(loggedInOfficer);
+                            initialLoginDepartment = officer.department || 'LSPD';
+                        } catch (e) {
+                            console.error('Error parsing loggedInOfficer from localStorage:', e);
+                        }
+                    }
+                    loginDepartmentSelect.value = initialLoginDepartment;
+
+                    await fetchAndSetOfficerRosterData(initialLoginDepartment); // Fetch and populate for the initial department
                 });
             }
+
+            // Event listener for department change in login modal
+            loginDepartmentSelect.addEventListener('change', async (e) => {
+                const selectedDepartment = e.target.value;
+                officerSearchInput.value = ''; // Clear search when department changes
+                await fetchAndSetOfficerRosterData(selectedDepartment);
+            });
 
             // Officer Search Input Listener
             officerSearchInput.addEventListener('input', (e) => {
@@ -1191,11 +1265,11 @@
                 if (theme === 'dark') {
                     document.body.classList.add('dark-mode');
                     document.body.classList.remove('light-mode');
-                    darkModeRadio.checked = true;
+                    if (darkModeRadio) darkModeRadio.checked = true; // Ensure radio button is checked
                 } else {
                     document.body.classList.remove('dark-mode');
                     document.body.classList.add('light-mode');
-                    lightModeRadio.checked = true;
+                    if (lightModeRadio) lightModeRadio.checked = true; // Ensure radio button is checked
                 }
                 localStorage.setItem('theme', theme);
             };
@@ -1204,76 +1278,100 @@
             const savedTheme = localStorage.getItem('theme') || 'light';
             applyTheme(savedTheme);
 
-            lightModeRadio.addEventListener('change', () => applyTheme('light'));
-            darkModeRadio.addEventListener('change', () => applyTheme('dark'));
+            if (lightModeRadio) {
+                lightModeRadio.addEventListener('change', () => applyTheme('light'));
+            }
+            if (darkModeRadio) {
+                darkModeRadio.addEventListener('change', () => applyTheme('dark'));
+            }
 
             // --- Settings Modal Logic ---
-            settingsIcon.addEventListener('click', () => {
-                settingsModal.classList.remove('hidden');
-                // Ensure correct radio button is checked when opening modal
-                const currentTheme = localStorage.getItem('theme') || 'light';
-                if (currentTheme === 'dark') {
-                    darkModeRadio.checked = true;
-                } else {
-                    lightModeRadio.checked = true;
-                }
-            });
+            if (settingsIcon) {
+                settingsIcon.addEventListener('click', () => {
+                    settingsModal.classList.remove('hidden');
+                    // Ensure correct radio button is checked when opening modal
+                    const currentTheme = localStorage.getItem('theme') || 'light';
+                    if (currentTheme === 'dark') {
+                        darkModeRadio.checked = true;
+                    } else {
+                        lightModeRadio.checked = true;
+                    }
+                });
+            }
 
-            closeSettingsModalBtn.addEventListener('click', () => {
-                settingsModal.classList.add('hidden');
-            });
-
-            settingsModal.addEventListener('click', (e) => {
-                if (e.target === settingsModal) {
+            if (closeSettingsModalBtn) {
+                closeSettingsModalBtn.addEventListener('click', () => {
                     settingsModal.classList.add('hidden');
-                }
-            });
+                });
+            }
+
+            if (settingsModal) {
+                settingsModal.addEventListener('click', (e) => {
+                    if (e.target === settingsModal) {
+                        settingsModal.classList.add('hidden');
+                    }
+                });
+            }
 
             // --- Clear All Data Logic (now inside settings modal) ---
-            clearAllDataBtn.addEventListener('click', () => {
-                settingsModal.classList.add('hidden'); // Hide settings modal first
-                confirmDeleteModal.classList.remove('hidden'); // Show confirmation modal
-            });
+            if (clearAllDataBtn) {
+                clearAllDataBtn.addEventListener('click', () => {
+                    settingsModal.classList.add('hidden'); // Hide settings modal first
+                    confirmDeleteModal.classList.remove('hidden'); // Show confirmation modal
+                });
+            }
 
-            confirmDeleteYesBtn.addEventListener('click', () => {
-                localStorage.clear(); // Clears all data from local storage for this domain
-                console.log('All website data cleared from local storage.');
-                confirmDeleteModal.classList.add('hidden');
-                location.reload(); // Reload the page to reflect changes
-            });
+            if (confirmDeleteYesBtn) {
+                confirmDeleteYesBtn.addEventListener('click', () => {
+                    localStorage.clear(); // Clears all data from local storage for this domain
+                    console.log('All website data cleared from local storage.');
+                    confirmDeleteModal.classList.add('hidden');
+                    location.reload(); // Reload the page to reflect changes
+                });
+            }
 
-            confirmDeleteNoBtn.addEventListener('click', () => {
-                confirmDeleteModal.classList.add('hidden');
-                settingsModal.classList.remove('hidden'); // Show settings modal again
-            });
-
-            // Close delete confirmation modal if clicking outside
-            confirmDeleteModal.addEventListener('click', (e) => {
-                if (e.target === confirmDeleteModal) {
+            if (confirmDeleteNoBtn) {
+                confirmDeleteNoBtn.addEventListener('click', () => {
                     confirmDeleteModal.classList.add('hidden');
                     settingsModal.classList.remove('hidden'); // Show settings modal again
-                }
-            });
+                });
+            }
+
+            // Close delete confirmation modal if clicking outside
+            if (confirmDeleteModal) {
+                confirmDeleteModal.addEventListener('click', (e) => {
+                    if (e.target === confirmDeleteModal) {
+                        confirmDeleteModal.classList.add('hidden');
+                        settingsModal.classList.remove('hidden'); // Show settings modal again
+                    }
+                });
+            }
 
 
             // --- Data Viewer Logic ---
-            viewDataBtn.addEventListener('click', () => {
-                settingsModal.classList.add('hidden'); // Hide settings modal
-                dataViewerModal.classList.remove('hidden');
-                displayLocalStorageData();
-            });
+            if (viewDataBtn) {
+                viewDataBtn.addEventListener('click', () => {
+                    settingsModal.classList.add('hidden'); // Hide settings modal
+                    dataViewerModal.classList.remove('hidden');
+                    displayLocalStorageData();
+                });
+            }
 
-            closeDataViewerModalBtn.addEventListener('click', () => {
-                dataViewerModal.classList.add('hidden');
-                settingsModal.classList.remove('hidden'); // Show settings modal again
-            });
-
-            dataViewerModal.addEventListener('click', (e) => {
-                if (e.target === dataViewerModal) {
+            if (closeDataViewerModalBtn) {
+                closeDataViewerModalBtn.addEventListener('click', () => {
                     dataViewerModal.classList.add('hidden');
                     settingsModal.classList.remove('hidden'); // Show settings modal again
-                }
-            });
+                });
+            }
+
+            if (dataViewerModal) {
+                dataViewerModal.addEventListener('click', (e) => {
+                    if (e.target === dataViewerModal) {
+                        dataViewerModal.classList.add('hidden');
+                        settingsModal.classList.remove('hidden'); // Show settings modal again
+                    }
+                });
+            }
 
             function displayLocalStorageData() {
                 dataViewerContent.innerHTML = ''; // Clear existing content
@@ -1288,9 +1386,9 @@
                         const officerDiv = document.createElement('div');
                         officerDiv.className = 'data-viewer-item';
                         officerDiv.innerHTML = `
-                                        <p class="title">Officer Logged In</p>
-                                        <p class="description">${officer.name} (Badge: ${officer.badge})</p>
-                                    `;
+                                            <p class="title">Officer Logged In</p>
+                                            <p class="description">${officer.name} (Badge: ${officer.badge}, Department: ${officer.department || 'N/A'})</p>
+                                        `;
                         dataViewerContent.appendChild(officerDiv);
                         hasData = true;
                     } catch (e) {
@@ -1304,9 +1402,9 @@
                     const themeDiv = document.createElement('div');
                     themeDiv.className = 'data-viewer-item';
                     themeDiv.innerHTML = `
-                                    <p class="title">Website Theme</p>
-                                    <p class="description">${currentTheme.charAt(0).toUpperCase() + currentTheme.slice(1)} Mode</p>
-                                `;
+                                        <p class="title">Website Theme</p>
+                                        <p class="description">${currentTheme.charAt(0).toUpperCase() + currentTheme.slice(1)} Mode</p>
+                                    `;
                     dataViewerContent.appendChild(themeDiv);
                     hasData = true;
                 }
@@ -1316,7 +1414,7 @@
                 for (let i = 0; i < localStorage.length; i++) {
                     const key = localStorage.key(i);
                     // Skip keys already displayed
-                    if (key === 'loggedInOfficer' || key === 'theme' || key === 'cookieConsent') {
+                    if (key === 'loggedInOfficer' || key === 'theme' || key === 'cookieConsent' || key === 'reportGeneratorData') { // Added reportGeneratorData
                         continue;
                     }
 
@@ -1342,9 +1440,9 @@
                     const dataDiv = document.createElement('div');
                     dataDiv.className = 'data-viewer-item';
                     dataDiv.innerHTML = `
-                                    <p class="title">${key}</p>
-                                    <p class="description">${value}</p>
-                                `;
+                                        <p class="title">${key}</p>
+                                        <p class="description">${value}</p>
+                                    `;
                     dataViewerContent.appendChild(dataDiv);
                     hasData = true;
                     otherDataCount++;
@@ -1428,9 +1526,9 @@
                             const updateDiv = document.createElement('div');
                             updateDiv.className = 'bg-white p-4 rounded-md shadow-sm';
                             updateDiv.innerHTML = `
-                                                    <p class="text-gray-800 font-semibold">${update.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}: ${update.title}</p>
-                                                    <p class="text-gray-600 text-sm">${update.description}</p>
-                                                `;
+                                                        <p class="text-gray-800 font-semibold">${update.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}: ${update.title}</p>
+                                                        <p class="text-gray-600 text-sm">${update.description}</p>
+                                                    `;
                             updatesContent.appendChild(updateDiv);
                         });
                         updatesSection.classList.remove('hidden'); // Show the section

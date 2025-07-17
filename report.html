@@ -1279,16 +1279,49 @@
             return index - 1; // Convert to 0-based index
         }
 
+        // Configuration for different department sheets
+        const departmentSheetConfig = {
+            "LSPD": {
+                sheetId: '1o4Xw8GSQBp6brMfGo_ubYngnhJYU_f8AhyUIftAlT1Y', // Existing LSPD sheet
+                gid: '0',
+                rowRanges: [
+                    { start: 6, end: 6 },
+                    { start: 9, end: 16 },
+                    { start: 18, end: 22 },
+                    { start: 24, end: 27 },
+                    { start: 29, end: 32 },
+                    { start: 34, end: 43 },
+                    { start: 45, end: 54 },
+                    { start: 56, end: 65 },
+                    { start: 67, end: 78 },
+                    { start: 80, end: 96 },
+                    { start: 98, end: 117 },
+                    { start: 119, end: 148 }
+                ]
+            },
+            "LSCSO": {
+                sheetId: '2PACX-1vT8yueJjp9o-XVH1_RXPji6N_IAP1DDbNLZ8l4__IqGCvVEUWscsdsJ6uNHZ8u6kDhhXkSxcdkdeDJi',
+                gid: '1747285908',
+                rowRanges: null // Indicates generic filtering for this sheet
+            }
+        };
+
         /**
          * Fetches CSV data from a Google Sheet, parses it, and populates the officerRosterData.
-         * This function is called when the officer selection modal is opened.
+         * @param {string} department - The department for which to fetch the roster (e.g., "LSPD", "LSCSO").
          */
-        async function fetchAndSetOfficerRosterData() {
+        async function fetchOfficerRosterData(department) {
             officerListDiv.innerHTML = '<div class="loader mx-auto my-4"></div>'; // Show loader
 
-            const sheetId = '1o4Xw8GSQBp6brMfGo_ubYngnhWJU_f8AhyUIftAlT1Y';
-            const gid = '0'; // Assuming gid=0 for the primary sheet tab
-            const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
+            const config = departmentSheetConfig[department];
+            if (!config) {
+                console.error(`Configuration not found for department: ${department}`);
+                officerListDiv.innerHTML = '<p class="text-red-500 text-center py-4">Department roster configuration missing.</p>';
+                officerRosterData = [];
+                return;
+            }
+
+            const csvUrl = `https://docs.google.com/spreadsheets/d/e/${config.sheetId}/export?format=csv&gid=${config.gid}`;
 
             try {
                 const response = await fetch(csvUrl);
@@ -1299,49 +1332,51 @@
 
                 const rawRows = csvText.trim().split('\n');
                 if (rawRows.length === 0) {
-                    console.warn('No roster data available from Google Sheet.');
-                    officerRosterData = []; // Ensure it's empty
-                    officerListDiv.innerHTML = '<p class="text-gray-500 text-center py-4">No officers found.</p>';
+                    console.warn(`No roster data available for ${department} from Google Sheet.`);
+                    officerRosterData = [];
+                    officerListDiv.innerHTML = '<p class="text-gray-500 text-center py-4">No officers found for this department.</p>';
                     return;
                 }
 
-                // Define the target spreadsheet row numbers (1-indexed)
-                const targetSpreadsheetRows = new Set();
-                const addRange = (start, end) => {
-                    for (let i = start; i <= end; i++) {
-                        targetSpreadsheetRows.add(i);
-                    }
-                };
-
-                targetSpreadsheetRows.add(6);
-                targetSpreadsheetRows.add(9);
-                targetSpreadsheetRows.add(10);
-                targetSpreadsheetRows.add(11);
-                addRange(12, 16);
-                addRange(18, 22);
-                addRange(24, 27);
-                addRange(29, 32);
-                addRange(34, 43);
-                addRange(45, 54);
-                addRange(56, 65);
-                addRange(67, 78);
-                addRange(80, 96);
-                addRange(98, 117);
-                addRange(119, 148);
-
                 const filteredRowsData = [];
-                const regex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/; // Regex to split by comma, ignoring commas in double quotes
+                // Regex to split by comma, ignoring commas inside double quotes
+                const regex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
 
-                rawRows.forEach((rowString, index) => {
-                    const spreadsheetRowNumber = index + 1; // CSV rows are 0-indexed, spreadsheet rows are 1-indexed
-                    if (targetSpreadsheetRows.has(spreadsheetRowNumber)) {
-                        // Parse each cell, removing quotes if present
+                if (config.rowRanges) {
+                    // Use specific row ranges if provided (e.g., for LSPD)
+                    const targetSpreadsheetRows = new Set();
+                    config.rowRanges.forEach(range => {
+                        for (let i = range.start; i <= range.end; i++) {
+                            targetSpreadsheetRows.add(i);
+                        }
+                    });
+
+                    rawRows.forEach((rowString, index) => {
+                        const spreadsheetRowNumber = index + 1;
+                        if (targetSpreadsheetRows.has(spreadsheetRowNumber)) {
+                            const parsedCells = rowString.split(regex).map(cell => cell.replace(/^"(.*)"$/, '$1').trim());
+                            filteredRowsData.push(parsedCells);
+                        }
+                    });
+                } else {
+                    // Generic filtering for sheets without specific row ranges (e.g., LSCSO)
+                    // Skip the first row (assuming it's a header) and filter out empty rows
+                    const nameColIndex = columnLetterToIndex('D'); // Assuming 'D' for Name
+                    const badgeColIndex = columnLetterToIndex('C'); // Assuming 'C' for Badge No.
+
+                    rawRows.slice(1).forEach(rowString => { // Start from the second row
                         const parsedCells = rowString.split(regex).map(cell => cell.replace(/^"(.*)"$/, '$1').trim());
-                        filteredRowsData.push(parsedCells);
-                    }
-                });
+                        const name = parsedCells[nameColIndex] ? parsedCells[nameColIndex].trim() : '';
+                        const badge = parsedCells[badgeColIndex] ? parsedCells[badgeColIndex].trim() : '';
 
-                // Define the mapping from desired fields to their original column indices
+                        // Only add if both name and badge are present and not 'N/A' or header-like strings
+                        if (name && name !== 'N/A' && name.toLowerCase() !== 'name' && name.toLowerCase() !== 'full name' &&
+                            badge && badge !== 'N/A' && badge.toLowerCase() !== 'badge no.' && badge.toLowerCase() !== 'badge number') {
+                            filteredRowsData.push(parsedCells);
+                        }
+                    });
+                }
+
                 const headerToColIndexMap = {
                     'Badge No.': columnLetterToIndex('C'),
                     'Name': columnLetterToIndex('D'),
@@ -1354,14 +1389,14 @@
 
                     // Only add if both name and badge are present and not 'N/A' or empty
                     if (name && name !== 'N/A' && badge && badge !== 'N/A') {
-                        tempOfficerRoster.push({ name: name, badge: badge });
+                        tempOfficerRoster.push({ name: name, badge: badge, department: department });
                     }
                 });
                 officerRosterData = tempOfficerRoster; // Update the global roster data
                 populateOfficerList(officerRosterData); // Populate the modal list with fetched data
             } catch (error) {
-                console.error('Error fetching or parsing roster data:', error);
-                officerListDiv.innerHTML = '<p class="text-red-500 text-center py-4">Failed to load officer roster. Please try again later.</p>';
+                console.error(`Error fetching or parsing roster data for ${department}:`, error);
+                officerListDiv.innerHTML = `<p class="text-red-500 text-center py-4">Failed to load officer roster for ${department}. Please try again later.</p>`;
             }
         }
 
@@ -1596,12 +1631,13 @@
                 div.textContent = `${officer.name} (${officer.badge})`;
                 div.dataset.name = officer.name;
                 div.dataset.badge = officer.badge;
+                div.dataset.department = officer.department; // Store department
 
                 div.addEventListener('click', () => {
                     officerInfoInput.value = `${officer.name} (${officer.badge})`;
                     officerSelectionModal.classList.add('hidden');
-                    // No longer saving officerInfo directly here, as it's handled by login
-                    // saveFormData();
+                    // Save the selected officer's full details to local storage for persistence
+                    localStorage.setItem('loggedInOfficer', JSON.stringify(officer));
                 });
                 officerListDiv.appendChild(div);
             });
@@ -1802,27 +1838,38 @@
         // Add event listener to report type dropdown to toggle fields
         reportTypeSelect.addEventListener('change', toggleReportFields);
 
+        // Event listener for department dropdown change
+        departmentSelect.addEventListener('change', (e) => {
+            const selectedDepartment = e.target.value;
+            fetchOfficerRosterData(selectedDepartment);
+        });
+
         // Initialize fields visibility and populate evidence list on page load
-        document.addEventListener('DOMContentLoaded', () => {
+        document.addEventListener('DOMContentLoaded', async () => {
             populateEvidenceList(); // Populate evidence options first
             loadFormData(); // Then load saved data
 
             // Apply theme on load (now that applyTheme is defined)
             applyTheme(localStorage.getItem('theme') || 'light');
 
-
             // Check for loggedInOfficer in local storage and pre-fill officerInfoInput
             const loggedInOfficer = localStorage.getItem('loggedInOfficer');
+            let initialDepartment = 'LSPD'; // Default to LSPD
             if (loggedInOfficer) {
                 try {
                     const officer = JSON.parse(loggedInOfficer);
                     officerInfoInput.value = `${officer.name} (${officer.badge})`;
-                    // No need to call saveFormData here as officerInfo is not saved to reportGeneratorData
+                    // If the logged-in officer belongs to LCSO, automatically select LCSO
+                    if (officer.department === 'LSCSO') {
+                        initialDepartment = 'LSCSO';
+                    }
                 } catch (e) {
                     console.error('Error parsing loggedInOfficer from localStorage:', e);
                     localStorage.removeItem('loggedInOfficer'); // Clear corrupted data
                 }
             }
+            departmentSelect.value = initialDepartment; // Set the department dropdown
+            await fetchOfficerRosterData(initialDepartment); // Fetch roster for the initial/auto-selected department
         });
 
         // Add event listeners to all form fields for saving data
@@ -1917,8 +1964,8 @@
         officerInfoInput.addEventListener('click', async () => {
             officerSelectionModal.classList.remove('hidden');
             officerSearchInput.value = ''; // Clear search input
-            officerListDiv.innerHTML = '<div class="loader mx-auto my-4"></div>'; // Show loader inside modal
-            await fetchAndSetOfficerRosterData(); // Fetch and populate
+            // Fetch and populate for the currently selected department
+            await fetchOfficerRosterData(departmentSelect.value);
         });
 
         officerSearchInput.addEventListener('input', (e) => {
@@ -2664,7 +2711,7 @@ Status: Report Filed.
                     officerDiv.className = 'data-viewer-item';
                     officerDiv.innerHTML = `
                             <p class="title">Officer Logged In</p>
-                            <p class="description">${officer.name} (Badge: ${officer.badge})</p>
+                            <p class="description">${officer.name} (Badge: ${officer.badge}, Department: ${officer.department || 'N/A'})</p>
                         `;
                     dataViewerContent.appendChild(officerDiv);
                     hasData = true;
