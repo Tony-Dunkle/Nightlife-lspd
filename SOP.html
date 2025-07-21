@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LSPD Internal Portal - SOPs</title>
-    <link rel="icon" href="LSPD.png" type="image/png"> <!-- Favicon added -->
+    <title>UPD Internal Portal - SOPs</title>
+    <link rel="icon" href="LSPD.png" type="image/png" onerror="this.onerror=null; this.href='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';"> <!-- Favicon added -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -20,7 +20,7 @@
             color: #333;
             display: flex;
             flex-direction: column;
-            min-height: 10vh;
+            min-height: 100vh; /* Changed to 100vh to ensure footer sticks to bottom */
         }
 
         main {
@@ -386,10 +386,10 @@
     <!-- Header Section -->
     <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex items-center justify-between sticky top-0 z-50 rounded-b-lg relative">
         <div class="flex items-center">
-            <!-- LSPD Logo -->
-            <img src="LSPD.png" alt="LSPD Logo" class="mr-4 w-16 h-16 object-contain" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
+            <!-- UPD Logo -->
+            <img src="LSPD.png" alt="UPD Logo" class="mr-4 w-16 h-16 object-contain" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
             <!-- Responsive font size: text-2xl for small screens, text-3xl for medium screens and up -->
-            <h1 class="text-2xl md:text-3xl font-bold">Los Santos Police Department</h1>
+            <h1 class="text-2xl md:text-3xl font-bold">Unified Police Department</h1>
         </div>
 
         <!-- Hamburger Menu Button for Mobile -->
@@ -404,8 +404,8 @@
         <nav class="nav-links md:flex md:flex-grow md:justify-end">
             <!-- Changed md:space-x-8 to md:space-x-4 and added md:flex-wrap for stacking -->
             <ul class="flex flex-col md:flex-row md:flex-wrap md:justify-end space-y-2 md:space-y-0 md:space-x-4 text-sm font-medium">
-                <li><a href="index.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700 current-page">Dashboard</a></li>
-                <li><a href="SOP.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">SOPs</a></li>
+                <li><a href="index.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Dashboard</a></li>
+                <li><a href="SOP.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700 current-page">SOPs</a></li>
                 <li><a href="training.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Training</a></li>
                 <li><a href="forms.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Forms</a></li>
                 <li><a href="roster.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Roster</a></li>
@@ -423,48 +423,48 @@
         <div class="absolute inset-0 bg-cover bg-center opacity-30"></div>
         <div class="relative z-10 max-w-4xl mx-auto">
             <h2 class="text-4xl md:text-5xl font-extrabold leading-tight mb-4 text-white">Standard Operating Procedures</h2>
-            <p class="text-lg md:text-xl mb-6 text-white">Your comprehensive guide to LSPD policies and protocols. Click the buttons below to view the documents.</p>
+            <p class="text-lg md:text-xl mb-6 text-white">Your comprehensive guide to UPD policies and protocols. Click the buttons below to view the documents.</p>
         </div>
     </section>
 
     <!-- Main Content Section - Buttons for Documents -->
     <main class="container mx-auto px-4 md:px-8 py-12">
-        <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">LSPD Internal Documents</h2>
+        <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">UPD Internal Documents</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <button class="doc-button bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold shadow-lg hover:bg-blue-700 transition duration-300 ease-in-out transform hover:scale-105"
                     data-doc-url="https://docs.google.com/document/d/e/2PACX-1vTqgwwOg0Z1YwizKL9fTocMNfJC0A3ElTMvyukZZFQOi2SAjozk3mEmMrg-w1q12HYJSb-jtzYS1w8s/pub"
-                    data-doc-title="LSPD Standard Operating Procedures">
+                    data-doc-title="UPD Standard Operating Procedures">
                 View General SOP
             </button>
 
             <button class="doc-button bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold shadow-lg hover:bg-blue-700 transition duration-300 ease-in-out transform hover:scale-105"
                     data-doc-url="https://docs.google.com/document/d/e/2PACX-1vSu3017bed6u23vHL2Eexv_1IGwqED2TO2ZOJxDa0EzO5glkDEy_DbLxSgYET-_E_k79uOKSlF6bnEH/pub"
-                    data-doc-title="LSPD Interview Procedure & Questions">
+                    data-doc-title="UPD Interview Procedure & Questions">
                 View Interview Procedure & Questions
             </button>
 
             <button class="doc-button bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold shadow-lg hover:bg-blue-700 transition duration-300 ease-in-out transform hover:scale-105"
                     data-doc-url="https://docs.google.com/document/d/e/2PACX-1vQg2Dhsa_pMb0zLvt7x7_FnkRRLK2UFhgIYyyzlNlBIxmtoYu9jKdjwIJEzorGk_nM8w9-Nq9c7vtAR/pub"
-                    data-doc-title="LSPD Promotional Pathway & Subdivision Assignment Policy">
+                    data-doc-title="UPD Promotional Pathway & Subdivision Assignment Policy">
                 View Promotional Pathway Policy
             </button>
 
             <button class="doc-button bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold shadow-lg hover:bg-blue-700 transition duration-300 ease-in-out transform hover:scale-105"
                     data-doc-url="https://docs.google.com/document/d/e/2PACX-1vSVPyAf9aX1HEOdbIePwtq8NovTudH6s-KuFMkFxBmJCX00OYbMY84pO2c66oELDt_Tm97s8WRmXdqW/pub"
-                    data-doc-title="LSPD HEAT SOP">
+                    data-doc-title="UPD HEAT SOP">
                 View HEAT SOP
             </button>
 
             <button class="doc-button bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold shadow-lg hover:bg-blue-700 transition duration-300 ease-in-out transform hover:scale-105"
                     data-doc-url="https://docs.google.com/document/d/e/2PACX-1vRZowQD3Rqo7MK4drpXXgRud-gmZ5WLy6GjjWZnRYnT_v27dZ71ufX1zNx53rk3fnF8cWDGNeLdOYRP/pub"
-                    data-doc-title="LSPD Disciplinary Guidelines">
+                    data-doc-title="UPD Disciplinary Guidelines">
                 View Disciplinary Guidelines
             </button>
 
             <!-- New Button for Bonus Distribution Program -->
             <button class="doc-button bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold shadow-lg hover:bg-blue-700 transition duration-300 ease-in-out transform hover:scale-105"
                     data-doc-url="https://docs.google.com/document/d/e/2PACX-1vTyfcTo8MFKRbi9YhttnDnV5uWYAbAvf-NYpVPy4q2hiUF3oH6xLOA4b3CpjECW-H8oqqC5962SBgIG/pub"
-                    data-doc-title="LSPD Bonus Distribution Program">
+                    data-doc-title="UPD Bonus Distribution Program">
                 View Bonus Distribution Program
             </button>
         </div>
@@ -501,15 +501,17 @@
                 <h4 class="text-xl font-semibold mb-4 text-blue-300">Internal Contacts</h4>
                 <ul class="space-y-2 text-sm">
                     <li><a href="https://discord.gg/7FwxdpfDTM" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Discord</a></li>
-                    <li><a href="https://discord.com/channels/1383775098464370768/1383775099777318972" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Chat</a></li>
-                    <li><a href="https://discord.com/channels/1383775098464370768/1383782578976456735" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Cadet Support</a></li>
+                    <li><a href="https://discord.com/channels/1383775098464370768/1396398235660058685" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Support</a></li>
+                    <li><a href="https://discord.com/channels/1383775098464370768/1396398240840290374" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Chat</a></li>
+                    <li><a href="https://discord.com/channels/1383775098464370768/1396398235660058685" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Internal Affairs</a></li>
+                    <li><a href="https://discord.com/channels/1383775098464370768/1396398239678333030" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Announcements</a></li>
                 </ul>
             </div>
             <div>
                 <h4 class="text-xl font-semibold mb-4 text-blue-300">Quick Access</h4>
                 <ul class="space-y-2 text-sm">
-                    <li><a href="https://docs.google.com/document/d/1etjilZ1dAHGviw33MV5Zs-b5dXqcSHyoYIHvHiRIyy4/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">LSPD SOP</a></li>
-                    <li><a href="https://docs.google.com/document/d/1hKQ4fw9b1_yQELhPi1p1b4M6uiSaYb7bBp-9C6GVTdY/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Los Santos Police Department Interview Procedure & Questions</a></li>
+                    <li><a href="https://docs.google.com/document/d/1etjilZ1dAHGviw33MV5Zs-b5dXqcSHyoYIHvHiRIyy4/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD SOP</a></li>
+                    <li><a href="https://docs.google.com/document/d/1hKQ4fw9b1_yQELhPi1p1b4MuiSaYb7bBp-9C6GVTdY/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Unified Police Department Interview Procedure & Questions</a></li>
                     <li><a href="https://docs.google.com/document/d/1d004FfAhZBgESn88Mx21N3CGqXlcoNeP9_sadn_ePak/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Promotional Pathway & Subdivision Assignment Policy</a></li>
                     <li><a href="https://docs.google.com/document/d/14QIEsYMWpTssti1xGbGWiMxQ2b0jbiYxuMmvV8XWUUo/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Highway Enforcement and Apprehension Team (HEAT) Activation Policy</a></li>
                     <li><a href="https://docs.google.com/document/d/1Ggf7SS5voiIjr3iSLB3VtAc47JN3aDjm2J_gYnpoZ6s/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Disciplinary Guidelines</a></li>
@@ -519,9 +521,9 @@
             <div>
                 <h4 class="text-xl font-semibold mb-4 text-blue-300">System Information</h4>
                 <p class="text-gray-500 text-sm mb-2">Unauthorized Access Strictly Prohibited</p>
-                <p class="text-gray-500 text-sm mb-2">For LSPD Personnel Use Only</p>
+                <p class="text-gray-500 text-sm mb-2">For UPD Personnel Use Only</p>
                 <p class="text-500 text-sm mb-2">Created and Maintained by FiveM "NightLife RP"</p>
-                <p class="text-gray-500 text-sm">&copy; 2025 Los Santos Police Department Internal Systems.</p>
+                <p class="text-gray-500 text-sm">&copy; 2025 Unified Police Department Internal Systems.</p>
             </div>
         </div>
         <!-- Font Awesome for any potential internal icons (though less needed here) -->

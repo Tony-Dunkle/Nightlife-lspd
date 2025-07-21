@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <!-- Viewport meta tag is crucial for responsive behavior across devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Police Report Generator</title>
+    <title>LSPD Report Generator</title>
     <!-- Favicon link updated with a fallback URL for robustness -->
     <link rel="icon" type="image/png" href="LSPD.png" onerror="this.href='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
     <!-- Tailwind CSS CDN - provides responsive utility classes out of the out of the box -->
@@ -427,13 +427,13 @@
         <nav class="nav-links md:flex md:flex-grow md:justify-end">
             <!-- Changed md:space-x-8 to md:space-x-4 and added md:flex-wrap for stacking -->
             <ul class="flex flex-col md:flex-row md:flex-wrap md:justify-end space-y-2 md:space-y-0 md:space-x-4 text-sm font-medium">
-                <li><a href="index.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700 current-page">Dashboard</a></li>
+                <li><a href="index.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Dashboard</a></li>
                 <li><a href="SOP.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">SOPs</a></li>
                 <li><a href="training.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Training</a></li>
                 <li><a href="forms.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Forms</a></li>
                 <li><a href="roster.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Roster</a></li>
                 <li><a href="hr.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">HR Info</a></li>
-                <li><a href="report.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Report Generator</a></li>
+                <li><a href="report.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700 current-page">Report Generator</a></li>
                 <li><a href="charges.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Charge Calculator</a></li>
                 <li><a href="info.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Common Information</a></li>
             </ul>
@@ -445,7 +445,7 @@
     <main class="w-full px-4 md:px-8 py-12 flex justify-center items-start">
         <!-- Police Report Generator Section -->
         <section class="bg-blue-50 p-8 rounded-lg shadow-inner w-full">
-            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Police Report Generator</h2>
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">LSPD Report Generator</h2>
             <div class="bg-white p-8 rounded-xl shadow-2xl w-full">
 
                 <!-- Clear Report Button - Added here -->
@@ -1094,8 +1094,10 @@
                 <h4 class="text-xl font-semibold mb-4 text-blue-300">Internal Contacts</h4>
                 <ul class="space-y-2 text-sm">
                     <li><a href="https://discord.gg/7FwxdpfDTM" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Discord</a></li>
-                    <li><a href="https://discord.com/channels/1383775098464370768/1383775099777318972" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Chat</a></li>
-                    <li><a href="https://discord.com/channels/1383775098464370768/1383782578976456735" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Cadet Support</a></li>
+                    <li><a href="https://discord.com/channels/1383775098464370768/1396398235660058685" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">LSPD Support</a></li>
+                    <li><a href="https://discord.com/channels/1383775098464370768/1396398240840290374" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">LSPD Chat</a></li>
+                    <li><a href="https://discord.com/channels/1383775098464370768/1396398235660058685" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">LSPD Internal Affairs</a></li>
+                    <li><a href="https://discord.com/channels/1383775098464370768/1396398239678333030" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">LSPD Announcements</a></li>
                 </ul>
             </div>
             <div>
@@ -1282,8 +1284,8 @@
 
         // Configuration for different department sheets
         const departmentSheetConfig = {
-            "LSPD": {
-                sheetId: '2PACX-1vT8yueJjp9o-XVH1_RXPji6N_IAP1DDbNLZ8l4__IqGCvVEUWscsdsJ6uNHZ8u6kDhhXkSxcdkdeDJi', // Corrected LSPD sheetId
+            "LSPD": { // Changed from UPD to LSPD
+                sheetId: '1o4Xw8GSQBp6brMfGo_ubYngnhWJU_f8AhyUIftAlT1Y', // Corrected LSPD sheetId
                 gid: '0',
                 rowRanges: [
                     { start: 6, end: 6 },
@@ -1435,9 +1437,9 @@
                 const div = document.createElement('div');
                 div.className = 'evidence-item flex items-center p-2 rounded-md hover:bg-blue-100 cursor-pointer';
                 div.innerHTML = `
-                                                    <input type="checkbox" id="evidence-${item.name.replace(/\s/g, '-')}" value="${item.name}" class="form-checkbox h-5 w-5 text-blue-600 rounded-md">
-                                                    <label for="evidence-${item.name.replace(/\s/g, '-')}" class="ml-2 text-gray-800 text-sm font-medium flex-grow">${item.name}</label>
-                                                `;
+                                                        <input type="checkbox" id="evidence-${item.name.replace(/\s/g, '-')}" value="${item.name}" class="form-checkbox h-5 w-5 text-blue-600 rounded-md">
+                                                        <label for="evidence-${item.name.replace(/\s/g, '-')}" class="ml-2 text-gray-800 text-sm font-medium flex-grow">${item.name}</label>
+                                                    `;
                 div.setAttribute('data-description', item.description);
                 div.setAttribute('data-type', item.type);
                 if (item.linkProviders) {
@@ -1815,13 +1817,13 @@
             modalOverlay.className = 'modal-overlay'; // Re-use modal-overlay styles
             modalOverlay.id = 'customAlertModal';
             modalOverlay.innerHTML = `
-                                    <div class="modal-content text-center">
-                                        <p class="text-lg font-semibold mb-6">${message}</p>
-                                        <button id="closeCustomAlertBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">
-                                            OK
-                                        </button>
-                                    </div>
-                                `;
+                                        <div class="modal-content text-center">
+                                            <p class="text-lg font-semibold mb-6">${message}</p>
+                                            <button id="closeCustomAlertBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">
+                                                OK
+                                            </button>
+                                        </div>
+                                    `;
             document.body.appendChild(modalOverlay);
 
             document.getElementById('closeCustomAlertBtn').addEventListener('click', () => {
@@ -1861,9 +1863,11 @@
                 try {
                     const officer = JSON.parse(loggedInOfficer);
                     officerInfoInput.value = `${officer.name} (${officer.badge})`;
-                    // If the logged-in officer belongs to LCSO, automatically select LCSO
+                    // If the logged-in officer belongs to LSCSO, automatically select LSCSO
                     if (officer.department === 'LSCSO') {
                         initialDepartment = 'LSCSO';
+                    } else { // Default to LSPD if not LSCSO
+                        initialDepartment = 'LSPD';
                     }
                 } catch (e) {
                     console.error('Error parsing loggedInOfficer from localStorage:', e);
@@ -2534,11 +2538,11 @@ Status: Report Filed.
             let lspdLogoBase64 = '';
             try {
                 // Use the onerror fallback URL for LSPD.png if the direct path fails
-                const imgElement = document.querySelector('img[alt="LSPD Logo"]');
+                const imgElement = document.querySelector('img[alt="LSPD Logo"]'); // Changed alt to LSPD Logo
                 const logoUrl = imgElement.src || 'https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';
                 lspdLogoBase64 = await getImageBase64(logoUrl);
             } catch (error) {
-                console.error('Error loading LSPD logo for PDF:', error);
+                console.error('Error loading LSPD logo for PDF:', error); // Changed UPD to LSPD
                 // Optionally, you can add a placeholder text or simply skip the image if it fails to load
             }
 
@@ -2712,9 +2716,9 @@ Status: Report Filed.
                     const officerDiv = document.createElement('div');
                     officerDiv.className = 'data-viewer-item';
                     officerDiv.innerHTML = `
-                                <p class="title">Officer Logged In</p>
-                                <p class="description">${officer.name} (Badge: ${officer.badge}, Department: ${officer.department || 'N/A'})</p>
-                            `;
+                                    <p class="title">Officer Logged In</p>
+                                    <p class="description">${officer.name} (Badge: ${officer.badge}, Department: ${officer.department || 'N/A'})</p>
+                                `;
                     dataViewerContent.appendChild(officerDiv);
                     hasData = true;
                 } catch (e) {
@@ -2728,9 +2732,9 @@ Status: Report Filed.
                 const themeDiv = document.createElement('div');
                 themeDiv.className = 'data-viewer-item';
                 themeDiv.innerHTML = `
-                            <p class="title">Website Theme</p>
-                            <p class="description">${currentTheme.charAt(0).toUpperCase() + currentTheme.slice(1)} Mode</p>
-                        `;
+                                <p class="title">Website Theme</p>
+                                <p class="description">${currentTheme.charAt(0).toUpperCase() + currentTheme.slice(1)} Mode</p>
+                            `;
                 dataViewerContent.appendChild(themeDiv);
                 hasData = true;
             }
@@ -2743,11 +2747,11 @@ Status: Report Filed.
                     const reportDiv = document.createElement('div');
                     reportDiv.className = 'data-viewer-item mt-4';
                     reportDiv.innerHTML = `
-                                <p class="title">Report Generator Data</p>
-                                <p class="description">Last saved report type: ${data.reportType || 'N/A'}</p>
-                                <p class="description">Last saved suspect name: ${data.suspectName || 'N/A'}</p>
-                                <p class="description">Other form fields saved. (Too detailed to list all here)</p>
-                            `;
+                                    <p class="title">Report Generator Data</p>
+                                    <p class="description">Last saved report type: ${data.reportType || 'N/A'}</p>
+                                    <p class="description">Last saved suspect name: ${data.suspectName || 'N/A'}</p>
+                                    <p class="description">Other form fields saved. (Too detailed to list all here)</p>
+                                `;
                     dataViewerContent.appendChild(reportDiv);
                     hasData = true;
                 } catch (e) {
@@ -2786,9 +2790,9 @@ Status: Report Filed.
                 const dataDiv = document.createElement('div');
                 dataDiv.className = 'data-viewer-item';
                 dataDiv.innerHTML = `
-                            <p class="title">${key}</p>
-                            <p class="description">${value}</p>
-                        `;
+                                <p class="title">${key}</p>
+                                <p class="description">${value}</p>
+                            `;
                 dataViewerContent.appendChild(dataDiv);
                 hasData = true;
                 otherDataCount++;
