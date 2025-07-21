@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UPD Internal Portal - Roster</title>
+    <title>Unified Police Department - Roster</title>
     <link rel="icon" type="image/png" href="LSPD.png"> <!-- Favicon added here -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -460,33 +460,41 @@
         <!-- Settings Icon -->
         <img src="settings.png" alt="Settings" id="settingsIcon" class="ml-4 cursor-pointer">
     </header>
-    <!-- Main Content Section - UPD Roster -->
+    <!-- Main Content Section - Roster -->
     <main class="container mx-auto px-4 md:px-8 py-12 flex-grow">
         <section class="bg-white p-6 md:p-8 rounded-lg shadow-xl mb-12">
-            <h2 class="text-3xl md:text-4xl font-extrabold text-gray-800 mb-6 text-center border-b-4 border-blue-500 pb-3">UPD Current Roster</h2>
+            <h2 id="rosterTitle" class="text-3xl md:text-4xl font-extrabold text-gray-800 mb-6 text-center border-b-4 border-blue-500 pb-3">Department Roster</h2>
             <p class="text-lg text-gray-700 text-center mb-8">
-                Below is the official Unified Police Department roster. This data is dynamically loaded and updated regularly by the HR division.
+                Select a department to view its current roster. Data is dynamically loaded and updated regularly by the HR division.
             </p>
+
+            <!-- Department Selection Dropdown -->
+            <div class="mb-8 flex justify-center">
+                <label for="departmentSelect" class="sr-only">Select Department</label>
+                <select id="departmentSelect"
+                        class="px-6 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg font-semibold text-gray-800 bg-white dark:bg-gray-700 dark:text-white">
+                    <option value="">-- Unified Police Roster --</option>
+                    <option value="LSPD">Los Santos Police Department</option>
+                    <option value="LSCSO">Los Santos County Sheriff's Office</option>
+                    <option value="State Police">State Police</option>
+                </select>
+            </div>
 
             <!-- Officer Count Summary Section -->
             <div id="officer-summary" class="bg-blue-100 p-4 md:p-6 rounded-lg shadow-md mb-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-center">
                 <div class="p-2 bg-blue-200 rounded-md">
-                    <!-- Reverted to original light mode colors, added dark mode colors -->
                     <p class="text-lg font-semibold text-blue-800 dark:text-white">High Command Officers:</p>
                     <p id="high-command-officers" class="text-2xl font-bold text-blue-900 dark:text-white">0</p>
                 </div>
                 <div class="p-2 bg-blue-200 rounded-md">
-                    <!-- Reverted to original light mode colors, added dark mode colors -->
                     <p class="text-lg font-semibold text-blue-800 dark:text-white">Command Officers:</p>
                     <p id="command-officers" class="text-2xl font-bold text-blue-900 dark:text-white">0</p>
                 </div>
                 <div class="p-2 bg-blue-200 rounded-md">
-                    <!-- Reverted to original light mode colors, added dark mode colors -->
                     <p class="text-lg font-semibold text-blue-800 dark:text-white">Cadets:</p>
                     <p id="cadets" class="text-2xl font-bold text-blue-900 dark:text-white">0</p>
                 </div>
                 <div class="p-2 bg-blue-200 rounded-md">
-                    <!-- Reverted to original light mode colors, added dark mode colors -->
                     <p class="text-lg font-semibold text-blue-800 dark:text-white">Total Officers:</p>
                     <p id="total-officers" class="text-2xl font-bold text-blue-900 dark:text-white">0</p>
                 </div>
@@ -619,8 +627,10 @@
             const commandOfficersEl = document.getElementById('command-officers');
             const highCommandOfficersEl = document.getElementById('high-command-officers');
             const cadetsEl = document.getElementById('cadets');
+            const departmentSelect = document.getElementById('departmentSelect'); // New department select
+            const rosterTitle = document.getElementById('rosterTitle'); // Roster title element
 
-            // Settings Modal Elements (New)
+            // Settings Modal Elements
             const settingsIcon = document.getElementById('settingsIcon');
             const settingsModal = document.getElementById('settingsModal');
             const closeSettingsModalBtn = document.getElementById('closeSettingsModalBtn');
@@ -629,18 +639,17 @@
             const clearAllDataBtn = document.getElementById('clearAllDataBtn');
             const viewDataBtn = document.getElementById('viewDataBtn');
 
-            // Data Viewer Modal Elements (New)
+            // Data Viewer Modal Elements
             const dataViewerModal = document.getElementById('dataViewerModal');
             const dataViewerContent = document.getElementById('dataViewerContent');
             const closeDataViewerModalBtn = document.getElementById('closeDataViewerModalBtn');
 
-            // Delete All Data Confirmation Modal Elements (New)
+            // Delete All Data Confirmation Modal Elements
             const confirmDeleteModal = document.getElementById('confirmDeleteModal');
             const confirmDeleteYesBtn = document.getElementById('confirmDeleteYesBtn');
             const confirmDeleteNoBtn = document.getElementById('confirmDeleteNoBtn');
 
             // --- Theme Switching Logic ---
-            // Define applyTheme function before it's called
             const applyTheme = (theme) => {
                 if (theme === 'dark') {
                     document.body.classList.add('dark-mode');
@@ -654,9 +663,8 @@
                 localStorage.setItem('theme', theme);
             };
 
-            // Apply theme on load (now that applyTheme is defined)
+            // Apply theme on load
             applyTheme(localStorage.getItem('theme') || 'light');
-
 
             // Retrieve logged-in officer data from local storage
             let loggedInOfficer = null;
@@ -670,9 +678,37 @@
                 localStorage.removeItem('loggedInOfficer'); // Clear corrupted data
             }
 
-            // Directly fetch roster data on page load since the modal is removed
-            fetchRosterData();
-
+            // Configuration for different department sheets
+            const departmentSheetConfig = {
+                "LSPD": {
+                    sheetId: '2PACX-1vT8yueJjp9o-XVH1_RXPji6N_IAP1DDbNLZ8l4__IqGCvVEUWscsdsJ6uNHZ8u6kDhhXkSxcdkdeDJi',
+                    gid: '0',
+                    rowRanges: [
+                        { start: 6, end: 6 },
+                        { start: 9, end: 16 },
+                        { start: 18, end: 22 },
+                        { start: 24, end: 27 },
+                        { start: 29, end: 32 },
+                        { start: 34, end: 43 },
+                        { start: 45, end: 54 },
+                        { start: 56, end: 65 },
+                        { start: 67, end: 78 },
+                        { start: 80, end: 96 },
+                        { start: 98, end: 117 },
+                        { start: 119, end: 148 }
+                    ]
+                },
+                "LSCSO": {
+                    sheetId: '2PACX-1vT8yueJjp9o-XVH1_RXPji6N_IAP1DDbNLZ8l4__IqGCvVEUWscsdsJ6uNHZ8u6kDhhXkSxcdkdeDJi',
+                    gid: '1747285908',
+                    rowRanges: null // Indicates generic filtering for this sheet
+                },
+                "State Police": {
+                    sheetId: '2PACX-1vT8yueJjp9o-XVH1_RXPji6N_IAP1DDbNLZ8l4__IqGCvVEUWscsdsJ6uNHZ8u6kDhhXkSxcdkdeDJi',
+                    gid: '394994291',
+                    rowRanges: null // Indicates generic filtering for this sheet
+                }
+            };
 
             /**
              * Converts an Excel-style column letter (e.g., 'A', 'B', 'AA') to a 0-based index.
@@ -690,15 +726,26 @@
             /**
              * Fetches CSV data from a Google Sheet and parses it.
              * Displays the data in a structured, column-based format based on specific row and column filters.
+             * @param {string} department - The department to fetch the roster for (e.g., "LSPD", "LSCSO").
              */
-            async function fetchRosterData() {
+            async function fetchAndRenderRoster(department) {
                 rosterLoader.classList.remove('hidden'); // Show loader
                 rosterDisplay.innerHTML = ''; // Clear previous content
+                rosterTitle.textContent = `${department} Current Roster`; // Update title
 
-                // Construct the CSV export URL from the provided Google Sheet ID
-                const sheetId = '1o4Xw8GSQBp6brMfGo_ubYngnhWJU_f8AhyUIftAlT1Y';
-                const gid = '0'; // Assuming gid=0 for the primary sheet tab
-                const csvUrl = `https://docs.google.com/spreadsheets/d/${sheetId}/export?format=csv&gid=${gid}`;
+                const config = departmentSheetConfig[department];
+                if (!config) {
+                    rosterDisplay.innerHTML = '<p class="text-red-500 text-center py-4">Please select a department to view the roster.</p>';
+                    rosterLoader.classList.add('hidden');
+                    // Reset counts
+                    totalOfficersEl.textContent = 0;
+                    commandOfficersEl.textContent = 0;
+                    highCommandOfficersEl.textContent = 0;
+                    cadetsEl.textContent = 0;
+                    return;
+                }
+
+                const csvUrl = `https://docs.google.com/spreadsheets/d/e/${config.sheetId}/pub?gid=${config.gid}&single=true&output=csv`;
 
                 try {
                     const response = await fetch(csvUrl);
@@ -707,112 +754,84 @@
                     }
                     const csvText = await response.text();
 
-                    // Parse CSV data into raw rows
                     const rawRows = csvText.trim().split('\n');
                     if (rawRows.length === 0) {
-                        rosterDisplay.innerHTML = '<p class="text-red-500">No roster data available.</p>';
+                        rosterDisplay.innerHTML = `<p class="text-gray-600 text-center py-4">No roster data available for ${department}.</p>`;
                         rosterLoader.classList.add('hidden');
+                        // Reset counts
+                        totalOfficersEl.textContent = 0;
+                        commandOfficersEl.textContent = 0;
+                        highCommandOfficersEl.textContent = 0;
+                        cadetsEl.textContent = 0;
                         return;
                     }
 
-                    // Define the target spreadsheet row numbers (1-indexed)
-                    const targetSpreadsheetRows = new Set(); // Using a Set for efficient lookup
-                    const addRange = (start, end) => {
-                        for (let i = start; i <= end; i++) {
-                            targetSpreadsheetRows.add(i);
-                        }
-                    };
-
-                    targetSpreadsheetRows.add(6);
-                    targetSpreadsheetRows.add(9);
-                    targetSpreadsheetRows.add(10); // Explicitly added row 10
-                    targetSpreadsheetRows.add(11); // Explicitly added row 11
-                    addRange(12, 16);
-                    addRange(18, 22);
-                    addRange(24, 27);
-                    addRange(29, 32);
-                    addRange(34, 43);
-                    addRange(45, 54);
-                    addRange(56, 65);
-                    addRange(67, 78);
-                    addRange(80, 96);
-                    addRange(98, 117);
-                    addRange(119, 148);
-
-                    // Filter rows based on the target spreadsheet row numbers
                     const filteredRowsData = [];
-                    const regex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/; // Regex to split by comma, ignoring commas in double quotes
+                    const regex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
 
-                    rawRows.forEach((rowString, index) => {
-                        const spreadsheetRowNumber = index + 1; // CSV rows are 0-indexed, spreadsheet rows are 1-indexed
-                        if (targetSpreadsheetRows.has(spreadsheetRowNumber)) {
-                            // Parse each cell, removing quotes if present
+                    if (config.rowRanges) {
+                        const targetSpreadsheetRows = new Set();
+                        config.rowRanges.forEach(range => {
+                            for (let i = range.start; i <= range.end; i++) {
+                                targetSpreadsheetRows.add(i);
+                            }
+                        });
+
+                        rawRows.forEach((rowString, index) => {
+                            const spreadsheetRowNumber = index + 1;
+                            if (targetSpreadsheetRows.has(spreadsheetRowNumber)) {
+                                const parsedCells = rowString.split(regex).map(cell => cell.replace(/^"(.*)"$/, '$1').trim());
+                                filteredRowsData.push(parsedCells);
+                            }
+                        });
+                    } else {
+                        // Generic filtering for LSCSO and State Police
+                        const nameColIndex = columnLetterToIndex('D'); // Assuming 'D' for Name
+                        const badgeColIndex = columnLetterToIndex('C'); // Assuming 'C' for Badge No.
+
+                        rawRows.slice(1).forEach(rowString => { // Skip header row
                             const parsedCells = rowString.split(regex).map(cell => cell.replace(/^"(.*)"$/, '$1').trim());
-                            filteredRowsData.push(parsedCells);
-                        }
-                    });
+                            const name = parsedCells[nameColIndex] ? parsedCells[nameColIndex].trim() : '';
+                            const badge = parsedCells[badgeColIndex] ? parsedCells[badgeColIndex].trim() : '';
 
-                    // Define the user's desired columns by letter and convert to 0-based indices
-                    // This list must include ALL columns present in the sheet, even if not displayed,
-                    // to correctly map the indices.
-                    const allPossibleColumnLetters = [
-                        'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R',
-                        'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'AA', 'AB', 'AC', 'AD', 'AE', 'AF', 'AG', 'AH',
-                        'AI', 'AJ', 'AK', 'AL'
-                    ]; // Expanded to cover all likely columns in a large sheet
+                            if (name && name !== 'N/A' && name.toLowerCase() !== 'name' && name.toLowerCase() !== 'full name' &&
+                                badge && badge !== 'N/A' && badge.toLowerCase() !== 'badge no.' && badge.toLowerCase() !== 'badge number') {
+                                filteredRowsData.push(parsedCells);
+                            }
+                        });
+                    }
 
-
-                    // Define the display headers based on the user's explicit list, EXCLUDING the ones to be removed
-                    // and including Discord Username for AI content
                     const displayHeaders = [
                         'Badge No.', 'Name', 'Rank', 'Hire Date',
                         'Region', 'Divison Information', 'Specialization', 'FTO Status',
-                        'Discord Username', 'I.C. Phone Number', 'Image Link' // Added Image Link
+                        'Discord Username', 'I.C. Phone Number', 'Image Link'
                     ];
 
-                    // Process data to extract only the desired columns and map to display headers
-                    const processedData = [];
-                    // Mapping from display header to its original column index in the full CSV
-                    // We must still map all relevant original columns even if not displayed as their values might be combined.
                     const headerToColIndexMap = {
-                        'Insignia': columnLetterToIndex('B'), // Not displayed, but kept for parsing if needed
                         'Badge No.': columnLetterToIndex('C'),
                         'Name': columnLetterToIndex('D'),
                         'Rank': columnLetterToIndex('E'),
                         'Hire Date': columnLetterToIndex('G'),
-                        'Time in service': columnLetterToIndex('H'), // Not displayed
-                        'Promotion Date': columnLetterToIndex('I'), // Not displayed
-                        'Time in grade': columnLetterToIndex('J'), // Not displayed
                         'Region': columnLetterToIndex('L'),
-                        'Status': columnLetterToIndex('M'), // Not displayed
-                        'Department information': columnLetterToIndex('O'), // Not displayed
                         'Divison Information': columnLetterToIndex('P'),
                         'Specialization': columnLetterToIndex('Q'),
                         'FTO Status': columnLetterToIndex('R'),
-                        'Certifications': columnLetterToIndex('T'), // Not displayed
-                        'Divisions': columnLetterToIndex('U'), // Not displayed
-                        'Strikes': columnLetterToIndex('V'), // Not displayed
-                        'CC': columnLetterToIndex('W'), // Not displayed
-                        'Discord Username': columnLetterToIndex('Y'), // Main Discord Username column
-                        'Notes': columnLetterToIndex('Z'), // Not displayed
-                        'I.C. Phone Number': columnLetterToIndex('AA'), // Main I.C. Phone Number column
-                        'CID': columnLetterToIndex('AC'), // Not displayed
-                        'AI_Column_Data': columnLetterToIndex('AI'), // Column AI data (for combining with Discord)
-                        'Image Link': columnLetterToIndex('AJ'), // Column AJ for image link
-                        'AK_Column_Data': columnLetterToIndex('AK')  // Column AK data (for combining with I.C. Phone Number)
+                        'Discord Username': columnLetterToIndex('Y'),
+                        'I.C. Phone Number': columnLetterToIndex('AA'),
+                        'Image Link': columnLetterToIndex('AJ'),
+                        'AI_Column_Data': columnLetterToIndex('AI'), // For combining with Discord
+                        'AK_Column_Data': columnLetterToIndex('AK')  // For combining with I.C. Phone Number
                     };
 
-
+                    const processedData = [];
                     filteredRowsData.forEach(rowData => {
                         const newRow = [];
                         displayHeaders.forEach(header => {
                             let value;
                             if (header === 'Discord Username') {
-                                // Get Discord Username (Y) and AI column data (AI)
                                 const discordUserValue = rowData[headerToColIndexMap['Discord Username']] ? rowData[headerToColIndexMap['Discord Username']].trim() : '';
                                 const aiColumnValue = rowData[headerToColIndexMap['AI_Column_Data']] ? rowData[headerToColIndexMap['AI_Column_Data']].trim() : '';
 
-                                // Combine and format. Handle 'true'/'false' from original Discord Username.
                                 let displayDiscord = '';
                                 if (discordUserValue.toLowerCase() === 'true' || discordUserValue.toLowerCase() === 'false' || discordUserValue === '') {
                                     displayDiscord = 'N/A';
@@ -822,20 +841,18 @@
 
                                 if (aiColumnValue && aiColumnValue.toLowerCase() !== 'true' && aiColumnValue.toLowerCase() !== 'false' && aiColumnValue !== 'N/A' && aiColumnValue !== '') {
                                     if (displayDiscord === 'N/A') {
-                                        value = aiColumnValue; // If no Discord username, just show AI content
+                                        value = aiColumnValue;
                                     } else {
-                                        value = `${displayDiscord} (${aiColumnValue})`; // Combine
+                                        value = `${displayDiscord} (${aiColumnValue})`;
                                     }
                                 } else {
-                                    value = displayDiscord; // If AI content is empty/true/false, just show Discord username
+                                    value = displayDiscord;
                                 }
 
                             } else if (header === 'I.C. Phone Number') {
-                                // Get I.C. Phone Number (AA) and AK column data (AK)
                                 const icPhoneNumberValue = rowData[headerToColIndexMap['I.C. Phone Number']] ? rowData[headerToColIndexMap['I.C. Phone Number']].trim() : '';
                                 const akColumnValue = rowData[headerToColIndexMap['AK_Column_Data']] ? rowData[headerToColIndexMap['AK_Column_Data']].trim() : '';
 
-                                // Format I.C. Phone Number. Handle 'true'/'false' from original value.
                                 let displayICPhone = '';
                                 if (icPhoneNumberValue.toLowerCase() === 'true' || icPhoneNumberValue.toLowerCase() === 'false' || icPhoneNumberValue === '') {
                                     displayICPhone = 'N/A';
@@ -843,26 +860,23 @@
                                     displayICPhone = icPhoneNumberValue;
                                 }
 
-                                // Combine with AK value. Handle 'true'/'false' from AK value.
                                 if (akColumnValue && akColumnValue.toLowerCase() !== 'true' && akColumnValue.toLowerCase() !== 'false' && akColumnValue !== 'N/A' && akColumnValue !== '') {
                                     if (displayICPhone === 'N/A') {
-                                        value = akColumnValue; // If no I.C. Phone, just show AK content
+                                        value = akColumnValue;
                                     } else {
-                                        value = `${displayICPhone} (${akColumnValue})`; // Combine
+                                        value = `${displayICPhone} (${akColumnValue})`;
                                     }
                                 } else {
-                                    value = displayICPhone; // If AK content is empty/true/false, just show I.C. Phone
+                                    value = displayICPhone;
                                 }
 
                             } else {
                                 const originalColIndex = headerToColIndexMap[header];
-                                // Check if originalColIndex is defined and valid before accessing rowData
                                 if (originalColIndex !== undefined && rowData[originalColIndex] !== undefined) {
                                     value = rowData[originalColIndex].trim();
                                 } else {
-                                    value = 'N/A'; // Fallback if column index is not found or data is missing
+                                    value = 'N/A';
                                 }
-                                // Apply the generic TRUE/FALSE/empty check for other fields that might have it
                                 if (value.toLowerCase() === 'true' || value.toLowerCase() === 'false' || value === '') {
                                     value = 'N/A';
                                 }
@@ -877,6 +891,11 @@
                 } catch (error) {
                     console.error('Error fetching or parsing roster data:', error);
                     rosterDisplay.innerHTML = '<p class="text-red-500">Failed to load roster data. Please try again later.</p>';
+                    // Reset counts on error
+                    totalOfficersEl.textContent = 0;
+                    commandOfficersEl.textContent = 0;
+                    highCommandOfficersEl.textContent = 0;
+                    cadetsEl.textContent = 0;
                 } finally {
                     rosterLoader.classList.add('hidden'); // Hide loader
                 }
@@ -891,7 +910,7 @@
                 rosterDisplay.innerHTML = ''; // Clear loading spinner/previous content
 
                 if (data.length === 0) {
-                    rosterDisplay.innerHTML = '<p class="text-gray-600">No roster entries found for the specified filters.</p>';
+                    rosterDisplay.innerHTML = '<p class="text-gray-600">No roster entries found for the selected department.</p>';
                     // Reset counts if no data
                     totalOfficersEl.textContent = 0;
                     commandOfficersEl.textContent = 0;
@@ -906,17 +925,15 @@
                 let cadets = 0;
 
                 const rankIndex = headers.indexOf('Rank');
-                const badgeNoIndex = headers.indexOf('Badge No.'); // Get index for Badge No.
+                const badgeNoIndex = headers.indexOf('Badge No.');
                 if (rankIndex === -1 || badgeNoIndex === -1) {
                     console.error("Rank or Badge No. column not found in headers.");
-                    return; // Cannot calculate counts or highlight without these
+                    return;
                 }
 
-                // Create a container for the grid layout of officer cards
                 const gridContainer = document.createElement('div');
                 gridContainer.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full';
 
-                // Mapping for region abbreviations to full names
                 const regionMap = {
                     'NA': 'North America',
                     'EU': 'Europe',
@@ -924,25 +941,22 @@
                     'SA': 'South America',
                     'AF': 'Africa',
                     'OC': 'Oceania',
-                    // Add more as needed
                 };
 
+                // Define ranks for each category
+                const highCommandRanks = ['Commissioner', 'Dpt. Commissioner', 'Chief of Police', 'Deputy Chief', 'Captain'];
+                const commandRanks = ['Lieutenant', 'Master Sergeant'];
+                const cadetRanks = ['Cadet'];
+
                 data.forEach((rowData) => {
-                    // Get the 'Name' value (which is at index 2 in the `displayHeaders` array)
                     const nameValue = rowData[headers.indexOf('Name')];
                     if (!nameValue || nameValue.trim() === 'N/A') {
-                        return; // Skip this row if Name is empty or 'N/A'
+                        return;
                     }
 
-                    totalOfficers++; // Count all valid entries
+                    totalOfficers++;
 
-                    const rank = rowData[rankIndex].trim(); // Trim whitespace from the rank
-                    console.log(`Processing officer: ${nameValue}, Rank: '${rank}'`); // Log the exact rank string
-
-                    // Define ranks for each category based on user's updated request
-                    const highCommandRanks = ['Commissioner', 'Dpt. Commissioner', 'Chief of Police', 'Deputy Chief', 'Captain'];
-                    const commandRanks = ['Lieutenant', 'Master Sergeant'];
-                    const cadetRanks = ['Cadet']; // Assuming 'Cadet' remains the rank for cadets
+                    const rank = rowData[rankIndex].trim();
 
                     if (highCommandRanks.includes(rank)) {
                         highCommandOfficers++;
@@ -952,66 +966,54 @@
                         cadets++;
                     }
 
-
-                    // Get the 'Image Link' value
                     const imageLink = rowData[headers.indexOf('Image Link')];
-                    const officerBadgeNo = rowData[badgeNoIndex].trim(); // Get the badge number for comparison
+                    const officerBadgeNo = rowData[badgeNoIndex].trim();
 
                     const officerCard = document.createElement('div');
-                    // Base classes for the officer card
                     let cardClasses = 'officer-card bg-blue-50 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 ease-in-out flex flex-col items-start';
 
-                    // Add highlighting class if this officer is the logged-in officer
-                    if (loggedInOfficer && loggedInOfficer.badge === officerBadgeNo) {
-                        cardClasses += ' border-4 border-yellow-500 ring-4 ring-yellow-300'; // Add highlighting classes
+                    if (loggedInOfficer && loggedInOfficer.badge === officerBadgeNo && loggedInOfficer.department === departmentSelect.value) {
+                        cardClasses += ' border-4 border-yellow-500 ring-4 ring-yellow-300';
                     }
                     officerCard.className = cardClasses;
 
-
-                    // Create a div to hold the name and image side-by-side
                     const nameAndImageContainer = document.createElement('div');
-                    nameAndImageContainer.className = 'flex items-center mb-2 w-full'; // Added w-full for proper alignment
+                    nameAndImageContainer.className = 'flex items-center mb-2 w-full';
 
-                    // Create the name element
                     const nameElement = document.createElement('h3');
                     nameElement.className = 'text-xl font-semibold text-blue-800';
                     nameElement.textContent = nameValue;
                     nameAndImageContainer.appendChild(nameElement);
 
-                    // Add image if a valid link exists
                     if (imageLink && imageLink !== 'N/A' && (imageLink.startsWith('http://') || imageLink.startsWith('https://'))) {
                         const imgElement = document.createElement('img');
                         imgElement.src = imageLink;
                         imgElement.alt = `${nameValue}'s profile picture`;
-                        imgElement.className = 'w-16 h-16 rounded-full ml-4 object-cover'; // Tailwind classes for styling
+                        imgElement.className = 'w-16 h-16 rounded-full ml-4 object-cover';
                         imgElement.onerror = function () {
-                            this.onerror = null; // Prevent infinite loop if fallback also fails
-                            this.src = 'https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png'; // Placeholder if image fails
+                            this.onerror = null;
+                            this.src = 'https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';
                         };
                         nameAndImageContainer.appendChild(imgElement);
                     } else {
-                        // If no image, add a placeholder or simply leave empty space
                         const placeholderImg = document.createElement('img');
-                        placeholderImg.src = 'https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png'; // Placeholder if no image link
+                        placeholderImg.src = 'https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';
                         placeholderImg.alt = 'No image available';
                         placeholderImg.className = 'w-16 h-16 rounded-full ml-4 object-cover';
                         nameAndImageContainer.appendChild(placeholderImg);
                     }
                     officerCard.appendChild(nameAndImageContainer);
 
-
-                    // Iterate through headers and display corresponding data, skipping 'Name' and 'Image Link'
                     headers.forEach((header, colIndex) => {
                         if (header === 'Name' || header === 'Image Link') {
-                            return; // Skip these as they are handled above
+                            return;
                         }
 
-                        let value = rowData[colIndex]; // Already processed in fetchRosterData
+                        let value = rowData[colIndex];
                         if (value === undefined || value === null || value.trim() === '') {
                             value = 'N/A';
                         }
 
-                        // Apply region mapping if the header is 'Region'
                         if (header === 'Region' && regionMap[value]) {
                             value = regionMap[value];
                         }
@@ -1019,7 +1021,6 @@
                         const detailDiv = document.createElement('div');
                         detailDiv.className = 'mb-2';
 
-                        // Apply specific styling based on the header for better presentation
                         if (header === 'Rank') {
                             detailDiv.innerHTML = `<p class="text-md text-gray-700 font-medium"><span class="font-bold">${header}:</span> ${value}</p>`;
                         } else if (header === 'Badge No.' || header === 'I.C. Phone Number' || header === 'Discord Username') {
@@ -1044,16 +1045,37 @@
                 cadetsEl.textContent = cadets;
             }
 
+            // Initial load based on logged-in officer's department or default
+            if (loggedInOfficer && departmentSheetConfig[loggedInOfficer.department]) {
+                departmentSelect.value = loggedInOfficer.department;
+                fetchAndRenderRoster(loggedInOfficer.department);
+            } else {
+                rosterLoader.classList.add('hidden'); // Hide loader if no department selected initially
+                rosterDisplay.innerHTML = '<p class="text-gray-600 text-center py-4">Please select a department from the dropdown above to view the roster.</p>';
+            }
+
+            // Event listener for department selection change
+            departmentSelect.addEventListener('change', (event) => {
+                const selectedDepartment = event.target.value;
+                if (selectedDepartment) {
+                    fetchAndRenderRoster(selectedDepartment);
+                } else {
+                    rosterDisplay.innerHTML = '<p class="text-gray-600 text-center py-4">Please select a department from the dropdown above to view the roster.</p>';
+                    rosterLoader.classList.add('hidden');
+                    rosterTitle.textContent = 'Department Roster'; // Reset title
+                    // Reset counts when no department is selected
+                    totalOfficersEl.textContent = 0;
+                    commandOfficersEl.textContent = 0;
+                    highCommandOfficersEl.textContent = 0;
+                    cadetsEl.textContent = 0;
+                }
+            });
+
 
             // --- Settings Modal Logic ---
             if (settingsIcon) {
-                console.log('Settings icon found:', settingsIcon); // Debugging log
                 settingsIcon.addEventListener('click', () => {
-                    console.log('Settings icon clicked!'); // Debugging log
-                    console.log('Classes before removing hidden:', settingsModal.classList); // Debugging log
                     settingsModal.classList.remove('hidden');
-                    console.log('Classes after removing hidden:', settingsModal.classList); // Debugging log
-                    // Ensure correct radio button is checked when opening modal
                     const currentTheme = localStorage.getItem('theme') || 'light';
                     if (currentTheme === 'dark') {
                         if (darkModeRadio) darkModeRadio.checked = true;
@@ -1156,9 +1178,9 @@
                         const officerDiv = document.createElement('div');
                         officerDiv.className = 'data-viewer-item';
                         officerDiv.innerHTML = `
-                                        <p class="title">Officer Logged In</p>
-                                        <p class="description">${officer.name} (Badge: ${officer.badge})</p>
-                                    `;
+                                            <p class="title">Officer Logged In</p>
+                                            <p class="description">${officer.name} (Badge: ${officer.badge}, Department: ${officer.department || 'N/A'})</p>
+                                        `;
                         dataViewerContent.appendChild(officerDiv);
                         hasData = true;
                     } catch (e) {
@@ -1172,30 +1194,30 @@
                     const themeDiv = document.createElement('div');
                     themeDiv.className = 'data-viewer-item';
                     themeDiv.innerHTML = `
-                                    <p class="title">Website Theme</p>
-                                    <p class="description">${currentTheme.charAt(0).toUpperCase() + currentTheme.slice(1)} Mode</p>
-                                `;
+                                        <p class="title">Website Theme</p>
+                                        <p class="description">${currentTheme.charAt(0).toUpperCase() + currentTheme.slice(1)} Mode</p>
+                                    `;
                     dataViewerContent.appendChild(themeDiv);
                     hasData = true;
                 }
 
                 // Display Admin Report Generator Data (if applicable, though this is roster.html)
-                const adminReportData = localStorage.getItem('adminReportGeneratorData');
+                const adminReportData = localStorage.getItem('reportGeneratorData'); // Changed from adminReportGeneratorData
                 if (adminReportData) {
                     try {
                         const data = JSON.parse(adminReportData);
                         const adminReportDiv = document.createElement('div');
                         adminReportDiv.className = 'data-viewer-item mt-4';
                         adminReportDiv.innerHTML = `
-                                        <p class="title">Administrative Report Generator Data</p>
-                                        <p class="description">Last saved report type: ${data.reportType || 'N/A'}</p>
-                                        <p class="description">Last saved officer info: ${data.officerInfo || 'N/A'}</p>
-                                        <p class="description">Other form fields saved. (Too detailed to list all here)</p>
-                                    `;
+                                            <p class="title">Report Generator Data</p>
+                                            <p class="description">Last saved report type: ${data.reportType || 'N/A'}</p>
+                                            <p class="description">Last saved officer info: ${data.officerInfo || 'N/A'}</p>
+                                            <p class="description">Other form fields saved. (Too detailed to list all here)</p>
+                                        `;
                         dataViewerContent.appendChild(adminReportDiv);
                         hasData = true;
                     } catch (e) {
-                        console.error("Error parsing adminReportGeneratorData from local storage:", e);
+                        console.error("Error parsing reportGeneratorData from local storage:", e); // Changed from adminReportGeneratorData
                     }
                 }
 
@@ -1204,7 +1226,7 @@
                 for (let i = 0; i < localStorage.length; i++) {
                     const key = localStorage.key(i);
                     // Skip keys already displayed or internal keys
-                    if (key === 'loggedInOfficer' || key === 'theme' || key === 'adminReportGeneratorData' || key === 'cookieConsent') {
+                    if (key === 'loggedInOfficer' || key === 'theme' || key === 'reportGeneratorData' || key === 'cookieConsent') { // Changed from adminReportGeneratorData
                         continue;
                     }
 
@@ -1230,9 +1252,9 @@
                     const dataDiv = document.createElement('div');
                     dataDiv.className = 'data-viewer-item';
                     dataDiv.innerHTML = `
-                                    <p class="title">${key}</p>
-                                    <p class="description">${value}</p>
-                                `;
+                                        <p class="title">${key}</p>
+                                        <p class="description">${value}</p>
+                                    `;
                     dataViewerContent.appendChild(dataDiv);
                     hasData = true;
                     otherDataCount++;

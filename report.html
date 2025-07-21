@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <!-- Viewport meta tag is crucial for responsive behavior across devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LSPD Report Generator</title>
+    <title>Unified Police Department Report Generator</title>
     <!-- Favicon link updated with a fallback URL for robustness -->
     <link rel="icon" type="image/png" href="LSPD.png" onerror="this.href='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
     <!-- Tailwind CSS CDN - provides responsive utility classes out of the out of the box -->
@@ -414,7 +414,7 @@
             <!-- LSPD Logo -->
             <img src="LSPD.png" alt="LSPD Logo" class="mr-4 w-16 h-16 object-contain" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
             <!-- Responsive font size: text-2xl for small screens, text-3xl for medium screens and up -->
-            <h1 class="text-2xl md:text-3xl font-bold">Los Santos Police Department</h1>
+            <h1 class="text-2xl md:text-3xl font-bold">Unified Police Department</h1>
         </div>
 
         <!-- Hamburger Menu Button for Mobile -->
@@ -445,7 +445,7 @@
     <main class="w-full px-4 md:px-8 py-12 flex justify-center items-start">
         <!-- Police Report Generator Section -->
         <section class="bg-blue-50 p-8 rounded-lg shadow-inner w-full">
-            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">LSPD Report Generator</h2>
+            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Unified Police Department Report Generator</h2>
             <div class="bg-white p-8 rounded-xl shadow-2xl w-full">
 
                 <!-- Clear Report Button - Added here -->
@@ -467,6 +467,7 @@
                             class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm text-gray-800">
                         <option value="LSPD">Los Santos Police Department</option>
                         <option value="LSCSO">Los Santos County Sheriff's Office</option>
+                        <option value="State Police">State Police</option>
                     </select>
                 </div>
 
@@ -1085,1022 +1086,993 @@
                 </button>
             </div>
         </div>
-    </div>
+        </footer>
 
-    <!-- Footer Section - Internal Contacts -->
-    <footer class="bg-gray-800 text-white py-10 px-6 md:px-12 rounded-t-lg">
-        <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-                <h4 class="text-xl font-semibold mb-4 text-blue-300">Internal Contacts</h4>
-                <ul class="space-y-2 text-sm">
-                    <li><a href="https://discord.gg/7FwxdpfDTM" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Discord</a></li>
-                    <li><a href="https://discord.com/channels/1383775098464370768/1396398235660058685" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">LSPD Support</a></li>
-                    <li><a href="https://discord.com/channels/1383775098464370768/1396398240840290374" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">LSPD Chat</a></li>
-                    <li><a href="https://discord.com/channels/1383775098464370768/1396398235660058685" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">LSPD Internal Affairs</a></li>
-                    <li><a href="https://discord.com/channels/1383775098464370768/1396398239678333030" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">LSPD Announcements</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="text-xl font-semibold mb-4 text-blue-300">Quick Access</h4>
-                <ul class="space-y-2 text-sm">
-                    <li><a href="https://docs.google.com/document/d/1etjilZ1dAHGviw33MV5Zs-b5dXqcSHyoYIHvHiRIyy4/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">LSPD SOP</a></li>
-                    <li><a href="https://docs.google.com/document/d/1hKQ4fw9b1_yQELhPi1p1b4M6uiSaYb7bBp-9C6GVTdY/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Los Santos Police Department Interview Procedure & Questions</a></li>
-                    <li><a href="https://docs.google.com/document/d/1d004FfAhZBgESn88Mx21N3CGqXlcoNeP9_sadn_ePak/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Promotional Pathway & Subdivision Assignment Policy</a></li>
-                    <li><a href="https://docs.google.com/document/d/14QIEsYMWpTssti1xGbGWiMxQ2b0jbiYxuMmvV8XWUUo/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Highway Enforcement and Apprehension Team (HEAT) Activation Policy</a></li>
-                    <li><a href="https://docs.google.com/document/d/1Ggf7SS5voiIjr3iSLB3VtAc47JN3aDjm2J_gYnpoZ6s/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Disciplinary Guidelines</a></li>
-                    <li><a href="privacypolicy.html" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Privacy Policy</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="text-xl font-semibold mb-4 text-blue-300">System Information</h4>
-                <p class="text-gray-500 text-sm mb-2">Unauthorized Access Strictly Prohibited</p>
-                <p class="text-gray-500 text-sm mb-2">For LSPD Personnel Use Only</p>
-                <p class="text-500 text-sm mb-2">Created and Maintained by FiveM "NightLife RP"</p>
-                <p class="text-gray-500 text-sm">&copy; 2025 Los Santos Police Department Internal Systems.</p>
-            </div>
-        </div>
-        <!-- Font Awesome for any potential internal icons (though less needed here) -->
-        <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-    </footer>
+        <script>
+            // Get references to common elements
+            const departmentSelect = document.getElementById('department');
+            const reportTypeSelect = document.getElementById('reportType');
+            const officerInfoInput = document.getElementById('officerInfo'); // Common officer info field
+            const generatedReportTextarea = document.getElementById('generatedReport');
+            const generateReportBtn = document.getElementById('generateReportBtn');
+            const copyReportBtn = document.getElementById('copyReportBtn');
+            const downloadReportBtn = document.getElementById('downloadReportBtn'); // NEW Download Report Button
+            const viewReportBtn = document.getElementById('viewReportBtn'); // NEW View Report Button
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const clearReportBtn = document.getElementById('clearReportBtn'); // NEW Clear Report Button
 
-    <script>
-        // Get references to common elements
-        const departmentSelect = document.getElementById('department');
-        const reportTypeSelect = document.getElementById('reportType');
-        const officerInfoInput = document.getElementById('officerInfo'); // Common officer info field
-        const generatedReportTextarea = document.getElementById('generatedReport');
-        const generateReportBtn = document.getElementById('generateReportBtn');
-        const copyReportBtn = document.getElementById('copyReportBtn');
-        const downloadReportBtn = document.getElementById('downloadReportBtn'); // NEW Download Report Button
-        const viewReportBtn = document.getElementById('viewReportBtn'); // NEW View Report Button
-        const loadingIndicator = document.getElementById('loadingIndicator');
-        const clearReportBtn = document.getElementById('clearReportBtn'); // NEW Clear Report Button
+            // Get references to report-specific field containers
+            const arrestReportFields = document.getElementById('arrestReportFields');
+            const trafficCitationFields = document.getElementById('trafficCitationFields');
+            const useOfForceFields = document.getElementById('useOfForceFields');
+            const trespassNoticeFields = document.getElementById('trespassNoticeFields');
+            const businessIncidentFields = document.getElementById('businessIncidentFields');
+            const incidentReportFields = document.getElementById('incidentReportFields'); // NEW Incident Report Fields
 
-        // Get references to report-specific field containers
-        const arrestReportFields = document.getElementById('arrestReportFields');
-        const trafficCitationFields = document.getElementById('trafficCitationFields');
-        const useOfForceFields = document.getElementById('useOfForceFields');
-        const trespassNoticeFields = document.getElementById('trespassNoticeFields');
-        const businessIncidentFields = document.getElementById('businessIncidentFields');
-        const incidentReportFields = document.getElementById('incidentReportFields'); // NEW Incident Report Fields
+            // Get references to Arrest Report specific elements
+            const suspectNameInput = document.getElementById('suspectName');
+            const chargesInput = document.getElementById('charges');
+            const arrestNarrativeTextarea = document.getElementById('arrestNarrative'); // Renamed from 'narrative'
+            const mirandizedSelect = document.getElementById('mirandized');
+            const gsrTestSelect = document.getElementById('gsrTest');
+            const legalRepresentationInput = document.getElementById('legalRepresentation');
+            const levelOfForceSelect = document.getElementById('levelOfForce');
+            const medicalTreatmentSelect = document.getElementById('medicalTreatment');
+            const pleaTypeSelect = document.getElementById('pleaType');
 
-        // Get references to Arrest Report specific elements
-        const suspectNameInput = document.getElementById('suspectName');
-        const chargesInput = document.getElementById('charges');
-        const arrestNarrativeTextarea = document.getElementById('arrestNarrative'); // Renamed from 'narrative'
-        const mirandizedSelect = document.getElementById('mirandized');
-        const gsrTestSelect = document.getElementById('gsrTest');
-        const legalRepresentationInput = document.getElementById('legalRepresentation');
-        const levelOfForceSelect = document.getElementById('levelOfForce');
-        const medicalTreatmentSelect = document.getElementById('medicalTreatment');
-        const pleaTypeSelect = document.getElementById('pleaType');
+            // Get references to Traffic Citation specific elements
+            const driverNameInput = document.getElementById('driverName');
+            const driverLicenseInput = document.getElementById('driverLicense');
+            const vehicleMakeModelInput = document.getElementById('vehicleMakeModel');
+            const vehiclePlateInput = document.getElementById('vehiclePlate');
+            const violationInput = document.getElementById('violation');
+            const citationLocationInput = document.getElementById('citationLocation');
+            const citationNarrativeTextarea = document.getElementById('citationNarrative');
 
-        // Get references to Traffic Citation specific elements
-        const driverNameInput = document.getElementById('driverName');
-        const driverLicenseInput = document.getElementById('driverLicense');
-        const vehicleMakeModelInput = document.getElementById('vehicleMakeModel');
-        const vehiclePlateInput = document.getElementById('vehiclePlate');
-        const violationInput = document.getElementById('violation');
-        const citationLocationInput = document.getElementById('citationLocation');
-        const citationNarrativeTextarea = document.getElementById('citationNarrative');
+            // Get references to Use of Force specific elements
+            const subjectNameInput = document.getElementById('subjectName');
+            const uofLevelOfForceSelect = document.getElementById('uofLevelOfForce');
+            const uofReasonTextarea = document.getElementById('uofReason');
+            const uofInjuriesTextarea = document = document.getElementById('uofInjuries');
+            const uofMedicalTreatmentSelect = document.getElementById('uofMedicalTreatment');
+            const uofNarrativeTextarea = document.getElementById('uofNarrative');
 
-        // Get references to Use of Force specific elements
-        const subjectNameInput = document.getElementById('subjectName');
-        const uofLevelOfForceSelect = document.getElementById('uofLevelOfForce');
-        const uofReasonTextarea = document.getElementById('uofReason');
-        const uofInjuriesTextarea = document = document.getElementById('uofInjuries');
-        const uofMedicalTreatmentSelect = document.getElementById('uofMedicalTreatment');
-        const uofNarrativeTextarea = document.getElementById('uofNarrative');
+            // Get references to Trespass Notice specific elements
+            const trespasserNameInput = document.getElementById('trespasserName');
+            const trespassLocationInput = document.getElementById('trespassLocation');
+            const propertyOwnerInput = document.getElementById('propertyOwner');
+            const trespassReasonTextarea = document.getElementById('trespassReason');
+            const trespassDurationInput = document.getElementById('trespassDuration');
+            const trespassNarrativeTextarea = document.getElementById('trespassNarrative');
 
-        // Get references to Trespass Notice specific elements
-        const trespasserNameInput = document.getElementById('trespasserName');
-        const trespassLocationInput = document.getElementById('trespassLocation');
-        const propertyOwnerInput = document.getElementById('propertyOwner');
-        const trespassReasonTextarea = document.getElementById('trespassReason');
-        const trespassDurationInput = document.getElementById('trespassDuration');
-        const trespassNarrativeTextarea = document.getElementById('trespassNarrative');
+            // Get references to Business Incident specific elements
+            const businessNameInput = document.getElementById('businessName');
+            const businessAddressInput = document.getElementById('businessAddress');
+            const incidentTypeInput = document.getElementById('incidentType');
+            const involvedPartiesTextarea = document.getElementById('involvedParties');
+            const damagesTheftTextarea = document.getElementById('damagesTheft');
+            const bizNarrativeTextarea = document.getElementById('bizNarrative');
 
-        // Get references to Business Incident specific elements
-        const businessNameInput = document.getElementById('businessName');
-        const businessAddressInput = document.getElementById('businessAddress');
-        const incidentTypeInput = document.getElementById('incidentType');
-        const involvedPartiesTextarea = document.getElementById('involvedParties');
-        const damagesTheftTextarea = document.getElementById('damagesTheft');
-        const bizNarrativeTextarea = document.getElementById('bizNarrative');
-
-        // Get references to Incident Report specific elements (NEW)
-        const incidentLocationInput = document.getElementById('incidentLocation');
-        const incidentDateInput = document.getElementById('incidentDate');
-        const incidentTimeInput = document.getElementById('incidentTime');
-        const primaryIncidentTypeInput = document.getElementById('primaryIncidentType');
-        const affectedPartiesTextarea = document.getElementById('affectedParties');
-        const incidentDescriptionTextarea = document.getElementById('incidentDescription');
-        const actionsTakenTextarea = document.getElementById('actionsTaken');
+            // Get references to Incident Report specific elements (NEW)
+            const incidentLocationInput = document.getElementById('incidentLocation');
+            const incidentDateInput = document.getElementById('incidentDate');
+            const incidentTimeInput = document.getElementById('incidentTime');
+            const primaryIncidentTypeInput = document.getElementById('primaryIncidentType');
+            const affectedPartiesTextarea = document.getElementById('affectedParties');
+            const incidentDescriptionTextarea = document.getElementById('incidentDescription');
+            const actionsTakenTextarea = document.getElementById('actionsTaken');
 
 
-        // Evidence Collection Elements
-        const evidenceCollectedInput = document.getElementById('evidenceCollectedInput');
-        const evidenceModal = document.getElementById('evidenceModal');
-        const closeEvidenceModalBtn = document.getElementById('closeEvidenceModalBtn');
-        const evidenceListDiv = document.getElementById('evidenceList');
-        const evidenceDescriptionDisplay = document.getElementById('evidenceDescriptionDisplay');
+            // Evidence Collection Elements
+            const evidenceCollectedInput = document.getElementById('evidenceCollectedInput');
+            const evidenceModal = document.getElementById('evidenceModal');
+            const closeEvidenceModalBtn = document.getElementById('closeEvidenceModalBtn');
+            const evidenceListDiv = document.getElementById('evidenceList');
+            const evidenceDescriptionDisplay = document.getElementById('evidenceDescriptionDisplay');
 
-        // Conditional Statement Text Areas
-        const victimStatementsContainer = document.getElementById('victimStatementsContainer');
-        const victimStatementsTextarea = document.getElementById('victimStatementsText');
-        const witnessStatementsContainer = document.getElementById('witnessStatementsContainer');
-        const witnessStatementsTextarea = document.getElementById('witnessStatementsText');
-        const suspectStatementsContainer = document.getElementById('suspectStatementsContainer');
-        const suspectStatementsTextarea = document.getElementById('suspectStatementsText');
+            // Conditional Statement Text Areas
+            const victimStatementsContainer = document.getElementById('victimStatementsContainer');
+            const victimStatementsTextarea = document.getElementById('victimStatementsText');
+            const witnessStatementsContainer = document.getElementById('witnessStatementsContainer');
+            const witnessStatementsTextarea = document.getElementById('witnessStatementsText');
+            const suspectStatementsContainer = document.getElementById('suspectStatementsContainer');
+            const suspectStatementsTextarea = document.getElementById('suspectStatementsText');
 
-        // URL Input Modal Elements
-        const urlInputModal = document.getElementById('urlInputModal');
-        const urlModalTitle = document.getElementById('urlModalTitle');
-        const allowedProvidersText = document.getElementById('allowedProvidersText');
-        const evidenceUrlInput = document.getElementById('evidenceUrlInput');
-        const urlValidationError = document.getElementById('urlValidationError');
-        const currentLinksDisplay = document.getElementById('currentLinksDisplay');
-        const addUrlBtn = document.getElementById('addUrlBtn');
-        const closeUrlModalBtn = document.getElementById('closeUrlModalBtn');
+            // URL Input Modal Elements
+            const urlInputModal = document.getElementById('urlInputModal');
+            const urlModalTitle = document.getElementById('urlModalTitle');
+            const allowedProvidersText = document.getElementById('allowedProvidersText');
+            const evidenceUrlInput = document.getElementById('evidenceUrlInput');
+            const urlValidationError = document.getElementById('urlValidationError');
+            const currentLinksDisplay = document.getElementById('currentLinksDisplay');
+            const addUrlBtn = document.getElementById('addUrlBtn');
+            const closeUrlModalBtn = document.getElementById('closeUrlModalBtn');
 
-        // Officer Selection Modal Elements
-        const officerSelectionModal = document.getElementById('officerSelectionModal');
-        const officerSearchInput = document.getElementById('officerSearchInput');
-        const officerListDiv = document.getElementById('officerList');
-        const closeOfficerModalBtn = document.getElementById('closeOfficerModalBtn');
+            // Officer Selection Modal Elements
+            const officerSelectionModal = document.getElementById('officerSelectionModal');
+            const officerSearchInput = document.getElementById('officerSearchInput');
+            const officerListDiv = document.getElementById('officerList');
+            const closeOfficerModalBtn = document.getElementById('closeOfficerModalBtn');
 
-        // Settings Modal Elements (Copied from roster.html)
-        const settingsIcon = document.getElementById('settingsIcon');
-        const settingsModal = document.getElementById('settingsModal');
-        const closeSettingsModalBtn = document.getElementById('closeSettingsModalBtn');
-        const lightModeRadio = document.getElementById('lightMode');
-        const darkModeRadio = document.getElementById('darkMode');
-        const clearAllDataBtn = document.getElementById('clearAllDataBtn');
-        const viewDataBtn = document.getElementById('viewDataBtn');
+            // Settings Modal Elements (Copied from roster.html)
+            const settingsIcon = document.getElementById('settingsIcon');
+            const settingsModal = document.getElementById('settingsModal');
+            const closeSettingsModalBtn = document.getElementById('closeSettingsModalBtn');
+            const lightModeRadio = document.getElementById('lightMode');
+            const darkModeRadio = document.getElementById('darkMode');
+            const clearAllDataBtn = document.getElementById('clearAllDataBtn');
+            const viewDataBtn = document.getElementById('viewDataBtn');
 
-        // Data Viewer Modal Elements (Copied from roster.html)
-        const dataViewerModal = document.getElementById('dataViewerModal');
-        const dataViewerContent = document.getElementById('dataViewerContent');
-        const closeDataViewerModalBtn = document.getElementById('closeDataViewerModalBtn');
+            // Data Viewer Modal Elements (Copied from roster.html)
+            const dataViewerModal = document.getElementById('dataViewerModal');
+            const dataViewerContent = document.getElementById('dataViewerContent');
+            const closeDataViewerModalBtn = document.getElementById('closeDataViewerModalBtn');
 
-        // Delete All Data Confirmation Modal Elements (Copied from roster.html)
-        const confirmDeleteModal = document.getElementById('confirmDeleteModal');
-        const confirmDeleteYesBtn = document.getElementById('confirmDeleteYesBtn');
-        const confirmDeleteNoBtn = document.getElementById('confirmDeleteNoBtn');
+            // Delete All Data Confirmation Modal Elements (Copied from roster.html)
+            const confirmDeleteModal = document.getElementById('confirmDeleteModal');
+            const confirmDeleteYesBtn = document.getElementById('confirmDeleteYesBtn');
+            const confirmDeleteNoBtn = document.getElementById('confirmDeleteNoBtn');
 
-        // Global object to store selected evidence and their details (including links/text)
-        let selectedEvidenceDetails = {};
+            // Global object to store selected evidence and their details (including links/text)
+            let selectedEvidenceDetails = {};
 
-        // Global variable to store fetched officer roster data
-        let officerRosterData = [];
+            // Global variable to store fetched officer roster data
+            let officerRosterData = [];
 
-        // --- Theme Switching Logic (Copied from roster.html) ---
-        const applyTheme = (theme) => {
-            if (theme === 'dark') {
-                document.body.classList.add('dark-mode');
-                document.body.classList.remove('light-mode');
-                if (darkModeRadio) darkModeRadio.checked = true;
-            } else {
-                document.body.classList.remove('dark-mode');
-                document.body.classList.add('light-mode');
-                if (lightModeRadio) lightModeRadio.checked = true;
-            }
-            localStorage.setItem('theme', theme);
-        };
-
-
-        /**
-         * Converts an Excel-style column letter (e.g., 'A', 'B', 'AA') to a 0-based index.
-         * @param {string} columnLetter - The column letter (e.g., 'C').
-         * @returns {number} The 0-based column index (e.g., 'C' returns 2).
-         */
-        function columnLetterToIndex(columnLetter) {
-            let index = 0;
-            for (let i = 0; i < columnLetter.length; i++) {
-                index = index * 26 + (columnLetter.charCodeAt(i) - 'A'.charCodeAt(0) + 1);
-            }
-            return index - 1; // Convert to 0-based index
-        }
-
-        // Configuration for different department sheets
-        const departmentSheetConfig = {
-            "LSPD": { // Changed from UPD to LSPD
-                sheetId: '1o4Xw8GSQBp6brMfGo_ubYngnhWJU_f8AhyUIftAlT1Y', // Corrected LSPD sheetId
-                gid: '0',
-                rowRanges: [
-                    { start: 6, end: 6 },
-                    { start: 9, end: 16 },
-                    { start: 18, end: 22 },
-                    { start: 24, end: 27 },
-                    { start: 29, end: 32 },
-                    { start: 34, end: 43 },
-                    { start: 45, end: 54 },
-                    { start: 56, end: 65 },
-                    { start: 67, end: 78 },
-                    { start: 80, end: 96 },
-                    { start: 98, end: 117 },
-                    { start: 119, end: 148 }
-                ]
-            },
-            "LSCSO": {
-                sheetId: '2PACX-1vT8yueJjp9o-XVH1_RXPji6N_IAP1DDbNLZ8l4__IqGCvVEUWscsdsJ6uNHZ8u6kDhhXkSxcdkdeDJi',
-                gid: '1747285908',
-                rowRanges: null // Indicates generic filtering for this sheet
-            }
-        };
-
-        /**
-         * Fetches CSV data from a Google Sheet, parses it, and populates the officerRosterData.
-         * @param {string} department - The department for which to fetch the roster (e.g., "LSPD", "LSCSO").
-         */
-        async function fetchOfficerRosterData(department) {
-            officerListDiv.innerHTML = '<div class="loader mx-auto my-4"></div>'; // Show loader
-
-            const config = departmentSheetConfig[department];
-            if (!config) {
-                console.error(`Configuration not found for department: ${department}`);
-                officerListDiv.innerHTML = '<p class="text-red-500 text-center py-4">Department roster configuration missing.</p>';
-                officerRosterData = [];
-                return;
-            }
-
-            // Construct the CSV URL using the sheetId and gid, ensuring output=csv
-            const csvUrl = `https://docs.google.com/spreadsheets/d/e/${config.sheetId}/pub?gid=${config.gid}&single=true&output=csv`;
-
-            try {
-                const response = await fetch(csvUrl);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
+            // --- Theme Switching Logic (Copied from roster.html) ---
+            const applyTheme = (theme) => {
+                if (theme === 'dark') {
+                    document.body.classList.add('dark-mode');
+                    document.body.classList.remove('light-mode');
+                    if (darkModeRadio) darkModeRadio.checked = true;
+                } else {
+                    document.body.classList.remove('dark-mode');
+                    document.body.classList.add('light-mode');
+                    if (lightModeRadio) lightModeRadio.checked = true;
                 }
-                const csvText = await response.text();
+                localStorage.setItem('theme', theme);
+            };
 
-                const rawRows = csvText.trim().split('\n');
-                if (rawRows.length === 0) {
-                    console.warn(`No roster data available for ${department} from Google Sheet.`);
+
+            /**
+             * Converts an Excel-style column letter (e.g., 'A', 'B', 'AA') to a 0-based index.
+             * @param {string} columnLetter - The column letter (e.g., 'C').
+             * @returns {number} The 0-based column index (e.g., 'C' returns 2).
+             */
+            function columnLetterToIndex(columnLetter) {
+                let index = 0;
+                for (let i = 0; i < columnLetter.length; i++) {
+                    index = index * 26 + (columnLetter.charCodeAt(i) - 'A'.charCodeAt(0) + 1);
+                }
+                return index - 1; // Convert to 0-based index
+            }
+
+            // Configuration for different department sheets
+            const departmentSheetConfig = {
+                "LSPD": {
+                    sheetId: '2PACX-1vT8yueJjp9o-XVH1_RXPji6N_IAP1DDbNLZ8l4__IqGCvVEUWscsdsJ6uNHZ8u6kDhhXkSxcdkdeDJi',
+                    gid: '0',
+                    rowRanges: [
+                        { start: 6, end: 6 },
+                        { start: 9, end: 16 },
+                        { start: 18, end: 22 },
+                        { start: 24, end: 27 },
+                        { start: 29, end: 32 },
+                        { start: 34, end: 43 },
+                        { start: 45, end: 54 },
+                        { start: 56, end: 65 },
+                        { start: 67, end: 78 },
+                        { start: 80, end: 96 },
+                        { start: 98, end: 117 },
+                        { start: 119, end: 148 }
+                    ]
+                },
+                "LSCSO": {
+                    sheetId: '2PACX-1vT8yueJjp9o-XVH1_RXPji6N_IAP1DDbNLZ8l4__IqGCvVEUWscsdsJ6uNHZ8u6kDhhXkSxcdkdeDJi',
+                    gid: '1747285908',
+                    rowRanges: null // Indicates generic filtering for this sheet
+                },
+                "State Police": {
+                    sheetId: '2PACX-1vT8yueJjp9o-XVH1_RXPji6N_IAP1DDbNLZ8l4__IqGCvVEUWscsdsJ6uNHZ8u6kDhhXkSxcdkdeDJi',
+                    gid: '394994291',
+                    rowRanges: null // Indicates generic filtering for this sheet
+                }
+            };
+
+            /**
+             * Fetches CSV data from a Google Sheet, parses it, and populates the officerRosterData.
+             * @param {string} department - The department for which to fetch the roster (e.g., "LSPD", "LSCSO").
+             */
+            async function fetchOfficerRosterData(department) {
+                officerListDiv.innerHTML = '<div class="loader mx-auto my-4"></div>'; // Show loader
+
+                const config = departmentSheetConfig[department];
+                if (!config) {
+                    console.error(`Configuration not found for department: ${department}`);
+                    officerListDiv.innerHTML = '<p class="text-red-500 text-center py-4">Department roster configuration missing.</p>';
                     officerRosterData = [];
-                    officerListDiv.innerHTML = '<p class="text-gray-500 text-center py-4">No officers found for this department.</p>';
                     return;
                 }
 
-                const filteredRowsData = [];
-                // Regex to split by comma, ignoring commas inside double quotes
-                const regex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
+                // Construct the CSV URL using the sheetId and gid, ensuring output=csv
+                const csvUrl = `https://docs.google.com/spreadsheets/d/e/${config.sheetId}/pub?gid=${config.gid}&single=true&output=csv`;
 
-                if (config.rowRanges) {
-                    // Use specific row ranges if provided (e.g., for LSPD)
-                    const targetSpreadsheetRows = new Set();
-                    config.rowRanges.forEach(range => {
-                        for (let i = range.start; i <= range.end; i++) {
-                            targetSpreadsheetRows.add(i);
-                        }
-                    });
+                try {
+                    const response = await fetch(csvUrl);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const csvText = await response.text();
 
-                    rawRows.forEach((rowString, index) => {
-                        const spreadsheetRowNumber = index + 1;
-                        if (targetSpreadsheetRows.has(spreadsheetRowNumber)) {
+                    const rawRows = csvText.trim().split('\n');
+                    if (rawRows.length === 0) {
+                        console.warn(`No roster data available for ${department} from Google Sheet.`);
+                        officerRosterData = [];
+                        officerListDiv.innerHTML = '<p class="text-gray-500 text-center py-4">No officers found for this department.</p>';
+                        return;
+                    }
+
+                    const filteredRowsData = [];
+                    // Regex to split by comma, ignoring commas inside double quotes
+                    const regex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
+
+                    if (config.rowRanges) {
+                        // Use specific row ranges if provided (e.g., for LSPD)
+                        const targetSpreadsheetRows = new Set();
+                        config.rowRanges.forEach(range => {
+                            for (let i = range.start; i <= range.end; i++) {
+                                targetSpreadsheetRows.add(i);
+                            }
+                        });
+
+                        rawRows.forEach((rowString, index) => {
+                            const spreadsheetRowNumber = index + 1;
+                            if (targetSpreadsheetRows.has(spreadsheetRowNumber)) {
+                                const parsedCells = rowString.split(regex).map(cell => cell.replace(/^"(.*)"$/, '$1').trim());
+                                filteredRowsData.push(parsedCells);
+                            }
+                        });
+                    } else {
+                        // Generic filtering for sheets without specific row ranges (e.g., LSCSO, State Police)
+                        // Skip the first row (assuming it's a header) and filter out empty rows
+                        const nameColIndex = columnLetterToIndex('D'); // Assuming 'D' for Name
+                        const badgeColIndex = columnLetterToIndex('C'); // Assuming 'C' for Badge No.
+
+                        rawRows.slice(1).forEach(rowString => { // Start from the second row
                             const parsedCells = rowString.split(regex).map(cell => cell.replace(/^"(.*)"$/, '$1').trim());
-                            filteredRowsData.push(parsedCells);
+                            const name = parsedCells[nameColIndex] ? parsedCells[nameColIndex].trim() : '';
+                            const badge = parsedCells[badgeColIndex] ? parsedCells[badgeColIndex].trim() : '';
+
+                            // Only add if both name and badge are present and not 'N/A' or header-like strings
+                            if (name && name !== 'N/A' && name.toLowerCase() !== 'name' && name.toLowerCase() !== 'full name' &&
+                                badge && badge !== 'N/A' && badge.toLowerCase() !== 'badge no.' && badge.toLowerCase() !== 'badge number') {
+                                filteredRowsData.push(parsedCells);
+                            }
+                        });
+                    }
+
+                    const headerToColIndexMap = {
+                        'Badge No.': columnLetterToIndex('C'),
+                        'Name': columnLetterToIndex('D'),
+                    };
+
+                    const tempOfficerRoster = [];
+                    filteredRowsData.forEach(rowData => {
+                        const name = rowData[headerToColIndexMap['Name']] ? rowData[headerToColIndexMap['Name']].trim() : '';
+                        const badge = rowData[headerToColIndexMap['Badge No.']] ? rowData[headerToColIndexMap['Badge No.']].trim() : '';
+
+                        // Only add if both name and badge are present and not 'N/A' or empty
+                        if (name && name !== 'N/A' && badge && badge !== 'N/A') {
+                            tempOfficerRoster.push({ name: name, badge: badge, department: department });
                         }
                     });
-                } else {
-                    // Generic filtering for sheets without specific row ranges (e.g., LSCSO)
-                    // Skip the first row (assuming it's a header) and filter out empty rows
-                    const nameColIndex = columnLetterToIndex('D'); // Assuming 'D' for Name
-                    const badgeColIndex = columnLetterToIndex('C'); // Assuming 'C' for Badge No.
+                    officerRosterData = tempOfficerRoster; // Update the global roster data
+                    populateOfficerList(officerRosterData); // Populate the modal list with fetched data
+                } catch (error) {
+                    console.error(`Error fetching or parsing roster data for ${department}:`, error);
+                    officerListDiv.innerHTML = `<p class="text-red-500 text-center py-4">Failed to load officer roster for ${department}. Please try again later.</p>`;
+                }
+            }
 
-                    rawRows.slice(1).forEach(rowString => { // Start from the second row
-                        const parsedCells = rowString.split(regex).map(cell => cell.replace(/^"(.*)"$/, '$1').trim());
-                        const name = parsedCells[nameColIndex] ? parsedCells[nameColIndex].trim() : '';
-                        const badge = parsedCells[badgeColIndex] ? parsedCells[badgeColIndex].trim() : '';
 
-                        // Only add if both name and badge are present and not 'N/A' or header-like strings
-                        if (name && name !== 'N/A' && name.toLowerCase() !== 'name' && name.toLowerCase() !== 'full name' &&
-                            badge && badge !== 'N/A' && badge.toLowerCase() !== 'badge no.' && badge.toLowerCase() !== 'badge number') {
-                            filteredRowsData.push(parsedCells);
+            // Array of evidence items with descriptions, types, and allowed link providers
+            const evidenceItems = [
+                { name: "Shell Casings", description: "Spent ammunition casings found at a scene.", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
+                { name: "Weapon(s) - Firearm", description: "Any type of gun, pistol, rifle, shotgun, etc.", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
+                { name: "Weapon(s) - Non-Firearm", description: "Knives, bats, blunt objects, tasers, etc.", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
+                { name: "Contraband", description: "Any item not allowed to be possessed by law (e.g., illegal paraphernalia, stolen goods).", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
+                { name: "Controlled Substances", description: "Illegal drugs or unprescribed medication (e.g., Methamphetamine, Cocaine, Marijuana).", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
+                { name: "Fingerprints", description: "Latent or visible prints lifted from surfaces.", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
+                { name: "DNA Evidence", description: "Biological samples such as blood, hair, saliva, skin cells.", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
+                { name: "Clothing/Personal Items", description: "Garments or personal belongings relevant to the incident.", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
+                { name: "Vehicular Evidence", description: "Vehicle parts, fluids, tire marks, paint transfers, etc.", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
+                { name: "Photographs/Videos (Other)", description: "Still images or video recordings not from body/dash cam (e.g., from civilian phones).", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
+                { name: "Electronic Devices", description: "Phones, computers, tablets, USB drives, memory cards.", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
+                { name: "Documents", description: "Papers, identification cards, financial records, written notes.", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
+
+                { name: "CCTV Footage", description: "Video recordings from surveillance cameras.", type: "video", linkProviders: ["discord.com", "medal.tv", "youtube.com"] },
+                { name: "Body Cam Footage", description: "Video recordings from officer-worn body cameras.", type: "video", linkProviders: ["discord.com", "medal.tv", "youtube.com"] },
+                { name: "Dashcam Footage", description: "Video recordings from patrol vehicle dashboard cameras.", type: "video", linkProviders: ["discord.com", "medal.tv", "youtube.com"] },
+                { name: "Audio Recordings", description: "Voice recordings, 911 calls, dispatch recordings, etc.", type: "video", linkProviders: ["discord.com", "medal.tv", "youtube.com"] },
+
+                { name: "Victim Statements", description: "Written or recorded accounts from individuals who were harmed or affected.", type: "statement" },
+                { name: "Witness Statements", description: "Written or recorded accounts from individuals observing the incident.", type: "statement" },
+                { name: "Suspect Statements/Confessions", description: "Written or recorded admissions or accounts from the suspect.", type: "statement" },
+            ];
+
+            // Function to populate the evidence modal
+            function populateEvidenceList() {
+                evidenceListDiv.innerHTML = ''; // Clear existing list
+                evidenceItems.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'evidence-item flex items-center p-2 rounded-md hover:bg-blue-100 cursor-pointer';
+                    div.innerHTML = `
+                                                            <input type="checkbox" id="evidence-${item.name.replace(/\s/g, '-')}" value="${item.name}" class="form-checkbox h-5 w-5 text-blue-600 rounded-md">
+                                                            <label for="evidence-${item.name.replace(/\s/g, '-')}" class="ml-2 text-gray-800 text-sm font-medium flex-grow">${item.name}</label>
+                                                        `;
+                    div.setAttribute('data-description', item.description);
+                    div.setAttribute('data-type', item.type);
+                    if (item.linkProviders) {
+                        div.setAttribute('data-link-providers', item.linkProviders.join(','));
+                    }
+
+                    // Add event listeners for hover to display description
+                    div.addEventListener('mouseenter', () => {
+                        evidenceDescriptionDisplay.textContent = item.description;
+                    });
+                    div.addEventListener('mouseleave', () => {
+                        evidenceDescriptionDisplay.textContent = 'Hover over an item for more details.';
+                    });
+
+                    // Add event listener for checkbox change
+                    const checkbox = div.querySelector('input[type="checkbox"]');
+                    checkbox.addEventListener('change', (e) => {
+                        const itemName = e.target.value;
+                        const itemType = e.target.closest('.evidence-item').dataset.type;
+                        const itemLinkProviders = e.target.closest('.evidence-item').dataset.linkProviders ? e.target.closest('.evidence-item').dataset.linkProviders.split(',') : [];
+
+                        if (e.target.checked) {
+                            selectedEvidenceDetails[itemName] = { type: itemType, links: [], text: '' };
+                            if (itemType === 'statement') {
+                                // Show the corresponding text area
+                                switch (itemName) {
+                                    case 'Victim Statements': victimStatementsContainer.classList.remove('hidden'); break;
+                                    case 'Witness Statements': witnessStatementsContainer.classList.remove('hidden'); break;
+                                    case 'Suspect Statements/Confessions': suspectStatementsContainer.classList.remove('hidden'); break;
+                                }
+                            } else if (itemType === 'image' || itemType === 'video') {
+                                // Open URL input modal
+                                evidenceModal.classList.add('hidden'); // Hide evidence modal first
+                                openUrlInputModal(itemName, itemLinkProviders);
+                            }
+                        } else {
+                            delete selectedEvidenceDetails[itemName];
+                            if (itemType === 'statement') {
+                                // Hide the corresponding text area and clear its content
+                                switch (itemName) {
+                                    case 'Victim Statements': victimStatementsContainer.classList.add('hidden'); victimStatementsTextarea.value = ''; break;
+                                    case 'Witness Statements': witnessStatementsContainer.classList.add('hidden'); witnessStatementsTextarea.value = ''; break;
+                                    case 'Suspect Statements/Confessions': suspectStatementsContainer.classList.add('hidden'); suspectStatementsTextarea.value = ''; break;
+                                }
+                            }
                         }
+                        updateEvidenceCollectedInputSummary();
+                        saveFormData(); // Save data after evidence selection changes
+                    });
+
+                    evidenceListDiv.appendChild(div);
+                });
+            }
+
+            // Function to open the URL input modal
+            function openUrlInputModal(itemName, providers) {
+                urlModalTitle.textContent = `Add Links for ${itemName}`;
+                allowedProvidersText.textContent = `Allowed providers: ${providers.map(p => p.replace('https://', '')).join(', ')}`;
+                evidenceUrlInput.value = '';
+                urlValidationError.classList.add('hidden');
+                currentLinksDisplay.innerHTML = ''; // Clear previous links
+
+                // Populate current links if any exist for this item
+                if (selectedEvidenceDetails[itemName] && selectedEvidenceDetails[itemName].links) {
+                    selectedEvidenceDetails[itemName].links.forEach(link => {
+                        const p = document.createElement('p');
+                        p.textContent = link;
+                        currentLinksDisplay.appendChild(p);
                     });
                 }
 
-                const headerToColIndexMap = {
-                    'Badge No.': columnLetterToIndex('C'),
-                    'Name': columnLetterToIndex('D'),
+                urlInputModal.dataset.currentItem = itemName; // Store the current item being edited
+                urlInputModal.dataset.allowedProviders = providers.join(','); // Store allowed providers
+                urlInputModal.classList.remove('hidden');
+            }
+
+            // Function to validate URL
+            function isValidUrl(url, allowedProviders) {
+                try {
+                    const urlObj = new URL(url);
+                    const hostname = urlObj.hostname;
+                    return allowedProviders.some(provider => hostname.includes(provider));
+                } catch (e) {
+                    return false;
+                }
+            }
+
+            // Function to update the main evidence input field summary and its title attribute for hover
+            function updateEvidenceCollectedInputSummary() {
+                const summaryParts = [];
+                const hoverTextParts = []; // To store text for the title attribute
+
+                for (const itemName in selectedEvidenceDetails) {
+                    const item = selectedEvidenceDetails[itemName];
+                    if (item.type === 'statement') {
+                        if (item.text.trim() !== '') {
+                            summaryParts.push(`${itemName} (D)`); // (D) for details
+                            hoverTextParts.push(`${itemName}: ${item.text.trim()}`);
+                        } else {
+                            summaryParts.push(itemName);
+                            hoverTextParts.push(`${itemName}: No details provided.`);
+                        }
+                    } else if (item.type === 'image' || item.type === 'video') {
+                        if (item.links.length > 0) {
+                            summaryParts.push(`${itemName} (L)`); // (L) for links
+                            hoverTextParts.push(`${itemName}: ${item.links.join(', ')}`);
+                        } else {
+                            summaryParts.push(itemName);
+                            hoverTextParts.push(`${itemName}: No links provided.`);
+                        }
+                    } else {
+                        summaryParts.push(itemName);
+                        hoverTextParts.push(itemName); // Fallback for other types
+                    }
+                }
+                evidenceCollectedInput.value = summaryParts.join(', ');
+                evidenceCollectedInput.title = hoverTextParts.join('\n'); // Set the title attribute for hover
+            }
+
+
+            // Function to show/hide fields based on report type
+            function toggleReportFields() {
+                const selectedReportType = reportTypeSelect.value;
+
+                // Hide all report-specific field containers
+                arrestReportFields.classList.add('hidden');
+                trafficCitationFields.classList.add('hidden');
+                useOfForceFields.classList.add('hidden');
+                trespassNoticeFields.classList.add('hidden');
+                businessIncidentFields.classList.add('hidden');
+                incidentReportFields.classList.add('hidden'); // NEW Incident Report Fields
+
+                // Hide all statement containers
+                victimStatementsContainer.classList.add('hidden');
+                witnessStatementsContainer.classList.add('hidden');
+                suspectStatementsContainer.classList.add('hidden');
+
+                // Show fields relevant to the selected report type
+                switch (selectedReportType) {
+                    case 'Arrest Report':
+                        arrestReportFields.classList.remove('hidden');
+                        break;
+                    case 'Traffic Citation':
+                        trafficCitationFields.classList.remove('hidden');
+                        break;
+                    case 'Use of Force':
+                        useOfForceFields.classList.remove('hidden');
+                        break;
+                    case 'Trespass Notice':
+                        trespassNoticeFields.classList.remove('hidden');
+                        break;
+                    case 'Business Incident':
+                        businessIncidentFields.classList.remove('hidden');
+                        break;
+                    case 'Incident Report': // NEW Case
+                        incidentReportFields.classList.remove('hidden');
+                        break;
+                    default:
+                        // No default action, all fields remain hidden
+                        break;
+                }
+
+                // Re-evaluate visibility of statement text areas based on selectedEvidenceDetails
+                for (const itemName in selectedEvidenceDetails) {
+                    const item = selectedEvidenceDetails[itemName];
+                    if (item.type === 'statement') {
+                        switch (itemName) {
+                            case 'Victim Statements': victimStatementsContainer.classList.remove('hidden'); break;
+                            case 'Witness Statements': witnessStatementsContainer.classList.remove('hidden'); break;
+                            case 'Suspect Statements/Confessions': suspectStatementsContainer.classList.remove('hidden'); break;
+                        }
+                    }
+                }
+                saveFormData(); // Save data after toggling fields
+            }
+
+            // Function to populate the officer list in the modal
+            function populateOfficerList(officers, searchTerm = '') {
+                officerListDiv.innerHTML = ''; // Clear existing list
+                const filteredOfficers = officers.filter(officer =>
+                    officer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                    officer.badge.toLowerCase().includes(searchTerm.toLowerCase())
+                );
+
+                if (filteredOfficers.length === 0) {
+                    officerListDiv.innerHTML = '<p class="text-gray-500 text-center py-4">No officers found.</p>';
+                    return;
+                }
+
+                filteredOfficers.forEach(officer => {
+                    const div = document.createElement('div');
+                    div.className = 'officer-item p-2 rounded-md hover:bg-blue-100 cursor-pointer text-gray-800 text-sm font-medium';
+                    div.textContent = `${officer.name} (${officer.badge})`;
+                    div.dataset.name = officer.name;
+                    div.dataset.badge = officer.badge;
+                    div.dataset.department = officer.department; // Store department
+
+                    div.addEventListener('click', () => {
+                        officerInfoInput.value = `${officer.name} (${officer.badge})`;
+                        officerSelectionModal.classList.add('hidden');
+                        // Save the selected officer's full details to local storage for persistence
+                        localStorage.setItem('loggedInOfficer', JSON.stringify(officer));
+                    });
+                    officerListDiv.appendChild(div);
+                });
+            }
+
+            // Function to gather all form data (excluding officerInfo)
+            function getFormData() {
+                return {
+                    department: departmentSelect.value,
+                    reportType: reportTypeSelect.value,
+                    // officerInfo is intentionally excluded as it's handled by login
+                    suspectName: suspectNameInput.value,
+                    charges: chargesInput.value,
+                    mirandized: mirandizedSelect.value,
+                    gsrTest: gsrTestSelect.value,
+                    legalRepresentation: legalRepresentationInput.value,
+                    levelOfForce: levelOfForceSelect.value,
+                    medicalTreatment: medicalTreatmentSelect.value,
+                    pleaType: pleaTypeSelect.value,
+                    arrestNarrative: arrestNarrativeTextarea.value,
+                    driverName: driverNameInput.value,
+                    driverLicense: driverLicenseInput.value,
+                    vehicleMakeModel: vehicleMakeModelInput.value,
+                    vehiclePlate: vehiclePlateInput.value,
+                    violation: violationInput.value,
+                    citationLocation: citationLocationInput.value,
+                    citationNarrative: citationNarrativeTextarea.value,
+                    subjectName: subjectNameInput.value,
+                    uofLevelOfForce: uofLevelOfForceSelect.value,
+                    uofReason: uofReasonTextarea.value,
+                    uofInjuries: uofInjuriesTextarea.value,
+                    uofMedicalTreatment: uofMedicalTreatmentSelect.value,
+                    uofNarrative: uofNarrativeTextarea.value,
+                    trespasserName: trespasserNameInput.value,
+                    trespassLocation: trespassLocationInput.value,
+                    propertyOwner: propertyOwnerInput.value,
+                    trespassReason: trespassReasonTextarea.value,
+                    trespassDuration: trespassDurationInput.value,
+                    trespassNarrative: trespassNarrativeTextarea.value,
+                    businessName: businessNameInput.value,
+                    businessAddress: businessAddressInput.value,
+                    incidentType: incidentTypeInput.value,
+                    involvedParties: involvedPartiesTextarea.value,
+                    damagesTheft: damagesTheftTextarea.value,
+                    bizNarrative: bizNarrativeTextarea.value,
+                    incidentLocation: incidentLocationInput.value,
+                    incidentDate: incidentDateInput.value,
+                    incidentTime: incidentTimeInput.value,
+                    primaryIncidentType: primaryIncidentTypeInput.value,
+                    affectedParties: affectedPartiesTextarea.value,
+                    incidentDescription: incidentDescriptionTextarea.value,
+                    actionsTaken: actionsTakenTextarea.value,
+                    selectedEvidenceDetails: selectedEvidenceDetails, // Save the entire object
+                    victimStatementsText: victimStatementsTextarea.value,
+                    witnessStatementsText: witnessStatementsTextarea.value,
+                    suspectStatementsText: suspectStatementsTextarea.value,
                 };
-
-                const tempOfficerRoster = [];
-                filteredRowsData.forEach(rowData => {
-                    const name = rowData[headerToColIndexMap['Name']] ? rowData[headerToColIndexMap['Name']].trim() : '';
-                    const badge = rowData[headerToColIndexMap['Badge No.']] ? rowData[headerToColIndexMap['Badge No.']].trim() : '';
-
-                    // Only add if both name and badge are present and not 'N/A' or empty
-                    if (name && name !== 'N/A' && badge && badge !== 'N/A') {
-                        tempOfficerRoster.push({ name: name, badge: badge, department: department });
-                    }
-                });
-                officerRosterData = tempOfficerRoster; // Update the global roster data
-                populateOfficerList(officerRosterData); // Populate the modal list with fetched data
-            } catch (error) {
-                console.error(`Error fetching or parsing roster data for ${department}:`, error);
-                officerListDiv.innerHTML = `<p class="text-red-500 text-center py-4">Failed to load officer roster for ${department}. Please try again later.</p>`;
             }
-        }
 
+            // Function to save form data to local storage
+            function saveFormData() {
+                const data = getFormData();
+                localStorage.setItem('reportGeneratorData', JSON.stringify(data));
+            }
 
-        // Array of evidence items with descriptions, types, and allowed link providers
-        const evidenceItems = [
-            { name: "Shell Casings", description: "Spent ammunition casings found at a scene.", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
-            { name: "Weapon(s) - Firearm", description: "Any type of gun, pistol, rifle, shotgun, etc.", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
-            { name: "Weapon(s) - Non-Firearm", description: "Knives, bats, blunt objects, tasers, etc.", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
-            { name: "Contraband", description: "Any item not allowed to be possessed by law (e.g., illegal paraphernalia, stolen goods).", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
-            { name: "Controlled Substances", description: "Illegal drugs or unprescribed medication (e.g., Methamphetamine, Cocaine, Marijuana).", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
-            { name: "Fingerprints", description: "Latent or visible prints lifted from surfaces.", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
-            { name: "DNA Evidence", description: "Biological samples such as blood, hair, saliva, skin cells.", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
-            { name: "Clothing/Personal Items", description: "Garments or personal belongings relevant to the incident.", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
-            { name: "Vehicular Evidence", description: "Vehicle parts, fluids, tire marks, paint transfers, etc.", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
-            { name: "Photographs/Videos (Other)", description: "Still images or video recordings not from body/dash cam (e.g., from civilian phones).", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
-            { name: "Electronic Devices", description: "Phones, computers, tablets, USB drives, memory cards.", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
-            { name: "Documents", description: "Papers, identification cards, financial records, written notes.", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
+            // Function to load form data from local storage
+            function loadFormData() {
+                const savedData = localStorage.getItem('reportGeneratorData');
+                if (savedData) {
+                    const data = JSON.parse(savedData);
 
-            { name: "CCTV Footage", description: "Video recordings from surveillance cameras.", type: "video", linkProviders: ["discord.com", "medal.tv", "youtube.com"] },
-            { name: "Body Cam Footage", description: "Video recordings from officer-worn body cameras.", type: "video", linkProviders: ["discord.com", "medal.tv", "youtube.com"] },
-            { name: "Dashcam Footage", description: "Video recordings from patrol vehicle dashboard cameras.", type: "video", linkProviders: ["discord.com", "medal.tv", "youtube.com"] },
-            { name: "Audio Recordings", description: "Voice recordings, 911 calls, dispatch recordings, etc.", type: "video", linkProviders: ["discord.com", "medal.tv", "youtube.com"] },
+                    departmentSelect.value = data.department || '';
+                    reportTypeSelect.value = data.reportType || 'Arrest Report'; // Default if not found
+                    // officerInfoInput.value = data.officerInfo || ''; // Removed: officerInfo is now handled by login
+                    suspectNameInput.value = data.suspectName || '';
+                    chargesInput.value = data.charges || '';
+                    mirandizedSelect.value = data.mirandized || '';
+                    gsrTestSelect.value = data.gsrTest || '';
+                    legalRepresentationInput.value = data.legalRepresentation || '';
+                    levelOfForceSelect.value = data.levelOfForce || '';
+                    medicalTreatmentSelect.value = data.medicalTreatment || '';
+                    pleaTypeSelect.value = data.pleaType || '';
+                    arrestNarrativeTextarea.value = data.arrestNarrative || '';
+                    driverNameInput.value = data.driverName || '';
+                    driverLicenseInput.value = data.driverLicense || '';
+                    vehicleMakeModelInput.value = data.vehicleMakeModel || '';
+                    vehiclePlateInput.value = data.vehiclePlate || '';
+                    violationInput.value = data.violation || '';
+                    citationLocationInput.value = data.citationLocation || '';
+                    citationNarrativeTextarea.value = data.citationNarrative || '';
+                    subjectNameInput.value = data.subjectName || '';
+                    uofLevelOfForceSelect.value = data.uofLevelOfForce || '';
+                    uofReasonTextarea.value = data.uofReason || '';
+                    uofInjuriesTextarea.value = data.uofInjuries || '';
+                    uofMedicalTreatmentSelect.value = data.uofMedicalTreatment || '';
+                    uofNarrativeTextarea.value = data.uofNarrative || '';
+                    trespasserNameInput.value = data.trespasserName || '';
+                    trespassLocationInput.value = data.trespassLocation || '';
+                    propertyOwnerInput.value = data.propertyOwner || '';
+                    trespassReasonTextarea.value = data.trespassReason || '';
+                    trespassDurationInput.value = data.trespassDuration || '';
+                    trespassNarrativeTextarea.value = data.trespassNarrative || '';
+                    businessNameInput.value = data.businessName || '';
+                    businessAddressInput.value = data.businessAddress || '';
+                    incidentTypeInput.value = data.incidentType || '';
+                    involvedPartiesTextarea.value = data.involvedParties || '';
+                    damagesTheftTextarea.value = data.damagesTheft || '';
+                    bizNarrativeTextarea.value = data.bizNarrative || '';
+                    incidentLocationInput.value = data.incidentLocation || '';
+                    incidentDateInput.value = data.incidentDate || '';
+                    incidentTimeInput.value = data.incidentTime || '';
+                    primaryIncidentTypeInput.value = data.primaryIncidentType || '';
+                    affectedPartiesTextarea.value = data.affectedParties || '';
+                    incidentDescriptionTextarea.value = data.incidentDescription || '';
+                    actionsTakenTextarea.value = data.actionsTaken || '';
 
-            { name: "Victim Statements", description: "Written or recorded accounts from individuals who were harmed or affected.", type: "statement" },
-            { name: "Witness Statements", description: "Written or recorded accounts from individuals observing the incident.", type: "statement" },
-            { name: "Suspect Statements/Confessions", description: "Written or recorded admissions or accounts from the suspect.", type: "statement" },
-        ];
-
-        // Function to populate the evidence modal
-        function populateEvidenceList() {
-            evidenceListDiv.innerHTML = ''; // Clear existing list
-            evidenceItems.forEach(item => {
-                const div = document.createElement('div');
-                div.className = 'evidence-item flex items-center p-2 rounded-md hover:bg-blue-100 cursor-pointer';
-                div.innerHTML = `
-                                                        <input type="checkbox" id="evidence-${item.name.replace(/\s/g, '-')}" value="${item.name}" class="form-checkbox h-5 w-5 text-blue-600 rounded-md">
-                                                        <label for="evidence-${item.name.replace(/\s/g, '-')}" class="ml-2 text-gray-800 text-sm font-medium flex-grow">${item.name}</label>
-                                                    `;
-                div.setAttribute('data-description', item.description);
-                div.setAttribute('data-type', item.type);
-                if (item.linkProviders) {
-                    div.setAttribute('data-link-providers', item.linkProviders.join(','));
-                }
-
-                // Add event listeners for hover to display description
-                div.addEventListener('mouseenter', () => {
-                    evidenceDescriptionDisplay.textContent = item.description;
-                });
-                div.addEventListener('mouseleave', () => {
-                    evidenceDescriptionDisplay.textContent = 'Hover over an item for more details.';
-                });
-
-                // Add event listener for checkbox change
-                const checkbox = div.querySelector('input[type="checkbox"]');
-                checkbox.addEventListener('change', (e) => {
-                    const itemName = e.target.value;
-                    const itemType = e.target.closest('.evidence-item').dataset.type;
-                    const itemLinkProviders = e.target.closest('.evidence-item').dataset.linkProviders ? e.target.closest('.evidence-item').dataset.linkProviders.split(',') : [];
-
-                    if (e.target.checked) {
-                        selectedEvidenceDetails[itemName] = { type: itemType, links: [], text: '' };
-                        if (itemType === 'statement') {
-                            // Show the corresponding text area
-                            switch (itemName) {
-                                case 'Victim Statements': victimStatementsContainer.classList.remove('hidden'); break;
-                                case 'Witness Statements': witnessStatementsContainer.classList.remove('hidden'); break;
-                                case 'Suspect Statements/Confessions': suspectStatementsContainer.classList.remove('hidden'); break;
-                            }
-                        } else if (itemType === 'image' || itemType === 'video') {
-                            // Open URL input modal
-                            evidenceModal.classList.add('hidden'); // Hide evidence modal first
-                            openUrlInputModal(itemName, itemLinkProviders);
-                        }
-                    } else {
-                        delete selectedEvidenceDetails[itemName];
-                        if (itemType === 'statement') {
-                            // Hide the corresponding text area and clear its content
-                            switch (itemName) {
-                                case 'Victim Statements': victimStatementsContainer.classList.add('hidden'); victimStatementsTextarea.value = ''; break;
-                                case 'Witness Statements': witnessStatementsContainer.classList.add('hidden'); witnessStatementsTextarea.value = ''; break;
-                                case 'Suspect Statements/Confessions': suspectStatementsContainer.classList.add('hidden'); suspectStatementsTextarea.value = ''; break;
-                            }
-                        }
-                    }
+                    // Restore selectedEvidenceDetails and update related UI
+                    selectedEvidenceDetails = data.selectedEvidenceDetails || {};
                     updateEvidenceCollectedInputSummary();
-                    saveFormData(); // Save data after evidence selection changes
-                });
+                    victimStatementsTextarea.value = data.victimStatementsText || '';
+                    witnessStatementsTextarea.value = data.witnessStatementsText || '';
+                    suspectStatementsTextarea.value = data.suspectStatementsText || '';
 
-                evidenceListDiv.appendChild(div);
-            });
-        }
-
-        // Function to open the URL input modal
-        function openUrlInputModal(itemName, providers) {
-            urlModalTitle.textContent = `Add Links for ${itemName}`;
-            allowedProvidersText.textContent = `Allowed providers: ${providers.map(p => p.replace('https://', '')).join(', ')}`;
-            evidenceUrlInput.value = '';
-            urlValidationError.classList.add('hidden');
-            currentLinksDisplay.innerHTML = ''; // Clear previous links
-
-            // Populate current links if any exist for this item
-            if (selectedEvidenceDetails[itemName] && selectedEvidenceDetails[itemName].links) {
-                selectedEvidenceDetails[itemName].links.forEach(link => {
-                    const p = document.createElement('p');
-                    p.textContent = link;
-                    currentLinksDisplay.appendChild(p);
-                });
-            }
-
-            urlInputModal.dataset.currentItem = itemName; // Store the current item being edited
-            urlInputModal.dataset.allowedProviders = providers.join(','); // Store allowed providers
-            urlInputModal.classList.remove('hidden');
-        }
-
-        // Function to validate URL
-        function isValidUrl(url, allowedProviders) {
-            try {
-                const urlObj = new URL(url);
-                const hostname = urlObj.hostname;
-                return allowedProviders.some(provider => hostname.includes(provider));
-            } catch (e) {
-                return false;
-            }
-        }
-
-        // Function to update the main evidence input field summary and its title attribute for hover
-        function updateEvidenceCollectedInputSummary() {
-            const summaryParts = [];
-            const hoverTextParts = []; // To store text for the title attribute
-
-            for (const itemName in selectedEvidenceDetails) {
-                const item = selectedEvidenceDetails[itemName];
-                if (item.type === 'statement') {
-                    if (item.text.trim() !== '') {
-                        summaryParts.push(`${itemName} (D)`); // (D) for details
-                        hoverTextParts.push(`${itemName}: ${item.text.trim()}`);
-                    } else {
-                        summaryParts.push(itemName);
-                        hoverTextParts.push(`${itemName}: No details provided.`);
-                    }
-                } else if (item.type === 'image' || item.type === 'video') {
-                    if (item.links.length > 0) {
-                        summaryParts.push(`${itemName} (L)`); // (L) for links
-                        hoverTextParts.push(`${itemName}: ${item.links.join(', ')}`);
-                    } else {
-                        summaryParts.push(itemName);
-                        hoverTextParts.push(`${itemName}: No links provided.`);
-                    }
-                } else {
-                    summaryParts.push(itemName);
-                    hoverTextParts.push(itemName); // Fallback for other types
+                    // After loading, ensure correct fields are shown
+                    toggleReportFields();
                 }
             }
-            evidenceCollectedInput.value = summaryParts.join(', ');
-            evidenceCollectedInput.title = hoverTextParts.join('\n'); // Set the title attribute for hover
-        }
 
-
-        // Function to show/hide fields based on report type
-        function toggleReportFields() {
-            const selectedReportType = reportTypeSelect.value;
-
-            // Hide all report-specific field containers
-            arrestReportFields.classList.add('hidden');
-            trafficCitationFields.classList.add('hidden');
-            useOfForceFields.classList.add('hidden');
-            trespassNoticeFields.classList.add('hidden');
-            businessIncidentFields.classList.add('hidden');
-            incidentReportFields.classList.add('hidden'); // NEW Incident Report Fields
-
-            // Hide all statement containers
-            victimStatementsContainer.classList.add('hidden');
-            witnessStatementsContainer.classList.add('hidden');
-            suspectStatementsContainer.classList.add('hidden');
-
-            // Show fields relevant to the selected report type
-            switch (selectedReportType) {
-                case 'Arrest Report':
-                    arrestReportFields.classList.remove('hidden');
-                    break;
-                case 'Traffic Citation':
-                    trafficCitationFields.classList.remove('hidden');
-                    break;
-                case 'Use of Force':
-                    useOfForceFields.classList.remove('hidden');
-                    break;
-                case 'Trespass Notice':
-                    trespassNoticeFields.classList.remove('hidden');
-                    break;
-                case 'Business Incident':
-                    businessIncidentFields.classList.remove('hidden');
-                    break;
-                case 'Incident Report': // NEW Case
-                    incidentReportFields.classList.remove('hidden');
-                    break;
-                default:
-                    // No default action, all fields remain hidden
-                    break;
-            }
-
-            // Re-evaluate visibility of statement text areas based on selectedEvidenceDetails
-            for (const itemName in selectedEvidenceDetails) {
-                const item = selectedEvidenceDetails[itemName];
-                if (item.type === 'statement') {
-                    switch (itemName) {
-                        case 'Victim Statements': victimStatementsContainer.classList.remove('hidden'); break;
-                        case 'Witness Statements': witnessStatementsContainer.classList.remove('hidden'); break;
-                        case 'Suspect Statements/Confessions': suspectStatementsContainer.classList.remove('hidden'); break;
+            // Function to clear all form data and local storage for the report
+            function clearReportData() {
+                // Clear all input fields, textareas, and select elements
+                document.querySelectorAll('input, select, textarea').forEach(element => {
+                    if (element.type === 'checkbox' || element.type === 'radio') {
+                        element.checked = false;
+                    } else if (element.tagName === 'SELECT') {
+                        element.value = element.options[0] ? element.options[0].value : ''; // Reset to first option
+                    } else {
+                        element.value = '';
                     }
-                }
-            }
-            saveFormData(); // Save data after toggling fields
-        }
-
-        // Function to populate the officer list in the modal
-        function populateOfficerList(officers, searchTerm = '') {
-            officerListDiv.innerHTML = ''; // Clear existing list
-            const filteredOfficers = officers.filter(officer =>
-                officer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                officer.badge.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-
-            if (filteredOfficers.length === 0) {
-                officerListDiv.innerHTML = '<p class="text-gray-500 text-center py-4">No officers found.</p>';
-                return;
-            }
-
-            filteredOfficers.forEach(officer => {
-                const div = document.createElement('div');
-                div.className = 'officer-item p-2 rounded-md hover:bg-blue-100 cursor-pointer text-gray-800 text-sm font-medium';
-                div.textContent = `${officer.name} (${officer.badge})`;
-                div.dataset.name = officer.name;
-                div.dataset.badge = officer.badge;
-                div.dataset.department = officer.department; // Store department
-
-                div.addEventListener('click', () => {
-                    officerInfoInput.value = `${officer.name} (${officer.badge})`;
-                    officerSelectionModal.classList.add('hidden');
-                    // Save the selected officer's full details to local storage for persistence
-                    localStorage.setItem('loggedInOfficer', JSON.stringify(officer));
                 });
-                officerListDiv.appendChild(div);
-            });
-        }
 
-        // Function to gather all form data (excluding officerInfo)
-        function getFormData() {
-            return {
-                department: departmentSelect.value,
-                reportType: reportTypeSelect.value,
-                // officerInfo is intentionally excluded as it's handled by login
-                suspectName: suspectNameInput.value,
-                charges: chargesInput.value,
-                mirandized: mirandizedSelect.value,
-                gsrTest: gsrTestSelect.value,
-                legalRepresentation: legalRepresentationInput.value,
-                levelOfForce: levelOfForceSelect.value,
-                medicalTreatment: medicalTreatmentSelect.value,
-                pleaType: pleaTypeSelect.value,
-                arrestNarrative: arrestNarrativeTextarea.value,
-                driverName: driverNameInput.value,
-                driverLicense: driverLicenseInput.value,
-                vehicleMakeModel: vehicleMakeModelInput.value,
-                vehiclePlate: vehiclePlateInput.value,
-                violation: violationInput.value,
-                citationLocation: citationLocationInput.value,
-                citationNarrative: citationNarrativeTextarea.value,
-                subjectName: subjectNameInput.value,
-                uofLevelOfForce: uofLevelOfForceSelect.value,
-                uofReason: uofReasonTextarea.value,
-                uofInjuries: uofInjuriesTextarea.value,
-                uofMedicalTreatment: uofMedicalTreatmentSelect.value,
-                uofNarrative: uofNarrativeTextarea.value,
-                trespasserName: trespasserNameInput.value,
-                trespassLocation: trespassLocationInput.value,
-                propertyOwner: propertyOwnerInput.value,
-                trespassReason: trespassReasonTextarea.value,
-                trespassDuration: trespassDurationInput.value,
-                trespassNarrative: trespassNarrativeTextarea.value,
-                businessName: businessNameInput.value,
-                businessAddress: businessAddressInput.value,
-                incidentType: incidentTypeInput.value,
-                involvedParties: involvedPartiesTextarea.value,
-                damagesTheft: damagesTheftTextarea.value,
-                bizNarrative: bizNarrativeTextarea.value,
-                incidentLocation: incidentLocationInput.value,
-                incidentDate: incidentDateInput.value,
-                incidentTime: incidentTimeInput.value,
-                primaryIncidentType: primaryIncidentTypeInput.value,
-                affectedParties: affectedPartiesTextarea.value,
-                incidentDescription: incidentDescriptionTextarea.value,
-                actionsTaken: actionsTakenTextarea.value,
-                selectedEvidenceDetails: selectedEvidenceDetails, // Save the entire object
-                victimStatementsText: victimStatementsTextarea.value,
-                witnessStatementsText: witnessStatementsTextarea.value,
-                suspectStatementsText: suspectStatementsTextarea.value,
-            };
-        }
+                // Specific reset for officerInfoInput, as it's pre-filled from login
+                officerInfoInput.value = ''; // Clear it manually
 
-        // Function to save form data to local storage
-        function saveFormData() {
-            const data = getFormData();
-            localStorage.setItem('reportGeneratorData', JSON.stringify(data));
-        }
+                // Clear generated report area
+                generatedReportTextarea.value = '';
+                copyReportBtn.classList.add('hidden');
+                downloadReportBtn.classList.add('hidden');
+                viewReportBtn.classList.add('hidden');
 
-        // Function to load form data from local storage
-        function loadFormData() {
-            const savedData = localStorage.getItem('reportGeneratorData');
-            if (savedData) {
-                const data = JSON.parse(savedData);
-
-                departmentSelect.value = data.department || '';
-                reportTypeSelect.value = data.reportType || 'Arrest Report'; // Default if not found
-                // officerInfoInput.value = data.officerInfo || ''; // Removed: officerInfo is now handled by login
-                suspectNameInput.value = data.suspectName || '';
-                chargesInput.value = data.charges || '';
-                mirandizedSelect.value = data.mirandized || '';
-                gsrTestSelect.value = data.gsrTest || '';
-                legalRepresentationInput.value = data.legalRepresentation || '';
-                levelOfForceSelect.value = data.levelOfForce || '';
-                medicalTreatmentSelect.value = data.medicalTreatment || '';
-                pleaTypeSelect.value = data.pleaType || '';
-                arrestNarrativeTextarea.value = data.arrestNarrative || '';
-                driverNameInput.value = data.driverName || '';
-                driverLicenseInput.value = data.driverLicense || '';
-                vehicleMakeModelInput.value = data.vehicleMakeModel || '';
-                vehiclePlateInput.value = data.vehiclePlate || '';
-                violationInput.value = data.violation || '';
-                citationLocationInput.value = data.citationLocation || '';
-                citationNarrativeTextarea.value = data.citationNarrative || '';
-                subjectNameInput.value = data.subjectName || '';
-                uofLevelOfForceSelect.value = data.uofLevelOfForce || '';
-                uofReasonTextarea.value = data.uofReason || '';
-                uofInjuriesTextarea.value = data.uofInjuries || '';
-                uofMedicalTreatmentSelect.value = data.uofMedicalTreatment || '';
-                uofNarrativeTextarea.value = data.uofNarrative || '';
-                trespasserNameInput.value = data.trespasserName || '';
-                trespassLocationInput.value = data.trespassLocation || '';
-                propertyOwnerInput.value = data.propertyOwner || '';
-                trespassReasonTextarea.value = data.trespassReason || '';
-                trespassDurationInput.value = data.trespassDuration || '';
-                trespassNarrativeTextarea.value = data.trespassNarrative || '';
-                businessNameInput.value = data.businessName || '';
-                businessAddressInput.value = data.businessAddress || '';
-                incidentTypeInput.value = data.incidentType || '';
-                involvedPartiesTextarea.value = data.involvedParties || '';
-                damagesTheftTextarea.value = data.damagesTheft || '';
-                bizNarrativeTextarea.value = data.bizNarrative || '';
-                incidentLocationInput.value = data.incidentLocation || '';
-                incidentDateInput.value = data.incidentDate || '';
-                incidentTimeInput.value = data.incidentTime || '';
-                primaryIncidentTypeInput.value = data.primaryIncidentType || '';
-                affectedPartiesTextarea.value = data.affectedParties || '';
-                incidentDescriptionTextarea.value = data.incidentDescription || '';
-                actionsTakenTextarea.value = data.actionsTaken || '';
-
-                // Restore selectedEvidenceDetails and update related UI
-                selectedEvidenceDetails = data.selectedEvidenceDetails || {};
+                // Reset selected evidence details
+                selectedEvidenceDetails = {};
                 updateEvidenceCollectedInputSummary();
-                victimStatementsTextarea.value = data.victimStatementsText || '';
-                witnessStatementsTextarea.value = data.witnessStatementsText || '';
-                suspectStatementsTextarea.value = data.suspectStatementsText || '';
+                populateEvidenceList(); // Re-populate to reset checkboxes
 
-                // After loading, ensure correct fields are shown
+                // Hide all statement containers
+                victimStatementsContainer.classList.add('hidden');
+                witnessStatementsContainer.classList.add('hidden');
+                suspectStatementsContainer.classList.add('hidden');
+
+                // Clear local storage for this report
+                localStorage.removeItem('reportGeneratorData');
+                console.log('Report data cleared from local storage.');
+
+                // Reset report type to default and toggle fields
+                reportTypeSelect.value = 'Arrest Report';
                 toggleReportFields();
             }
-        }
 
-        // Function to clear all form data and local storage for the report
-        function clearReportData() {
-            // Clear all input fields, textareas, and select elements
-            document.querySelectorAll('input, select, textarea').forEach(element => {
-                if (element.type === 'checkbox' || element.type === 'radio') {
-                    element.checked = false;
-                } else if (element.tagName === 'SELECT') {
-                    element.value = element.options[0] ? element.options[0].value : ''; // Reset to first option
-                } else {
-                    element.value = '';
-                }
-            });
+            // Function to show a custom alert modal
+            function showCustomAlert(message) {
+                const modalOverlay = document.createElement('div');
+                modalOverlay.className = 'modal-overlay'; // Re-use modal-overlay styles
+                modalOverlay.id = 'customAlertModal';
+                modalOverlay.innerHTML = `
+                                            <div class="modal-content text-center">
+                                                <p class="text-lg font-semibold mb-6">${message}</p>
+                                                <button id="closeCustomAlertBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">
+                                                    OK
+                                                </button>
+                                            </div>
+                                        `;
+                document.body.appendChild(modalOverlay);
 
-            // Specific reset for officerInfoInput, as it's pre-filled from login
-            officerInfoInput.value = ''; // Clear it manually
-
-            // Clear generated report area
-            generatedReportTextarea.value = '';
-            copyReportBtn.classList.add('hidden');
-            downloadReportBtn.classList.add('hidden');
-            viewReportBtn.classList.add('hidden');
-
-            // Reset selected evidence details
-            selectedEvidenceDetails = {};
-            updateEvidenceCollectedInputSummary();
-            populateEvidenceList(); // Re-populate to reset checkboxes
-
-            // Hide all statement containers
-            victimStatementsContainer.classList.add('hidden');
-            witnessStatementsContainer.classList.add('hidden');
-            suspectStatementsContainer.classList.add('hidden');
-
-            // Clear local storage for this report
-            localStorage.removeItem('reportGeneratorData');
-            console.log('Report data cleared from local storage.');
-
-            // Reset report type to default and toggle fields
-            reportTypeSelect.value = 'Arrest Report';
-            toggleReportFields();
-        }
-
-        // Function to show a custom alert modal
-        function showCustomAlert(message) {
-            const modalOverlay = document.createElement('div');
-            modalOverlay.className = 'modal-overlay'; // Re-use modal-overlay styles
-            modalOverlay.id = 'customAlertModal';
-            modalOverlay.innerHTML = `
-                                        <div class="modal-content text-center">
-                                            <p class="text-lg font-semibold mb-6">${message}</p>
-                                            <button id="closeCustomAlertBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">
-                                                OK
-                                            </button>
-                                        </div>
-                                    `;
-            document.body.appendChild(modalOverlay);
-
-            document.getElementById('closeCustomAlertBtn').addEventListener('click', () => {
-                modalOverlay.remove();
-            });
-
-            // Close if clicking outside the modal content
-            modalOverlay.addEventListener('click', (e) => {
-                if (e.target === modalOverlay) {
+                document.getElementById('closeCustomAlertBtn').addEventListener('click', () => {
                     modalOverlay.remove();
-                }
-            });
-        }
+                });
 
-
-        // Add event listener to report type dropdown to toggle fields
-        reportTypeSelect.addEventListener('change', toggleReportFields);
-
-        // Event listener for department dropdown change
-        departmentSelect.addEventListener('change', (e) => {
-            const selectedDepartment = e.target.value;
-            fetchOfficerRosterData(selectedDepartment);
-        });
-
-        // Initialize fields visibility and populate evidence list on page load
-        document.addEventListener('DOMContentLoaded', async () => {
-            populateEvidenceList(); // Populate evidence options first
-            loadFormData(); // Then load saved data
-
-            // Apply theme on load (now that applyTheme is defined)
-            applyTheme(localStorage.getItem('theme') || 'light');
-
-            // Check for loggedInOfficer in local storage and pre-fill officerInfoInput
-            const loggedInOfficer = localStorage.getItem('loggedInOfficer');
-            let initialDepartment = 'LSPD'; // Default to LSPD
-            if (loggedInOfficer) {
-                try {
-                    const officer = JSON.parse(loggedInOfficer);
-                    officerInfoInput.value = `${officer.name} (${officer.badge})`;
-                    // If the logged-in officer belongs to LSCSO, automatically select LSCSO
-                    if (officer.department === 'LSCSO') {
-                        initialDepartment = 'LSCSO';
-                    } else { // Default to LSPD if not LSCSO
-                        initialDepartment = 'LSPD';
+                // Close if clicking outside the modal content
+                modalOverlay.addEventListener('click', (e) => {
+                    if (e.target === modalOverlay) {
+                        modalOverlay.remove();
                     }
-                } catch (e) {
-                    console.error('Error parsing loggedInOfficer from localStorage:', e);
-                    localStorage.removeItem('loggedInOfficer'); // Clear corrupted data
-                }
+                });
             }
-            departmentSelect.value = initialDepartment; // Set the department dropdown
-            await fetchOfficerRosterData(initialDepartment); // Fetch roster for the initial/auto-selected department
-        });
 
-        // Add event listeners to all form fields for saving data
-        document.querySelectorAll('input:not(#officerInfo), select, textarea').forEach(element => {
-            element.addEventListener('input', saveFormData);
-            element.addEventListener('change', saveFormData); // For select elements
-        });
 
-        // Event listeners for opening and closing the evidence modal
-        evidenceCollectedInput.addEventListener('click', () => {
-            evidenceModal.classList.remove('hidden');
-            // Ensure checkboxes reflect current selectedEvidenceDetails when modal opens
-            evidenceListDiv.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-                checkbox.checked = !!selectedEvidenceDetails[checkbox.value];
+            // Add event listener to report type dropdown to toggle fields
+            reportTypeSelect.addEventListener('change', toggleReportFields);
+
+            // Event listener for department dropdown change
+            departmentSelect.addEventListener('change', (e) => {
+                const selectedDepartment = e.target.value;
+                fetchOfficerRosterData(selectedDepartment);
             });
-            evidenceDescriptionDisplay.textContent = 'Hover over an item for more details.'; // Reset description display
-        });
 
-        closeEvidenceModalBtn.addEventListener('click', () => {
-            evidenceModal.classList.add('hidden');
-            saveFormData(); // Save data when evidence modal is closed
-        });
+            // Initialize fields visibility and populate evidence list on page load
+            document.addEventListener('DOMContentLoaded', async () => {
+                populateEvidenceList(); // Populate evidence options first
+                loadFormData(); // Then load saved data
 
-        // Close modal when clicking outside of it
-        evidenceModal.addEventListener('click', (e) => {
-            if (e.target === evidenceModal) {
-                evidenceModal.classList.add('hidden');
-                saveFormData(); // Save data when evidence modal is closed by clicking outside
-            }
-        });
+                // Apply theme on load (now that applyTheme is defined)
+                applyTheme(localStorage.getItem('theme') || 'light');
 
-        // URL Modal Logic
-        addUrlBtn.addEventListener('click', () => {
-            const url = evidenceUrlInput.value.trim();
-            const currentItemName = urlInputModal.dataset.currentItem;
-            const allowedProviders = urlInputModal.dataset.allowedProviders.split(',');
-
-            urlValidationError.classList.add('hidden'); // Hide previous errors
-
-            if (!url) {
-                urlValidationError.textContent = 'URL cannot be empty.';
-                urlValidationError.classList.remove('hidden');
-                return;
-            }
-
-            if (!isValidUrl(url, allowedProviders)) {
-                urlValidationError.textContent = `Invalid URL or not from allowed providers: ${allowedProviders.map(p => p.replace('https://', '')).join(', ')}.`;
-                urlValidationError.classList.remove('hidden');
-                return;
-            }
-
-            if (selectedEvidenceDetails[currentItemName]) {
-                if (!selectedEvidenceDetails[currentItemName].links.includes(url)) {
-                    selectedEvidenceDetails[currentItemName].links.push(url);
-                    const p = document.createElement('p');
-                    p.textContent = url;
-                    currentLinksDisplay.appendChild(p);
+                // Check for loggedInOfficer in local storage and pre-fill officerInfoInput
+                const loggedInOfficer = localStorage.getItem('loggedInOfficer');
+                let initialDepartment = 'LSPD'; // Default to LSPD
+                if (loggedInOfficer) {
+                    try {
+                        const officer = JSON.parse(loggedInOfficer);
+                        officerInfoInput.value = `${officer.name} (${officer.badge})`;
+                        // If the logged-in officer belongs to LSCSO, automatically select LSCSO
+                        if (officer.department === 'LSCSO') {
+                            initialDepartment = 'LSCSO';
+                        } else if (officer.department === 'State Police') { // Handle State Police
+                            initialDepartment = 'State Police';
+                        } else { // Default to LSPD if not LSCSO or State Police
+                            initialDepartment = 'LSPD';
+                        }
+                    } catch (e) {
+                        console.error('Error parsing loggedInOfficer from localStorage:', e);
+                        localStorage.removeItem('loggedInOfficer'); // Clear corrupted data
+                    }
                 }
-            }
-            evidenceUrlInput.value = ''; // Clear input after adding
-            updateEvidenceCollectedInputSummary(); // Update summary immediately after adding a link
-            saveFormData(); // Save data after adding a URL
-        });
+                departmentSelect.value = initialDepartment; // Set the department dropdown
+                await fetchOfficerRosterData(initialDepartment); // Fetch roster for the initial/auto-selected department
+            });
 
-        closeUrlModalBtn.addEventListener('click', () => {
-            urlInputModal.classList.add('hidden');
-            evidenceModal.classList.remove('hidden'); // Bring back the evidence selection modal
-            updateEvidenceCollectedInputSummary(); // Ensure summary is updated when done
-            saveFormData(); // Save data when URL modal is closed
-        });
+            // Add event listeners to all form fields for saving data
+            document.querySelectorAll('input:not(#officerInfo), select, textarea').forEach(element => {
+                element.addEventListener('input', saveFormData);
+                element.addEventListener('change', saveFormData); // For select elements
+            });
 
-        urlInputModal.addEventListener('click', (e) => {
-            if (e.target === urlInputModal) {
+            // Event listeners for opening and closing the evidence modal
+            evidenceCollectedInput.addEventListener('click', () => {
+                evidenceModal.classList.remove('hidden');
+                // Ensure checkboxes reflect current selectedEvidenceDetails when modal opens
+                evidenceListDiv.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+                    checkbox.checked = !!selectedEvidenceDetails[checkbox.value];
+                });
+                evidenceDescriptionDisplay.textContent = 'Hover over an item for more details.'; // Reset description display
+            });
+
+            closeEvidenceModalBtn.addEventListener('click', () => {
+                evidenceModal.classList.add('hidden');
+                saveFormData(); // Save data when evidence modal is closed
+            });
+
+            // Close modal when clicking outside of it
+            evidenceModal.addEventListener('click', (e) => {
+                if (e.target === evidenceModal) {
+                    evidenceModal.classList.add('hidden');
+                    saveFormData(); // Save data when evidence modal is closed by clicking outside
+                }
+            });
+
+            // URL Modal Logic
+            addUrlBtn.addEventListener('click', () => {
+                const url = evidenceUrlInput.value.trim();
+                const currentItemName = urlInputModal.dataset.currentItem;
+                const allowedProviders = urlInputModal.dataset.allowedProviders.split(',');
+
+                urlValidationError.classList.add('hidden'); // Hide previous errors
+
+                if (!url) {
+                    urlValidationError.textContent = 'URL cannot be empty.';
+                    urlValidationError.classList.remove('hidden');
+                    return;
+                }
+
+                if (!isValidUrl(url, allowedProviders)) {
+                    urlValidationError.textContent = `Invalid URL or not from allowed providers: ${allowedProviders.map(p => p.replace('https://', '')).join(', ')}.`;
+                    urlValidationError.classList.remove('hidden');
+                    return;
+                }
+
+                if (selectedEvidenceDetails[currentItemName]) {
+                    if (!selectedEvidenceDetails[currentItemName].links.includes(url)) {
+                        selectedEvidenceDetails[currentItemName].links.push(url);
+                        const p = document.createElement('p');
+                        p.textContent = url;
+                        currentLinksDisplay.appendChild(p);
+                    }
+                }
+                evidenceUrlInput.value = ''; // Clear input after adding
+                updateEvidenceCollectedInputSummary(); // Update summary immediately after adding a link
+                saveFormData(); // Save data after adding a URL
+            });
+
+            closeUrlModalBtn.addEventListener('click', () => {
                 urlInputModal.classList.add('hidden');
                 evidenceModal.classList.remove('hidden'); // Bring back the evidence selection modal
-                // This block handles the case where the user closes the URL modal by clicking outside
-                // If no links were added for the current item, uncheck its checkbox and remove it from selectedEvidenceDetails
-                const currentItemName = urlInputModal.dataset.currentItem;
-                if (selectedEvidenceDetails[currentItemName] && selectedEvidenceDetails[currentItemName].links.length === 0) {
-                    const checkbox = document.getElementById(`evidence-${currentItemName.replace(/\s/g, '-')}`);
-                    if (checkbox) {
-                        checkbox.checked = false;
-                        delete selectedEvidenceDetails[currentItemName]; // Remove from details if no links
+                updateEvidenceCollectedInputSummary(); // Ensure summary is updated when done
+                saveFormData(); // Save data when URL modal is closed
+            });
+
+            urlInputModal.addEventListener('click', (e) => {
+                if (e.target === urlInputModal) {
+                    urlInputModal.classList.add('hidden');
+                    evidenceModal.classList.remove('hidden'); // Bring back the evidence selection modal
+                    // This block handles the case where the user closes the URL modal by clicking outside
+                    // If no links were added for the current item, uncheck its checkbox and remove it from selectedEvidenceDetails
+                    const currentItemName = urlInputModal.dataset.currentItem;
+                    if (selectedEvidenceDetails[currentItemName] && selectedEvidenceDetails[currentItemName].links.length === 0) {
+                        const checkbox = document.getElementById(`evidence-${currentItemName.replace(/\s/g, '-')}`);
+                        if (checkbox) {
+                            checkbox.checked = false;
+                            delete selectedEvidenceDetails[currentItemName]; // Remove from details if no links
+                        }
                     }
+                    updateEvidenceCollectedInputSummary(); // Ensure summary is updated after any modal closure
+                    saveFormData(); // Save data when URL modal is closed by clicking outside
                 }
-                updateEvidenceCollectedInputSummary(); // Ensure summary is updated after any modal closure
-                saveFormData(); // Save data when URL modal is closed by clicking outside
-            }
-        });
+            });
 
-        // Officer Selection Modal Logic
-        officerInfoInput.addEventListener('click', async () => {
-            officerSelectionModal.classList.remove('hidden');
-            officerSearchInput.value = ''; // Clear search input
-            // Fetch and populate for the currently selected department
-            await fetchOfficerRosterData(departmentSelect.value);
-        });
+            // Officer Selection Modal Logic
+            officerInfoInput.addEventListener('click', async () => {
+                officerSelectionModal.classList.remove('hidden');
+                officerSearchInput.value = ''; // Clear search input
+                // Fetch and populate for the currently selected department
+                await fetchOfficerRosterData(departmentSelect.value);
+            });
 
-        officerSearchInput.addEventListener('input', (e) => {
-            populateOfficerList(officerRosterData, e.target.value);
-        });
+            officerSearchInput.addEventListener('input', (e) => {
+                populateOfficerList(officerRosterData, e.target.value);
+            });
 
-        closeOfficerModalBtn.addEventListener('click', () => {
-            officerSelectionModal.classList.add('hidden');
-            // No longer saving officerInfo directly here, as it's handled by login
-            // saveFormData();
-        });
-
-        officerSelectionModal.addEventListener('click', (e) => {
-            if (e.target === officerSelectionModal) {
+            closeOfficerModalBtn.addEventListener('click', () => {
                 officerSelectionModal.classList.add('hidden');
                 // No longer saving officerInfo directly here, as it's handled by login
                 // saveFormData();
-            }
-        });
+            });
 
-        // Update selectedEvidenceDetails for statement text areas on input
-        victimStatementsTextarea.addEventListener('input', (e) => {
-            if (selectedEvidenceDetails['Victim Statements']) {
-                selectedEvidenceDetails['Victim Statements'].text = e.target.value;
-            }
-            updateEvidenceCollectedInputSummary();
-            saveFormData();
-        });
-        witnessStatementsTextarea.addEventListener('input', (e) => {
-            if (selectedEvidenceDetails['Witness Statements']) {
-                selectedEvidenceDetails['Witness Statements'].text = e.target.value;
-            }
-            updateEvidenceCollectedInputSummary();
-            saveFormData();
-        });
-        suspectStatementsTextarea.addEventListener('input', (e) => {
-            if (selectedEvidenceDetails['Suspect Statements/Confessions']) {
-                selectedEvidenceDetails['Suspect Statements/Confessions'].text = e.target.value;
-            }
-            updateEvidenceCollectedInputSummary();
-            saveFormData();
-        });
-
-        // Event listener for the new Clear Report button
-        clearReportBtn.addEventListener('click', clearReportData);
-
-
-        // IMPORTANT: Gemini API Key Configuration
-        // If you are running this code on YOUR OWN WEB SERVER:
-        // 1. Go to Google AI Studio (https://aistudio.google.com/app/apikey) or Google Cloud.
-        // 2. Generate a new API key.
-        // 3. Replace the empty string below with your ACTUAL, VALID API key.
-        //    Example: const apiKey = "YOUR_ACTUAL_GEMINI_API_KEY_HERE";
-        // If you are running this within the Google Canvas environment, leave this as "".
-        const apiKey = "AIzaSyCsWMWfmCfR59mcAy4as7XR95YY__7hayc";
-
-        // Add event listener to the "Generate Report" button
-        generateReportBtn.addEventListener('click', async () => {
-            const selectedReportType = reportTypeSelect.value;
-            const department = departmentSelect.value;
-            const officerInfo = officerInfoInput.value.trim(); // Common officer info
-            const now = new Date();
-            const localDate = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-            const localTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
-            const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-            generatedReportTextarea.value = '';
-            copyReportBtn.classList.add('hidden');
-            downloadReportBtn.classList.add('hidden'); // Hide download button on new generation
-            viewReportBtn.classList.add('hidden'); // Hide view button on new generation
-            loadingIndicator.classList.remove('hidden');
-
-            let prompt = '';
-            let reportNarrative = ''; // Common variable for narrative across reports
-            let requiredFieldsFilled = true; // Flag for validation
-
-            // Prepare evidence string for prompt
-            let evidenceForPrompt = '';
-            const evidenceParts = [];
-            for (const itemName in selectedEvidenceDetails) {
-                const item = selectedEvidenceDetails[itemName];
-                if (item.type === 'statement') {
-                    if (item.text.trim() !== '') {
-                        evidenceParts.push(`${itemName}: ${item.text.trim()}`);
-                    } else {
-                        evidenceParts.push(`${itemName}: No details provided.`);
-                    }
-                } else if (item.type === 'image' || item.type === 'video') {
-                    if (item.links.length > 0) {
-                        evidenceParts.push(`${itemName}: ${item.links.join(', ')}`);
-                    } else {
-                        evidenceParts.push(`${itemName}: No links provided.`);
-                    }
-                } else {
-                    evidenceParts.push(itemName);
+            officerSelectionModal.addEventListener('click', (e) => {
+                if (e.target === officerSelectionModal) {
+                    officerSelectionModal.classList.add('hidden');
+                    // No longer saving officerInfo directly here, as it's handled by login
+                    // saveFormData();
                 }
-            }
-            evidenceForPrompt = evidenceParts.length > 0 ? evidenceParts.join('\n') : 'None';
+            });
+
+            // Update selectedEvidenceDetails for statement text areas on input
+            victimStatementsTextarea.addEventListener('input', (e) => {
+                if (selectedEvidenceDetails['Victim Statements']) {
+                    selectedEvidenceDetails['Victim Statements'].text = e.target.value;
+                }
+                updateEvidenceCollectedInputSummary();
+                saveFormData();
+            });
+            witnessStatementsTextarea.addEventListener('input', (e) => {
+                if (selectedEvidenceDetails['Witness Statements']) {
+                    selectedEvidenceDetails['Witness Statements'].text = e.target.value;
+                }
+                updateEvidenceCollectedInputSummary();
+                saveFormData();
+            });
+            suspectStatementsTextarea.addEventListener('input', (e) => {
+                if (selectedEvidenceDetails['Suspect Statements/Confessions']) {
+                    selectedEvidenceDetails['Suspect Statements/Confessions'].text = e.target.value;
+                }
+                updateEvidenceCollectedInputSummary();
+                saveFormData();
+            });
+
+            // Event listener for the new Clear Report button
+            clearReportBtn.addEventListener('click', clearReportData);
 
 
-            // Determine which API key to use
-            const finalApiKey = typeof __api_key__ !== 'undefined' ? __api_key__ : apiKey;
+            // IMPORTANT: Gemini API Key Configuration
+            // If you are running this code on YOUR OWN WEB SERVER:
+            // 1. Go to Google AI Studio (https://aistudio.google.com/app/apikey) or Google Cloud.
+            // 2. Generate a new API key.
+            // 3. Replace the empty string below with your ACTUAL, VALID API key.
+            //    Example: const apiKey = "YOUR_ACTUAL_GEMINI_API_KEY_HERE";
+            // If you are running this within the Google Canvas environment, leave this as "".
+            const apiKey = "AIzaSyCsWMWfmCfR59mcAy4as7XR95YY__7hayc";
 
-            if (!finalApiKey || finalApiKey === "YOUR_ACTUAL_GEMINI_API_KEY_HERE") {
-                generatedReportTextarea.value = 'Error: Gemini API Key is not configured. Please ensure your API key is correctly set in the JavaScript code. If running on your own server, replace the empty string for `apiKey` with your actual key.';
-                console.error('API Key not configured. Please set your actual Gemini API key if running on your own server.');
-                loadingIndicator.classList.add('hidden');
-                return;
-            }
+            // Add event listener to the "Generate Report" button
+            generateReportBtn.addEventListener('click', async () => {
+                const selectedReportType = reportTypeSelect.value;
+                const department = departmentSelect.value;
+                const officerInfo = officerInfoInput.value.trim(); // Common officer info
+                const now = new Date();
+                const localDate = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                const localTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+                const timeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-            // Construct prompt based on report type
-            switch (selectedReportType) {
-                case 'Arrest Report':
-                    reportNarrative = arrestNarrativeTextarea.value.trim();
-                    const suspectName = suspectNameInput.value.trim();
-                    const charges = chargesInput.value.trim();
-                    const mirandized = mirandizedSelect.value;
-                    const gsrTest = gsrTestSelect.value;
-                    const legalRepresentation = legalRepresentationInput.value.trim();
-                    const levelOfForce = levelOfForceSelect.value;
-                    const medicalTreatment = medicalTreatmentSelect.value;
-                    const pleaType = pleaTypeSelect.value;
+                generatedReportTextarea.value = '';
+                copyReportBtn.classList.add('hidden');
+                downloadReportBtn.classList.add('hidden'); // Hide download button on new generation
+                viewReportBtn.classList.add('hidden'); // Hide view button on new generation
+                loadingIndicator.classList.remove('hidden');
 
-                    if (!officerInfo || !suspectName || !charges || !reportNarrative || mirandized === "" || gsrTest === "" || medicalTreatment === "" || pleaType === "" || levelOfForce === "") { // Fixed pleaOfForce to pleaType
-                        requiredFieldsFilled = false;
+                let prompt = '';
+                let reportNarrative = ''; // Common variable for narrative across reports
+                let requiredFieldsFilled = true; // Flag for validation
+
+                // Prepare evidence string for prompt
+                let evidenceForPrompt = '';
+                const evidenceParts = [];
+                for (const itemName in selectedEvidenceDetails) {
+                    const item = selectedEvidenceDetails[itemName];
+                    if (item.type === 'statement') {
+                        if (item.text.trim() !== '') {
+                            evidenceParts.push(`${itemName}: ${item.text.trim()}`);
+                        } else {
+                            evidenceParts.push(`${itemName}: No details provided.`);
+                        }
+                    } else if (item.type === 'image' || item.type === 'video') {
+                        if (item.links.length > 0) {
+                            evidenceParts.push(`${itemName}: ${item.links.join(', ')}`);
+                        } else {
+                            evidenceParts.push(`${itemName}: No links provided.`);
+                        }
+                    } else {
+                        evidenceParts.push(itemName);
                     }
+                }
+                evidenceForPrompt = evidenceParts.length > 0 ? evidenceParts.join('\n') : 'None';
 
-                    if (requiredFieldsFilled) {
-                        prompt = `${localDate}, ${localTime} ${timeZone}
+
+                // Determine which API key to use
+                const finalApiKey = typeof __api_key__ !== 'undefined' ? __api_key__ : apiKey;
+
+                if (!finalApiKey || finalApiKey === "YOUR_ACTUAL_GEMINI_API_KEY_HERE") {
+                    generatedReportTextarea.value = 'Error: Gemini API Key is not configured. Please ensure your API key is correctly set in the JavaScript code. If running on your own server, replace the empty string for `apiKey` with your actual key.';
+                    console.error('API Key not configured. Please set your actual Gemini API key if running on your own server.');
+                    loadingIndicator.classList.add('hidden');
+                    return;
+                }
+
+                // Construct prompt based on report type
+                switch (selectedReportType) {
+                    case 'Arrest Report':
+                        reportNarrative = arrestNarrativeTextarea.value.trim();
+                        const suspectName = suspectNameInput.value.trim();
+                        const charges = chargesInput.value.trim();
+                        const mirandized = mirandizedSelect.value;
+                        const gsrTest = gsrTestSelect.value;
+                        const legalRepresentation = legalRepresentationInput.value.trim();
+                        const levelOfForce = levelOfForceSelect.value;
+                        const medicalTreatment = medicalTreatmentSelect.value;
+                        const pleaType = pleaTypeSelect.value;
+
+                        if (!officerInfo || !suspectName || !charges || !reportNarrative || mirandized === "" || gsrTest === "" || medicalTreatment === "" || pleaType === "" || levelOfForce === "") { // Fixed pleaOfForce to pleaType
+                            requiredFieldsFilled = false;
+                        }
+
+                        if (requiredFieldsFilled) {
+                            prompt = `${localDate}, ${localTime} ${timeZone}
 
 Officer: ${officerInfo} ${department}
 City/State: Los Santos, San Andreas (SA)
@@ -2138,24 +2110,24 @@ Legal Representation: ${legalRepresentation || 'N/A'}
 Mirandized (Y | N): ${mirandized}
 Plea (guilty | not guilty | no contest): ${pleaType}
 `;
-                    }
-                    break;
+                        }
+                        break;
 
-                case 'Traffic Citation':
-                    reportNarrative = citationNarrativeTextarea.value.trim();
-                    const driverName = driverNameInput.value.trim();
-                    const driverLicense = driverLicenseInput.value.trim();
-                    const vehicleMakeModel = vehicleMakeModelInput.value.trim();
-                    const vehiclePlate = vehiclePlateInput.value.trim();
-                    const violation = violationInput.value.trim();
-                    const citationLocation = citationLocationInput.value.trim();
+                    case 'Traffic Citation':
+                        reportNarrative = citationNarrativeTextarea.value.trim();
+                        const driverName = driverNameInput.value.trim();
+                        const driverLicense = driverLicenseInput.value.trim();
+                        const vehicleMakeModel = vehicleMakeModelInput.value.trim();
+                        const vehiclePlate = vehiclePlateInput.value.trim();
+                        const violation = violationInput.value.trim();
+                        const citationLocation = citationLocationInput.value.trim();
 
-                    if (!officerInfo || !driverName || !driverLicense || !vehicleMakeModel || !vehiclePlate || !violation || !citationLocation || !reportNarrative) {
-                        requiredFieldsFilled = false;
-                    }
+                        if (!officerInfo || !driverName || !driverLicense || !vehicleMakeModel || !vehiclePlate || !violation || !citationLocation || !reportNarrative) {
+                            requiredFieldsFilled = false;
+                        }
 
-                    if (requiredFieldsFilled) {
-                        prompt = `${localDate}, ${localTime} ${timeZone}
+                        if (requiredFieldsFilled) {
+                            prompt = `${localDate}, ${localTime} ${timeZone}
 
 Officer: ${officerInfo} ${department}
 City/State: Los Santos, San Andreas (SA)
@@ -2186,23 +2158,23 @@ Evidence Collected:
 ${evidenceForPrompt}
 Action Taken: Citation Issued.
 `;
-                    }
-                    break;
+                        }
+                        break;
 
-                case 'Use of Force':
-                    reportNarrative = uofNarrativeTextarea.value.trim();
-                    const subjectName = subjectNameInput.value.trim();
-                    const uofLevelOfForce = uofLevelOfForceSelect.value;
-                    const uofReason = uofReasonTextarea.value.trim();
-                    const uofInjuries = uofInjuriesTextarea.value.trim();
-                    const uofMedicalTreatment = uofMedicalTreatmentSelect.value;
+                    case 'Use of Force':
+                        reportNarrative = uofNarrativeTextarea.value.trim();
+                        const subjectName = subjectNameInput.value.trim();
+                        const uofLevelOfForce = uofLevelOfForceSelect.value;
+                        const uofReason = uofReasonTextarea.value.trim();
+                        const uofInjuries = uofInjuriesTextarea.value.trim();
+                        const uofMedicalTreatment = uofMedicalTreatmentSelect.value;
 
-                    if (!officerInfo || !subjectName || uofLevelOfForce === "" || !uofReason || !reportNarrative || uofMedicalTreatment === "") {
-                        requiredFieldsFilled = false;
-                    }
+                        if (!officerInfo || !subjectName || uofLevelOfForce === "" || !uofReason || !reportNarrative || uofMedicalTreatment === "") {
+                            requiredFieldsFilled = false;
+                        }
 
-                    if (requiredFieldsFilled) {
-                        prompt = `${localDate}, ${localTime} ${timeZone}
+                        if (requiredFieldsFilled) {
+                            prompt = `${localDate}, ${localTime} ${timeZone}
 
 Officer: ${officerInfo} ${department}
 City/State: Los Santos, San Andreas (SA)
@@ -2242,23 +2214,23 @@ Medical Treatment Provided/Requested: ${uofMedicalTreatment}
 Evidence Collected:
 ${evidenceForPrompt}
 `;
-                    }
-                    break;
+                        }
+                        break;
 
-                case 'Trespass Notice':
-                    reportNarrative = trespassNarrativeTextarea.value.trim();
-                    const trespasserName = trespasserNameInput.value.trim();
-                    const trespassLocation = trespassLocationInput.value.trim();
-                    const propertyOwner = propertyOwnerInput.value.trim();
-                    const trespassReason = trespassReasonTextarea.value.trim();
-                    const trespassDuration = trespassDurationInput.value.trim();
+                    case 'Trespass Notice':
+                        reportNarrative = trespassNarrativeTextarea.value.trim();
+                        const trespasserName = trespasserNameInput.value.trim();
+                        const trespassLocation = trespassLocationInput.value.trim();
+                        const propertyOwner = propertyOwnerInput.value.trim();
+                        const trespassReason = trespassReasonTextarea.value.trim();
+                        const trespassDuration = trespassDurationInput.value.trim();
 
-                    if (!officerInfo || !trespasserName || !trespassLocation || !propertyOwner || !trespassReason || !trespassDuration || !reportNarrative) {
-                        requiredFieldsFilled = false;
-                    }
+                        if (!officerInfo || !trespasserName || !trespassLocation || !propertyOwner || !trespassReason || !trespassDuration || !reportNarrative) {
+                            requiredFieldsFilled = false;
+                        }
 
-                    if (requiredFieldsFilled) {
-                        prompt = `${localDate}, ${localTime} ${timeZone}
+                        if (requiredFieldsFilled) {
+                            prompt = `${localDate}, ${localTime} ${timeZone}
 
 Officer: ${officerInfo} ${department}
 City/State: Los Santos, San Andreas (SA)
@@ -2298,23 +2270,23 @@ Evidence Collected:
 ${evidenceForPrompt}
 Warning: Failure to comply with this notice may result in arrest and prosecution.
 `;
-                    }
-                    break;
+                        }
+                        break;
 
-                case 'Business Incident':
-                    reportNarrative = bizNarrativeTextarea.value.trim();
-                    const businessName = businessNameInput.value.trim();
-                    const businessAddress = businessAddressInput.value.trim();
-                    const incidentType = incidentTypeInput.value.trim();
-                    const involvedParties = involvedPartiesTextarea.value.trim();
-                    const damagesTheft = damagesTheftTextarea.value.trim();
+                    case 'Business Incident':
+                        reportNarrative = bizNarrativeTextarea.value.trim();
+                        const businessName = businessNameInput.value.trim();
+                        const businessAddress = businessAddressInput.value.trim();
+                        const incidentType = incidentTypeInput.value.trim();
+                        const involvedParties = involvedPartiesTextarea.value.trim();
+                        const damagesTheft = damagesTheftTextarea.value.trim();
 
-                    if (!officerInfo || !businessName || !businessAddress || !incidentType || !involvedParties || !reportNarrative) {
-                        requiredFieldsFilled = false;
-                    }
+                        if (!officerInfo || !businessName || !businessAddress || !incidentType || !involvedParties || !reportNarrative) {
+                            requiredFieldsFilled = false;
+                        }
 
-                    if (requiredFieldsFilled) {
-                        prompt = `${localDate}, ${localTime} ${timeZone}
+                        if (requiredFieldsFilled) {
+                            prompt = `${localDate}, ${localTime} ${timeZone}
 
 Officer: ${officerInfo} ${department}
 City/State: Los Santos, San Andreas (SA)
@@ -2352,24 +2324,24 @@ Evidence Collected:
 ${evidenceForPrompt}
 Action Taken: [Describe actions taken by law enforcement, e.g., Report filed, Investigation initiated, Parties warned/advised.]
 `;
-                    }
-                    break;
+                        }
+                        break;
 
-                case 'Incident Report': // NEW Incident Report Case
-                    const incidentLocation = incidentLocationInput.value.trim();
-                    const incidentDate = incidentDateInput.value.trim();
-                    const incidentTime = incidentTimeInput.value.trim();
-                    const primaryIncidentType = primaryIncidentTypeInput.value.trim();
-                    const affectedParties = affectedPartiesTextarea.value.trim();
-                    const incidentDescription = incidentDescriptionTextarea.value.trim();
-                    const actionsTaken = actionsTakenTextarea.value.trim();
+                    case 'Incident Report': // NEW Incident Report Case
+                        const incidentLocation = incidentLocationInput.value.trim();
+                        const incidentDate = incidentDateInput.value.trim();
+                        const incidentTime = incidentTimeInput.value.trim();
+                        const primaryIncidentType = primaryIncidentTypeInput.value.trim();
+                        const affectedParties = affectedPartiesTextarea.value.trim();
+                        const incidentDescription = incidentDescriptionTextarea.value.trim();
+                        const actionsTaken = actionsTakenTextarea.value.trim();
 
-                    if (!officerInfo || !incidentLocation || !incidentDate || !incidentTime || !primaryIncidentType || !affectedParties || !incidentDescription || !actionsTaken) {
-                        requiredFieldsFilled = false;
-                    }
+                        if (!officerInfo || !incidentLocation || !incidentDate || !incidentTime || !primaryIncidentType || !affectedParties || !incidentDescription || !actionsTaken) {
+                            requiredFieldsFilled = false;
+                        }
 
-                    if (requiredFieldsFilled) {
-                        prompt = `${localDate}, ${localTime} ${timeZone}
+                        if (requiredFieldsFilled) {
+                            prompt = `${localDate}, ${localTime} ${timeZone}
 
 Officer: ${officerInfo} ${department}
 City/State: Los Santos, San Andreas (SA)
@@ -2412,396 +2384,396 @@ Evidence Collected:
 ${evidenceForPrompt}
 Status: Report Filed.
 `;
-                    }
-                    break;
+                        }
+                        break;
 
-                default:
-                    generatedReportTextarea.value = 'Invalid report type selected.';
+                    default:
+                        generatedReportTextarea.value = 'Invalid report type selected.';
+                        loadingIndicator.classList.add('hidden');
+                        return;
+                }
+
+                if (!requiredFieldsFilled) {
+                    generatedReportTextarea.value = 'Please fill in all required fields for the selected report type to generate the report.';
                     loadingIndicator.classList.add('hidden');
-                    return;
-            }
-
-            if (!requiredFieldsFilled) {
-                generatedReportTextarea.value = 'Please fill in all required fields for the selected report type to generate the report.';
-                loadingIndicator.classList.add('hidden');
-                // Ensure download button is hidden if required fields are not filled
-                downloadReportBtn.classList.add('hidden');
-                viewReportBtn.classList.add('hidden'); // Hide view button if fields are not filled
-                return;
-            }
-
-            try {
-                let chatHistory = [];
-                chatHistory.push({ role: "user", parts: [{ text: prompt }] });
-
-                const payload = { contents: chatHistory };
-                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${finalApiKey}`;
-
-                const response = await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-
-                if (!response.ok) {
-                    const errorBody = await response.text();
-                    generatedReportTextarea.value = `Error: API call failed with status ${response.status}. Details: ${errorBody}`;
-                    console.error('API Error Response:', response.status, errorBody);
-                    loadingIndicator.classList.add('hidden');
-                    downloadReportBtn.classList.add('hidden'); // Hide download button on API error
-                    viewReportBtn.classList.add('hidden'); // Hide view button on API error
+                    // Ensure download button is hidden if required fields are not filled
+                    downloadReportBtn.classList.add('hidden');
+                    viewReportBtn.classList.add('hidden'); // Hide view button if fields are not filled
                     return;
                 }
 
-                const result = await response.json();
+                try {
+                    let chatHistory = [];
+                    chatHistory.push({ role: "user", parts: [{ text: prompt }] });
 
-                if (result.candidates && result.candidates.length > 0 &&
-                    result.candidates[0].content && result.candidates[0].content.parts &&
-                    result.candidates[0].content.parts.length > 0) {
-                    let generatedText = result.candidates[0].content.parts[0].text;
-                    generatedText = generatedText.replace(/[<>]/g, '').trim();
-                    generatedReportTextarea.value = generatedText;
-                    copyReportBtn.classList.remove('hidden');
-                    downloadReportBtn.classList.remove('hidden'); // Show download button after successful generation
-                    viewReportBtn.classList.remove('hidden'); // Show view button after successful generation
-                } else {
-                    generatedReportTextarea.value = 'Failed to generate report. Gemini API returned an unexpected structure or no content.';
-                    console.error('Gemini API returned an unexpected structure or no content:', result);
+                    const payload = { contents: chatHistory };
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${finalApiKey}`;
+
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) {
+                        const errorBody = await response.text();
+                        generatedReportTextarea.value = `Error: API call failed with status ${response.status}. Details: ${errorBody}`;
+                        console.error('API Error Response:', response.status, errorBody);
+                        loadingIndicator.classList.add('hidden');
+                        downloadReportBtn.classList.add('hidden'); // Hide download button on API error
+                        viewReportBtn.classList.add('hidden'); // Hide view button on API error
+                        return;
+                    }
+
+                    const result = await response.json();
+
+                    if (result.candidates && result.candidates.length > 0 &&
+                        result.candidates[0].content && result.candidates[0].content.parts &&
+                        result.candidates[0].content.parts.length > 0) {
+                        let generatedText = result.candidates[0].content.parts[0].text;
+                        generatedText = generatedText.replace(/[<>]/g, '').trim();
+                        generatedReportTextarea.value = generatedText;
+                        copyReportBtn.classList.remove('hidden');
+                        downloadReportBtn.classList.remove('hidden'); // Show download button after successful generation
+                        viewReportBtn.classList.remove('hidden'); // Show view button after successful generation
+                    } else {
+                        generatedReportTextarea.value = 'Failed to generate report. Gemini API returned an unexpected structure or no content.';
+                        console.error('Gemini API returned an unexpected structure or no content:', result);
+                        copyReportBtn.classList.add('hidden');
+                        downloadReportBtn.classList.add('hidden');
+                        viewReportBtn.classList.add('hidden');
+                    }
+                } catch (error) {
+                    generatedReportTextarea.value = `An error occurred: ${error.message}. Please check your network connection and try again.`;
+                    console.error('Error during API call or processing:', error);
                     copyReportBtn.classList.add('hidden');
                     downloadReportBtn.classList.add('hidden');
                     viewReportBtn.classList.add('hidden');
+                } finally {
+                    loadingIndicator.classList.add('hidden');
                 }
-            } catch (error) {
-                generatedReportTextarea.value = `An error occurred: ${error.message}. Please check your network connection and try again.`;
-                console.error('Error during API call or processing:', error);
-                copyReportBtn.classList.add('hidden');
-                downloadReportBtn.classList.add('hidden');
-                viewReportBtn.classList.add('hidden');
-            } finally {
-                loadingIndicator.classList.add('hidden');
-            }
-        });
+            });
 
-        // Add event listener for the new Copy Report button
-        copyReportBtn.addEventListener('click', () => {
-            let textToCopy = generatedReportTextarea.value.trim().replace(/[<>]/g, '');
+            // Add event listener for the new Copy Report button
+            copyReportBtn.addEventListener('click', () => {
+                let textToCopy = generatedReportTextarea.value.trim().replace(/[<>]/g, '');
 
-            const tempTextArea = document.createElement('textarea');
-            tempTextArea.value = textToCopy;
-            tempTextArea.style.position = 'absolute';
-            tempTextArea.style.left = '-9999px';
-            document.body.appendChild(tempTextArea);
+                const tempTextArea = document.createElement('textarea');
+                tempTextArea.value = textToCopy;
+                tempTextArea.style.position = 'absolute';
+                tempTextArea.style.left = '-9999px';
+                document.body.appendChild(tempTextArea);
 
-            tempTextArea.select();
-            document.execCommand('copy');
+                tempTextArea.select();
+                document.execCommand('copy');
 
-            const originalText = copyReportBtn.textContent;
-            copyReportBtn.textContent = 'Copied!';
-            setTimeout(() => {
-                copyReportBtn.textContent = originalText;
-            }, 1500);
-        });
+                const originalText = copyReportBtn.textContent;
+                copyReportBtn.textContent = 'Copied!';
+                setTimeout(() => {
+                    copyReportBtn.textContent = originalText;
+                }, 1500);
+            });
 
-        // Function to generate PDF content (reused for both download and view)
-        const generatePdfContent = async () => {
-            const { jsPDF } = window.jspdf;
-            const doc = new jsPDF();
+            // Function to generate PDF content (reused for both download and view)
+            const generatePdfContent = async () => {
+                const { jsPDF } = window.jspdf;
+                const doc = new jsPDF();
 
-            const department = departmentSelect.value;
-            const officerInfo = officerInfoInput.value.trim();
-            const generatedReportText = generatedReportTextarea.value.trim();
-            const now = new Date();
-            const reportDate = now.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
-            const currentYear = now.getFullYear();
-            const currentMonth = now.toLocaleString('en-US', { month: 'long' });
-            const currentDay = now.getDate();
-            const selectedReportType = reportTypeSelect.value; // Get the selected report type
+                const department = departmentSelect.value;
+                const officerInfo = officerInfoInput.value.trim();
+                const generatedReportText = generatedReportTextarea.value.trim();
+                const now = new Date();
+                const reportDate = now.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
+                const currentYear = now.getFullYear();
+                const currentMonth = now.toLocaleString('en-US', { month: 'long' });
+                const currentDay = now.getDate();
+                const selectedReportType = reportTypeSelect.value; // Get the selected report type
 
-            // Function to load image as base64
-            const getImageBase64 = (url) => {
-                return new Promise((resolve, reject) => {
-                    const img = new Image();
-                    img.crossOrigin = 'Anonymous'; // Required for CORS if image is from another domain
-                    img.onload = () => {
-                        const canvas = document.createElement('canvas');
-                        canvas.width = img.width;
-                        canvas.height = img.height;
-                        const ctx = canvas.getContext('2d');
-                        ctx.drawImage(img, 0, 0);
-                        resolve(canvas.toDataURL('image/png')); // Convert to PNG for transparency
-                    };
-                    img.onerror = (error) => reject(error);
-                    img.src = url;
-                });
+                // Function to load image as base64
+                const getImageBase64 = (url) => {
+                    return new Promise((resolve, reject) => {
+                        const img = new Image();
+                        img.crossOrigin = 'Anonymous'; // Required for CORS if image is from another domain
+                        img.onload = () => {
+                            const canvas = document.createElement('canvas');
+                            canvas.width = img.width;
+                            canvas.height = img.height;
+                            const ctx = canvas.getContext('2d');
+                            ctx.drawImage(img, 0, 0);
+                            resolve(canvas.toDataURL('image/png')); // Convert to PNG for transparency
+                        };
+                        img.onerror = (error) => reject(error);
+                        img.src = url;
+                    });
+                };
+
+                let lspdLogoBase64 = '';
+                try {
+                    // Use the onerror fallback URL for LSPD.png if the direct path fails
+                    const imgElement = document.querySelector('img[alt="LSPD Logo"]'); // Changed alt to LSPD Logo
+                    const logoUrl = imgElement.src || 'https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';
+                    lspdLogoBase64 = await getImageBase64(logoUrl);
+                } catch (error) {
+                    console.error('Error loading LSPD logo for PDF:', error); // Changed UPD to LSPD
+                    // Optionally, you can add a placeholder text or simply skip the image if it fails to load
+                }
+
+
+                // Set font and size for the main title
+                doc.setFontSize(16);
+                // Modified to include the report type
+                doc.text(`${department} ${selectedReportType}`, 20, 20);
+
+                // Add LSPD logo if available
+                if (lspdLogoBase64) {
+                    doc.addImage(lspdLogoBase64, 'PNG', 170, 10, 25, 25); // Adjust position and size as needed
+                }
+
+                // Case Number and Date
+                doc.setFontSize(10);
+                doc.text(`Case Number: ${Math.floor(Math.random() * 1000000)}`, 20, 40); // Placeholder case number
+                doc.text(`Date: ${reportDate}`, 150, 40);
+
+                // Add a line separator
+                doc.line(20, 45, 190, 45); // x1, y1, x2, y2
+
+                // Report Body (Generated Report Text)
+                doc.setFontSize(10);
+                const splitText = doc.splitTextToSize(generatedReportText, 170); // Max width 170mm
+                let currentY = 55; // Starting Y position for the report text
+                doc.text(splitText, 20, currentY);
+
+                // Get the current Y position after adding the report text
+                // Calculate finalY based on the last line of text added
+                let finalY = currentY + (splitText.length * doc.internal.getLineHeight());
+
+                // Add a line separator before footer
+                doc.line(20, finalY + 10, 190, finalY + 10);
+
+                // Footer information
+                finalY += 20;
+                doc.text(`Reporting Officer: ${officerInfo}`, 20, finalY);
+                finalY += 7;
+                doc.text(`Date: ${currentMonth} ${currentDay}, ${currentYear}`, 20, finalY);
+                finalY += 7;
+                doc.text(`Sworn to and subscribed before me this ________ day of __________, ${currentYear}.`, 20, finalY);
+                finalY += 7;
+                doc.text(`Notary/Law Enforcement Officer: _____________________________________`, 20, finalY);
+                finalY += 7;
+                doc.text(`Supervisor Approval: _____________________________________`, 20, finalY);
+
+                return doc; // Return the jsPDF document object
             };
 
-            let lspdLogoBase64 = '';
-            try {
-                // Use the onerror fallback URL for LSPD.png if the direct path fails
-                const imgElement = document.querySelector('img[alt="LSPD Logo"]'); // Changed alt to LSPD Logo
-                const logoUrl = imgElement.src || 'https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';
-                lspdLogoBase64 = await getImageBase64(logoUrl);
-            } catch (error) {
-                console.error('Error loading LSPD logo for PDF:', error); // Changed UPD to LSPD
-                // Optionally, you can add a placeholder text or simply skip the image if it fails to load
+            // Event listener for the Download Report button
+            downloadReportBtn.addEventListener('click', async () => {
+                const doc = await generatePdfContent();
+                const department = departmentSelect.value;
+                const selectedReportType = reportTypeSelect.value;
+                const now = new Date();
+                const reportDate = now.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
+                doc.save(`${department.replace(/\s/g, '_')}_${selectedReportType.replace(/\s/g, '_')}_Report_${reportDate}.pdf`);
+            });
+
+            // NEW: Event listener for the View Report button
+            viewReportBtn.addEventListener('click', async () => {
+                const doc = await generatePdfContent();
+                const pdfBlob = doc.output('blob');
+                const pdfUrl = URL.createObjectURL(pdfBlob);
+                window.open(pdfUrl, '_blank');
+            });
+
+            // --- Settings Modal Logic (Copied from roster.html) ---
+            if (settingsIcon) {
+                settingsIcon.addEventListener('click', () => {
+                    settingsModal.classList.remove('hidden');
+                    const currentTheme = localStorage.getItem('theme') || 'light';
+                    if (currentTheme === 'dark') {
+                        if (darkModeRadio) darkModeRadio.checked = true;
+                    } else {
+                        if (lightModeRadio) lightModeRadio.checked = true;
+                    }
+                });
             }
 
-
-            // Set font and size for the main title
-            doc.setFontSize(16);
-            // Modified to include the report type
-            doc.text(`${department} ${selectedReportType}`, 20, 20);
-
-            // Add LSPD logo if available
-            if (lspdLogoBase64) {
-                doc.addImage(lspdLogoBase64, 'PNG', 170, 10, 25, 25); // Adjust position and size as needed
-            }
-
-            // Case Number and Date
-            doc.setFontSize(10);
-            doc.text(`Case Number: ${Math.floor(Math.random() * 1000000)}`, 20, 40); // Placeholder case number
-            doc.text(`Date: ${reportDate}`, 150, 40);
-
-            // Add a line separator
-            doc.line(20, 45, 190, 45); // x1, y1, x2, y2
-
-            // Report Body (Generated Report Text)
-            doc.setFontSize(10);
-            const splitText = doc.splitTextToSize(generatedReportText, 170); // Max width 170mm
-            let currentY = 55; // Starting Y position for the report text
-            doc.text(splitText, 20, currentY);
-
-            // Get the current Y position after adding the report text
-            // Calculate finalY based on the last line of text added
-            let finalY = currentY + (splitText.length * doc.internal.getLineHeight());
-
-            // Add a line separator before footer
-            doc.line(20, finalY + 10, 190, finalY + 10);
-
-            // Footer information
-            finalY += 20;
-            doc.text(`Reporting Officer: ${officerInfo}`, 20, finalY);
-            finalY += 7;
-            doc.text(`Date: ${currentMonth} ${currentDay}, ${currentYear}`, 20, finalY);
-            finalY += 7;
-            doc.text(`Sworn to and subscribed before me this ________ day of __________, ${currentYear}.`, 20, finalY);
-            finalY += 7;
-            doc.text(`Notary/Law Enforcement Officer: _____________________________________`, 20, finalY);
-            finalY += 7;
-            doc.text(`Supervisor Approval: _____________________________________`, 20, finalY);
-
-            return doc; // Return the jsPDF document object
-        };
-
-        // Event listener for the Download Report button
-        downloadReportBtn.addEventListener('click', async () => {
-            const doc = await generatePdfContent();
-            const department = departmentSelect.value;
-            const selectedReportType = reportTypeSelect.value;
-            const now = new Date();
-            const reportDate = now.toLocaleDateString('en-US', { year: 'numeric', month: '2-digit', day: '2-digit' });
-            doc.save(`${department.replace(/\s/g, '_')}_${selectedReportType.replace(/\s/g, '_')}_Report_${reportDate}.pdf`);
-        });
-
-        // NEW: Event listener for the View Report button
-        viewReportBtn.addEventListener('click', async () => {
-            const doc = await generatePdfContent();
-            const pdfBlob = doc.output('blob');
-            const pdfUrl = URL.createObjectURL(pdfBlob);
-            window.open(pdfUrl, '_blank');
-        });
-
-        // --- Settings Modal Logic (Copied from roster.html) ---
-        if (settingsIcon) {
-            settingsIcon.addEventListener('click', () => {
-                settingsModal.classList.remove('hidden');
-                const currentTheme = localStorage.getItem('theme') || 'light';
-                if (currentTheme === 'dark') {
-                    if (darkModeRadio) darkModeRadio.checked = true;
-                } else {
-                    if (lightModeRadio) lightModeRadio.checked = true;
-                }
-            });
-        }
-
-        if (closeSettingsModalBtn) {
-            closeSettingsModalBtn.addEventListener('click', () => {
-                settingsModal.classList.add('hidden');
-            });
-        }
-
-        if (settingsModal) {
-            settingsModal.addEventListener('click', (e) => {
-                if (e.target === settingsModal) {
+            if (closeSettingsModalBtn) {
+                closeSettingsModalBtn.addEventListener('click', () => {
                     settingsModal.classList.add('hidden');
-                }
-            });
-        }
+                });
+            }
 
-        if (lightModeRadio) {
-            lightModeRadio.addEventListener('change', () => applyTheme('light'));
-        }
-        if (darkModeRadio) {
-            darkModeRadio.addEventListener('change', () => applyTheme('dark'));
-        }
+            if (settingsModal) {
+                settingsModal.addEventListener('click', (e) => {
+                    if (e.target === settingsModal) {
+                        settingsModal.classList.add('hidden');
+                    }
+                });
+            }
 
-        // --- Clear All Data Logic (Copied from roster.html) ---
-        if (clearAllDataBtn) {
-            clearAllDataBtn.addEventListener('click', () => {
-                settingsModal.classList.add('hidden'); // Hide settings modal first
-                confirmDeleteModal.classList.remove('hidden'); // Show confirmation modal
-            });
-        }
+            if (lightModeRadio) {
+                lightModeRadio.addEventListener('change', () => applyTheme('light'));
+            }
+            if (darkModeRadio) {
+                darkModeRadio.addEventListener('change', () => applyTheme('dark'));
+            }
 
-        if (confirmDeleteYesBtn) {
-            confirmDeleteYesBtn.addEventListener('click', () => {
-                localStorage.clear(); // Clears all data from local storage for this domain
-                console.log('All website data cleared from local storage.');
-                confirmDeleteModal.classList.add('hidden');
-                location.reload(); // Reload the page to reflect changes
-            });
-        }
+            // --- Clear All Data Logic (Copied from roster.html) ---
+            if (clearAllDataBtn) {
+                clearAllDataBtn.addEventListener('click', () => {
+                    settingsModal.classList.add('hidden'); // Hide settings modal first
+                    confirmDeleteModal.classList.remove('hidden'); // Show confirmation modal
+                });
+            }
 
-        if (confirmDeleteNoBtn) {
-            confirmDeleteNoBtn.addEventListener('click', () => {
-                confirmDeleteModal.classList.add('hidden');
-                settingsModal.classList.remove('hidden'); // Show settings modal again
-            });
-        }
+            if (confirmDeleteYesBtn) {
+                confirmDeleteYesBtn.addEventListener('click', () => {
+                    localStorage.clear(); // Clears all data from local storage for this domain
+                    console.log('All website data cleared from local storage.');
+                    confirmDeleteModal.classList.add('hidden');
+                    location.reload(); // Reload the page to reflect changes
+                });
+            }
 
-        if (confirmDeleteModal) {
-            confirmDeleteModal.addEventListener('click', (e) => {
-                if (e.target === confirmDeleteModal) {
+            if (confirmDeleteNoBtn) {
+                confirmDeleteNoBtn.addEventListener('click', () => {
                     confirmDeleteModal.classList.add('hidden');
                     settingsModal.classList.remove('hidden'); // Show settings modal again
-                }
-            });
-        }
+                });
+            }
 
-        // --- Data Viewer Logic (Copied from roster.html) ---
-        if (viewDataBtn) {
-            viewDataBtn.addEventListener('click', () => {
-                settingsModal.classList.add('hidden'); // Hide settings modal
-                dataViewerModal.classList.remove('hidden');
-                displayLocalStorageData();
-            });
-        }
+            if (confirmDeleteModal) {
+                confirmDeleteModal.addEventListener('click', (e) => {
+                    if (e.target === confirmDeleteModal) {
+                        confirmDeleteModal.classList.add('hidden');
+                        settingsModal.classList.remove('hidden'); // Show settings modal again
+                    }
+                });
+            }
 
-        if (closeDataViewerModalBtn) {
-            closeDataViewerModalBtn.addEventListener('click', () => {
-                dataViewerModal.classList.add('hidden');
-                settingsModal.classList.remove('hidden'); // Show settings modal again
-            });
-        }
+            // --- Data Viewer Logic (Copied from roster.html) ---
+            if (viewDataBtn) {
+                viewDataBtn.addEventListener('click', () => {
+                    settingsModal.classList.add('hidden'); // Hide settings modal
+                    dataViewerModal.classList.remove('hidden');
+                    displayLocalStorageData();
+                });
+            }
 
-        if (dataViewerModal) {
-            dataViewerModal.addEventListener('click', (e) => {
-                if (e.target === dataViewerModal) {
+            if (closeDataViewerModalBtn) {
+                closeDataViewerModalBtn.addEventListener('click', () => {
                     dataViewerModal.classList.add('hidden');
                     settingsModal.classList.remove('hidden'); // Show settings modal again
-                }
-            });
-        }
-
-        function displayLocalStorageData() {
-            dataViewerContent.innerHTML = ''; // Clear existing content
-
-            let hasData = false;
-
-            // Display Logged In Officer
-            const loggedInOfficer = localStorage.getItem('loggedInOfficer');
-            if (loggedInOfficer) {
-                try {
-                    const officer = JSON.parse(loggedInOfficer);
-                    const officerDiv = document.createElement('div');
-                    officerDiv.className = 'data-viewer-item';
-                    officerDiv.innerHTML = `
-                                    <p class="title">Officer Logged In</p>
-                                    <p class="description">${officer.name} (Badge: ${officer.badge}, Department: ${officer.department || 'N/A'})</p>
-                                `;
-                    dataViewerContent.appendChild(officerDiv);
-                    hasData = true;
-                } catch (e) {
-                    console.error("Error parsing loggedInOfficer from local storage:", e);
-                }
+                });
             }
 
-            // Display Website Theme
-            const currentTheme = localStorage.getItem('theme');
-            if (currentTheme) {
-                const themeDiv = document.createElement('div');
-                themeDiv.className = 'data-viewer-item';
-                themeDiv.innerHTML = `
-                                <p class="title">Website Theme</p>
-                                <p class="description">${currentTheme.charAt(0).toUpperCase() + currentTheme.slice(1)} Mode</p>
-                            `;
-                dataViewerContent.appendChild(themeDiv);
-                hasData = true;
-            }
-
-            // Display Report Generator Data
-            const reportGeneratorData = localStorage.getItem('reportGeneratorData');
-            if (reportGeneratorData) {
-                try {
-                    const data = JSON.parse(reportGeneratorData);
-                    const reportDiv = document.createElement('div');
-                    reportDiv.className = 'data-viewer-item mt-4';
-                    reportDiv.innerHTML = `
-                                    <p class="title">Report Generator Data</p>
-                                    <p class="description">Last saved report type: ${data.reportType || 'N/A'}</p>
-                                    <p class="description">Last saved suspect name: ${data.suspectName || 'N/A'}</p>
-                                    <p class="description">Other form fields saved. (Too detailed to list all here)</p>
-                                `;
-                    dataViewerContent.appendChild(reportDiv);
-                    hasData = true;
-                } catch (e) {
-                    console.error("Error parsing reportGeneratorData from local storage:", e);
-                }
-            }
-
-            // Display Other Stored Data
-            let otherDataCount = 0;
-            for (let i = 0; i < localStorage.length; i++) {
-                const key = localStorage.key(i);
-                // Skip keys already displayed or internal keys
-                if (key === 'loggedInOfficer' || key === 'theme' || key === 'reportGeneratorData' || key === 'cookieConsent') {
-                    continue;
-                }
-
-                let value;
-                try {
-                    // Try to parse as JSON, otherwise keep as string
-                    value = JSON.parse(localStorage.getItem(key));
-                    // If it's an object/array, stringify it nicely
-                    if (typeof value === 'object' && value !== null) {
-                        value = JSON.stringify(value, null, 2);
+            if (dataViewerModal) {
+                dataViewerModal.addEventListener('click', (e) => {
+                    if (e.target === dataViewerModal) {
+                        dataViewerModal.classList.add('hidden');
+                        settingsModal.classList.remove('hidden'); // Show settings modal again
                     }
-                } catch (e) {
-                    value = localStorage.getItem(key);
-                }
-
-                if (otherDataCount === 0) {
-                    const otherDataHeader = document.createElement('div');
-                    otherDataHeader.className = 'data-viewer-item mt-4';
-                    otherDataHeader.innerHTML = `<p class="title">Other Stored Data</p>`;
-                    dataViewerContent.appendChild(otherDataHeader);
-                }
-
-                const dataDiv = document.createElement('div');
-                dataDiv.className = 'data-viewer-item';
-                dataDiv.innerHTML = `
-                                <p class="title">${key}</p>
-                                <p class="description">${value}</p>
-                            `;
-                dataViewerContent.appendChild(dataDiv);
-                hasData = true;
-                otherDataCount++;
+                });
             }
 
-            if (!hasData) {
-                dataViewerContent.innerHTML = '<p class="text-gray-500 text-center py-4">No user-specific data currently stored in local storage.</p>';
+            function displayLocalStorageData() {
+                dataViewerContent.innerHTML = ''; // Clear existing content
+
+                let hasData = false;
+
+                // Display Logged In Officer
+                const loggedInOfficer = localStorage.getItem('loggedInOfficer');
+                if (loggedInOfficer) {
+                    try {
+                        const officer = JSON.parse(loggedInOfficer);
+                        const officerDiv = document.createElement('div');
+                        officerDiv.className = 'data-viewer-item';
+                        officerDiv.innerHTML = `
+                                        <p class="title">Officer Logged In</p>
+                                        <p class="description">${officer.name} (Badge: ${officer.badge}, Department: ${officer.department || 'N/A'})</p>
+                                    `;
+                        dataViewerContent.appendChild(officerDiv);
+                        hasData = true;
+                    } catch (e) {
+                        console.error("Error parsing loggedInOfficer from local storage:", e);
+                    }
+                }
+
+                // Display Website Theme
+                const currentTheme = localStorage.getItem('theme');
+                if (currentTheme) {
+                    const themeDiv = document.createElement('div');
+                    themeDiv.className = 'data-viewer-item';
+                    themeDiv.innerHTML = `
+                                    <p class="title">Website Theme</p>
+                                    <p class="description">${currentTheme.charAt(0).toUpperCase() + currentTheme.slice(1)} Mode</p>
+                                `;
+                    dataViewerContent.appendChild(themeDiv);
+                    hasData = true;
+                }
+
+                // Display Report Generator Data
+                const reportGeneratorData = localStorage.getItem('reportGeneratorData');
+                if (reportGeneratorData) {
+                    try {
+                        const data = JSON.parse(reportGeneratorData);
+                        const reportDiv = document.createElement('div');
+                        reportDiv.className = 'data-viewer-item mt-4';
+                        reportDiv.innerHTML = `
+                                        <p class="title">Report Generator Data</p>
+                                        <p class="description">Last saved report type: ${data.reportType || 'N/A'}</p>
+                                        <p class="description">Last saved suspect name: ${data.suspectName || 'N/A'}</p>
+                                        <p class="description">Other form fields saved. (Too detailed to list all here)</p>
+                                    `;
+                        dataViewerContent.appendChild(reportDiv);
+                        hasData = true;
+                    } catch (e) {
+                        console.error("Error parsing reportGeneratorData from local storage:", e);
+                    }
+                }
+
+                // Display Other Stored Data
+                let otherDataCount = 0;
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    // Skip keys already displayed or internal keys
+                    if (key === 'loggedInOfficer' || key === 'theme' || key === 'reportGeneratorData' || key === 'cookieConsent') {
+                        continue;
+                    }
+
+                    let value;
+                    try {
+                        // Try to parse as JSON, otherwise keep as string
+                        value = JSON.parse(localStorage.getItem(key));
+                        // If it's an object/array, stringify it nicely
+                        if (typeof value === 'object' && value !== null) {
+                            value = JSON.stringify(value, null, 2);
+                        }
+                    } catch (e) {
+                        value = localStorage.getItem(key);
+                    }
+
+                    if (otherDataCount === 0) {
+                        const otherDataHeader = document.createElement('div');
+                        otherDataHeader.className = 'data-viewer-item mt-4';
+                        otherDataHeader.innerHTML = `<p class="title">Other Stored Data</p>`;
+                        dataViewerContent.appendChild(otherDataHeader);
+                    }
+
+                    const dataDiv = document.createElement('div');
+                    dataDiv.className = 'data-viewer-item';
+                    dataDiv.innerHTML = `
+                                    <p class="title">${key}</p>
+                                    <p class="description">${value}</p>
+                                `;
+                    dataViewerContent.appendChild(dataDiv);
+                    hasData = true;
+                    otherDataCount++;
+                }
+
+                if (!hasData) {
+                    dataViewerContent.innerHTML = '<p class="text-gray-500 text-center py-4">No user-specific data currently stored in local storage.</p>';
+                }
             }
-        }
-    </script>
+        </script>
 </body>
 </html>
