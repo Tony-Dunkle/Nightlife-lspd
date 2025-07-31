@@ -405,6 +405,37 @@
             margin-top: 2rem; /* Increase margin-top for more separation */
             padding-top: 2rem; /* Increase padding-top */
         }
+
+        /* Suspect list styling */
+        .suspect-item {
+            background-color: #f0f4f8;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        body.dark-mode .suspect-item {
+            background-color: #4a5568;
+        }
+
+        .suspect-item .input-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem; /* Space between name and fingerprint inputs */
+        }
+
+            .suspect-item .input-group input {
+                flex-grow: 1;
+            }
+
+        .suspect-item button {
+            background-color: #ef4444; /* Red-500 */
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 0.25rem;
+            font-size: 0.75rem;
+            line-height: 1;
+        }
     </style>
 </head>
 <body class="antialiased">
@@ -503,16 +534,17 @@
 
                 <!-- Arrest Report Fields -->
                 <div id="arrestReportFields" class="report-fields">
-                    <!-- Text Box 2: Suspect First and Last Name -->
+                    <!-- Suspects Section -->
                     <div class="mb-6">
-                        <label for="suspectName" class="block text-gray-700 text-sm font-semibold mb-2">
-                            Suspect First and Last Name
+                        <label class="block text-gray-700 text-sm font-semibold mb-2">
+                            Suspect(s)
                         </label>
-                        <input type="text"
-                               id="suspectName"
-                               name="suspectName"
-                               placeholder="Enter suspect's first and last name"
-                               class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400 text-gray-800">
+                        <div id="suspectsContainer" class="space-y-2 mb-2">
+                            <!-- Suspect inputs will be added here by JavaScript -->
+                        </div>
+                        <button type="button" id="addSuspectBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md text-sm">
+                            Add Suspect
+                        </button>
                     </div>
 
                     <!-- Text Box 3: Charges -->
@@ -924,11 +956,17 @@
                                 title="View report in new tab">
                             View Report
                         </button>
+                        <!-- NEW: Save Edited Report Button -->
+                        <button type="button"
+                                id="saveEditedReportBtn"
+                                class="bg-indigo-500 hover:bg-indigo-600 text-white text-xs font-bold py-1 px-3 rounded-lg shadow-md transition duration-200 ease-in-out hidden"
+                                title="Save current edits to local storage">
+                            Save Edits
+                        </button>
                     </div>
                     <textarea id="generatedReport"
                               name="generatedReport"
                               rows="10"
-                              readonly
                               placeholder="Your generated report will appear here..."
                               class="w-full px-4 py-3 border border-gray-300 rounded-lg bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm resize-y text-gray-800 pt-10"></textarea>
                 </div>
@@ -1098,6 +1136,7 @@
             const copyReportBtn = document.getElementById('copyReportBtn');
             const downloadReportBtn = document.getElementById('downloadReportBtn'); // NEW Download Report Button
             const viewReportBtn = document.getElementById('viewReportBtn'); // NEW View Report Button
+            const saveEditedReportBtn = document.getElementById('saveEditedReportBtn'); // NEW Save Edited Report Button
             const loadingIndicator = document.getElementById('loadingIndicator');
             const clearReportBtn = document.getElementById('clearReportBtn'); // NEW Clear Report Button
 
@@ -1110,7 +1149,8 @@
             const incidentReportFields = document.getElementById('incidentReportFields'); // NEW Incident Report Fields
 
             // Get references to Arrest Report specific elements
-            const suspectNameInput = document.getElementById('suspectName');
+            const suspectsContainer = document.getElementById('suspectsContainer'); // New container for multiple suspects
+            const addSuspectBtn = document.getElementById('addSuspectBtn'); // Button to add suspect
             const chargesInput = document.getElementById('charges');
             const arrestNarrativeTextarea = document.getElementById('arrestNarrative'); // Renamed from 'narrative'
             const mirandizedSelect = document.getElementById('mirandized');
@@ -1119,6 +1159,7 @@
             const levelOfForceSelect = document.getElementById('levelOfForce');
             const medicalTreatmentSelect = document.getElementById('medicalTreatment');
             const pleaTypeSelect = document.getElementById('pleaType');
+            // Removed global fingerprintDataInput as it's now per-suspect
 
             // Get references to Traffic Citation specific elements
             const driverNameInput = document.getElementById('driverName');
@@ -1218,6 +1259,9 @@
 
             // Global variable to store fetched officer roster data
             let officerRosterData = [];
+
+            // Array to store multiple suspect objects { name: '', fingerprint: '' }
+            let suspects = [];
 
             // --- Theme Switching Logic (Copied from roster.html) ---
             const applyTheme = (theme) => {
@@ -1377,23 +1421,23 @@
 
             // Array of evidence items with descriptions, types, and allowed link providers
             const evidenceItems = [
-                { name: "Shell Casings", description: "Spent ammunition casings found at a scene.", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
-                { name: "Weapon(s) - Firearm", description: "Any type of gun, pistol, rifle, shotgun, etc.", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
-                { name: "Weapon(s) - Non-Firearm", description: "Knives, bats, blunt objects, tasers, etc.", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
-                { name: "Contraband", description: "Any item not allowed to be possessed by law (e.g., illegal paraphernalia, stolen goods).", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
-                { name: "Controlled Substances", description: "Illegal drugs or unprescribed medication (e.g., Methamphetamine, Cocaine, Marijuana).", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
-                { name: "Fingerprints", description: "Latent or visible prints lifted from surfaces.", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
-                { name: "DNA Evidence", description: "Biological samples such as blood, hair, saliva, skin cells.", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
-                { name: "Clothing/Personal Items", description: "Garments or personal belongings relevant to the incident.", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
-                { name: "Vehicular Evidence", description: "Vehicle parts, fluids, tire marks, paint transfers, etc.", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
-                { name: "Photographs/Videos (Other)", description: "Still images or video recordings not from body/dash cam (e.g., from civilian phones).", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
-                { name: "Electronic Devices", description: "Phones, computers, tablets, USB drives, memory cards.", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
-                { name: "Documents", description: "Papers, identification cards, financial records, written notes.", type: "image", linkProviders: ["fivemanage.com", "imgur.com", "discord.com"] },
+                { name: "Shell Casings", description: "Spent ammunition casings found at a scene.", type: "link" },
+                { name: "Weapon(s) - Firearm", description: "Any type of gun, pistol, rifle, shotgun, etc.", type: "link" },
+                { name: "Weapon(s) - Non-Firearm", description: "Knives, bats, blunt objects, tasers, etc.", type: "link" },
+                { name: "Contraband", description: "Any item not allowed to be possessed by law (e.g., illegal paraphernalia, stolen goods).", type: "link" },
+                { name: "Controlled Substances", description: "Illegal drugs or unprescribed medication (e.g., Methamphetamine, Cocaine, Marijuana).", type: "link" },
+                { name: "Fingerprints", description: "Latent or visible prints lifted from surfaces.", type: "link" },
+                { name: "DNA Evidence", description: "Biological samples such as blood, hair, saliva, skin cells.", type: "link" },
+                { name: "Clothing/Personal Items", description: "Garments or personal belongings relevant to the incident.", type: "link" },
+                { name: "Vehicular Evidence", description: "Vehicle parts, fluids, tire marks, paint transfers, etc.", type: "link" },
+                { name: "Photographs/Videos (Other)", description: "Still images or video recordings not from body/dash cam (e.g., from civilian phones).", type: "link" },
+                { name: "Electronic Devices", description: "Phones, computers, tablets, USB drives, memory cards.", type: "link" },
+                { name: "Documents", description: "Papers, identification cards, financial records, written notes.", type: "link" },
 
-                { name: "CCTV Footage", description: "Video recordings from surveillance cameras.", type: "video", linkProviders: ["discord.com", "medal.tv", "youtube.com"] },
-                { name: "Body Cam Footage", description: "Video recordings from officer-worn body cameras.", type: "video", linkProviders: ["discord.com", "medal.tv", "youtube.com"] },
-                { name: "Dashcam Footage", description: "Video recordings from patrol vehicle dashboard cameras.", type: "video", linkProviders: ["discord.com", "medal.tv", "youtube.com"] },
-                { name: "Audio Recordings", description: "Voice recordings, 911 calls, dispatch recordings, etc.", type: "video", linkProviders: ["discord.com", "medal.tv", "youtube.com"] },
+                { name: "CCTV Footage", description: "Video recordings from surveillance cameras.", type: "link" },
+                { name: "Body Cam Footage", description: "Video recordings from officer-worn body cameras.", type: "link" },
+                { name: "Dashcam Footage", description: "Video recordings from patrol vehicle dashboard cameras.", type: "link" },
+                { name: "Audio Recordings", description: "Voice recordings, 911 calls, dispatch recordings, etc.", type: "link" },
 
                 { name: "Victim Statements", description: "Written or recorded accounts from individuals who were harmed or affected.", type: "statement" },
                 { name: "Witness Statements", description: "Written or recorded accounts from individuals observing the incident.", type: "statement" },
@@ -1412,9 +1456,7 @@
                                                         `;
                     div.setAttribute('data-description', item.description);
                     div.setAttribute('data-type', item.type);
-                    if (item.linkProviders) {
-                        div.setAttribute('data-link-providers', item.linkProviders.join(','));
-                    }
+                    // No more specific linkProviders, as any URL is allowed now.
 
                     // Add event listeners for hover to display description
                     div.addEventListener('mouseenter', () => {
@@ -1429,7 +1471,6 @@
                     checkbox.addEventListener('change', (e) => {
                         const itemName = e.target.value;
                         const itemType = e.target.closest('.evidence-item').dataset.type;
-                        const itemLinkProviders = e.target.closest('.evidence-item').dataset.linkProviders ? e.target.closest('.evidence-item').dataset.linkProviders.split(',') : [];
 
                         if (e.target.checked) {
                             selectedEvidenceDetails[itemName] = { type: itemType, links: [], text: '' };
@@ -1440,10 +1481,10 @@
                                     case 'Witness Statements': witnessStatementsContainer.classList.remove('hidden'); break;
                                     case 'Suspect Statements/Confessions': suspectStatementsContainer.classList.remove('hidden'); break;
                                 }
-                            } else if (itemType === 'image' || itemType === 'video') {
+                            } else if (itemType === 'link') { // Changed from 'image' or 'video' to 'link'
                                 // Open URL input modal
                                 evidenceModal.classList.add('hidden'); // Hide evidence modal first
-                                openUrlInputModal(itemName, itemLinkProviders);
+                                openUrlInputModal(itemName); // No providers needed now
                             }
                         } else {
                             delete selectedEvidenceDetails[itemName];
@@ -1465,9 +1506,9 @@
             }
 
             // Function to open the URL input modal
-            function openUrlInputModal(itemName, providers) {
+            function openUrlInputModal(itemName) { // Removed providers parameter
                 urlModalTitle.textContent = `Add Links for ${itemName}`;
-                allowedProvidersText.textContent = `Allowed providers: ${providers.map(p => p.replace('https://', '')).join(', ')}`;
+                allowedProvidersText.textContent = `You can add links from any provider.`; // Updated text
                 evidenceUrlInput.value = '';
                 urlValidationError.classList.add('hidden');
                 currentLinksDisplay.innerHTML = ''; // Clear previous links
@@ -1482,16 +1523,14 @@
                 }
 
                 urlInputModal.dataset.currentItem = itemName; // Store the current item being edited
-                urlInputModal.dataset.allowedProviders = providers.join(','); // Store allowed providers
                 urlInputModal.classList.remove('hidden');
             }
 
-            // Function to validate URL
-            function isValidUrl(url, allowedProviders) {
+            // Function to validate URL (simplified, now allows any valid URL)
+            function isValidUrl(url) {
                 try {
-                    const urlObj = new URL(url);
-                    const hostname = urlObj.hostname;
-                    return allowedProviders.some(provider => hostname.includes(provider));
+                    new URL(url);
+                    return true;
                 } catch (e) {
                     return false;
                 }
@@ -1512,7 +1551,7 @@
                             summaryParts.push(itemName);
                             hoverTextParts.push(`${itemName}: No details provided.`);
                         }
-                    } else if (item.type === 'image' || item.type === 'video') {
+                    } else if (item.type === 'link') { // Changed from 'image' or 'video' to 'link'
                         if (item.links.length > 0) {
                             summaryParts.push(`${itemName} (L)`); // (L) for links
                             hoverTextParts.push(`${itemName}: ${item.links.join(', ')}`);
@@ -1617,13 +1656,63 @@
                 });
             }
 
+            // Function to add a suspect input field with associated fingerprint field
+            function addSuspectInput(suspect = { name: '', fingerprint: '' }) {
+                const div = document.createElement('div');
+                div.className = 'suspect-item space-y-2'; // Use space-y for vertical spacing within item
+                div.innerHTML = `
+                    <div class="input-group flex items-center">
+                        <input type="text"
+                               class="flex-grow px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400 text-gray-800 suspect-name-input"
+                               placeholder="Enter suspect's first and last name"
+                               value="${suspect.name}">
+                        <button type="button" class="ml-2 bg-red-500 hover:bg-red-600 text-white py-1 px-2 rounded-md remove-suspect-btn">Remove</button>
+                    </div>
+                    <div class="input-group flex items-center">
+                        <input type="text"
+                               class="flex-grow px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition duration-200 ease-in-out shadow-sm placeholder-gray-400 text-gray-800 suspect-fingerprint-input"
+                               placeholder="Fingerprint (e.g., 02T25Q4T2M0Y005)"
+                               pattern="[0-9]{2}[TQMY][0-9]{2}[TQMY][0-9]{1}[TQMY][0-9]{1}[TQMY][0-9]{3}"
+                               title="Fingerprint data must be in the format 02T25Q4T2M0Y005"
+                               value="${suspect.fingerprint}">
+                    </div>
+                `;
+                suspectsContainer.appendChild(div);
+
+                const nameInput = div.querySelector('.suspect-name-input');
+                const fingerprintInput = div.querySelector('.suspect-fingerprint-input');
+                const removeBtn = div.querySelector('.remove-suspect-btn');
+
+                nameInput.addEventListener('input', updateSuspectsArrayAndSave);
+                fingerprintInput.addEventListener('input', updateSuspectsArrayAndSave);
+                removeBtn.addEventListener('click', () => {
+                    div.remove();
+                    updateSuspectsArrayAndSave();
+                });
+                updateSuspectsArrayAndSave(); // Update array immediately after adding
+            }
+
+            // Function to update the global suspects array and save to local storage
+            function updateSuspectsArrayAndSave() {
+                suspects = Array.from(document.querySelectorAll('.suspect-item')).map(itemDiv => {
+                    const nameInput = itemDiv.querySelector('.suspect-name-input');
+                    const fingerprintInput = itemDiv.querySelector('.suspect-fingerprint-input');
+                    return {
+                        name: nameInput ? nameInput.value.trim() : '',
+                        fingerprint: fingerprintInput ? fingerprintInput.value.trim() : ''
+                    };
+                }).filter(suspect => suspect.name !== '' || suspect.fingerprint !== ''); // Keep if either is present
+                saveFormData(); // Save the updated suspects array
+            }
+
+
             // Function to gather all form data (excluding officerInfo)
             function getFormData() {
                 return {
                     department: departmentSelect.value,
                     reportType: reportTypeSelect.value,
                     // officerInfo is intentionally excluded as it's handled by login
-                    suspectName: suspectNameInput.value,
+                    suspects: suspects, // Save the array of suspect objects
                     charges: chargesInput.value,
                     mirandized: mirandizedSelect.value,
                     gsrTest: gsrTestSelect.value,
@@ -1631,6 +1720,7 @@
                     levelOfForce: levelOfForceSelect.value,
                     medicalTreatment: medicalTreatmentSelect.value,
                     pleaType: pleaTypeSelect.value,
+                    // fingerprintData is now part of each suspect object
                     arrestNarrative: arrestNarrativeTextarea.value,
                     driverName: driverNameInput.value,
                     driverLicense: driverLicenseInput.value,
@@ -1685,8 +1775,16 @@
 
                     departmentSelect.value = data.department || '';
                     reportTypeSelect.value = data.reportType || 'Arrest Report'; // Default if not found
-                    // officerInfoInput.value = data.officerInfo || ''; // Removed: officerInfo is now handled by login
-                    suspectNameInput.value = data.suspectName || '';
+
+                    // Load suspects
+                    suspects = data.suspects || [];
+                    suspectsContainer.innerHTML = ''; // Clear existing inputs
+                    if (suspects.length > 0) {
+                        suspects.forEach(suspect => addSuspectInput(suspect));
+                    } else {
+                        addSuspectInput(); // Add at least one empty suspect field if none saved
+                    }
+
                     chargesInput.value = data.charges || '';
                     mirandizedSelect.value = data.mirandized || '';
                     gsrTestSelect.value = data.gsrTest || '';
@@ -1737,14 +1835,30 @@
 
                     // After loading, ensure correct fields are shown
                     toggleReportFields();
+                } else {
+                    // If no saved data, ensure at least one suspect input is present
+                    addSuspectInput();
+                }
+
+                // Load saved edited report content if available
+                const savedEditedReportContent = localStorage.getItem('savedEditedReportContent');
+                if (savedEditedReportContent) {
+                    generatedReportTextarea.value = savedEditedReportContent;
+                    copyReportBtn.classList.remove('hidden');
+                    downloadReportBtn.classList.remove('hidden');
+                    viewReportBtn.classList.remove('hidden');
+                    saveEditedReportBtn.classList.remove('hidden'); // Show save edits button if content is loaded
                 }
             }
 
             // Function to clear all form data and local storage for the report
             function clearReportData() {
+                // Get the currently logged-in officer data before clearing
+                const loggedInOfficer = localStorage.getItem('loggedInOfficer');
+
                 // Clear all input fields, textareas, and select elements
-                document.querySelectorAll('input, select, textarea').forEach(element => {
-                    if (element.type === 'checkbox' || element.type === 'radio') {
+                document.querySelectorAll('input:not([type="radio"]), select, textarea').forEach(element => {
+                    if (element.type === 'checkbox') {
                         element.checked = false;
                     } else if (element.tagName === 'SELECT') {
                         element.value = element.options[0] ? element.options[0].value : ''; // Reset to first option
@@ -1753,19 +1867,37 @@
                     }
                 });
 
-                // Specific reset for officerInfoInput, as it's pre-filled from login
-                officerInfoInput.value = ''; // Clear it manually
+                // Restore officerInfoInput if it was pre-filled from local storage
+                if (loggedInOfficer) {
+                    try {
+                        const officer = JSON.parse(loggedInOfficer);
+                        officerInfoInput.value = `${officer.name} (${officer.badge})`;
+                        departmentSelect.value = officer.department || 'LSPD'; // Also reset department
+                    } catch (e) {
+                        console.error('Error parsing loggedInOfficer from localStorage during clear:', e);
+                        officerInfoInput.value = ''; // Clear if corrupted
+                    }
+                } else {
+                    officerInfoInput.value = ''; // Clear if no officer was logged in
+                }
+
 
                 // Clear generated report area
                 generatedReportTextarea.value = '';
                 copyReportBtn.classList.add('hidden');
                 downloadReportBtn.classList.add('hidden');
                 viewReportBtn.classList.add('hidden');
+                saveEditedReportBtn.classList.add('hidden'); // Hide save edits button
 
                 // Reset selected evidence details
                 selectedEvidenceDetails = {};
                 updateEvidenceCollectedInputSummary();
                 populateEvidenceList(); // Re-populate to reset checkboxes
+
+                // Clear suspects and add one empty field
+                suspects = [];
+                suspectsContainer.innerHTML = '';
+                addSuspectInput();
 
                 // Hide all statement containers
                 victimStatementsContainer.classList.add('hidden');
@@ -1774,6 +1906,7 @@
 
                 // Clear local storage for this report
                 localStorage.removeItem('reportGeneratorData');
+                localStorage.removeItem('savedEditedReportContent'); // Clear saved edited content
                 console.log('Report data cleared from local storage.');
 
                 // Reset report type to default and toggle fields
@@ -1818,6 +1951,9 @@
                 fetchOfficerRosterData(selectedDepartment);
             });
 
+            // Event listener for adding a suspect
+            addSuspectBtn.addEventListener('click', () => addSuspectInput());
+
             // Initialize fields visibility and populate evidence list on page load
             document.addEventListener('DOMContentLoaded', async () => {
                 populateEvidenceList(); // Populate evidence options first
@@ -1852,8 +1988,11 @@
 
             // Add event listeners to all form fields for saving data
             document.querySelectorAll('input:not(#officerInfo), select, textarea').forEach(element => {
-                element.addEventListener('input', saveFormData);
-                element.addEventListener('change', saveFormData); // For select elements
+                // Exclude suspect name inputs as they are handled by updateSuspectsArrayAndSave
+                if (!element.classList.contains('suspect-name-input') && !element.classList.contains('suspect-fingerprint-input')) {
+                    element.addEventListener('input', saveFormData);
+                    element.addEventListener('change', saveFormData); // For select elements
+                }
             });
 
             // Event listeners for opening and closing the evidence modal
@@ -1883,7 +2022,6 @@
             addUrlBtn.addEventListener('click', () => {
                 const url = evidenceUrlInput.value.trim();
                 const currentItemName = urlInputModal.dataset.currentItem;
-                const allowedProviders = urlInputModal.dataset.allowedProviders.split(',');
 
                 urlValidationError.classList.add('hidden'); // Hide previous errors
 
@@ -1893,8 +2031,8 @@
                     return;
                 }
 
-                if (!isValidUrl(url, allowedProviders)) {
-                    urlValidationError.textContent = `Invalid URL or not from allowed providers: ${allowedProviders.map(p => p.replace('https://', '')).join(', ')}.`;
+                if (!isValidUrl(url)) { // Simplified validation
+                    urlValidationError.textContent = `Invalid URL format. Please enter a valid URL.`;
                     urlValidationError.classList.remove('hidden');
                     return;
                 }
@@ -1990,6 +2128,17 @@
             // Event listener for the new Clear Report button
             clearReportBtn.addEventListener('click', clearReportData);
 
+            // NEW: Event listener for the Save Edited Report button
+            saveEditedReportBtn.addEventListener('click', () => {
+                localStorage.setItem('savedEditedReportContent', generatedReportTextarea.value);
+                const originalText = saveEditedReportBtn.textContent;
+                saveEditedReportBtn.textContent = 'Saved!';
+                setTimeout(() => {
+                    saveEditedReportBtn.textContent = originalText;
+                }, 1500);
+                console.log('Edited report content saved to local storage.');
+            });
+
 
             // IMPORTANT: Gemini API Key Configuration
             // If you are running this code on YOUR OWN WEB SERVER:
@@ -1998,7 +2147,7 @@
             // 3. Replace the empty string below with your ACTUAL, VALID API key.
             //    Example: const apiKey = "YOUR_ACTUAL_GEMINI_API_KEY_HERE";
             // If you are running this within the Google Canvas environment, leave this as "".
-            const apiKey = "AIzaSyCsWMWfmCfR59mcAy4as7XR95YY__7hayc";
+            const apiKey = ""; // Keep this empty for Canvas environment
 
             // Add event listener to the "Generate Report" button
             generateReportBtn.addEventListener('click', async () => {
@@ -2014,6 +2163,7 @@
                 copyReportBtn.classList.add('hidden');
                 downloadReportBtn.classList.add('hidden'); // Hide download button on new generation
                 viewReportBtn.classList.add('hidden'); // Hide view button on new generation
+                saveEditedReportBtn.classList.add('hidden'); // Hide save edits button on new generation
                 loadingIndicator.classList.remove('hidden');
 
                 let prompt = '';
@@ -2031,7 +2181,7 @@
                         } else {
                             evidenceParts.push(`${itemName}: No details provided.`);
                         }
-                    } else if (item.type === 'image' || item.type === 'video') {
+                    } else if (item.type === 'link') {
                         if (item.links.length > 0) {
                             evidenceParts.push(`${itemName}: ${item.links.join(', ')}`);
                         } else {
@@ -2047,7 +2197,7 @@
                 // Determine which API key to use
                 const finalApiKey = typeof __api_key__ !== 'undefined' ? __api_key__ : apiKey;
 
-                if (!finalApiKey || finalApiKey === "YOUR_ACTUAL_GEMINI_API_KEY_HERE") {
+                if (!finalApiKey) { // Simplified check for empty API key
                     generatedReportTextarea.value = 'Error: Gemini API Key is not configured. Please ensure your API key is correctly set in the JavaScript code. If running on your own server, replace the empty string for `apiKey` with your actual key.';
                     console.error('API Key not configured. Please set your actual Gemini API key if running on your own server.');
                     loadingIndicator.classList.add('hidden');
@@ -2058,7 +2208,6 @@
                 switch (selectedReportType) {
                     case 'Arrest Report':
                         reportNarrative = arrestNarrativeTextarea.value.trim();
-                        const suspectName = suspectNameInput.value.trim();
                         const charges = chargesInput.value.trim();
                         const mirandized = mirandizedSelect.value;
                         const gsrTest = gsrTestSelect.value;
@@ -2066,8 +2215,22 @@
                         const levelOfForce = levelOfForceSelect.value;
                         const medicalTreatment = medicalTreatmentSelect.value;
                         const pleaType = pleaTypeSelect.value;
+                        const fingerprintPattern = /^[0-9]{2}[TQMY][0-9]{2}[TQMY][0-9]{1}[TQMY][0-9]{1}[TQMY][0-9]{3}$/;
 
-                        if (!officerInfo || !suspectName || !charges || !reportNarrative || mirandized === "" || gsrTest === "" || medicalTreatment === "" || pleaType === "" || levelOfForce === "") { // Fixed pleaOfForce to pleaType
+                        let suspectDetailsForPrompt = [];
+                        let allSuspectsValid = true;
+                        suspects.forEach(suspect => {
+                            if (!suspect.name) {
+                                allSuspectsValid = false;
+                            }
+                            if (suspect.fingerprint && !fingerprintPattern.test(suspect.fingerprint)) {
+                                allSuspectsValid = false;
+                                showCustomAlert(`Invalid Fingerprint Data format for suspect ${suspect.name || 'Unnamed Suspect'}. Please use the format: 02T25Q4T2M0Y005`);
+                            }
+                            suspectDetailsForPrompt.push(`Name: ${suspect.name || 'N/A'}, Fingerprint: ${suspect.fingerprint || 'N/A'}`);
+                        });
+
+                        if (!officerInfo || suspects.length === 0 || !allSuspectsValid || !charges || !reportNarrative || mirandized === "" || gsrTest === "" || medicalTreatment === "" || pleaType === "" || levelOfForce === "") {
                             requiredFieldsFilled = false;
                         }
 
@@ -2077,9 +2240,10 @@
 Officer: ${officerInfo} ${department}
 City/State: Los Santos, San Andreas (SA)
 
-Generate a detailed, professional, and concise police report. The report must strictly adhere to the information provided in the "Officer Narrative" and other text fields. Do not include any information that is not directly deducible from the provided inputs. The output must strictly follow the format provided below, with no additional text, introductory phrases, or markdown formatting (like bold, italics, headers, or bullet points). Ensure all fields are populated appropriately based on the input. If a field is not directly deducible from the input, provide a reasonable placeholder or "N/A". The report should be written as if you were the officer writing it. Make sure to include the officers name, rank if included and badge number. Also, explicitly mention the suspect's name in the debrief.
+Generate a detailed, professional, and concise police report. The report must strictly adhere to the information provided in the "Officer Narrative" and other text fields. Do not include any information that is not directly deducible from the provided inputs. The output must strictly follow the format provided below, with no additional text, introductory phrases, or markdown formatting (like bold, italics, headers, or bullet points). Ensure all fields are populated appropriately based on the input. If a field is not directly deducible from the input, provide a reasonable placeholder or "N/A". The report should be written as if you were the officer writing it. Make sure to include the officers name, rank if included and badge number. Also, explicitly mention the suspect(s) name(s) in the debrief.
 
-Suspect Name: ${suspectName}
+Suspect(s) Details:
+${suspectDetailsForPrompt.join('\n')}
 Charges: ${charges}
 Officer Narrative: ${reportNarrative}
 Mirandized: ${mirandized}
@@ -2093,12 +2257,15 @@ ${evidenceForPrompt}
 
 ---
 Strict Output Format:
-Debrief: [Detailed summary of the incident based on the narrative and provided information, explicitly mentioning the suspect's name: ${suspectName}. Focus on the factual account of events, what happened, and actions taken by law enforcement.]
+Debrief: [Detailed summary of the incident based on the narrative and provided information, explicitly mentioning the suspect(s) name(s): ${suspects.map(s => s.name).join(', ')}. Focus on the factual account of events, what happened, and actions taken by law enforcement.]
 
 Justification of Charges:
 ${charges.split(',').map(charge => `(${charge.trim()}): [Reason for this specific charge based on the narrative and incident details]`).join('\n')}
 
 Postal/Location: [Location of the incident, if mentioned in narrative, otherwise provide a general placeholder like "Los Santos, SA"]
+
+Suspect(s) Information:
+${suspectDetailsForPrompt.join('\n')}
 
 Evidence Collected:
 ${evidenceForPrompt}
@@ -2394,11 +2561,12 @@ Status: Report Filed.
                 }
 
                 if (!requiredFieldsFilled) {
-                    generatedReportTextarea.value = 'Please fill in all required fields for the selected report type to generate the report.';
+                    showCustomAlert('Please fill in all required fields for the selected report type to generate the report.');
                     loadingIndicator.classList.add('hidden');
                     // Ensure download button is hidden if required fields are not filled
                     downloadReportBtn.classList.add('hidden');
                     viewReportBtn.classList.add('hidden'); // Hide view button if fields are not filled
+                    saveEditedReportBtn.classList.add('hidden'); // Hide save edits button if fields are not filled
                     return;
                 }
 
@@ -2407,7 +2575,7 @@ Status: Report Filed.
                     chatHistory.push({ role: "user", parts: [{ text: prompt }] });
 
                     const payload = { contents: chatHistory };
-                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${finalApiKey}`;
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${finalApiKey}`; // Using gemini-2.5-flash-preview-05-20
 
                     const response = await fetch(apiUrl, {
                         method: 'POST',
@@ -2422,6 +2590,7 @@ Status: Report Filed.
                         loadingIndicator.classList.add('hidden');
                         downloadReportBtn.classList.add('hidden'); // Hide download button on API error
                         viewReportBtn.classList.add('hidden'); // Hide view button on API error
+                        saveEditedReportBtn.classList.add('hidden'); // Hide save edits button on API error
                         return;
                     }
 
@@ -2436,12 +2605,14 @@ Status: Report Filed.
                         copyReportBtn.classList.remove('hidden');
                         downloadReportBtn.classList.remove('hidden'); // Show download button after successful generation
                         viewReportBtn.classList.remove('hidden'); // Show view button after successful generation
+                        saveEditedReportBtn.classList.remove('hidden'); // Show save edits button after successful generation
                     } else {
                         generatedReportTextarea.value = 'Failed to generate report. Gemini API returned an unexpected structure or no content.';
                         console.error('Gemini API returned an unexpected structure or no content:', result);
                         copyReportBtn.classList.add('hidden');
                         downloadReportBtn.classList.add('hidden');
                         viewReportBtn.classList.add('hidden');
+                        saveEditedReportBtn.classList.add('hidden');
                     }
                 } catch (error) {
                     generatedReportTextarea.value = `An error occurred: ${error.message}. Please check your network connection and try again.`;
@@ -2449,6 +2620,7 @@ Status: Report Filed.
                     copyReportBtn.classList.add('hidden');
                     downloadReportBtn.classList.add('hidden');
                     viewReportBtn.classList.add('hidden');
+                    saveEditedReportBtn.classList.add('hidden');
                 } finally {
                     loadingIndicator.classList.add('hidden');
                 }
@@ -2721,7 +2893,7 @@ Status: Report Filed.
                         reportDiv.innerHTML = `
                                         <p class="title">Report Generator Data</p>
                                         <p class="description">Last saved report type: ${data.reportType || 'N/A'}</p>
-                                        <p class="description">Last saved suspect name: ${data.suspectName || 'N/A'}</p>
+                                        <p class="description">Last saved suspects: ${data.suspects && data.suspects.length > 0 ? data.suspects.map(s => `${s.name} (FP: ${s.fingerprint || 'N/A'})`).join(', ') : 'N/A'}</p>
                                         <p class="description">Other form fields saved. (Too detailed to list all here)</p>
                                     `;
                         dataViewerContent.appendChild(reportDiv);
@@ -2731,12 +2903,25 @@ Status: Report Filed.
                     }
                 }
 
+                // Display Saved Edited Report Content
+                const savedEditedReportContent = localStorage.getItem('savedEditedReportContent');
+                if (savedEditedReportContent) {
+                    const editedReportDiv = document.createElement('div');
+                    editedReportDiv.className = 'data-viewer-item mt-4';
+                    editedReportDiv.innerHTML = `
+                                        <p class="title">Saved Edited Report Content</p>
+                                        <p class="description">${savedEditedReportContent.substring(0, 200)}... (truncated for display)</p>
+                                    `;
+                    dataViewerContent.appendChild(editedReportDiv);
+                    hasData = true;
+                }
+
                 // Display Other Stored Data
                 let otherDataCount = 0;
                 for (let i = 0; i < localStorage.length; i++) {
                     const key = localStorage.key(i);
                     // Skip keys already displayed or internal keys
-                    if (key === 'loggedInOfficer' || key === 'theme' || key === 'reportGeneratorData' || key === 'cookieConsent') {
+                    if (key === 'loggedInOfficer' || key === 'theme' || key === 'reportGeneratorData' || key === 'cookieConsent' || key === 'savedEditedReportContent') {
                         continue;
                     }
 
