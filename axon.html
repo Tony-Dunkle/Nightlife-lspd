@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://code.jquery.com/jquery.min.js"></script>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+    <link href="https://netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+    <link href="https://fonts.googleapis.com/css?family=Share+Tech+Mono&effect=outline" rel="stylesheet" type="text/css">
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap'); /* Added Inter font */
+
+        @font-face {
+            font-family: instruction;
+            src: url(Lekton-Italic.ttf);
+        }
+
+        body {
+            background-color: rgba(0, 0, 0, 0);
+            margin: 0px auto;
+            overflow: hidden;
+            font-family: 'Inter', instruction, monospace; /* Prioritize Inter, fallback to instruction and monospace */
+            font-size: 13px;
+            color: #AFAFAF;
+        }
+
+        .Blink {
+            animation: blinker 1.5s cubic-bezier(.5, 0, 1, 1) infinite alternate;
+        }
+
+        @keyframes blinker {
+            from {
+                opacity: 1;
+            }
+
+            to {
+                opacity: 0;
+            }
+        }
+
+        .top-right {
+            float: right;
+            width: auto;
+            text-align: right;
+        }
+
+        .top-right-container {
+            float: right;
+            width: auto;
+            text-align: right;
+            /* edit the fourth value of the next line to change opacity */
+            /* 0.0 is clear, 1.0 is completely opaque                   */
+            background-color: rgba(0,0,0,0.5);
+            padding: 5px;
+            margin: 10px;
+            -moz-border-radius: 10px;
+            -webkit-border-radius: 10px;
+            border-radius: 10px;
+        }
+
+        .container {
+            width: 100wh;
+            height: 100vh;
+        }
+    </style>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Added viewport meta tag for responsiveness -->
+    <title>XION Bodycam Overlay</title>
+</head>
+
+<body>
+    <audio id="beep" autoplay loop>
+        <source src="double-beep.wav" type="audio/wav">
+    </audio>
+
+    <div class="top-right-container">
+        <div class="top-right">
+            <!-- LSPD Logo - Reverted to original source, keeping onerror for robustness -->
+            <img src="LSPD.png" width="64" height="64" border="0" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
+        </div>
+        <div class="top-right">
+            REC&nbsp;<i class="fa fa-circle text-danger Blink"></i>&nbsp;&nbsp;AXON&nbsp;BODYCAM&trade;&nbsp;&nbsp;<br />
+            <span id="player">N/A</span> <!-- Default placeholder -->
+            <span id="callsign">[N/A]</span>&nbsp;&nbsp;<br /> <!-- Default placeholder -->
+            <span id="agency">N/A</span>&nbsp;&nbsp;<br /> <!-- Default placeholder -->
+            <span style="padding:0px;margin:0px;" id="date-span">00 XXX 0000</span>
+            <span style="padding:0px;margin:0px;" id="time-span">00:00:00</span>&nbsp;&nbsp;
+        </div>
+    </div>
+</body>
+
+<script>
+        // Removed hardcoded player, agency, callsign variables.
+        // These will now be pulled from local storage.
+
+        const monthNames = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+
+        /**
+         * Initializes the overlay by loading officer data from local storage
+         * and starting the clock.
+         */
+        function init(){
+            const loggedInOfficer = localStorage.getItem('loggedInOfficer');
+            let officerName = "N/A";
+            let officerAgency = "N/A";
+            let officerCallsign = "[N/A]"; // Default with brackets
+
+            if (loggedInOfficer) {
+                try {
+                    const officer = JSON.parse(loggedInOfficer);
+                    officerName = officer.name || "N/A";
+                    // For agency, use the department name directly
+                    officerAgency = officer.department || "N/A";
+                    // For callsign, use badge number with brackets
+                    officerCallsign = officer.badge ? `[${officer.badge}]` : "[N/A]";
+                } catch (e) {
+                    console.error("Error parsing loggedInOfficer from localStorage in top-right.html:", e);
+                    // Fallback to defaults if parsing fails
+                }
+            }
+
+            // Use the helper function to set the initial values for officer info
+            // These values are static once loaded and do not need to be updated by the clock function.
+            $('player', officerName);
+            $('agency', officerAgency);
+            $('callsign', officerCallsign);
+
+            clock(); // Start the clock to update time and date
+        };
+
+        /**
+         * Gets the current local time and date based on the user's timezone.
+         * @returns {object} An object containing hours, minutes, seconds, and the full date object.
+         */
+        function getLocalTime() {
+            const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+            const localTimeStr = new Date().toLocaleString("en-US", { timeZone: userTimezone });
+            const localDate = new Date(localTimeStr);
+            return {
+                hours: localDate.getHours(),
+                minutes: localDate.getMinutes(),
+                seconds: localDate.getSeconds(),
+                fullDate: localDate
+            };
+        }
+
+        /**
+         * Updates the time and date display periodically.
+         */
+        function clock(){
+            var d = getLocalTime();
+            updateTime(d);
+            updateDate(d);
+            // Officer info is now set once in init(), no need to update here.
+            var animate = setTimeout(clock, 100); // Continue the animation loop
+        };
+
+        /**
+         * Updates the date display on the page.
+         * @param {object} dt - The date-time object from getLocalTime().
+         */
+        function updateDate(dt){
+            const dateObj = dt.fullDate;
+            const day = ("0" + dateObj.getDate()).slice(-2);
+            const month = monthNames[dateObj.getMonth()];
+            const year = dateObj.getFullYear();
+            // The d_str variable was not used, removed it.
+            document.getElementById('date-span').innerHTML = day + '-' + month + '-' + year;
+        };
+
+        /**
+         * Updates the time display on the page.
+         * @param {object} dt - The date-time object from getLocalTime().
+         */
+        function updateTime(dt){
+            const h = ("0" + dt.hours).slice(-2);
+            const m = ("0" + dt.minutes).slice(-2);
+            const s = ("0" + dt.seconds).slice(-2);
+            var t_str = h + ":" + m + ":" + s + " ";
+            document.getElementById('time-span').innerHTML = t_str;
+        };
+
+        /**
+         * Helper function to update the innerHTML of an element by its ID.
+         * Adds leading zeros for numbers less than 10 (though not strictly needed for strings like names).
+         * @param {string} id - The ID of the HTML element.
+         * @param {string|number} val - The value to set as innerHTML.
+         */
+        function $(id,val){
+            // This conditional is primarily for numerical values (like time components)
+            // It won't affect string values for player, agency, callsign, which is fine.
+            if(typeof val === 'number' && val < 10){
+                val='0'+val;
+            }
+            document.getElementById(id).innerHTML=val;
+        };
+
+        // Initialize the overlay when the window loads.
+        window.onload = init;
+</script>
+
+</html>
