@@ -62,6 +62,66 @@
             width: 100wh;
             height: 100vh;
         }
+
+        /* Modal specific styles (copied from report.html) */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw; /* Use viewport width */
+            height: 100vh; /* Use viewport height */
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999; /* Very high z-index */
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* shadow-2xl */
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+            position: relative;
+            width: 500px; /* Adjusted width for better readability */
+            color: #333; /* Ensure text is readable in modal */
+        }
+
+        .officer-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.5rem;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            transition: background-color 0.2s ease-in-out;
+        }
+
+            .officer-item:hover {
+                background-color: #f0f4f8; /* Light blue-gray hover */
+            }
+
+        /* Loading indicator styles (copied from report.html) */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
     </style>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Added viewport meta tag for responsiveness -->
@@ -85,45 +145,266 @@
             <span id="agency">N/A</span>&nbsp;&nbsp;<br /> <!-- Default placeholder -->
             <span style="padding:0px;margin:0px;" id="date-span">00 XXX 0000</span>
             <span style="padding:0px;margin:0px;" id="time-span">00:00:00</span>&nbsp;&nbsp;
+            <button id="loginButton" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded-md text-xs mt-2" style="display: none;">Log In</button>
+        </div>
+    </div>
+
+    <!-- Officer Selection Modal (copied from report.html) -->
+    <div id="officerSelectionModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Select Officer</h3>
+            <input type="text"
+                   id="officerSearchInput"
+                   placeholder="Search officer name or badge..."
+                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 mb-4 text-gray-800">
+            <div id="officerList" class="max-h-64 overflow-y-auto border border-gray-200 rounded-lg p-2 mb-4">
+                <!-- Officer list will be populated here -->
+                <div class="loader mx-auto my-4"></div> <!-- Loader for officer list -->
+            </div>
+            <div class="flex justify-end space-x-4">
+                <button id="closeOfficerModalBtn"
+                        class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">
+                    Close
+                </button>
+            </div>
         </div>
     </div>
 </body>
 
 <script>
-        // Removed hardcoded player, agency, callsign variables.
-        // These will now be pulled from local storage.
-
         const monthNames = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
+
+        // Get references to elements
+        const playerSpan = document.getElementById('player');
+        const callsignSpan = document.getElementById('callsign');
+        const agencySpan = document.getElementById('agency');
+        const loginButton = document.getElementById('loginButton');
+
+        // Officer Selection Modal Elements
+        const officerSelectionModal = document.getElementById('officerSelectionModal');
+        const officerSearchInput = document.getElementById('officerSearchInput');
+        const officerListDiv = document.getElementById('officerList');
+        const closeOfficerModalBtn = document.getElementById('closeOfficerModalBtn');
+
+        // Global variable to store fetched officer roster data
+        let officerRosterData = [];
+
+        /**
+         * Converts an Excel-style column letter (e.g., 'A', 'B', 'AA') to a 0-based index.
+         * @param {string} columnLetter - The column letter (e.g., 'C').
+         * @returns {number} The 0-based column index (e.g., 'C' returns 2).
+         */
+        function columnLetterToIndex(columnLetter) {
+            let index = 0;
+            for (let i = 0; i < columnLetter.length; i++) {
+                index = index * 26 + (columnLetter.charCodeAt(i) - 'A'.charCodeAt(0) + 1);
+            }
+            return index - 1; // Convert to 0-based index
+        }
+
+        // Configuration for different department sheets (copied from report.html)
+        const departmentSheetConfig = {
+            "LSPD": {
+                sheetId: '2PACX-1vT8yueJjp9o-XVH1_RXPji6N_IAP1DDbNLZ8l4__IqGCvVEUWscsdsJ6uNHZ8u6kDhhXkSxcdkdeDJi',
+                gid: '0',
+                rowRanges: [
+                    { start: 6, end: 6 },
+                    { start: 9, end: 16 },
+                    { start: 18, end: 22 },
+                    { start: 24, end: 27 },
+                    { start: 29, end: 32 },
+                    { start: 34, end: 43 },
+                    { start: 45, end: 54 },
+                    { start: 56, end: 65 },
+                    { start: 67, end: 78 },
+                    { start: 80, end: 96 },
+                    { start: 98, end: 117 },
+                    { start: 119, end: 148 }
+                ]
+            },
+            "LSCSO": {
+                sheetId: '2PACX-1vT8yueJjp9o-XVH1_RXPji6N_IAP1DDbNLZ8l4__IqGCvVEUWscsdsJ6uNHZ8u6kDhhXkSxcdkdeDJi',
+                gid: '1747285908',
+                rowRanges: null // Indicates generic filtering for this sheet
+            },
+            "State Police": {
+                sheetId: '2PACX-1vT8yueJjp9o-XVH1_RXPji6N_IAP1DDbNLZ8l4__IqGCvVEUWscsdsJ6uNHZ8u6kDhhXkSxcdkdeDJi',
+                gid: '394994291',
+                rowRanges: null // Indicates generic filtering for this sheet
+            }
+        };
+
+        /**
+         * Fetches CSV data from a Google Sheet, parses it, and populates the officerRosterData.
+         * @param {string} department - The department for which to fetch the roster (e.g., "LSPD", "LSCSO").
+         */
+        async function fetchOfficerRosterData(department) {
+            officerListDiv.innerHTML = '<div class="loader mx-auto my-4"></div>'; // Show loader
+
+            const config = departmentSheetConfig[department];
+            if (!config) {
+                console.error(`Configuration not found for department: ${department}`);
+                officerListDiv.innerHTML = '<p class="text-red-500 text-center py-4">Department roster configuration missing.</p>';
+                officerRosterData = [];
+                return;
+            }
+
+            // Construct the CSV URL using the sheetId and gid, ensuring output=csv
+            const csvUrl = `https://docs.google.com/spreadsheets/d/e/${config.sheetId}/pub?gid=${config.gid}&single=true&output=csv`;
+
+            try {
+                const response = await fetch(csvUrl);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const csvText = await response.text();
+
+                const rawRows = csvText.trim().split('\n');
+                if (rawRows.length === 0) {
+                    console.warn(`No roster data available for ${department} from Google Sheet.`);
+                    officerRosterData = [];
+                    officerListDiv.innerHTML = '<p class="text-gray-500 text-center py-4">No officers found for this department.</p>';
+                    return;
+                }
+
+                const filteredRowsData = [];
+                // Regex to split by comma, ignoring commas inside double quotes
+                const regex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
+
+                if (config.rowRanges) {
+                    // Use specific row ranges if provided (e.g., for LSPD)
+                    const targetSpreadsheetRows = new Set();
+                    config.rowRanges.forEach(range => {
+                        for (let i = range.start; i <= range.end; i++) {
+                            targetSpreadsheetRows.add(i);
+                        }
+                    });
+
+                    rawRows.forEach((rowString, index) => {
+                        const spreadsheetRowNumber = index + 1;
+                        if (targetSpreadsheetRows.has(spreadsheetRowNumber)) {
+                            const parsedCells = rowString.split(regex).map(cell => cell.replace(/^"(.*)"$/, '$1').trim());
+                            filteredRowsData.push(parsedCells);
+                        }
+                    });
+                } else {
+                    // Generic filtering for sheets without specific row ranges (e.g., LSCSO, State Police)
+                    // Skip the first row (assuming it's a header) and filter out empty rows
+                    const nameColIndex = columnLetterToIndex('D'); // Assuming 'D' for Name
+                    const badgeColIndex = columnLetterToIndex('C'); // Assuming 'C' for Badge No.
+
+                    rawRows.slice(1).forEach(rowString => { // Start from the second row
+                        const parsedCells = rowString.split(regex).map(cell => cell.replace(/^"(.*)"$/, '$1').trim());
+                        const name = parsedCells[nameColIndex] ? parsedCells[nameColIndex].trim() : '';
+                        const badge = parsedCells[badgeColIndex] ? parsedCells[badgeColIndex].trim() : '';
+
+                        // Only add if both name and badge are present and not 'N/A' or header-like strings
+                        if (name && name !== 'N/A' && name.toLowerCase() !== 'name' && name.toLowerCase() !== 'full name' &&
+                            badge && badge !== 'N/A' && badge.toLowerCase() !== 'badge no.' && badge.toLowerCase() !== 'badge number') {
+                            filteredRowsData.push(parsedCells);
+                        }
+                    });
+                }
+
+                const headerToColIndexMap = {
+                    'Badge No.': columnLetterToIndex('C'),
+                    'Name': columnLetterToIndex('D'),
+                };
+
+                const tempOfficerRoster = [];
+                filteredRowsData.forEach(rowData => {
+                    const name = rowData[headerToColIndexMap['Name']] ? rowData[headerToColIndexMap['Name']].trim() : '';
+                    const badge = rowData[headerToColIndexMap['Badge No.']] ? rowData[headerToColIndexMap['Badge No.']].trim() : '';
+
+                    // Only add if both name and badge are present and not 'N/A' or empty
+                    if (name && name !== 'N/A' && badge && badge !== 'N/A') {
+                        tempOfficerRoster.push({ name: name, badge: badge, department: department });
+                    }
+                });
+                officerRosterData = tempOfficerRoster; // Update the global roster data
+                populateOfficerList(officerRosterData); // Populate the modal list with fetched data
+            } catch (error) {
+                console.error(`Error fetching or parsing roster data for ${department}:`, error);
+                officerListDiv.innerHTML = `<p class="text-red-500 text-center py-4">Failed to load officer roster for ${department}. Please try again later.</p>`;
+            }
+        }
+
+        /**
+         * Populates the officer list in the modal based on fetched data and search term.
+         * @param {Array<Object>} officers - The array of officer objects.
+         * @param {string} searchTerm - The search term to filter officers.
+         */
+        function populateOfficerList(officers, searchTerm = '') {
+            officerListDiv.innerHTML = ''; // Clear existing list
+            const filteredOfficers = officers.filter(officer =>
+                officer.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                officer.badge.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+
+            if (filteredOfficers.length === 0) {
+                officerListDiv.innerHTML = '<p class="text-gray-500 text-center py-4">No officers found.</p>';
+                return;
+            }
+
+            filteredOfficers.forEach(officer => {
+                const div = document.createElement('div');
+                div.className = 'officer-item p-2 rounded-md hover:bg-blue-100 cursor-pointer text-gray-800 text-sm font-medium';
+                div.textContent = `${officer.name} (${officer.badge})`;
+                div.dataset.name = officer.name;
+                div.dataset.badge = officer.badge;
+                div.dataset.department = officer.department; // Store department
+
+                div.addEventListener('click', () => {
+                    // Update the display spans
+                    playerSpan.innerHTML = officer.name;
+                    callsignSpan.innerHTML = `[${officer.badge}]`;
+                    agencySpan.innerHTML = officer.department;
+
+                    // Save the selected officer's full details to local storage
+                    localStorage.setItem('loggedInOfficer', JSON.stringify(officer));
+
+                    officerSelectionModal.classList.add('hidden'); // Hide the modal
+                    loginButton.style.display = 'none'; // Hide the login button
+                });
+                officerListDiv.appendChild(div);
+            });
+        }
 
         /**
          * Initializes the overlay by loading officer data from local storage
          * and starting the clock.
          */
-        function init(){
+        async function init(){
             const loggedInOfficer = localStorage.getItem('loggedInOfficer');
             let officerName = "N/A";
             let officerAgency = "N/A";
             let officerCallsign = "[N/A]"; // Default with brackets
+            let initialDepartment = "LSPD"; // Default department for fetching roster
 
             if (loggedInOfficer) {
                 try {
                     const officer = JSON.parse(loggedInOfficer);
                     officerName = officer.name || "N/A";
-                    // For agency, use the department name directly
                     officerAgency = officer.department || "N/A";
-                    // For callsign, use badge number with brackets
                     officerCallsign = officer.badge ? `[${officer.badge}]` : "[N/A]";
+                    initialDepartment = officer.department || "LSPD"; // Use logged-in officer's department
+                    loginButton.style.display = 'none'; // Hide button if already logged in
                 } catch (e) {
                     console.error("Error parsing loggedInOfficer from localStorage in top-right.html:", e);
-                    // Fallback to defaults if parsing fails
+                    localStorage.removeItem('loggedInOfficer'); // Clear corrupted data
+                    loginButton.style.display = 'block'; // Show button if data is corrupted
                 }
+            } else {
+                loginButton.style.display = 'block'; // Show button if no officer is logged in
             }
 
-            // Use the helper function to set the initial values for officer info
-            // These values are static once loaded and do not need to be updated by the clock function.
-            $('player', officerName);
-            $('agency', officerAgency);
-            $('callsign', officerCallsign);
+            // Set the initial values for officer info
+            playerSpan.innerHTML = officerName;
+            callsignSpan.innerHTML = officerCallsign;
+            agencySpan.innerHTML = officerAgency;
+
+            // Pre-fetch roster data for the initial department
+            await fetchOfficerRosterData(initialDepartment);
 
             clock(); // Start the clock to update time and date
         };
@@ -151,7 +432,6 @@
             var d = getLocalTime();
             updateTime(d);
             updateDate(d);
-            // Officer info is now set once in init(), no need to update here.
             var animate = setTimeout(clock, 100); // Continue the animation loop
         };
 
@@ -164,7 +444,6 @@
             const day = ("0" + dateObj.getDate()).slice(-2);
             const month = monthNames[dateObj.getMonth()];
             const year = dateObj.getFullYear();
-            // The d_str variable was not used, removed it.
             document.getElementById('date-span').innerHTML = day + '-' + month + '-' + year;
         };
 
@@ -182,18 +461,34 @@
 
         /**
          * Helper function to update the innerHTML of an element by its ID.
-         * Adds leading zeros for numbers less than 10 (though not strictly needed for strings like names).
          * @param {string} id - The ID of the HTML element.
          * @param {string|number} val - The value to set as innerHTML.
          */
         function $(id,val){
-            // This conditional is primarily for numerical values (like time components)
-            // It won't affect string values for player, agency, callsign, which is fine.
-            if(typeof val === 'number' && val < 10){
-                val='0'+val;
-            }
             document.getElementById(id).innerHTML=val;
         };
+
+        // Event Listeners for Login Button and Modal
+        loginButton.addEventListener('click', async () => {
+            officerSelectionModal.classList.remove('hidden');
+            officerSearchInput.value = ''; // Clear search input
+            // Fetch and populate for the default department (LSPD)
+            await fetchOfficerRosterData("LSPD");
+        });
+
+        officerSearchInput.addEventListener('input', (e) => {
+            populateOfficerList(officerRosterData, e.target.value);
+        });
+
+        closeOfficerModalBtn.addEventListener('click', () => {
+            officerSelectionModal.classList.add('hidden');
+        });
+
+        officerSelectionModal.addEventListener('click', (e) => {
+            if (e.target === officerSelectionModal) {
+                officerSelectionModal.classList.add('hidden');
+            }
+        });
 
         // Initialize the overlay when the window loads.
         window.onload = init;
