@@ -123,6 +123,18 @@
             .delete-btn:hover {
                 color: #f87171;
             }
+        /* Spinner animation for loading */
+        .spinner {
+            border-top-color: #3b82f6;
+            border-left-color: #3b82f6;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-100 flex flex-col min-h-screen">
@@ -190,6 +202,12 @@
                 </div>
             </div>
 
+            <!-- Loading Indicator -->
+            <div id="loading" class="mt-4 text-center text-blue-400 flex flex-col items-center justify-center hidden">
+                <div class="w-12 h-12 border-4 border-gray-300 rounded-full spinner mb-2"></div>
+                <p>Generating report... Please wait.</p>
+            </div>
+
             <!-- Report Grid Layout -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <!-- Left Column -->
@@ -216,10 +234,6 @@
                 </div>
             </div>
 
-            <!-- Loading Indicator -->
-            <div id="loading" class="mt-4 text-center text-blue-400 hidden">
-                <p>Generating report... Please wait.</p>
-            </div>
         </div>
     </main>
 
@@ -1071,6 +1085,10 @@
             const officerNarrativeTextArea = document.getElementById('officerNarrative');
             const originalNarrative = officerNarrativeTextArea.value.trim() || 'No narrative provided.';
 
+            // Get the first officer's name and badge number for the persona
+            const firstOfficerInput = document.querySelector('[id^="officerName-"]');
+            const firstOfficerName = firstOfficerInput ? firstOfficerInput.value.trim() : 'Reporting Officer';
+
             // Helper function to collect data from dynamic fields
             const getDynamicInputValues = (containerId, namePrefix, additionalPrefixes = []) => {
                 const container = document.getElementById(containerId);
@@ -1156,11 +1174,11 @@
             const additionalEvidence = getEvidenceEntryValues('evidenceContainer');
             const tagsInvolved = getDynamicInputValues('tagsContainer', 'tagName');
 
-            // Construct the prompt for the Gemini AI
+            // Construct the updated prompt for the Gemini AI with the new persona and plain text instructions
             const prompt = `
-                You are an AI assistant for the Los Santos Police Department. Your task is to rewrite a police officer's provided narrative and other details into a professional, well-written police report. The report must use proper grammar, be detailed, and avoid jargon. After the narrative, you must append a structured debrief section. The final output must be a single block of text and only include information provided.
+                You are an LSPD Officer. Your name and badge number are ${firstOfficerName}. Write a detailed, professional, and well-written police report from your first-person perspective. The report must use proper grammar, be detailed, and avoid jargon. The final output must be a single block of plain text, with no markdown, and only include information provided.
 
-                Here is the officer's raw narrative: ${originalNarrative}
+                First, write the narrative based on the details below. Then, provide a structured debrief section.
 
                 Here are the report details:
                 - Report Type: ${reportType}
@@ -1201,7 +1219,7 @@
                 let chatHistory = [];
                 chatHistory.push({ role: "user", parts: [{ text: prompt }] });
                 const payload = { contents: chatHistory };
-                const apiKey = "AIzaSyAbU7k_19bBgnGpFtX742tYGwLySd_U3fI"
+                const apiKey = "AIzaSyAbU7k_19bBgnGpFtX742tYGwLySd_U3fI" // API key is handled by the environment
                 const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
                 const response = await fetch(apiUrl, {
                     method: 'POST',
