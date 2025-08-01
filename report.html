@@ -135,8 +135,8 @@
             </ul>
         </nav>
         <!-- Updated settings icon to open a modal -->
-        <button id="settingsIcon" class="ml-4 focus:outline-none">
-            <img src="settings.png" alt="Settings" class="w-10 h-10 cursor-pointer" onerror="this.onerror=null; this.src='https://placehold.co/40x40/4A5568/FFFFFF?text=SET';">
+        <button id="settingsIcon" class="ml-4 focus:outline-none bg-transparent border-0 p-0">
+            <img src="settings.png" alt="Settings" class="w-10 h-10 cursor-pointer" onerror="this.onerror=null; this.src='https://placehold.co/40x40/transparent/FFFFFF?text=SET';">
         </button>
         <!-- The login button container from the previous version is no longer used for the settings icon, but is kept for potential future use or other functionality -->
         <div id="loginButtonContainer" class="absolute top-full left-0 mt-4 ml-4 hidden">
@@ -199,7 +199,7 @@
                     </ul>
                 </div>
                 <!-- Description Section -->
-                <div class="bg-gray-800 p-4 rounded-lg shadow-lg flex-grow">
+                <div class="bg-gray-800 p-4 rounded-lg shadow-lg flex-grow flex flex-col">
                     <div class="flex justify-between items-center mb-2">
                         <h3 class="font-semibold text-lg">Description</h3>
                         <button id="generate-report-btn" class="bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-1 px-3 rounded-full transition-colors duration-200">
@@ -220,10 +220,10 @@
                         </button>
                     </div>
                     <!-- Loading state container for the description -->
-                    <div id="description-loading-container" class="hidden flex justify-center items-center h-80 bg-gray-700 rounded-b-lg">
+                    <div id="description-loading-container" class="hidden flex justify-center items-center flex-grow bg-gray-700 rounded-b-lg">
                         <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
                     </div>
-                    <textarea id="report-description" placeholder="Enter a description..." class="w-full h-80 p-2 bg-gray-700 text-white rounded-b-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-600"></textarea>
+                    <textarea id="report-description" placeholder="Enter a description..." class="w-full flex-grow p-2 bg-gray-700 text-white rounded-b-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-600"></textarea>
                 </div>
             </div>
 
@@ -254,7 +254,7 @@
                 <div class="bg-gray-800 p-4 rounded-lg shadow-lg">
                     <div class="flex justify-between items-center mb-2">
                         <h3 class="font-semibold text-lg">Vehicles Involved</h3>
-                        <button class="add-item-btn bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-1 px-3 rounded-full transition-colors duration-200" data-list-id="vehicles-list">+ Add</button>
+                        <button id="add-vehicle-btn" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-1 px-3 rounded-full transition-colors duration-200">+ Add</button>
                     </div>
                     <ul id="vehicles-list" class="space-y-1 text-sm text-gray-400">
                         <li class="p-2 border border-gray-700 rounded-md">NO VEHICLES INVOLVED</li>
@@ -417,7 +417,7 @@
     </div>
 
     <!-- Modals for adding items (reused components) -->
-    <!-- Modal for adding Evidence, Linked Reports, Tags, Vehicles, Civilians -->
+    <!-- Modal for adding Evidence, Linked Reports, Tags, Civilians -->
     <div id="addItemModal" class="modal-overlay hidden">
         <div class="modal-content">
             <h3 class="text-xl font-bold text-gray-100 mb-4">Add Item</h3>
@@ -428,6 +428,25 @@
             </div>
         </div>
     </div>
+
+    <!-- NEW: Modal for adding a Vehicle -->
+    <div id="addVehicleModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3 class="text-xl font-bold text-gray-100 mb-4">Add Vehicle</h3>
+            <input type="text" id="vehicleOwnerInput" placeholder="Enter owner's name..." class="w-full p-3 mb-2 bg-gray-700 text-white rounded-md border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-blue-600 transition-colors duration-200">
+            <input type="text" id="vehiclePlateInput" placeholder="Enter license plate..." class="w-full p-3 mb-2 bg-gray-700 text-white rounded-md border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-blue-600 transition-colors duration-200">
+            <input type="text" id="vehicleModelInput" placeholder="Enter make and model..." class="w-full p-3 mb-4 bg-gray-700 text-white rounded-md border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-blue-600 transition-colors duration-200">
+            <label class="flex items-center space-x-2 text-gray-300 cursor-pointer mb-4">
+                <input type="checkbox" id="vehicleImpoundedCheckbox" class="form-checkbox h-5 w-5 text-blue-600 bg-gray-800 border-gray-600 rounded focus:ring-blue-500">
+                <span>Was the vehicle impounded?</span>
+            </label>
+            <div class="flex justify-end space-x-2">
+                <button id="closeAddVehicleModalBtn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">Cancel</button>
+                <button id="saveAddVehicleBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">Add</button>
+            </div>
+        </div>
+    </div>
+
 
     <!-- NEW: Modal for adding a Weapon -->
     <div id="addWeaponModal" class="modal-overlay hidden">
@@ -613,6 +632,70 @@
             });
 
             // ===============================================
+            // NEW: Add Vehicle Modal Functionality
+            // ===============================================
+            const addVehicleBtn = document.getElementById('add-vehicle-btn');
+            const addVehicleModal = document.getElementById('addVehicleModal');
+            const closeAddVehicleModalBtn = document.getElementById('closeAddVehicleModalBtn');
+            const saveAddVehicleBtn = document.getElementById('saveAddVehicleBtn');
+            const vehicleOwnerInput = document.getElementById('vehicleOwnerInput');
+            const vehiclePlateInput = document.getElementById('vehiclePlateInput');
+            const vehicleModelInput = document.getElementById('vehicleModelInput');
+            const vehicleImpoundedCheckbox = document.getElementById('vehicleImpoundedCheckbox');
+            const vehiclesList = document.getElementById('vehicles-list');
+
+            addVehicleBtn.addEventListener('click', () => {
+                vehicleOwnerInput.value = '';
+                vehiclePlateInput.value = '';
+                vehicleModelInput.value = '';
+                vehicleImpoundedCheckbox.checked = false;
+                addVehicleModal.classList.remove('hidden');
+                vehicleOwnerInput.focus();
+            });
+
+            closeAddVehicleModalBtn.addEventListener('click', () => {
+                addVehicleModal.classList.add('hidden');
+            });
+
+            saveAddVehicleBtn.addEventListener('click', () => {
+                const owner = vehicleOwnerInput.value.trim();
+                const plate = vehiclePlateInput.value.trim();
+                const model = vehicleModelInput.value.trim();
+                const impounded = vehicleImpoundedCheckbox.checked;
+
+                if (owner || plate || model) {
+                    if (vehiclesList.firstElementChild && vehiclesList.firstElementChild.textContent.includes('NO VEHICLES INVOLVED')) {
+                        vehiclesList.innerHTML = '';
+                    }
+
+                    const newVehicleItem = document.createElement('li');
+                    newVehicleItem.className = "flex flex-col space-y-1 p-2 border border-gray-700 rounded-md bg-gray-700 text-white";
+                    newVehicleItem.innerHTML = `
+                            <div class="flex justify-between items-center w-full">
+                                <span class="font-bold text-base">${model || 'N/A'}</span>
+                                <button class="remove-item-btn bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-xs transition-colors duration-200">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                </button>
+                            </div>
+                            <p class="text-xs text-gray-300">Owner: ${owner || 'N/A'}</p>
+                            <p class="text-xs text-gray-300">Plate: ${plate || 'N/A'}</p>
+                            <p class="text-xs ${impounded ? 'text-yellow-400' : 'text-gray-500'}">Impounded</p>
+                        `;
+                    vehiclesList.appendChild(newVehicleItem);
+
+                    newVehicleItem.querySelector('.remove-item-btn').addEventListener('click', (e) => {
+                        e.target.closest('li').remove();
+                        if (vehiclesList.children.length === 0) {
+                            vehiclesList.innerHTML = `<li class="p-2 border border-gray-700 rounded-md">NO VEHICLES INVOLVED</li>`;
+                        }
+                    });
+
+                    addVehicleModal.classList.add('hidden');
+                }
+            });
+
+
+            // ===============================================
             // NEW: Add Weapon Modal Functionality
             // ===============================================
             const addWeaponBtn = document.getElementById('add-weapon-btn');
@@ -638,11 +721,11 @@
                 }
 
                 weaponItems.forEach(item => {
-                    const isCustom = item.querySelector('p.text-green-400:first-of-type');
-                    const isF9 = item.querySelector('p.text-green-400:last-of-type');
+                    const customP = item.querySelector('p:nth-of-type(3)');
+                    const f9P = item.querySelector('p:nth-of-type(4)');
 
-                    // A more robust check for the text content to be safe
-                    if ((isCustom && isCustom.textContent === 'Custom') || (isF9 && isF9.textContent === 'F9')) {
+                    if ((customP && customP.textContent === 'Custom' && customP.classList.contains('text-green-400')) ||
+                        (f9P && f9P.textContent === 'F9' && f9P.classList.contains('text-green-400'))) {
                         hasSpecialWeapon = true;
                     }
                 });
@@ -1251,6 +1334,25 @@
                 return weapons;
             }
 
+            // NEW Function to extract vehicle details
+            function getVehicleData() {
+                const vehicles = [];
+                const vehicleList = document.getElementById('vehicles-list');
+                if (vehicleList.firstElementChild && vehicleList.firstElementChild.textContent.includes('NO VEHICLES INVOLVED')) {
+                    return vehicles;
+                }
+
+                vehicleList.querySelectorAll('li').forEach(vehicleItem => {
+                    const model = vehicleItem.querySelector('span').textContent.trim();
+                    const owner = vehicleItem.querySelector('p:nth-of-type(1)').textContent.replace('Owner: ', '').trim();
+                    const plate = vehicleItem.querySelector('p:nth-of-type(2)').textContent.replace('Plate: ', '').trim();
+                    const impounded = vehicleItem.querySelector('p:nth-of-type(3)').classList.contains('text-yellow-400');
+                    vehicles.push({ model, owner, plate, impounded });
+                });
+                return vehicles;
+            }
+
+
             // Function to extract criminal data and their charges
             function getCriminalData() {
                 const criminals = [];
@@ -1308,9 +1410,8 @@
                     const linkedReports = getListItems('linked-reports-list');
                     const evidenceLockerNumbers = getListItems('evidence-locker-list');
                     const tags = getListItems('tags-list');
-                    // UPDATED: Use the new function to get weapon data
                     const weapons = getWeaponData();
-                    const vehicles = getListItems('vehicles-list');
+                    const vehicles = getVehicleData();
                     const civilians = getListItems('civilians-list');
                     const officers = getListItems('officers-list');
                     const criminals = getCriminalData();
@@ -1323,11 +1424,13 @@
                         if (suspect.charges.length === 1) {
                             const chargeText = (suspect.charges[0].split(': ')[1] || suspect.charges[0]).trim();
                             caseTitle.textContent = `${suspect.name} - ${chargeText}`;
-                        } else {
+                        } else if (suspect.charges.length > 1) {
                             caseTitle.textContent = `${suspect.name} - Multiple`;
+                        } else {
+                            caseTitle.textContent = suspect.name;
                         }
                     } else {
-                        caseTitle.textContent = 'Suspect Name(s) - Multiple';
+                        caseTitle.textContent = 'Multiple Suspects';
                     }
 
 
@@ -1350,6 +1453,11 @@
                     // Format weapons data for the prompt
                     const weaponsText = weapons.length > 0
                         ? weapons.map(w => `Type: ${w.type}, Model: ${w.model}, Serial: ${w.serial}, Custom: ${w.isCustom ? 'Yes' : 'No'}, F9: ${w.isF9 ? 'Yes' : 'No'}`).join('\n')
+                        : 'None';
+
+                    // Format vehicle data for the prompt
+                    const vehiclesText = vehicles.length > 0
+                        ? vehicles.map(v => `Model: ${v.model}, Owner: ${v.owner}, Plate: ${v.plate}, Impounded: ${v.impounded ? 'Yes' : 'No'}`).join('\n')
                         : 'None';
 
                     // Create a simple string of all charges for the AI prompt
@@ -1380,7 +1488,8 @@
                             - **Tags:** ${tags.length > 0 ? tags.join(', ') : 'None'}
                             - **Weapons Involved:**
                             ${weaponsText}
-                            - **Vehicles Involved:** ${vehicles.length > 0 ? vehicles.join(', ') : 'None'}
+                            - **Vehicles Involved:**
+                            ${vehiclesText}
                             - **Civilians Involved:** ${civilians.length > 0 ? civilians.join(', ') : 'None'}
                             - **Officers Involved:** ${officers.length > 0 ? officers.join(', ') : 'None'}
                             - **Criminals Involved:**
@@ -1396,7 +1505,7 @@
                         const chatHistory = [];
                         chatHistory.push({ role: "user", parts: [{ text: prompt }] });
                         const payload = { contents: chatHistory };
-                        const apiKey = "AIzaSyAbU7k_19bBgnGpFtX742tYGwLySd_U3fI";
+                        const apiKey = "";
                         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
 
                         const response = await fetch(apiUrl, {
@@ -1437,6 +1546,126 @@
             });
 
             // ===============================================
+            // Local Storage Functionality
+            // ===============================================
+
+            const reportFieldsToSave = [
+                'caseTitle', 'report-description', 'postal-location', 'level-of-force',
+                'medical-treatment', 'gsr-test', 'legal-representation',
+                'mirandized', 'return-weapons', 'plea'
+            ];
+
+            const reportListsToSave = [
+                'evidence-list', 'linked-reports-list', 'evidence-locker-list',
+                'tags-list', 'weapons-list', 'vehicles-list', 'civilians-list',
+                'officers-list', 'criminals-list'
+            ];
+
+            function saveReportData() {
+                const data = {};
+                // Save fields
+                reportFieldsToSave.forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element.tagName === 'H1') {
+                        data[id] = element.textContent;
+                    } else {
+                        data[id] = element.value;
+                    }
+                });
+                // Save lists
+                reportListsToSave.forEach(id => {
+                    data[id] = document.getElementById(id).innerHTML;
+                });
+
+                localStorage.setItem('policeReportData', JSON.stringify(data));
+            }
+
+            function loadReportData() {
+                const savedData = localStorage.getItem('policeReportData');
+                if (savedData) {
+                    const data = JSON.parse(savedData);
+
+                    // Load fields
+                    reportFieldsToSave.forEach(id => {
+                        if (data[id]) {
+                            const element = document.getElementById(id);
+                            if (element.tagName === 'H1') {
+                                element.textContent = data[id];
+                            } else {
+                                element.value = data[id];
+                            }
+                        }
+                    });
+
+                    // Load lists
+                    reportListsToSave.forEach(id => {
+                        if (data[id]) {
+                            const listElement = document.getElementById(id);
+                            listElement.innerHTML = data[id];
+                            reAttachListEventListeners(listElement);
+                        }
+                    });
+
+                    updateReturnWeaponStatus();
+                }
+            }
+
+            function reAttachListEventListeners(listElement) {
+                // Re-attach remove buttons for simple lists
+                listElement.querySelectorAll('.remove-item-btn').forEach(button => {
+                    button.addEventListener('click', (e) => {
+                        const listItem = e.target.closest('li');
+                        const list = listItem.parentElement;
+                        listItem.remove();
+                        if (list.children.length === 0) {
+                            const placeholderText = list.closest('div').querySelector('h3').textContent.trim();
+                            list.innerHTML = `<li class="p-2 border border-gray-700 rounded-md">NO ${placeholderText.toUpperCase()}</li>`;
+                        }
+                        if (list.id === 'weapons-list') {
+                            updateReturnWeaponStatus();
+                        }
+                    });
+                });
+
+                // Re-attach event listeners specific to the criminals list
+                if (listElement.id === 'criminals-list') {
+                    listElement.querySelectorAll('.add-charge-btn').forEach(button => {
+                        button.addEventListener('click', () => {
+                            currentChargesList = button.closest('li').querySelector('.charges-list');
+                            addChargeModal.classList.remove('hidden');
+                            if (allCharges.length === 0) {
+                                fetchChargeData();
+                            } else {
+                                populateChargeList(allCharges);
+                            }
+                        });
+                    });
+                    listElement.querySelectorAll('.remove-charge-btn').forEach(button => {
+                        button.addEventListener('click', (e) => {
+                            const chargeItem = e.target.closest('li');
+                            const chargesList = chargeItem.parentElement;
+                            chargeItem.remove();
+                            if (chargesList.children.length === 0) {
+                                chargesList.innerHTML = `<li class="text-sm">No charges added yet.</li>`;
+                            }
+                        });
+                    });
+                }
+            }
+
+
+            function clearReportData() {
+                localStorage.removeItem('policeReportData');
+            }
+
+            // Load data on page load
+            loadReportData();
+
+            // Save data before leaving the page
+            window.addEventListener('beforeunload', saveReportData);
+
+
+            // ===============================================
             // Delete Button and Confirmation Modal Functionality
             // ===============================================
             const deleteBtn = document.getElementById('deleteBtn');
@@ -1459,6 +1688,8 @@
                 // Here you would add the logic to actually delete the report.
                 // For this example, we'll just log a message and reset the form.
                 console.log("Report deleted.");
+
+                clearReportData(); // Clear from local storage
 
                 // Close the modal
                 deleteConfirmationModal.classList.add('hidden');
