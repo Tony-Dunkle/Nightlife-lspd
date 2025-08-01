@@ -264,7 +264,7 @@
                 <div class="bg-gray-800 p-4 rounded-lg shadow-lg">
                     <div class="flex justify-between items-center mb-2">
                         <h3 class="font-semibold text-lg">Civilians Involved</h3>
-                        <button class="add-item-btn bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-1 px-3 rounded-full transition-colors duration-200" data-list-id="civilians-list">+ Add</button>
+                        <button id="add-civilian-btn" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-1 px-3 rounded-full transition-colors duration-200">+ Add</button>
                     </div>
                     <ul id="civilians-list" class="space-y-1 text-sm text-gray-400">
                         <li class="p-2 border border-gray-700 rounded-md">NO CIVILIANS INVOLVED</li>
@@ -417,7 +417,7 @@
     </div>
 
     <!-- Modals for adding items (reused components) -->
-    <!-- Modal for adding Evidence, Linked Reports, Tags, Civilians -->
+    <!-- Modal for adding Evidence, Linked Reports, Tags -->
     <div id="addItemModal" class="modal-overlay hidden">
         <div class="modal-content">
             <h3 class="text-xl font-bold text-gray-100 mb-4">Add Item</h3>
@@ -425,6 +425,24 @@
             <div class="flex justify-end space-x-2">
                 <button id="closeAddItemModalBtn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">Cancel</button>
                 <button id="saveAddItemBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">Add</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NEW: Modal for adding a Civilian -->
+    <div id="addCivilianModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3 class="text-xl font-bold text-gray-100 mb-4">Add Civilian</h3>
+            <input type="text" id="civilianNameInput" placeholder="Enter civilian's name..." class="w-full p-3 mb-2 bg-gray-700 text-white rounded-md border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-blue-600 transition-colors duration-200">
+            <select id="civilianRoleSelect" class="w-full p-3 mb-4 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600">
+                <option value="Victim">Victim</option>
+                <option value="Witness">Witness</option>
+                <option value="Caller">Caller</option>
+                <option value="Informant">Informant</option>
+            </select>
+            <div class="flex justify-end space-x-2">
+                <button id="closeAddCivilianModalBtn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">Cancel</button>
+                <button id="saveAddCivilianBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">Add</button>
             </div>
         </div>
     </div>
@@ -691,6 +709,58 @@
                     });
 
                     addVehicleModal.classList.add('hidden');
+                }
+            });
+
+            // ===============================================
+            // NEW: Add Civilian Modal Functionality
+            // ===============================================
+            const addCivilianBtn = document.getElementById('add-civilian-btn');
+            const addCivilianModal = document.getElementById('addCivilianModal');
+            const closeAddCivilianModalBtn = document.getElementById('closeAddCivilianModalBtn');
+            const saveAddCivilianBtn = document.getElementById('saveAddCivilianBtn');
+            const civilianNameInput = document.getElementById('civilianNameInput');
+            const civilianRoleSelect = document.getElementById('civilianRoleSelect');
+            const civiliansList = document.getElementById('civilians-list');
+
+            addCivilianBtn.addEventListener('click', () => {
+                civilianNameInput.value = '';
+                civilianRoleSelect.value = 'Victim';
+                addCivilianModal.classList.remove('hidden');
+                civilianNameInput.focus();
+            });
+
+            closeAddCivilianModalBtn.addEventListener('click', () => {
+                addCivilianModal.classList.add('hidden');
+            });
+
+            saveAddCivilianBtn.addEventListener('click', () => {
+                const name = civilianNameInput.value.trim();
+                const role = civilianRoleSelect.value;
+
+                if (name) {
+                    if (civiliansList.firstElementChild && civiliansList.firstElementChild.textContent.includes('NO CIVILIANS INVOLVED')) {
+                        civiliansList.innerHTML = '';
+                    }
+
+                    const newCivilianItem = document.createElement('li');
+                    newCivilianItem.className = "flex justify-between items-center p-2 border border-gray-700 rounded-md bg-gray-700 text-white";
+                    newCivilianItem.innerHTML = `
+                            <span>${name} - <span class="text-gray-400">${role}</span></span>
+                            <button class="remove-item-btn bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-xs transition-colors duration-200">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                            </button>
+                        `;
+                    civiliansList.appendChild(newCivilianItem);
+
+                    newCivilianItem.querySelector('.remove-item-btn').addEventListener('click', (e) => {
+                        e.target.closest('li').remove();
+                        if (civiliansList.children.length === 0) {
+                            civiliansList.innerHTML = `<li class="p-2 border border-gray-700 rounded-md">NO CIVILIANS INVOLVED</li>`;
+                        }
+                    });
+
+                    addCivilianModal.classList.add('hidden');
                 }
             });
 
@@ -1352,6 +1422,21 @@
                 return vehicles;
             }
 
+            // NEW function to get civilian data
+            function getCivilianData() {
+                const civilians = [];
+                const civilianList = document.getElementById('civilians-list');
+                if (civilianList.firstElementChild && civilianList.firstElementChild.textContent.includes('NO CIVILIANS INVOLVED')) {
+                    return civilians;
+                }
+                civilianList.querySelectorAll('li').forEach(item => {
+                    const text = item.querySelector('span').textContent;
+                    const [name, role] = text.split(' - ');
+                    civilians.push({ name: name.trim(), role: role.trim() });
+                });
+                return civilians;
+            }
+
 
             // Function to extract criminal data and their charges
             function getCriminalData() {
@@ -1412,7 +1497,7 @@
                     const tags = getListItems('tags-list');
                     const weapons = getWeaponData();
                     const vehicles = getVehicleData();
-                    const civilians = getListItems('civilians-list');
+                    const civilians = getCivilianData();
                     const officers = getListItems('officers-list');
                     const criminals = getCriminalData();
 
@@ -1460,6 +1545,11 @@
                         ? vehicles.map(v => `Model: ${v.model}, Owner: ${v.owner}, Plate: ${v.plate}, Impounded: ${v.impounded ? 'Yes' : 'No'}`).join('\n')
                         : 'None';
 
+                    // Format civilian data for the prompt
+                    const civiliansText = civilians.length > 0
+                        ? civilians.map(c => `Name: ${c.name}, Role: ${c.role}`).join('\n')
+                        : 'None';
+
                     // Create a simple string of all charges for the AI prompt
                     const allChargesText = criminals.flatMap(c => c.charges).join(', ');
 
@@ -1490,7 +1580,8 @@
                             ${weaponsText}
                             - **Vehicles Involved:**
                             ${vehiclesText}
-                            - **Civilians Involved:** ${civilians.length > 0 ? civilians.join(', ') : 'None'}
+                            - **Civilians Involved:**
+                            ${civiliansText}
                             - **Officers Involved:** ${officers.length > 0 ? officers.join(', ') : 'None'}
                             - **Criminals Involved:**
                             ${criminals.length > 0 ? criminals.map(c => `  - Name: ${c.name}, Fingerprint: ${c.fingerprint}, Charges: ${c.charges.length > 0 ? c.charges.join(', ') : 'None'}`).join('\n') : 'None'}
