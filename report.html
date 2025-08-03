@@ -93,15 +93,21 @@
             transition: transform 0.3s ease, opacity 0.3s ease;
         }
 
+        #addChargeModal .modal-content {
+            width: 80vw;
+            max-width: 1200px;
+        }
+
+
         .modal-overlay.hidden .modal-content {
             transform: translateY(-50px);
             opacity: 0;
         }
         /* Style for selected officers and charges */
         .officer-item.selected, .charge-item.selected {
-            background-color: #374151; /* A solid gray to indicate selection */
+            background-color: #dc2626; /* A solid red to indicate selection */
             color: #ffffff;
-            border: 2px solid #4b5563;
+            border: 2px solid #ef4444;
             font-weight: 600;
         }
     </style>
@@ -516,7 +522,7 @@
                 <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
             </div>
             <!-- The list of charges will be populated here -->
-            <div id="charge-list-container" class="space-y-2 max-h-64 overflow-y-auto mb-4 p-2 bg-gray-700 rounded-md">
+            <div id="charge-list-container" class="space-y-4 max-h-[60vh] overflow-y-auto mb-4 p-2 bg-gray-800 rounded-md">
                 <!-- Charges will be dynamically added here -->
             </div>
             <!-- Error message container -->
@@ -1102,7 +1108,7 @@
             let selectedCharges = [];
 
             // Charge List spreadsheet configuration
-            const chargesSheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSYcwC9pL7T2jDPO1erEsrKCtdqxROKmhcv1KzvcpdOAqRRcdkUedq04ge1sbFN-52MtgKAorKeMyOK/pub?gid=1243525972&single=true&output=csv';
+            const chargesSheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQa6HZQ9JM5Unzwe4zZDX8A21m6zV4oGvDuEbSEqA9f3m3CqplUUUlmCScNHf79a8Sr1nem0div9YT2/pub?output=csv';
 
             // Function to fetch and parse the charge list data
             async function fetchChargeData() {
@@ -1137,42 +1143,89 @@
                 }
             }
 
+            // A more robust CSV line parser that handles quoted fields
+            function parseCsvLine(line) {
+                const result = [];
+                let current = '';
+                let inQuotes = false;
+                for (let i = 0; i < line.length; i++) {
+                    const char = line[i];
+                    if (char === '"' && (i === 0 || line[i - 1] !== '\\')) { // Handle escaped quotes later if needed
+                        inQuotes = !inQuotes;
+                    } else if (char === ',' && !inQuotes) {
+                        result.push(current.trim());
+                        current = '';
+                    } else {
+                        current += char;
+                    }
+                }
+                result.push(current.trim());
+                return result;
+            }
+
+
             // Function to parse the charge CSV and get title code and description
             function parseChargeCSV(csv) {
                 const lines = csv.split('\n');
                 const charges = [];
-                let titleCodeIndex = -1;
-                let descriptionIndex = -1;
-                let dataStartIndex = -1;
+                let headers = [];
+                let headerFound = false;
+                let dataStartIndex = 0;
 
-                // Dynamically find the header row containing 'Title Code' and 'Charge Description'
-                for (let i = 0; i < lines.length && i < 15; i++) {
-                    const headerLine = lines[i];
-                    if (headerLine) {
-                        const headers = headerLine.split(',').map(header => header.trim().replace(/^"|"$/g, ''));
-                        titleCodeIndex = headers.findIndex(header => header.toLowerCase() === 'title code');
-                        descriptionIndex = headers.findIndex(header => header.toLowerCase() === 'charge description');
-                        if (titleCodeIndex !== -1 && descriptionIndex !== -1) {
-                            dataStartIndex = i + 1; // The data starts on the next line
-                            break; // Stop searching once the header is found
-                        }
+                // Dynamically find the header row
+                for (let i = 0; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    if (line.toLowerCase().includes('penal code') && line.toLowerCase().includes('charge name')) {
+                        headers = parseCsvLine(line).map(h => h.toLowerCase().replace(/^"|"$/g, '').trim());
+                        dataStartIndex = i + 1;
+                        headerFound = true;
+                        break;
                     }
                 }
 
-                if (titleCodeIndex !== -1 && descriptionIndex !== -1) {
-                    for (let i = dataStartIndex; i < lines.length; i++) {
-                        const line = lines[i].trim();
-                        if (line) {
-                            const columns = line.split(',').map(col => col.trim().replace(/^"|"$/g, ''));
-                            const titleCode = columns[titleCodeIndex];
-                            const description = columns[descriptionIndex];
+                if (!headerFound) {
+                    console.error("Header row with 'Penal Code' and 'Charge Name' not found.");
+                    return [];
+                }
 
-                            if (titleCode && description) {
-                                // Create a combined string for display
-                                const fullCharge = `${titleCode}: ${description}`;
-                                charges.push(fullCharge);
-                            }
-                        }
+                const penalCodeIndex = headers.indexOf('penal code');
+                const chargeNameIndex = headers.indexOf('charge name');
+                const chargeDescriptionIndex = headers.indexOf('charge description');
+                const jailTimeIndex = headers.indexOf('jail time (months)');
+                const fineAmountIndex = headers.indexOf('fine amount');
+                const felonyIndex = headers.indexOf('felony/infraction');
+
+                let currentCategory = "Uncategorized";
+
+                for (let i = dataStartIndex; i < lines.length; i++) {
+                    const line = lines[i].trim();
+                    if (!line) continue;
+
+                    // Check if the line is a category header
+                    if (line.startsWith('---') && line.endsWith('---')) {
+                        currentCategory = line.replace(/---/g, '').trim();
+                        continue;
+                    }
+
+                    const columns = parseCsvLine(line);
+
+                    const penalCode = columns[penalCodeIndex] ? columns[penalCodeIndex].replace(/^"|"$/g, '').trim() : '';
+                    const chargeName = columns[chargeNameIndex] ? columns[chargeNameIndex].replace(/^"|"$/g, '').trim() : '';
+                    const chargeDescription = columns[chargeDescriptionIndex] ? columns[chargeDescriptionIndex].replace(/^"|"$/g, '').trim() : '';
+                    const jailTime = columns[jailTimeIndex] ? columns[jailTimeIndex].replace(/^"|"$/g, '').trim() : 'N/A';
+                    const fineAmount = columns[fineAmountIndex] ? columns[fineAmountIndex].replace(/^"|"$/g, '').trim() : 'N/A';
+                    const felonyStatus = columns[felonyIndex] ? columns[felonyIndex].replace(/^"|"$/g, '').trim() : 'N/A';
+
+                    if (penalCode && chargeName) {
+                        charges.push({
+                            penalCode,
+                            chargeName,
+                            chargeDescription,
+                            jailTime,
+                            fineAmount,
+                            felonyStatus,
+                            category: currentCategory
+                        });
                     }
                 }
                 return charges;
@@ -1181,26 +1234,62 @@
             // Function to populate the modal with the list of charges
             function populateChargeList(chargesToDisplay) {
                 chargeListContainer.innerHTML = '';
-                chargesToDisplay.forEach(charge => {
-                    const chargeElement = document.createElement('div');
-                    chargeElement.className = 'charge-item p-2 rounded-md cursor-pointer hover:bg-gray-600 transition-colors duration-200 border border-gray-700';
-                    chargeElement.textContent = charge;
 
-                    if (selectedCharges.includes(charge)) {
-                        chargeElement.classList.add('selected');
-                    }
+                // Group charges by category
+                const groupedCharges = chargesToDisplay.reduce((acc, charge) => {
+                    (acc[charge.category] = acc[charge.category] || []).push(charge);
+                    return acc;
+                }, {});
 
-                    chargeElement.addEventListener('click', () => {
-                        chargeElement.classList.toggle('selected');
-                        if (chargeElement.classList.contains('selected')) {
-                            selectedCharges.push(charge);
-                        } else {
-                            selectedCharges = selectedCharges.filter(name => name !== charge);
+                for (const category in groupedCharges) {
+                    const categoryContainer = document.createElement('div');
+                    categoryContainer.className = 'mb-4';
+
+                    const categoryTitle = document.createElement('h4');
+                    categoryTitle.className = 'text-lg font-bold text-white mb-2 border-b border-gray-600 pb-1';
+                    categoryTitle.textContent = category;
+                    categoryContainer.appendChild(categoryTitle);
+
+                    const grid = document.createElement('div');
+                    grid.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2';
+
+                    groupedCharges[category].forEach(charge => {
+                        const chargeElement = document.createElement('div');
+                        chargeElement.className = 'charge-item p-3 rounded-md cursor-pointer bg-gray-700 hover:bg-red-700 transition-colors duration-200 border border-gray-600 flex flex-col justify-between';
+                        chargeElement.dataset.charge = `${charge.penalCode}: ${charge.chargeName}`;
+
+                        chargeElement.innerHTML = `
+                                <div>
+                                    <p class="font-bold text-white">${charge.chargeName}</p>
+                                    <p class="text-xs text-gray-400">${charge.penalCode}</p>
+                                    <p class="text-sm text-gray-300 mt-2">${charge.chargeDescription}</p>
+                                </div>
+                                <div class="text-right mt-2">
+                                    <p class="text-xs text-gray-300">${charge.jailTime} Months / ${charge.fineAmount}</p>
+                                    <p class="text-xs font-semibold ${charge.felonyStatus && charge.felonyStatus.toLowerCase() === 'felony' ? 'text-red-400' : 'text-green-400'}">${charge.felonyStatus || ''}</p>
+                                </div>
+                            `;
+
+
+                        if (selectedCharges.includes(chargeElement.dataset.charge)) {
+                            chargeElement.classList.add('selected');
                         }
-                        saveAddChargeBtn.disabled = selectedCharges.length === 0;
+
+                        chargeElement.addEventListener('click', () => {
+                            chargeElement.classList.toggle('selected');
+                            const chargeText = chargeElement.dataset.charge;
+                            if (chargeElement.classList.contains('selected')) {
+                                selectedCharges.push(chargeText);
+                            } else {
+                                selectedCharges = selectedCharges.filter(name => name !== chargeText);
+                            }
+                            saveAddChargeBtn.disabled = selectedCharges.length === 0;
+                        });
+                        grid.appendChild(chargeElement);
                     });
-                    chargeListContainer.appendChild(chargeElement);
-                });
+                    categoryContainer.appendChild(grid);
+                    chargeListContainer.appendChild(categoryContainer);
+                }
             }
 
             addCriminalBtn.addEventListener('click', () => {
@@ -1281,7 +1370,7 @@
             chargeSearchInput.addEventListener('input', (e) => {
                 const searchTerm = e.target.value.toLowerCase();
                 const filteredCharges = allCharges.filter(charge =>
-                    charge.toLowerCase().includes(searchTerm)
+                    charge.chargeName.toLowerCase().includes(searchTerm) || charge.penalCode.toLowerCase().includes(searchTerm)
                 );
                 populateChargeList(filteredCharges);
             });
