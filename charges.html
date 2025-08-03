@@ -9,10 +9,20 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        html, body {
+            height: 100%;
+        }
+
         body {
             font-family: 'Inter', sans-serif;
             background-color: #0d1117; /* A dark github-like background */
             color: #c9d1d9; /* Light text color */
+            display: flex;
+            flex-direction: column;
+        }
+
+        main {
+            flex-grow: 1; /* This makes the main content area expand */
             padding-bottom: 350px; /* Add padding to prevent calculator from overlapping content */
         }
         /* Custom scrollbar for a more integrated look */
@@ -185,7 +195,7 @@
     </header>
 
     <!-- Main Content Area -->
-    <main class="flex-1 p-4 sm:p-6 lg:p-8">
+    <main class="p-4 sm:p-6 lg:p-8">
         <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
             <div><h1 class="text-3xl font-bold text-white">Offences</h1></div>
             <div class="flex items-center mt-4 sm:mt-0 w-full sm:w-auto">
@@ -263,7 +273,7 @@
     </div>
 
     <!-- Footer Section -->
-    <footer class="bg-gray-800 text-white py-10 px-6 md:px-12 rounded-t-lg mt-8">
+    <footer class="bg-gray-800 text-white py-10 px-6 md:px-12 rounded-t-lg">
         <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
                 <h4 class="text-xl font-semibold mb-4 text-gray-300">Internal Contacts</h4>
@@ -535,7 +545,10 @@
                 renderOffenses(filteredOffenses);
 
                 // Expand all categories when searching
-                document.querySelectorAll('.offense-grid').forEach(grid => grid.classList.remove('hidden'));
+                document.querySelectorAll('.offense-grid').forEach(grid => {
+                    grid.classList.remove('hidden');
+                    grid.classList.add('grid');
+                });
                 document.querySelectorAll('.chevron-icon').forEach(icon => icon.classList.add('rotate-180'));
 
                 // Re-apply selected class to filtered cards
