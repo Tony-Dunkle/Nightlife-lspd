@@ -1,813 +1,508 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UPD Training Manual</title>
-    <link rel="icon" href="LSPD.png" type="image/png" onerror="this.onerror=null; this.href='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';"> <!-- Favicon added -->
+    <link rel="icon" href="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
-        /* Universal box-sizing for easier layout calculations */
-        *, *::before, *::after {
-            box-sizing: border-box;
+        /* Define CSS variables for theming */
+        :root {
+            --bg-primary: #f8fafc; /* slate-50 */
+            --bg-secondary: #ffffff; /* white */
+            --bg-tertiary: #f1f5f9; /* slate-100 */
+            --text-primary: #0f172a; /* slate-900 */
+            --text-secondary: #475569; /* slate-600 */
+            --border-color: #e2e8f0; /* slate-200 */
+            --accent-color: #3b82f6; /* blue-500 */
+        }
+
+        html.dark {
+            --bg-primary: #0f172a; /* slate-900 */
+            --bg-secondary: #1e293b; /* slate-800 */
+            --bg-tertiary: #334155; /* slate-700 */
+            --text-primary: #f1f5f9; /* slate-100 */
+            --text-secondary: #94a3b8; /* slate-400 */
+            --border-color: #334155; /* slate-700 */
+            --accent-color: #60a5fa; /* blue-400 */
         }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8f8f8;
-            color: #333;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
             display: flex;
             flex-direction: column;
-            min-height: 100vh; /* Changed to 100vh to ensure footer sticks to bottom */
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         main {
             flex-grow: 1;
         }
 
+        /* Scrollbar styles */
         ::-webkit-scrollbar {
-            width: 10px;
+            width: 12px;
         }
 
         ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 5px;
+            background: var(--bg-tertiary);
         }
 
         ::-webkit-scrollbar-thumb {
             background: #888;
-            border-radius: 5px;
+            border-radius: 6px;
         }
 
             ::-webkit-scrollbar-thumb:hover {
                 background: #555;
             }
 
-        .highlight {
-            background-color: yellow;
-            font-weight: bold;
+        html.dark ::-webkit-scrollbar-thumb {
+            background: #555;
         }
 
-        .current-highlight {
-            background-color: #87CEEB; /* Sky Blue for current highlight */
-            font-weight: bold;
-            border: 1px solid #1e3a8a; /* Blue border for emphasis */
-            padding: 2px 4px;
-            border-radius: 3px;
+            html.dark ::-webkit-scrollbar-thumb:hover {
+                background: #777;
+            }
+
+        /* Document Card Styles */
+        .doc-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
         }
 
-        .ten-code-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 1rem;
+            .doc-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            }
+
+        html.dark .doc-card:hover {
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.15);
         }
 
-            .ten-code-table th, .ten-code-table td {
-                border: 1px solid #ccc;
-                padding: 0.5rem;
-                text-align: left;
-            }
-
-            .ten-code-table th {
-                background-color: #e0e7ff;
-                color: #1e3a8a;
-            }
-
-            .ten-code-table tr:nth-child(even) {
-                background-color: #f8f8f8;
-            }
-
-        /* Styles to make the fetched Google Doc content look better */
-        /* This container is inside the modal-body and holds the actual document content */
-        #sop-container {
-            max-width: 800px; /* Max width for content within the modal body */
-            margin: 0 auto; /* Center the content horizontally */
-            padding: 0; /* Padding handled by modal-body */
-            box-sizing: border-box; /* Include padding in the width calculation */
-            text-align: left; /* Ensure text alignment is consistent by default */
-            word-wrap: break-word; /* Break long words */
-            overflow-x: hidden; /* Prevent horizontal scroll within content if something is too wide */
-        }
-
-            /* Aggressive resets for ALL elements within sop-container to strip Google Docs' inline styles */
-            /* Target common Google Docs elements and force styles */
-            #sop-container div,
-            #sop-container span,
-            #sop-container p,
-            #sop-container ul,
-            #sop-container ol,
-            #sop-container li,
-            #sop-container h1,
-            #sop-container h2,
-            #sop-container h3,
-            #sop-container h4,
-            #sop-container h5,
-            #sop-container h6,
-            #sop-container table,
-            #sop-container tr,
-            #sop-container th,
-            #sop-container td {
-                margin: 0 !important;
-                padding: 0 !important;
-                border: none !important;
-                outline: none !important;
-                width: auto !important;
-                min-width: auto !important;
-                max-width: 100% !important;
-                height: auto !important;
-                position: static !important; /* Remove any absolute/relative positioning */
-                float: none !important; /* Remove floats */
-                clear: both !important; /* Clear any floats */
-                background: transparent !important; /* Remove background colors */
-                text-decoration: none !important; /* Remove underlines by default */
-                vertical-align: baseline !important; /* Reset vertical alignment */
-                box-shadow: none !important; /* Remove shadows */
-                text-indent: 0 !important; /* Remove text indent */
-                word-break: break-word; /* Ensure words break to prevent overflow */
-                white-space: normal; /* Ensure normal white-space handling */
-                display: revert; /* Revert display property to its default for the tag */
-                /* Revert font properties to allow Google Docs' inline styles to take over */
-                font-size: revert;
-                line-height: revert;
-                font-weight: revert;
-                color: revert;
-                text-align: revert; /* Revert text-align to allow specific rules below to apply */
-            }
-
-            /* Specific display overrides for common tags */
-            #sop-container div {
-                display: block !important;
-            }
-
-            #sop-container span {
-                display: inline !important;
-            }
-            /* Spans should be inline */
-            #sop-container p {
-                display: block !important;
-                margin-bottom: 1rem !important;
-            }
-            /* Paragraphs are blocks with margin */
-            #sop-container ul {
-                display: block !important;
-                list-style-type: none !important;
-                margin-left: 1.5rem !important;
-                padding-left: 0.5rem !important;
-            }
-
-            #sop-container ol {
-                display: block !important;
-                list-style-type: decimal !important;
-                margin-left: 1.5rem !important;
-                padding-left: 0.5rem !important;
-            }
-
-            #sop-container li {
-                display: list-item !important;
-                margin-bottom: 0.5rem !important;
-            }
-
-            #sop-container table {
-                display: table !important;
-                border-collapse: collapse !important;
-            }
-
-            #sop-container tr {
-                display: table-row !important;
-            }
-
-            #sop-container th, #sop-container td {
-                display: table-cell !important;
-                border: 1px solid #ccc !important;
-                padding: 0.5rem !important;
-            }
-
-            /* Re-apply specific styles for semantic elements, allowing Google Docs' font properties */
-            /* These rules are less aggressive on font properties to allow original formatting to show */
-            #sop-container h1, #sop-container h2, #sop-container h3, #sop-container h4, #sop-container h5, #sop-container h6 {
-                font-weight: 600; /* Allow Google Docs' font-weight */
-                color: #1e3a8a; /* Allow Google Docs' color */
-                margin-top: 1.5rem !important;
-                margin-bottom: 0.75rem !important;
-                line-height: 1.3; /* Allow Google Docs' line-height */
-            }
-            /* Specific font sizes for headings, allowing Google Docs to override if its !important */
-            #sop-container h1 {
-                font-size: 2.25rem;
-            }
-
-            #sop-container h2 {
-                font-size: 2rem;
-            }
-
-            #sop-container h3 {
-                font-size: 1.75rem;
-            }
-
-            #sop-container h4 {
-                font-size: 1.5rem;
-            }
-
-            #sop-container h5 {
-                font-size: 1.25rem;
-            }
-
-            #sop-container h6 {
-                font-size: 1rem;
-            }
-
-            #sop-container p {
-                margin-bottom: 1rem !important;
-                line-height: 1.6 !important;
-                color: #333 !important;
-                text-align: left !important; /* Ensure paragraphs are left-aligned by default */
-            }
-
-            #sop-container ul {
-                list-style-type: none !important;
-                margin-left: 1.5rem !important;
-                margin-bottom: 1rem !important;
-                text-align: left !important;
-                padding-left: 0.5rem !important;
-            }
-
-            #sop-container ol {
-                list-style-type: decimal !important;
-                margin-left: 1.5rem !important;
-                margin-bottom: 1rem !important;
-                text-align: left !important;
-                padding-left: 0.5rem !important;
-            }
-
-            #sop-container li {
-                margin-bottom: 0.5rem !important;
-                line-height: 1.5 !important;
-            }
-
-            #sop-container pre {
-                background-color: #f0f0f0 !important;
-                padding: 1rem !important;
-                border-radius: 0.5rem !important;
-                overflow-x: auto !important;
-                margin-bottom: 1rem !important;
-                color: #333 !important; /* Ensure preformatted text is readable */
-                text-align: left !important; /* Ensure preformatted text is left-aligned */
-                white-space: pre-wrap !important; /* Allow text to wrap within pre tags */
-            }
-
-            /* Centering and sizing images within the fetched content */
-            #sop-container img {
-                display: block !important;
-                margin: 1.5rem auto !important;
-                max-width: 100% !important;
-                height: auto !important;
-                box-sizing: border-box !important;
-            }
-
-            /* Re-introduce specific formatting like bold/italic that might be stripped by 'all: unset' or aggressive resets */
-            #sop-container b, #sop-container strong {
-                font-weight: bold !important;
-            }
-
-            #sop-container i, #sop-container em {
-                font-style: italic !important;
-            }
-
-            #sop-container u {
-                text-decoration: underline !important;
-            }
-
-            #sop-container a {
-                color: #1e3a8a !important; /* Blue for links */
-                text-decoration: underline !important;
-            }
-
-                #sop-container a:hover {
-                    color: #0056b3 !important;
-                }
-
-            /* Highlight for search */
-            #sop-container .highlight {
-                background-color: yellow !important;
-                font-weight: bold !important;
-                color: #333 !important; /* Ensure highlight text is visible */
-            }
-
-        /* Full-screen Modal Styles */
+        /* Modal Styles */
         .modal {
-            display: none; /* Hidden by default */
-            position: fixed; /* Stay in place */
-            z-index: 1000; /* Sit on top */
-            left: 0;
-            top: 0;
-            width: 100%; /* Full width */
-            height: 100%; /* Full height */
-            overflow: hidden; /* Hide overflow from the modal itself */
-            background-color: rgba(0,0,0,0.6); /* Black w/ 60% opacity */
-            justify-content: center;
-            align-items: center;
-            padding: 0; /* No padding on the modal itself */
+            display: none;
+            background-color: rgba(0,0,0,0.7);
         }
 
         .modal-content {
-            background-color: #fefefe;
-            width: 100%; /* Take full width of parent (modal) */
-            height: 100%; /* Take full height of parent (modal) */
-            margin: 0; /* Remove margin */
-            padding: 0; /* Remove padding here, will apply to header/body */
-            border-radius: 0; /* Remove border-radius for full screen */
-            overflow: hidden; /* Control internal scrolling with modal-body */
-            position: relative;
-            box-shadow: none; /* No shadow for full screen */
-            display: flex;
-            flex-direction: column;
+            background-color: var(--bg-secondary);
         }
 
         .modal-header {
-            display: flex;
-            justify-content: space-between; /* Distribute items with space between them */
-            align-items: center;
-            padding: 15px 20px; /* Padding for header */
-            border-bottom: 1px solid #eee;
-            background-color: #fff; /* White background for header */
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1); /* Subtle shadow for header */
-            flex-shrink: 0; /* Prevent header from shrinking */
-            gap: 1rem; /* Add gap between header items */
+            border-bottom: 1px solid var(--border-color);
+            background-color: var(--bg-secondary);
         }
-
-            .modal-header h2 {
-                margin: 0;
-                font-size: 1.8rem;
-                color: #ffffff; /* Changed to white */
-                flex-shrink: 0; /* Prevent title from shrinking */
-            }
-
-        .close-button {
-            color: #aaa;
-            font-size: 28px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-            padding: 5px 10px; /* Make close button easier to click */
-            border-radius: 4px;
-            flex-shrink: 0; /* Prevent close button from shrinking */
-        }
-
-            .close-button:hover,
-            .close-button:focus {
-                color: #333;
-                background-color: #f0f0f0;
-                text-decoration: none;
-            }
 
         .modal-body {
-            flex-grow: 1; /* Allows body to take remaining space and be scrollable */
-            overflow-y: auto; /* Enable vertical scroll */
-            overflow-x: hidden; /* Hide horizontal scroll */
-            padding: 20px 40px; /* Added generous padding to the modal body */
-            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+            background-color: var(--bg-primary);
         }
-        /* Media queries for responsive padding on modal-body */
-        @media (max-width: 768px) {
-            .modal-body {
-                padding: 15px 20px; /* Less padding on smaller screens */
+
+        /* Fetched Google Doc Content Styling */
+        #sop-container {
+            max-width: 800px;
+            margin: 0 auto;
+            word-wrap: break-word;
+        }
+
+            #sop-container * {
+                color: var(--text-primary) !important;
+                background: transparent !important;
+                border-color: var(--border-color) !important;
+                line-height: 1.7;
             }
+
+            #sop-container h1, #sop-container h2, #sop-container h3, #sop-container h4, #sop-container h5, #sop-container h6 {
+                color: var(--accent-color) !important;
+                margin-top: 1.5rem !important;
+                margin-bottom: 0.75rem !important;
+            }
+
+            #sop-container a {
+                color: var(--accent-color) !important;
+                text-decoration: underline !important;
+            }
+
+            #sop-container pre {
+                background-color: var(--bg-tertiary) !important;
+                padding: 1rem !important;
+                border-radius: 0.5rem !important;
+            }
+
+            #sop-container img {
+                border-radius: 0.5rem;
+                box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            }
+
+            #sop-container .highlight {
+                background-color: yellow !important;
+                color: #1f2937 !important;
+                font-weight: bold !important;
+            }
+
+            #sop-container .current-highlight {
+                background-color: #87CEEB !important;
+                color: #1f2937 !important;
+                border: 2px solid var(--accent-color) !important;
+            }
+
+        /* Mobile Nav Specific Styles */
+        #nav-links.nav-mobile-active {
+            display: flex !important;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: #1e40af; /* A slightly lighter blue for the dropdown */
+            flex-direction: column;
+            padding: 1rem;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
         }
-        /* Ensure the main header title is white */
-        header h1 {
-            color: #ffffff !important;
+
+        html.dark #nav-links.nav-mobile-active {
+            background-color: #111827;
         }
     </style>
 </head>
 <body class="antialiased">
 
     <!-- Header Section -->
-    <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex items-center justify-between sticky top-0 z-50 rounded-b-lg relative">
+    <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex items-center justify-between sticky top-0 z-50">
         <div class="flex items-center">
-            <!-- UPD Logo -->
-            <img src="LSPD.png" alt="UPD Logo" class="mr-4 w-16 h-16 object-contain" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
-            <!-- Responsive font size: text-2xl for small screens, text-3xl for medium screens and up -->
+            <img src="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png" alt="UPD Logo" class="mr-4 w-16 h-16 object-contain">
             <h1 class="text-2xl md:text-3xl font-bold">Unified Police Department</h1>
         </div>
 
-        <!-- Hamburger Menu Button for Mobile -->
-        <button id="hamburgerBtn" class="hamburger-menu text-white focus:outline-none md:hidden">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-4 6h4"></path>
-            </svg>
-        </button>
+        <div class="flex items-center">
+            <!-- Navigation Menu (Desktop) -->
+            <nav id="nav-links" class="hidden md:flex items-center">
+                <ul class="flex flex-row space-x-4 text-sm font-medium">
+                    <li><a href="index.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Dashboard</a></li>
+                    <li><a href="SOP.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">SOPs</a></li>
+                    <li><a href="training.html" class="text-white bg-blue-700 font-semibold py-1 px-2 rounded-md">Training</a></li>
+                    <li><a href="forms.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Forms</a></li>
+                    <li><a href="roster.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Roster</a></li>
+                    <li><a href="hr.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">HR Info</a></li>
+                </ul>
+            </nav>
 
-        <!-- Navigation Menu -->
-        <!-- Added md:flex-grow to nav to allow it to take available space -->
-        <nav class="nav-links md:flex md:flex-grow md:justify-end">
-            <!-- Changed md:space-x-8 to md:space-x-4 and added md:flex-wrap for stacking -->
-            <ul class="flex flex-col md:flex-row md:flex-wrap md:justify-end space-y-2 md:space-y-0 md:space-x-4 text-sm font-medium">
-                <li><a href="index.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Dashboard</a></li>
-                <li><a href="SOP.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">SOPs</a></li>
-                <li><a href="training.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700 current-page">Training</a></li>
-                <li><a href="forms.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Forms</a></li>
-                <li><a href="roster.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Roster</a></li>
-                <li><a href="hr.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">HR Info</a></li>
-                <li><a href="report.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Report Generator</a></li>
-                <li><a href="charges.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Charge Calculator</a></li>
-                <li><a href="info.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Common Information</a></li>
-            </ul>
-        </nav>
+            <!-- Settings/Theme Toggle and Hamburger -->
+            <div class="flex items-center ml-4">
+                <button id="theme-toggle" class="p-2 rounded-full hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all">
+                    <svg id="theme-icon-light" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                    <svg id="theme-icon-dark" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                </button>
+                <button id="hamburgerBtn" class="hamburger-menu p-2 rounded-md hover:bg-white/10 focus:outline-none md:hidden ml-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </div>
     </header>
 
-
-    <!-- Hero Section for Training -->
-    <section class="relative bg-gradient-to-r from-blue-700 to-blue-900 text-white py-16 px-6 md:px-12 rounded-lg m-4 md:m-8 overflow-hidden shadow-xl text-center">
-        <div class="absolute inset-0 bg-cover bg-center opacity-30"></div>
-        <div class="relative z-10 max-w-4xl mx-auto">
-            <h2 class="text-4xl md:text-5xl font-extrabold leading-tight mb-4 text-white">UPD Training Manual</h2>
-            <p class="text-lg md:text-xl mb-6 text-white">Access all UPD training materials and guides. Click the button below to view the document.</p>
-        </div>
-    </section>
-
-    <!-- Main Content Section - Buttons for Documents -->
+    <!-- Main Content Section -->
     <main class="container mx-auto px-4 md:px-8 py-12">
-        <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">UPD Training Documents</h2>
-        <div class="flex justify-center gap-6">
-            <!-- Changed to flex and justify-center -->
-            <button class="doc-button bg-blue-600 text-white px-8 py-4 rounded-lg text-lg font-semibold shadow-lg hover:bg-blue-700 transition duration-300 ease-in-out transform hover:scale-105"
-                    data-doc-url="https://docs.google.com/document/d/e/2PACX-1vRDAwW9qJOXBT2On5CSW_Mkp709a5tlDQ96jxfvPI-G--w6gFF7Iel7pxJigCzy3yWkrdKuZtpWeAm2/pub"
-                    data-doc-title="UPD Basic Training">
-                UPD Basic Training
-            </button>
-            <!-- Add more training document buttons here if needed -->
+        <div class="text-center mb-12">
+            <h2 class="text-4xl md:text-5xl font-extrabold mb-3">UPD Training Manual</h2>
+            <p class="text-lg md:text-xl text-[var(--text-secondary)] max-w-3xl mx-auto">A centralized hub for all essential UPD training materials and operational guides. Select a document below to get started.</p>
+        </div>
+
+        <!-- Document Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Card 1: Basic Training -->
+            <div class="doc-card rounded-lg overflow-hidden shadow-md flex flex-col">
+                <div class="p-6 flex-grow">
+                    <h3 class="text-xl font-bold mb-2 text-[var(--text-primary)]">UPD Basic Training</h3>
+                    <p class="text-[var(--text-secondary)] mb-4">The foundational guide for all new recruits, covering essential protocols, procedures, and conduct.</p>
+                </div>
+                <div class="p-6 pt-0">
+                    <button class="doc-button w-full bg-[var(--accent-color)] text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:opacity-90 transition"
+                            data-doc-url="https://docs.google.com/document/d/e/2PACX-1vRDAwW9qJOXBT2On5CSW_Mkp709a5tlDQ96jxfvPI-G--w6gFF7Iel7pxJigCzy3yWkrdKuZtpWeAm2/pub"
+                            data-doc-title="UPD Basic Training">
+                        Open Document
+                    </button>
+                </div>
+            </div>
+
+            <!-- Card 2: Academy Plan -->
+            <div class="doc-card rounded-lg overflow-hidden shadow-md flex flex-col">
+                <div class="p-6 flex-grow">
+                    <h3 class="text-xl font-bold mb-2 text-[var(--text-primary)]">Academy Plan</h3>
+                    <p class="text-[var(--text-secondary)] mb-4">A comprehensive plan for the police academy, outlining curriculum, schedules, and evaluation criteria.</p>
+                </div>
+                <div class="p-6 pt-0">
+                    <button class="doc-button w-full bg-[var(--accent-color)] text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:opacity-90 transition"
+                            data-doc-url="https://docs.google.com/document/d/e/2PACX-1vRQJZJOUDLNDlSkGiTaZ_M5Gq8iYXZ9UObvM0IUm97qQ1ZiS5hWsNIC1gEk4pb3R2vN_js-QhbyUaYd/pub"
+                            data-doc-title="Academy Plan">
+                        Open Document
+                    </button>
+                </div>
+            </div>
+
+            <!-- Placeholder for more documents -->
+            <div class="doc-card rounded-lg overflow-hidden shadow-md flex flex-col items-center justify-center border-dashed border-2 border-[var(--border-color)]">
+                <div class="text-center p-6">
+                    <p class="text-[var(--text-secondary)]">More training documents will be available here soon.</p>
+                </div>
+            </div>
         </div>
     </main>
 
-    <!-- The Modal for Training Document -->
-    <div id="sopModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modalTitle" class="flex-shrink-0">UPD Training Document</h2>
-                <!-- Search Bar and Navigation Buttons -->
-                <div class="flex items-center flex-grow max-w-xs">
-                    <input type="text" id="modalSearchInput" placeholder="Search document..." class="w-full p-2 border border-gray-300 rounded-l-md focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <button id="nextResultBtn" class="bg-blue-500 text-white px-3 py-2 rounded-r-md hover:bg-blue-600 transition duration-200 ease-in-out" title="Next Result">
+    <!-- The Modal for Document -->
+    <div id="sopModal" class="modal fixed inset-0 z-[100] flex items-center justify-center">
+        <div class="modal-content w-full h-full flex flex-col">
+            <div class="modal-header flex items-center justify-between p-4 shadow-md flex-shrink-0">
+                <h2 id="modalTitle" class="text-xl font-bold text-[var(--text-primary)] truncate pr-4">Document Title</h2>
+                <div class="flex items-center flex-grow max-w-md mx-4">
+                    <input type="text" id="modalSearchInput" placeholder="Search document..." class="w-full p-2 border bg-[var(--bg-primary)] border-[var(--border-color)] rounded-l-md focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)] text-[var(--text-primary)]">
+                    <button id="nextResultBtn" class="bg-[var(--accent-color)] text-white px-3 py-2 rounded-r-md hover:opacity-90 transition" title="Next Result">
                         &raquo;
                     </button>
                 </div>
-                <span class="close-button" id="closeSOPModal">&times;</span>
+                <button id="closeSOPModal" class="text-gray-400 hover:text-[var(--text-primary)] transition p-2 rounded-full hover:bg-[var(--bg-tertiary)]">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+                </button>
             </div>
-            <div class="modal-body">
+            <div class="modal-body flex-grow overflow-y-auto p-6 md:p-10">
                 <div id="sop-container">
-                    <!-- Training Content will be dynamically inserted here by JavaScript -->
-                    <p class="text-center text-gray-500">Loading document content...</p>
+                    <p class="text-center text-[var(--text-secondary)]">Loading document content...</p>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Footer Section - Internal Contacts -->
-    <footer class="bg-gray-800 text-white py-10 px-6 md:px-12 rounded-t-lg">
+    <!-- Footer Section -->
+    <footer class="bg-gray-800 text-white py-10 px-6 md:px-12">
         <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
                 <h4 class="text-xl font-semibold mb-4 text-blue-300">Internal Contacts</h4>
                 <ul class="space-y-2 text-sm">
-                    <li><a href="https://discord.gg/7FwxdpfDTM" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Discord</a></li>
-                    <li><a href="https://discord.com/channels/1383775098464370768/1396398235660058685" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Support</a></li>
-                    <li><a href="https://discord.com/channels/1383775098464370768/1396398240840290374" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Chat</a></li>
-                    <li><a href="https://discord.com/channels/1383775098464370768/1396398235660058685" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Internal Affairs</a></li>
-                    <li><a href="https://discord.com/channels/1383775098464370768/1396398239678333030" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Announcements</a></li>
+                    <li><a href="https://discord.gg/7FwxdpfDTM" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition">Discord</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-white hover:underline transition">UPD Support</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-white hover:underline transition">UPD Chat</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-white hover:underline transition">UPD Internal Affairs</a></li>
+                    <li><a href="#" class="text-gray-400 hover:text-white hover:underline transition">UPD Announcements</a></li>
                 </ul>
             </div>
             <div>
                 <h4 class="text-xl font-semibold mb-4 text-blue-300">Quick Access</h4>
                 <ul class="space-y-2 text-sm">
-                    <li><a href="https://docs.google.com/document/d/1etjilZ1dAHGviw33MV5Zs-b5dXqcSHyoYIHvHiRIyy4/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD SOP</a></li>
-                    <li><a href="https://docs.google.com/document/d/1hKQ4fw9b1_yQELhPi1p1b4M6uiSaYb7bBp-9C6GVTdY/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Unified Police Department Interview Procedure & Questions</a></li>
-                    <li><a href="https://docs.google.com/document/d/1d004FfAhZBgESn88Mx21N3CGqXlcoNeP9_sadn_ePak/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Promotional Pathway & Subdivision Assignment Policy</a></li>
-                    <li><a href="https://docs.google.com/document/d/14QIEsYMWpTssti1xGbGWiMxQ2b0jbiYxuMmvV8XWUUo/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Highway Enforcement and Apprehension Team (HEAT) Activation Policy</a></li>
-                    <li><a href="https://docs.google.com/document/d/1Ggf7SS5voiIjr3iSLB3VtAc47JN3aDjm2J_gYnpoZ6s/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Disciplinary Guidelines</a></li>
-                    <li><a href="privacypolicy.html" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Privacy Policy</a></li>
+                    <li><a href="#" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition">UPD SOP</a></li>
+                    <li><a href="#" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition">Interview Procedure</a></li>
+                    <li><a href="#" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition">Promotional Pathway</a></li>
+                    <li><a href="#" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition">Disciplinary Guidelines</a></li>
+                    <li><a href="privacypolicy.html" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition">Privacy Policy</a></li>
                 </ul>
             </div>
             <div>
                 <h4 class="text-xl font-semibold mb-4 text-blue-300">System Information</h4>
                 <p class="text-gray-500 text-sm mb-2">Unauthorized Access Strictly Prohibited</p>
                 <p class="text-gray-500 text-sm mb-2">For UPD Personnel Use Only</p>
-                <p class="text-500 text-sm mb-2">Created and Maintained by FiveM "NightLife RP"</p>
+                <p class="text-gray-500 text-sm mb-2">Created by FiveM "NightLife RP"</p>
                 <p class="text-gray-500 text-sm">&copy; 2025 Unified Police Department Internal Systems.</p>
             </div>
         </div>
-        <!-- Font Awesome for any potential internal icons (though less needed here) -->
-        <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     </footer>
 
     <script>
-        (function () { // Start IIFE
-            let originalSOPContentHtml = ''; // Global variable to store the original fetched HTML
-            let highlightedElements = []; // Stores references to all highlighted spans
-            let currentHighlightIndex = -1; // Tracks the currently visible highlight
+        (() => {
+            // --- THEME MANAGEMENT ---
+            const themeToggleBtn = document.getElementById('theme-toggle');
+            const lightIcon = document.getElementById('theme-icon-light');
+            const darkIcon = document.getElementById('theme-icon-dark');
 
-            // Function to render content into the SOP container
-            function renderContent(htmlContent) {
-                const sopContainer = document.getElementById('sop-container');
-                if (sopContainer) {
-                    sopContainer.innerHTML = htmlContent;
-                    // Apply Tailwind classes to Google Doc tables if any
-                    sopContainer.querySelectorAll('table').forEach(table => {
-                        table.classList.add('ten-code-table'); // Reuse existing table style
-                    });
+            const applyTheme = (theme) => {
+                if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                    lightIcon.classList.add('hidden');
+                    darkIcon.classList.remove('hidden');
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    lightIcon.classList.remove('hidden');
+                    darkIcon.classList.add('hidden');
                 }
-            }
+            };
 
-            // Function to fetch content from a given Google Document URL
-            async function fetchGoogleDocContent(url, title) {
-                const sopContainer = document.getElementById('sop-container');
-                const modalTitleElement = document.getElementById('modalTitle');
-                const nextResultBtn = document.getElementById('nextResultBtn');
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (savedTheme) applyTheme(savedTheme);
+            else if (prefersDark) applyTheme('dark');
+            else applyTheme('light');
 
-                // Reset search state when a new document is loaded
+            themeToggleBtn.addEventListener('click', () => {
+                const newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+                localStorage.setItem('theme', newTheme);
+                applyTheme(newTheme);
+            });
+
+            // --- MOBILE NAVIGATION ---
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const navLinks = document.getElementById('nav-links');
+            hamburgerBtn.addEventListener('click', (e) => {
+                e.stopPropagation();
+                navLinks.classList.toggle('nav-mobile-active');
+            });
+
+            // --- MODAL & DOCUMENT FETCHING LOGIC ---
+            let originalSOPContentHtml = '';
+            let highlightedElements = [];
+            let currentHighlightIndex = -1;
+
+            const sopModal = document.getElementById('sopModal');
+            const docButtons = document.querySelectorAll('.doc-button');
+            const closeSOPModalBtn = document.getElementById('closeSOPModal');
+            const modalSearchInput = document.getElementById('modalSearchInput');
+            const nextResultBtn = document.getElementById('nextResultBtn');
+            const sopContainer = document.getElementById('sop-container');
+            const modalTitleElement = document.getElementById('modalTitle');
+
+            const renderContent = (htmlContent) => {
+                sopContainer.innerHTML = htmlContent;
+            };
+
+            const fetchGoogleDocContent = async (url, title) => {
                 highlightedElements = [];
                 currentHighlightIndex = -1;
-                if (nextResultBtn) {
-                    nextResultBtn.style.display = 'none'; // Hide next button until search is performed
-                }
-
-                if (sopContainer) {
-                    sopContainer.innerHTML = '<p class="text-center text-gray-500">Loading document content...</p>';
-                }
-                if (modalTitleElement) {
-                    modalTitleElement.textContent = title; // Set modal title
-                }
+                nextResultBtn.style.display = 'none';
+                sopContainer.innerHTML = `<p class="text-center text-[var(--text-secondary)]">Loading document content...</p>`;
+                modalTitleElement.textContent = title;
 
                 try {
-                    const response = await fetch(url);
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
+                    // Using a more reliable CORS proxy
+                    const proxyUrl = `https://corsproxy.io/?${encodeURIComponent(url)}`;
+                    const response = await fetch(proxyUrl);
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
                     const text = await response.text();
 
-                    // Parse the fetched HTML
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(text, 'text/html');
-
-                    // Extract the main content. Google Docs typically put content in a div with id="contents"
                     const contentElement = doc.getElementById('contents');
+
                     if (contentElement) {
                         originalSOPContentHtml = contentElement.innerHTML;
                         renderContent(originalSOPContentHtml);
                     } else {
-                        // Fallback for when 'contents' ID is not found (e.g., non-published Google Docs links)
-                        const mainContentDiv = doc.querySelector('.doc-content') || doc.querySelector('body > div:nth-child(2)');
-
-                        if (mainContentDiv) {
-                            originalSOPContentHtml = mainContentDiv.innerHTML;
-                            renderContent(originalSOPContentHtml);
-                        } else {
-                            sopContainer.innerHTML = '<p class="text-center text-red-500">Error: Could not find main content in the Google Document. Please ensure it is published for web.</p>';
-                            console.error('Could not find element with id="contents" or a suitable main content div in the fetched Google Doc.');
-                        }
+                        throw new Error("Could not find main content in the document.");
                     }
                 } catch (error) {
-                    sopContainer.innerHTML = `<p class="text-center text-red-500">Error loading document content: ${error.message}. Please try again later.</p>`;
+                    sopContainer.innerHTML = `<p class="text-center text-red-500">Error loading document: ${error.message}. Please ensure the document is public.</p>`;
                     console.error('Fetch error:', error);
                 }
-            }
+            };
 
-            // Function to clear existing highlights
-            function clearHighlights() {
-                highlightedElements.forEach(el => {
-                    el.classList.remove('current-highlight');
-                    el.classList.remove('highlight'); // Remove all highlight classes
-                    // Replace the span with its text content to remove the highlight entirely
-                    const parent = el.parentNode;
-                    if (parent) {
-                        parent.replaceChild(document.createTextNode(el.textContent), el);
-                    }
-                });
+            const clearHighlights = () => {
+                if (originalSOPContentHtml) {
+                    renderContent(originalSOPContentHtml);
+                }
                 highlightedElements = [];
                 currentHighlightIndex = -1;
-            }
+            };
 
-            // Function to perform search and highlighting
-            function performSearch(scrollToFirst = false) {
-                const modalSearchInput = document.getElementById('modalSearchInput');
-                const searchTerm = modalSearchInput.value.toLowerCase();
-                const sopContainer = document.getElementById('sop-container');
-                const nextResultBtn = document.getElementById('nextResultBtn');
-
-                // Clear previous highlights before re-rendering
+            const performSearch = (scrollToFirst = false) => {
                 clearHighlights();
-
-                // Re-render the original content to remove any old highlight spans
-                renderContent(originalSOPContentHtml);
-
+                const searchTerm = modalSearchInput.value.trim();
                 if (searchTerm === '') {
-                    if (nextResultBtn) nextResultBtn.style.display = 'none';
-                    return; // If search term is empty, just show original content
+                    nextResultBtn.style.display = 'none';
+                    return;
                 }
 
-                // Use a temporary div to perform highlighting without affecting the live DOM until ready
+                const regex = new RegExp(searchTerm, 'gi');
                 const tempDiv = document.createElement('div');
-                tempDiv.innerHTML = originalSOPContentHtml; // Start with the clean, original content
+                tempDiv.innerHTML = originalSOPContentHtml;
 
-                const walker = document.createTreeWalker(
-                    tempDiv,
-                    NodeFilter.SHOW_TEXT,
-                    null,
-                    false
-                );
-
+                const walker = document.createTreeWalker(tempDiv, NodeFilter.SHOW_TEXT, null, false);
                 let node;
-                const nodesToProcess = [];
-                while ((node = walker.nextNode())) {
-                    if (node.parentNode.nodeName !== 'SCRIPT' && node.parentNode.nodeName !== 'STYLE') {
-                        nodesToProcess.push(node);
+                const nodesToReplace = [];
+                while (node = walker.nextNode()) {
+                    if (node.nodeValue.match(regex)) {
+                        nodesToReplace.push(node);
                     }
                 }
 
-                nodesToProcess.forEach(textNode => {
-                    const text = textNode.nodeValue;
-                    const lowerCaseText = text.toLowerCase();
-                    let lastIndex = 0;
+                nodesToReplace.forEach(textNode => {
                     const fragment = document.createDocumentFragment();
-                    const regex = new RegExp(searchTerm, 'gi');
-                    let match;
-
-                    while ((match = regex.exec(lowerCaseText)) !== null) {
-                        if (match.index > lastIndex) {
-                            fragment.appendChild(document.createTextNode(text.substring(lastIndex, match.index)));
-                        }
+                    let lastIndex = 0;
+                    textNode.nodeValue.replace(regex, (match, offset) => {
+                        fragment.appendChild(document.createTextNode(textNode.nodeValue.slice(lastIndex, offset)));
                         const highlightSpan = document.createElement('span');
                         highlightSpan.className = 'highlight';
-                        highlightSpan.textContent = text.substring(match.index, regex.lastIndex);
+                        highlightSpan.textContent = match;
                         fragment.appendChild(highlightSpan);
-                        lastIndex = regex.lastIndex;
-                    }
-                    if (lastIndex < text.length) {
-                        fragment.appendChild(document.createTextNode(text.substring(lastIndex)));
-                    }
-                    if (fragment.childNodes.length > 0) {
-                        textNode.parentNode.replaceChild(fragment, textNode);
-                    }
+                        lastIndex = offset + match.length;
+                    });
+                    fragment.appendChild(document.createTextNode(textNode.nodeValue.slice(lastIndex)));
+                    textNode.parentNode.replaceChild(fragment, textNode);
                 });
 
-                // Update the live SOP container with the newly highlighted content
-                sopContainer.innerHTML = tempDiv.innerHTML;
-
-                // Now, collect references to the actual highlighted elements in the live DOM
+                renderContent(tempDiv.innerHTML);
                 highlightedElements = Array.from(sopContainer.querySelectorAll('.highlight'));
 
                 if (highlightedElements.length > 0) {
-                    if (nextResultBtn) nextResultBtn.style.display = 'inline-block'; // Show next button
+                    nextResultBtn.style.display = 'inline-block';
                     currentHighlightIndex = 0;
                     highlightedElements[currentHighlightIndex].classList.add('current-highlight');
                     if (scrollToFirst) {
                         highlightedElements[currentHighlightIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
                     }
                 } else {
-                    if (nextResultBtn) {
-                        nextResultBtn.style.display = 'none';
-                    }
-                }
-            }
-
-            // Function to navigate to the next highlight
-            function navigateToNextResult() {
-                if (highlightedElements.length === 0) return;
-
-                // Remove highlight from current element
-                if (currentHighlightIndex !== -1 && highlightedElements[currentHighlightIndex]) {
-                    highlightedElements[currentHighlightIndex].classList.remove('current-highlight');
-                }
-
-                currentHighlightIndex++;
-                if (currentHighlightIndex >= highlightedElements.length) {
-                    currentHighlightIndex = 0; // Loop back to the first result
-                }
-
-                // Add highlight to the new current element and scroll to it
-                highlightedElements[currentHighlightIndex].classList.add('current-highlight');
-                highlightedElements[currentHighlightIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-
-
-            // Event Listeners
-            document.addEventListener('DOMContentLoaded', () => {
-                // Get modal elements
-                const sopModal = document.getElementById('sopModal');
-                const docButtons = document.querySelectorAll('.doc-button'); // Select all buttons with class 'doc-button'
-                const closeSOPModal = document.getElementById('closeSOPModal');
-                const modalSearchInput = document.getElementById('modalSearchInput');
-                const nextResultBtn = document.getElementById('nextResultBtn');
-
-                // Initially hide the next result button
-                if (nextResultBtn) {
                     nextResultBtn.style.display = 'none';
                 }
+            };
 
-                // Add event listeners to all document buttons
-                docButtons.forEach(button => {
-                    button.addEventListener('click', (event) => {
-                        const docUrl = event.currentTarget.dataset.docUrl;
-                        const docTitle = event.currentTarget.dataset.docTitle;
-                        sopModal.style.display = 'flex'; // Use flex to center content
-                        fetchGoogleDocContent(docUrl, docTitle); // Fetch content for the clicked document
-                        if (modalSearchInput) {
-                            modalSearchInput.value = ''; // Clear search input when new doc opens
-                        }
-                    });
+            const navigateToNextResult = () => {
+                if (highlightedElements.length === 0) return;
+                highlightedElements[currentHighlightIndex].classList.remove('current-highlight');
+                currentHighlightIndex = (currentHighlightIndex + 1) % highlightedElements.length;
+                highlightedElements[currentHighlightIndex].classList.add('current-highlight');
+                highlightedElements[currentHighlightIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            };
+
+            docButtons.forEach(button => {
+                button.addEventListener('click', (event) => {
+                    const { docUrl, docTitle } = event.currentTarget.dataset;
+                    sopModal.style.display = 'flex';
+                    document.body.style.overflow = 'hidden';
+                    fetchGoogleDocContent(docUrl, docTitle);
+                    modalSearchInput.value = '';
                 });
+            });
 
-                // Close Modal
-                if (closeSOPModal) {
-                    closeSOPModal.addEventListener('click', () => {
-                        sopModal.style.display = 'none';
-                        // Clear search input and reset content when closing
-                        if (modalSearchInput) {
-                            modalSearchInput.value = '';
-                        }
-                        clearHighlights(); // Clear all highlights and reset state
-                        if (nextResultBtn) {
-                            nextResultBtn.style.display = 'none';
-                        }
-                    });
-                }
+            const closeModal = () => {
+                sopModal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+                clearHighlights();
+                renderContent('');
+            };
 
-                // Close modal if user clicks outside of it
-                window.addEventListener('click', (event) => {
-                    if (event.target === sopModal) {
-                        sopModal.style.display = 'none';
-                        // Clear search input and reset content when closing
-                        if (modalSearchInput) {
-                            modalSearchInput.value = '';
-                        }
-                        clearHighlights(); // Clear all highlights and reset state
-                        if (nextResultBtn) {
-                            nextResultBtn.style.display = 'none';
-                        }
-                    }
-                });
+            closeSOPModalBtn.addEventListener('click', closeModal);
+            sopModal.addEventListener('click', (event) => {
+                if (event.target === sopModal) closeModal();
+            });
 
-                // Search functionality inside the modal
-                if (modalSearchInput) {
-                    // Trigger search on input change (live search)
-                    modalSearchInput.addEventListener('input', () => performSearch(false));
-                    // Trigger search and scroll to first result on Enter key press
-                    modalSearchInput.addEventListener('keydown', (event) => {
-                        if (event.key === 'Enter') {
-                            event.preventDefault(); // Prevent default form submission
-                            performSearch(true); // Perform search and scroll to first result
-                        }
-                    });
-                }
-
-                // Next Result Button
-                if (nextResultBtn) {
-                    nextResultBtn.addEventListener('click', navigateToNextResult);
-                }
-
-                // Hamburger menu functionality (retained from original)
-                const hamburgerBtn = document.getElementById('hamburgerBtn');
-                const navLinks = document.querySelector('.nav-links ul');
-
-                if (hamburgerBtn && navLinks) {
-                    hamburgerBtn.addEventListener('click', function () {
-                        navLinks.classList.toggle('hidden'); // Toggle Tailwind's hidden class
-                        navLinks.classList.toggle('flex'); // Ensure it becomes flex when visible
-                        navLinks.classList.toggle('flex-col'); // Ensure it stacks vertically on mobile
-                        navLinks.classList.toggle('absolute'); // Make it absolute for overlay
-                        navLinks.classList.toggle('bg-blue-800'); // Add background for visibility
-                        navLinks.classList.toggle('w-full'); // Take full width
-                        navLinks.classList.toggle('left-0'); // Align to left
-                        navLinks.classList.toggle('py-4'); // Add padding
-                        navLinks.classList.toggle('top-full'); // Position below header
-                        navLinks.classList.toggle('rounded-b-lg'); // Rounded bottom corners
-                        navLinks.classList.toggle('shadow-lg'); // Add shadow
-                    });
-
-                    // Close menu when a nav link is clicked (for mobile)
-                    navLinks.querySelectorAll('a').forEach(link => {
-                        link.addEventListener('click', () => {
-                            if (window.innerWidth < 768) { // Only close on mobile
-                                navLinks.classList.add('hidden');
-                                navLinks.classList.remove('flex', 'flex-col', 'absolute', 'bg-blue-800', 'w-full', 'left-0', 'py-4', 'top-full', 'rounded-b-lg', 'shadow-lg');
-                            }
-                        });
-                    });
-
-                    // Adjust menu display on resize
-                    window.addEventListener('resize', () => {
-                        if (window.innerWidth >= 768) {
-                            navLinks.classList.remove('hidden', 'flex-col', 'absolute', 'bg-blue-800', 'w-full', 'left-0', 'py-4', 'top-full', 'rounded-b-lg', 'shadow-lg');
-                            navLinks.classList.add('flex'); // Ensure it's flex for desktop
-                        } else {
-                            // Ensure it's hidden on mobile if resized from desktop
-                            navLinks.classList.add('hidden');
-                            navLinks.classList.remove('flex');
-                        }
-                    });
+            modalSearchInput.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    performSearch(true);
                 }
             });
-        })(); // End IIFE
+
+            modalSearchInput.addEventListener('input', () => {
+                if (modalSearchInput.value.trim() === '') {
+                    clearHighlights();
+                    nextResultBtn.style.display = 'none';
+                }
+            });
+
+            nextResultBtn.addEventListener('click', navigateToNextResult);
+
+        })();
     </script>
 </body>
 </html>
