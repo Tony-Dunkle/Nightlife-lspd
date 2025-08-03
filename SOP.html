@@ -18,6 +18,8 @@
             --text-secondary: #475569; /* slate-600 */
             --border-color: #e2e8f0; /* slate-200 */
             --accent-color: #3b82f6; /* blue-500 */
+            --modal-bg: rgba(0,0,0,0.7);
+            --modal-content-bg: #ffffff;
         }
 
         html.dark {
@@ -28,6 +30,7 @@
             --text-secondary: #94a3b8; /* slate-400 */
             --border-color: #334155; /* slate-700 */
             --accent-color: #60a5fa; /* blue-400 */
+            --modal-content-bg: #1e293b; /* slate-800 */
         }
 
         body {
@@ -87,9 +90,32 @@
         }
 
         /* Modal Styles */
-        .modal {
+        .modal-overlay {
             display: none;
-            background-color: rgba(0,0,0,0.7);
+            position: fixed;
+            inset: 0;
+            background-color: var(--modal-bg);
+            z-index: 100;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .modal-overlay.is-open {
+                display: flex;
+            }
+
+        .modal-box {
+            background-color: var(--modal-content-bg);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            width: 90%;
+            max-width: 500px;
+        }
+
+        .data-modal-box {
+            max-height: 80vh;
+            overflow-y: auto;
         }
 
         .modal-content {
@@ -195,9 +221,8 @@
 
             <!-- Settings/Theme Toggle and Hamburger -->
             <div class="flex items-center ml-4">
-                <button id="theme-toggle" class="p-2 rounded-full hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all">
-                    <svg id="theme-icon-light" class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-                    <svg id="theme-icon-dark" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path></svg>
+                <button id="settings-btn" class="p-2 rounded-full hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                 </button>
                 <button id="hamburgerBtn" class="hamburger-menu p-2 rounded-md hover:bg-white/10 focus:outline-none md:hidden ml-2">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
@@ -215,116 +240,12 @@
 
         <!-- Document Cards Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-            <!-- Card 1: General SOP -->
-            <div class="doc-card rounded-lg overflow-hidden shadow-md flex flex-col">
-                <div class="p-6 flex-grow">
-                    <h3 class="text-xl font-bold mb-2 text-[var(--text-primary)]">General SOP</h3>
-                    <p class="text-[var(--text-secondary)] mb-4">The main Standard Operating Procedures for all department personnel.</p>
-                </div>
-                <div class="p-6 pt-0">
-                    <button class="doc-button w-full bg-[var(--accent-color)] text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:opacity-90 transition"
-                            data-doc-url="https://docs.google.com/document/d/e/2PACX-1vTqgwwOg0Z1YwizKL9fTocMNfJC0A3ElTMvyukZZFQOi2SAjozk3mEmMrg-w1q12HYJSb-jtzYS1w8s/pub"
-                            data-doc-title="UPD Standard Operating Procedures">
-                        Open Document
-                    </button>
-                </div>
-            </div>
-
-            <!-- Card 2: Interview Procedure -->
-            <div class="doc-card rounded-lg overflow-hidden shadow-md flex flex-col">
-                <div class="p-6 flex-grow">
-                    <h3 class="text-xl font-bold mb-2 text-[var(--text-primary)]">Interview Procedure</h3>
-                    <p class="text-[var(--text-secondary)] mb-4">Official questions and procedures for conducting interviews.</p>
-                </div>
-                <div class="p-6 pt-0">
-                    <button class="doc-button w-full bg-[var(--accent-color)] text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:opacity-90 transition"
-                            data-doc-url="https://docs.google.com/document/d/e/2PACX-1vSu3017bed6u23vHL2Eexv_1IGwqED2TO2ZOJxDa0EzO5glkDEy_DbLxSgYET-_E_k79uOKSlF6bnEH/pub"
-                            data-doc-title="UPD Interview Procedure & Questions">
-                        Open Document
-                    </button>
-                </div>
-            </div>
-
-            <!-- Card 3: Promotional Pathway -->
-            <div class="doc-card rounded-lg overflow-hidden shadow-md flex flex-col">
-                <div class="p-6 flex-grow">
-                    <h3 class="text-xl font-bold mb-2 text-[var(--text-primary)]">Promotional Pathway</h3>
-                    <p class="text-[var(--text-secondary)] mb-4">Policy for promotions and subdivision assignments within the department.</p>
-                </div>
-                <div class="p-6 pt-0">
-                    <button class="doc-button w-full bg-[var(--accent-color)] text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:opacity-90 transition"
-                            data-doc-url="https://docs.google.com/document/d/e/2PACX-1vQg2Dhsa_pMb0zLvt7x7_FnkRRLK2UFhgIYyyzlNlBIxmtoYu9jKdjwIJEzorGk_nM8w9-Nq9c7vtAR/pub"
-                            data-doc-title="UPD Promotional Pathway & Subdivision Assignment Policy">
-                        Open Document
-                    </button>
-                </div>
-            </div>
-
-            <!-- Card 4: HEAT SOP -->
-            <div class="doc-card rounded-lg overflow-hidden shadow-md flex flex-col">
-                <div class="p-6 flex-grow">
-                    <h3 class="text-xl font-bold mb-2 text-[var(--text-primary)]">HEAT SOP</h3>
-                    <p class="text-[var(--text-secondary)] mb-4">Procedures for the Highway Enforcement and Apprehension Team.</p>
-                </div>
-                <div class="p-6 pt-0">
-                    <button class="doc-button w-full bg-[var(--accent-color)] text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:opacity-90 transition"
-                            data-doc-url="https://docs.google.com/document/d/e/2PACX-1vSVPyAf9aX1HEOdbIePwtq8NovTudH6s-KuFMkFxBmJCX00OYbMY84pO2c66oELDt_Tm97s8WRmXdqW/pub"
-                            data-doc-title="UPD HEAT SOP">
-                        Open Document
-                    </button>
-                </div>
-            </div>
-
-            <!-- Card 5: Disciplinary Guidelines -->
-            <div class="doc-card rounded-lg overflow-hidden shadow-md flex flex-col">
-                <div class="p-6 flex-grow">
-                    <h3 class="text-xl font-bold mb-2 text-[var(--text-primary)]">Disciplinary Guidelines</h3>
-                    <p class="text-[var(--text-secondary)] mb-4">Official guidelines for disciplinary actions and procedures.</p>
-                </div>
-                <div class="p-6 pt-0">
-                    <button class="doc-button w-full bg-[var(--accent-color)] text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:opacity-90 transition"
-                            data-doc-url="https://docs.google.com/document/d/e/2PACX-1vRZowQD3Rqo7MK4drpXXgRud-gmZ5WLy6GjjWZnRYnT_v27dZ71ufX1zNx53rk3fnF8cWDGNeLdOYRP/pub"
-                            data-doc-title="UPD Disciplinary Guidelines">
-                        Open Document
-                    </button>
-                </div>
-            </div>
-
-            <!-- Card 6: Bonus Distribution -->
-            <div class="doc-card rounded-lg overflow-hidden shadow-md flex flex-col">
-                <div class="p-6 flex-grow">
-                    <h3 class="text-xl font-bold mb-2 text-[var(--text-primary)]">Bonus Distribution</h3>
-                    <p class="text-[var(--text-secondary)] mb-4">Details on the department's bonus distribution program.</p>
-                </div>
-                <div class="p-6 pt-0">
-                    <button class="doc-button w-full bg-[var(--accent-color)] text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:opacity-90 transition"
-                            data-doc-url="https://docs.google.com/document/d/e/2PACX-1vTyfcTo8MFKRbi9YhttnDnV5uWYAbAvf-NYpVPy4q2hiUF3oH6xLOA4b3CpjECW-H8oqqC5962SBgIG/pub"
-                            data-doc-title="UPD Bonus Distribution Program">
-                        Open Document
-                    </button>
-                </div>
-            </div>
-
-            <!-- Card 7: Air One Policy -->
-            <div class="doc-card rounded-lg overflow-hidden shadow-md flex flex-col">
-                <div class="p-6 flex-grow">
-                    <h3 class="text-xl font-bold mb-2 text-[var(--text-primary)]">Air One Policy</h3>
-                    <p class="text-[var(--text-secondary)] mb-4">Activation and procedures policy for the Air One unit.</p>
-                </div>
-                <div class="p-6 pt-0">
-                    <button class="doc-button w-full bg-[var(--accent-color)] text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:opacity-90 transition"
-                            data-doc-url="https://docs.google.com/document/d/e/2PACX-1vTShA-AU8S4P8YD67soDNOnHc641YzxIXTSsIhbBl6vKIvpliOOwZPWmW-C-KzNlOkFH0ZvApT0zrHD/pub"
-                            data-doc-title="Unified Police Department Air One Activation & Procedures Policy">
-                        Open Document
-                    </button>
-                </div>
-            </div>
-
+            <!-- Cards are dynamically generated here -->
         </div>
     </main>
 
-    <!-- The Modal for Document -->
-    <div id="sopModal" class="modal fixed inset-0 z-[100] flex items-center justify-center">
+    <!-- Document Viewer Modal -->
+    <div id="sopModal" class="modal-overlay items-center justify-center">
         <div class="modal-content w-full h-full flex flex-col">
             <div class="modal-header flex items-center justify-between p-4 shadow-md flex-shrink-0">
                 <h2 id="modalTitle" class="text-xl font-bold text-[var(--text-primary)] truncate pr-4">Document Title</h2>
@@ -345,6 +266,55 @@
             </div>
         </div>
     </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal-overlay">
+        <div class="modal-box text-[var(--text-primary)]">
+            <h2 class="text-2xl font-bold mb-6">Settings</h2>
+
+            <!-- Website Theme -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold mb-3">Website Theme</h3>
+                <div class="space-y-2">
+                    <label class="flex items-center">
+                        <input type="radio" name="theme" value="light" class="form-radio h-4 w-4 text-blue-600">
+                        <span class="ml-2">Light Mode</span>
+                    </label>
+                    <label class="flex items-center">
+                        <input type="radio" name="theme" value="dark" class="form-radio h-4 w-4 text-blue-600">
+                        <span class="ml-2">Dark Mode</span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Data Management -->
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold mb-3">Data Management</h3>
+                <div class="flex flex-col space-y-3">
+                    <button id="clear-data-btn" class="w-full bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition">Clear All Local Data</button>
+                    <button id="view-data-btn" class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition">View Stored Data</button>
+                </div>
+            </div>
+
+            <div class="mt-8 text-right">
+                <button id="close-settings-btn" class="bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-200 px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Data Modal -->
+    <div id="view-data-modal" class="modal-overlay">
+        <div class="modal-box data-modal-box text-[var(--text-primary)]">
+            <h2 class="text-2xl font-bold mb-4">Local Storage Data</h2>
+            <div id="data-container" class="space-y-4 text-sm">
+                <!-- Data will be injected here -->
+            </div>
+            <div class="mt-6 text-right">
+                <button id="close-view-data-btn" class="bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-200 px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition">Close</button>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Footer Section -->
     <footer class="bg-gray-800 text-white py-10 px-6 md:px-12">
@@ -381,33 +351,86 @@
 
     <script>
         (() => {
+            const sopDocuments = [
+                {
+                    title: "General SOP",
+                    description: "The main Standard Operating Procedures for all department personnel.",
+                    url: "https://docs.google.com/document/d/e/2PACX-1vTqgwwOg0Z1YwizKL9fTocMNfJC0A3ElTMvyukZZFQOi2SAjozk3mEmMrg-w1q12HYJSb-jtzYS1w8s/pub"
+                },
+                {
+                    title: "Interview Procedure",
+                    description: "Official questions and procedures for conducting interviews.",
+                    url: "https://docs.google.com/document/d/e/2PACX-1vSu3017bed6u23vHL2Eexv_1IGwqED2TO2ZOJxDa0EzO5glkDEy_DbLxSgYET-_E_k79uOKSlF6bnEH/pub"
+                },
+                {
+                    title: "Promotional Pathway",
+                    description: "Policy for promotions and subdivision assignments within the department.",
+                    url: "https://docs.google.com/document/d/e/2PACX-1vQg2Dhsa_pMb0zLvt7x7_FnkRRLK2UFhgIYyyzlNlBIxmtoYu9jKdjwIJEzorGk_nM8w9-Nq9c7vtAR/pub"
+                },
+                {
+                    title: "HEAT SOP",
+                    description: "Procedures for the Highway Enforcement and Apprehension Team.",
+                    url: "https://docs.google.com/document/d/e/2PACX-1vSVPyAf9aX1HEOdbIePwtq8NovTudH6s-KuFMkFxBmJCX00OYbMY84pO2c66oELDt_Tm97s8WRmXdqW/pub"
+                },
+                {
+                    title: "Disciplinary Guidelines",
+                    description: "Official guidelines for disciplinary actions and procedures.",
+                    url: "https://docs.google.com/document/d/e/2PACX-1vRZowQD3Rqo7MK4drpXXgRud-gmZ5WLy6GjjWZnRYnT_v27dZ71ufX1zNx53rk3fnF8cWDGNeLdOYRP/pub"
+                },
+                {
+                    title: "Bonus Distribution",
+                    description: "Details on the department's bonus distribution program.",
+                    url: "https://docs.google.com/document/d/e/2PACX-1vTyfcTo8MFKRbi9YhttnDnV5uWYAbAvf-NYpVPy4q2hiUF3oH6xLOA4b3CpjECW-H8oqqC5962SBgIG/pub"
+                },
+                {
+                    title: "Air One Policy",
+                    description: "Activation and procedures policy for the Air One unit.",
+                    url: "https://docs.google.com/document/d/e/2PACX-1vTShA-AU8S4P8YD67soDNOnHc641YzxIXTSsIhbBl6vKIvpliOOwZPWmW-C-KzNlOkFH0ZvApT0zrHD/pub"
+                }
+            ];
+
+            function generateDocCards() {
+                const container = document.querySelector('.grid');
+                container.innerHTML = sopDocuments.map(doc => `
+                    <div class="doc-card rounded-lg overflow-hidden shadow-md flex flex-col">
+                        <div class="p-6 flex-grow">
+                            <h3 class="text-xl font-bold mb-2 text-[var(--text-primary)]">${doc.title}</h3>
+                            <p class="text-[var(--text-secondary)] mb-4">${doc.description}</p>
+                        </div>
+                        <div class="p-6 pt-0">
+                            <button class="doc-button w-full bg-[var(--accent-color)] text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:opacity-90 transition"
+                                    data-doc-url="${doc.url}"
+                                    data-doc-title="${doc.title}">
+                                Open Document
+                            </button>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
             // --- THEME MANAGEMENT ---
-            const themeToggleBtn = document.getElementById('theme-toggle');
-            const lightIcon = document.getElementById('theme-icon-light');
-            const darkIcon = document.getElementById('theme-icon-dark');
+            const settingsModal = document.getElementById('settings-modal');
+            const themeRadios = document.querySelectorAll('input[name="theme"]');
 
             const applyTheme = (theme) => {
                 if (theme === 'dark') {
                     document.documentElement.classList.add('dark');
-                    lightIcon.classList.add('hidden');
-                    darkIcon.classList.remove('hidden');
+                    themeRadios.forEach(radio => radio.value === 'dark' ? radio.checked = true : radio.checked = false);
                 } else {
                     document.documentElement.classList.remove('dark');
-                    lightIcon.classList.remove('hidden');
-                    darkIcon.classList.add('hidden');
+                    themeRadios.forEach(radio => radio.value === 'light' ? radio.checked = true : radio.checked = false);
                 }
             };
 
-            const savedTheme = localStorage.getItem('theme');
-            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            if (savedTheme) applyTheme(savedTheme);
-            else if (prefersDark) applyTheme('dark');
-            else applyTheme('light');
+            const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            applyTheme(savedTheme);
 
-            themeToggleBtn.addEventListener('click', () => {
-                const newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
-                localStorage.setItem('theme', newTheme);
-                applyTheme(newTheme);
+            themeRadios.forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    const newTheme = e.target.value;
+                    localStorage.setItem('theme', newTheme);
+                    applyTheme(newTheme);
+                });
             });
 
             // --- MOBILE NAVIGATION ---
@@ -418,13 +441,12 @@
                 navLinks.classList.toggle('nav-mobile-active');
             });
 
-            // --- MODAL & DOCUMENT FETCHING LOGIC ---
+            // --- DOCUMENT VIEWER MODAL ---
             let originalSOPContentHtml = '';
             let highlightedElements = [];
             let currentHighlightIndex = -1;
 
             const sopModal = document.getElementById('sopModal');
-            const docButtons = document.querySelectorAll('.doc-button');
             const closeSOPModalBtn = document.getElementById('closeSOPModal');
             const modalSearchInput = document.getElementById('modalSearchInput');
             const nextResultBtn = document.getElementById('nextResultBtn');
@@ -448,7 +470,6 @@
                     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
 
                     const text = await response.text();
-
                     const parser = new DOMParser();
                     const doc = parser.parseFromString(text, 'text/html');
                     const contentElement = doc.getElementById('contents');
@@ -466,9 +487,7 @@
             };
 
             const clearHighlights = () => {
-                if (originalSOPContentHtml) {
-                    renderContent(originalSOPContentHtml);
-                }
+                if (originalSOPContentHtml) renderContent(originalSOPContentHtml);
                 highlightedElements = [];
                 currentHighlightIndex = -1;
             };
@@ -489,9 +508,7 @@
                 let node;
                 const nodesToReplace = [];
                 while (node = walker.nextNode()) {
-                    if (node.nodeValue.match(regex)) {
-                        nodesToReplace.push(node);
-                    }
+                    if (node.nodeValue.match(regex)) nodesToReplace.push(node);
                 }
 
                 nodesToReplace.forEach(textNode => {
@@ -532,43 +549,103 @@
                 highlightedElements[currentHighlightIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
             };
 
-            docButtons.forEach(button => {
-                button.addEventListener('click', (event) => {
-                    const { docUrl, docTitle } = event.currentTarget.dataset;
-                    sopModal.style.display = 'flex';
-                    document.body.style.overflow = 'hidden';
-                    fetchGoogleDocContent(docUrl, docTitle);
-                    modalSearchInput.value = '';
-                });
-            });
+            const openSopModal = (url, title) => {
+                sopModal.classList.add('is-open');
+                document.body.style.overflow = 'hidden';
+                fetchGoogleDocContent(url, title);
+                modalSearchInput.value = '';
+            };
 
-            const closeModal = () => {
-                sopModal.style.display = 'none';
+            const closeSopModal = () => {
+                sopModal.classList.remove('is-open');
                 document.body.style.overflow = 'auto';
                 clearHighlights();
                 renderContent('');
             };
 
-            closeSOPModalBtn.addEventListener('click', closeModal);
-            sopModal.addEventListener('click', (event) => {
-                if (event.target === sopModal) closeModal();
+            // --- SETTINGS & DATA MODALS ---
+            const settingsBtn = document.getElementById('settings-btn');
+            const closeSettingsBtn = document.getElementById('close-settings-btn');
+            const viewDataBtn = document.getElementById('view-data-btn');
+            const clearDataBtn = document.getElementById('clear-data-btn');
+            const viewDataModal = document.getElementById('view-data-modal');
+            const closeViewDataBtn = document.getElementById('close-view-data-btn');
+            const dataContainer = document.getElementById('data-container');
+
+            settingsBtn.addEventListener('click', () => settingsModal.classList.add('is-open'));
+            closeSettingsBtn.addEventListener('click', () => settingsModal.classList.remove('is-open'));
+
+            viewDataBtn.addEventListener('click', () => {
+                dataContainer.innerHTML = ''; // Clear previous data
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    const value = localStorage.getItem(key);
+                    const itemEl = document.createElement('div');
+                    itemEl.className = 'p-3 bg-[var(--bg-tertiary)] rounded-md';
+                    itemEl.innerHTML = `<strong class="text-[var(--accent-color)]">${key}:</strong><pre class="whitespace-pre-wrap break-all">${value}</pre>`;
+                    dataContainer.appendChild(itemEl);
+                }
+                if (localStorage.length === 0) {
+                    dataContainer.innerHTML = '<p>No local data found.</p>';
+                }
+                viewDataModal.classList.add('is-open');
             });
 
-            modalSearchInput.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter') {
-                    event.preventDefault();
-                    performSearch(true);
+            closeViewDataBtn.addEventListener('click', () => viewDataModal.classList.remove('is-open'));
+
+            clearDataBtn.addEventListener('click', () => {
+                const originalText = clearDataBtn.textContent;
+                if (confirm("Are you sure you want to clear all local data? This action cannot be undone.")) {
+                    Object.keys(localStorage).forEach(key => {
+                        if (key !== 'theme') { // Preserve the theme setting
+                            localStorage.removeItem(key);
+                        }
+                    });
+                    clearDataBtn.textContent = 'Data Cleared!';
+                    clearDataBtn.classList.remove('bg-red-600', 'hover:bg-red-700');
+                    clearDataBtn.classList.add('bg-green-600');
+                    setTimeout(() => {
+                        clearDataBtn.textContent = originalText;
+                        clearDataBtn.classList.remove('bg-green-600');
+                        clearDataBtn.classList.add('bg-red-600', 'hover:bg-red-700');
+                        location.reload();
+                    }, 2000);
                 }
             });
 
-            modalSearchInput.addEventListener('input', () => {
-                if (modalSearchInput.value.trim() === '') {
-                    clearHighlights();
-                    nextResultBtn.style.display = 'none';
-                }
-            });
+            // --- INITIALIZE PAGE ---
+            document.addEventListener('DOMContentLoaded', () => {
+                generateDocCards();
+                // Re-select docButtons after they are generated
+                const docButtons = document.querySelectorAll('.doc-button');
+                docButtons.forEach(button => {
+                    button.addEventListener('click', (event) => {
+                        const { docUrl, docTitle } = event.currentTarget.dataset;
+                        openSopModal(docUrl, docTitle);
+                    });
+                });
 
-            nextResultBtn.addEventListener('click', navigateToNextResult);
+                closeSOPModalBtn.addEventListener('click', closeSopModal);
+                sopModal.addEventListener('click', (event) => {
+                    if (event.target.classList.contains('modal-overlay')) closeSopModal();
+                });
+
+                modalSearchInput.addEventListener('keydown', (event) => {
+                    if (event.key === 'Enter') {
+                        event.preventDefault();
+                        performSearch(true);
+                    }
+                });
+
+                modalSearchInput.addEventListener('input', () => {
+                    if (modalSearchInput.value.trim() === '') {
+                        clearHighlights();
+                        nextResultBtn.style.display = 'none';
+                    }
+                });
+
+                nextResultBtn.addEventListener('click', navigateToNextResult);
+            });
 
         })();
     </script>
