@@ -178,12 +178,15 @@
         <div class="flex items-center">
             <nav id="nav-links" class="hidden md:flex items-center">
                 <ul class="flex flex-row space-x-4 text-sm font-medium">
-                    <li><a href="index.html" class="text-white bg-blue-700 font-semibold py-1 px-2 rounded-md">Dashboard</a></li>
-                    <li><a href="SOP.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">SOPs</a></li>
-                    <li><a href="training.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Training</a></li>
-                    <li><a href="forms.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Forms</a></li>
-                    <li><a href="roster.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Roster</a></li>
-                    <li><a href="hr.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">HR Info</a></li>
+                    <li><a href="index.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700 current-page">Dashboard</a></li>
+                    <li><a href="SOP.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">SOPs</a></li>
+                    <li><a href="training.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Training</a></li>
+                    <li><a href="forms.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Forms</a></li>
+                    <li><a href="roster.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Roster</a></li>
+                    <li><a href="hr.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">HR Info</a></li>
+                    <li><a href="report.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Report Generator</a></li>
+                    <li><a href="charges.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Charge Calculator</a></li>
+                    <li><a href="info.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Common Information</a></li>
                 </ul>
             </nav>
 
@@ -304,12 +307,12 @@
             function generateQuickLinks() {
                 const container = document.querySelector('.grid');
                 container.innerHTML = quickLinks.map(link => `
-                    <div class="bg-[var(--bg-secondary)] p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
-                        <h3 class="text-xl font-semibold text-[var(--accent-color)] mb-3">${link.title}</h3>
-                        <p class="text-[var(--text-secondary)] mb-4">${link.desc}</p>
-                        <a href="${link.href}" class="text-blue-500 dark:text-blue-400 hover:underline font-medium">${link.linkText} &rarr;</a>
-                    </div>
-                `).join('');
+                        <div class="bg-[var(--bg-secondary)] p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                            <h3 class="text-xl font-semibold text-[var(--accent-color)] mb-3">${link.title}</h3>
+                            <p class="text-[var(--text-secondary)] mb-4">${link.desc}</p>
+                            <a href="${link.href}" class="text-blue-500 dark:text-blue-400 hover:underline font-medium">${link.linkText} &rarr;</a>
+                        </div>
+                    `).join('');
             }
 
             const applyTheme = (theme) => {
@@ -474,11 +477,11 @@
 
                     if (recentUpdates.length > 0) {
                         updatesContent.innerHTML = recentUpdates.map(update => `
-                            <div class="bg-[var(--bg-tertiary)] p-4 rounded-md">
-                                <p class="font-semibold">${update.date.toLocaleDateString()}: ${update.title}</p>
-                                <p class="text-sm text-[var(--text-secondary)]">${update.description}</p>
-                            </div>
-                        `).join('');
+                                <div class="bg-[var(--bg-tertiary)] p-4 rounded-md">
+                                    <p class="font-semibold">${update.date.toLocaleDateString()}: ${update.title}</p>
+                                    <p class="text-sm text-[var(--text-secondary)]">${update.description}</p>
+                                </div>
+                            `).join('');
                         updatesSection.classList.remove('hidden');
                     }
                 } catch (error) {
@@ -540,6 +543,15 @@
                 declineCookiesBtn.addEventListener('click', () => { localStorage.setItem('cookieConsent', 'declined'); cookieConsentBanner.classList.remove('show'); disableLocalStorageFeatures(); });
             });
         })();
+    </script>
+ <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
+    <script>
+        kofiWidgetOverlay.draw('tonydunkle', {
+            'type': 'floating-chat',
+            'floating-chat.donateButton.text': 'Support me',
+            'floating-chat.donateButton.background-color': '#323842',
+            'floating-chat.donateButton.text-color': '#fff'
+        });
     </script>
 </body>
 </html>

@@ -1,1010 +1,310 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LSPD Police Information</title>
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="LSPD.png">
-    <!-- Tailwind CSS CDN -->
+    <title>UPD Common Information</title>
+    <link rel="icon" href="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Google Fonts - Inter -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Custom font for a clean, modern look */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display.swap');
+
+        /* Define CSS variables for theming */
+        :root {
+            --bg-primary: #f8fafc; /* slate-50 */
+            --bg-secondary: #ffffff; /* white */
+            --bg-tertiary: #f1f5f9; /* slate-100 */
+            --text-primary: #0f172a; /* slate-900 */
+            --text-secondary: #475569; /* slate-600 */
+            --border-color: #e2e8f0; /* slate-200 */
+            --accent-color: #3b82f6; /* blue-500 */
+            --modal-bg: rgba(0,0,0,0.7);
+            --modal-content-bg: #ffffff;
+        }
+
+        html.dark {
+            --bg-primary: #0f172a; /* slate-900 */
+            --bg-secondary: #1e293b; /* slate-800 */
+            --bg-tertiary: #334155; /* slate-700 */
+            --text-primary: #f1f5f9; /* slate-100 */
+            --text-secondary: #94a3b8; /* slate-400 */
+            --border-color: #334155; /* slate-700 */
+            --accent-color: #60a5fa; /* blue-400 */
+            --modal-content-bg: #1e293b; /* slate-800 */
+        }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f0f2f5; /* Light gray background */
-            color: #333;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
         }
-        /* Custom scrollbar for better aesthetics */
+
+        /* Scrollbar styles */
         ::-webkit-scrollbar {
-            width: 8px;
+            width: 12px;
         }
 
         ::-webkit-scrollbar-track {
-            background: #e2e8f0; /* Tailwind gray-200 */
-            border-radius: 10px;
+            background: var(--bg-tertiary);
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #94a3b8; /* Tailwind gray-400 */
-            border-radius: 10px;
+            background: #888;
+            border-radius: 6px;
         }
 
             ::-webkit-scrollbar-thumb:hover {
-                background: #64748b; /* Tailwind gray-500 */
+                background: #555;
             }
 
-        /* Light Mode */
-        body.light-mode {
-            background-color: #f0f2f5;
-            color: #333;
+        html.dark ::-webkit-scrollbar-thumb {
+            background: #555;
         }
 
-            body.light-mode .bg-blue-900 {
-                background-color: #1e3a8a; /* Darker blue for header */
+            html.dark ::-webkit-scrollbar-thumb:hover {
+                background: #777;
             }
 
-            body.light-mode .text-white {
-                color: #ffffff;
-            }
-
-            body.light-mode .bg-gradient-to-r {
-                background-image: linear-gradient(to right, #1e3a8a, #102a43); /* Darker blue gradient */
-            }
-
-            body.light-mode .bg-blue-50 {
-                background-color: #e0f2fe; /* Light blue */
-            }
-
-            body.light-mode .bg-gray-100 {
-                background-color: #f3f4f6;
-            }
-
-            body.light-mode .bg-white {
-                background-color: #ffffff;
-            }
-
-            body.light-mode .text-blue-700 {
-                color: #1d4ed8;
-            }
-
-            body.light-mode .text-blue-800 {
-                color: #1e40af;
-            }
-
-            body.light-mode .text-gray-800 {
-                color: #1f2937;
-            }
-
-            body.light-mode .text-gray-600 {
-                color: #4b5563;
-            }
-
-            body.light-mode .text-gray-700 {
-                color: #374151;
-            }
-
-            body.light-mode .text-blue-500 {
-                color: #3b82f6;
-            }
-
-            body.light-mode .bg-gray-800 {
-                background-color: #1f2937;
-            }
-
-            body.light-mode .text-blue-300 {
-                color: #93c5fd;
-            }
-
-            body.light-mode .text-gray-400 {
-                color: #9ca3af;
-            }
-
-            body.light-mode .text-gray-500 {
-                color: #6b7280;
-            }
-
-            /* Light mode input specific styles */
-            body.light-mode input[type="text"],
-            body.light-mode input[type="date"],
-            body.light-mode input[type="time"],
-            body.light-mode input[type="url"],
-            body.light-mode select,
-            body.light-mode textarea {
-                color: #1f2937; /* Dark gray text */
-                background-color: #ffffff; /* White background */
-            }
-
-                body.light-mode input::placeholder,
-                body.light-mode textarea::placeholder {
-                    color: #9ca3af; /* text-gray-400 */
-                }
-
-
-        /* Dark Mode */
-        body.dark-mode {
-            background-color: #1a202c; /* bg-gray-900 */
-            color: #e2e8f0; /* text-gray-200 */
-        }
-
-            body.dark-mode .bg-blue-900 {
-                background-color: #2d3748; /* Darker header */
-            }
-
-            body.dark-mode .text-white {
-                color: #e2e8f0;
-            }
-
-            body.dark-mode .bg-gradient-to-r {
-                background-image: linear-gradient(to right, #2d3748, #1a202c);
-            }
-
-            body.dark-mode .bg-blue-50 {
-                background-color: #2f3e58; /* Darker light blue */
-            }
-
-            body.dark-mode .bg-gray-100 {
-                background-color: #2d3748;
-            }
-
-            body.dark-mode .bg-white {
-                background-color: #2d3748;
-            }
-
-            body.dark-mode .text-blue-700 {
-                color: #90cdf4;
-            }
-
-            body.dark-mode .text-blue-800 {
-                color: #a7d9ff;
-            }
-
-            body.dark-mode .text-gray-800 {
-                color: #e2e8f0;
-            }
-
-            body.dark-mode .text-gray-600 {
-                color: #a0aec0;
-            }
-
-            body.dark-mode .text-gray-700 {
-                color: #cbd5e0;
-            }
-
-            body.dark-mode .text-blue-500 {
-                color: #63b3ed;
-            }
-
-            body.dark-mode .bg-gray-800 {
-                background-color: #1a202c;
-            }
-
-            body.dark-mode .text-blue-300 {
-                color: #90cdf4;
-            }
-
-            body.dark-mode .text-gray-400 {
-                color: #a0aec0;
-            }
-
-            body.dark-mode .text-gray-500 {
-                color: #cbd5e0;
-            }
-
-            body.dark-mode .shadow-lg,
-            body.dark-mode .shadow-xl,
-            body.dark-mode .shadow-inner {
-                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2);
-            }
-
-            body.dark-mode .modal-content {
-                background-color: #2d3748;
-            }
-
-            body.dark-mode .modal-overlay {
-                background-color: rgba(0, 0, 0, 0.8);
-            }
-
-            body.dark-mode .border {
-                border-color: #4a5568;
-            }
-
-            /* Dark mode specific footer styling for distinct separation */
-            body.dark-mode footer {
-                border-top: 2px solid #4a5568; /* A subtle border for separation */
-                box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.5); /* Stronger shadow at the top */
-            }
-
-            /* Force input text color and background for dark mode */
-            body.dark-mode input[type="text"],
-            body.dark-mode input[type="date"],
-            body.dark-mode input[type="time"],
-            body.dark-mode input[type="url"],
-            body.dark-mode select,
-            body.dark-mode textarea {
-                color: #e2e8f0; /* Light gray text */
-                background-color: #4a5568; /* Darker gray background */
-                border-color: #6b7280; /* Slightly lighter border for visibility */
-            }
-                /* Adjust placeholder color for dark mode inputs */
-                body.dark-mode input::placeholder,
-                body.dark-mode textarea::placeholder {
-                    color: #a0aec0; /* Lighter gray for placeholder */
-                }
-
-
-            body.dark-mode ::-webkit-scrollbar-track {
-                background: #2d3748;
-            }
-
-            body.dark-mode ::-webkit-scrollbar-thumb {
-                background: #a0aec0;
-            }
-
-                body.dark-mode ::-webkit-scrollbar-thumb:hover {
-                    background: #cbd5e0;
-                }
-
-        /* Settings icon styles */
-        #settingsIcon {
-            width: 28px; /* Slightly larger icon */
-            height: 28px;
-            cursor: pointer;
-            margin-left: 1.5rem; /* Space from navigation links */
-            transition: transform 0.2s ease-in-out;
-            filter: brightness(0) invert(1); /* Makes the icon white */
-        }
-
-            #settingsIcon:hover {
-                transform: rotate(15deg);
-            }
-
-        body.dark-mode #settingsIcon {
-            filter: none; /* Keep original color or adjust if necessary for dark mode */
-        }
-
-        /* Modal specific styles */
+        /* Modal Styles */
         .modal-overlay {
+            display: none;
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            inset: 0;
+            background-color: var(--modal-bg);
             z-index: 1000;
-        }
-
-        .modal-content {
-            background-color: #fff;
-            padding: 2rem;
-            border-radius: 0.75rem; /* rounded-xl */
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* shadow-2xl */
-            max-width: 90%;
-            max-height: 90%;
-            overflow-y: auto;
-            position: relative;
-            width: 500px; /* Adjusted width for better readability */
-        }
-
-        /* Settings modal specific styles */
-        #settingsModal .modal-content {
-            width: 350px; /* Adjust width for settings modal */
-        }
-
-        #settingsModal .radio-option {
-            display: flex;
             align-items: center;
-            margin-bottom: 0.75rem;
+            justify-content: center;
         }
 
-            #settingsModal .radio-option input[type="radio"] {
-                margin-right: 0.5rem;
+            .modal-overlay.is-open {
+                display: flex;
             }
 
-            #settingsModal .radio-option label {
-                font-size: 1rem;
-                color: #333;
-            }
-
-        body.dark-mode #settingsModal .radio-option label {
-            color: #e2e8f0;
-        }
-
-        #settingsModal button {
-            margin-top: 1rem;
-            width: 100%;
-        }
-
-        /* Data Viewer Modal Styles */
-        #dataViewerModal .modal-content {
-            width: 600px;
-            max-width: 95%;
-        }
-
-        #dataViewerContent {
-            background-color: #f4f4f4;
+        .modal-box {
+            background-color: var(--modal-content-bg);
+            padding: 1.5rem;
             border-radius: 0.5rem;
-            padding: 1rem;
-            max-height: 400px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            width: 90%;
+            max-width: 500px;
+        }
+
+        .data-modal-box {
+            max-height: 80vh;
             overflow-y: auto;
-            border: 1px solid #ddd;
         }
 
-        body.dark-mode #dataViewerContent {
-            background-color: #1f2937;
-            border-color: #4a5568;
-            color: #e2e8f0;
+        /* Mobile Nav Specific Styles */
+        #nav-links.nav-mobile-active {
+            display: flex !important;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: #1e40af;
+            flex-direction: column;
+            padding: 1rem;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
         }
 
-        /* Styles for data viewer items, similar to updates */
-        .data-viewer-item {
-            background-color: #ffffff;
-            padding: 0.75rem 1rem;
-            border-radius: 0.5rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            margin-bottom: 0.75rem;
+        html.dark #nav-links.nav-mobile-active {
+            background-color: #111827;
         }
 
-        body.dark-mode .data-viewer-item {
-            background-color: #2d3748;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-        }
-
-        .data-viewer-item p {
-            margin: 0;
-            line-height: 1.5;
-        }
-
-        .data-viewer-item .title {
-            font-weight: 600; /* font-semibold */
-            color: #1f2937; /* text-gray-800 */
-        }
-
-        body.dark-mode .data-viewer-item .title {
-            color: #e2e8f0;
-        }
-
-        .data-viewer-item .description {
-            font-size: 0.875rem; /* text-sm */
-            color: #4b5563; /* text-gray-600 */
-        }
-
-        body.dark-mode .data-viewer-item .description {
-            color: #a0aec0;
+        /* Info Card Styles */
+        .info-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
         }
     </style>
 </head>
-<body class="flex flex-col min-h-screen">
+<body class="antialiased">
+
     <!-- Header Section -->
-    <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex items-center justify-between sticky top-0 z-50 rounded-b-lg relative">
+    <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex items-center justify-between sticky top-0 z-50">
         <div class="flex items-center">
-            <!-- LSPD Logo -->
-            <img src="LSPD.png" alt="LSPD Logo" class="mr-4 w-16 h-16 object-contain" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
-            <!-- Responsive font size: text-2xl for small screens, text-3xl for medium screens and up -->
-            <h1 class="text-2xl md:text-3xl font-bold">Los Santos Police Department</h1>
+            <img src="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png" alt="UPD Logo" class="mr-4 w-16 h-16 object-contain">
+            <h1 class="text-2xl md:text-3xl font-bold">Unified Police Department</h1>
         </div>
 
-        <!-- Hamburger Menu Button for Mobile -->
-        <button id="hamburgerBtn" class="hamburger-menu text-white focus:outline-none md:hidden">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-4 6h4"></path>
-            </svg>
-        </button>
+        <div class="flex items-center">
+            <nav id="nav-links" class="hidden md:flex items-center">
+                <ul class="flex flex-row space-x-4 text-sm font-medium">
+                    <li><a href="index.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700 current-page">Dashboard</a></li>
+                    <li><a href="SOP.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">SOPs</a></li>
+                    <li><a href="training.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Training</a></li>
+                    <li><a href="forms.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Forms</a></li>
+                    <li><a href="roster.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Roster</a></li>
+                    <li><a href="hr.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">HR Info</a></li>
+                    <li><a href="report.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Report Generator</a></li>
+                    <li><a href="charges.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Charge Calculator</a></li>
+                    <li><a href="info.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Common Information</a></li>
+                </ul>
+            </nav>
 
-        <!-- Navigation Menu -->
-        <!-- Added md:flex-grow to nav to allow it to take available space -->
-        <nav class="nav-links md:flex md:flex-grow md:justify-end">
-            <!-- Changed md:space-x-8 to md:space-x-4 and added md:flex-wrap for stacking -->
-            <ul class="flex flex-col md:flex-row md:flex-wrap md:justify-end space-y-2 md:space-y-0 md:space-x-4 text-sm font-medium">
-                <li><a href="index.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700 current-page">Dashboard</a></li>
-                <li><a href="SOP.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">SOPs</a></li>
-                <li><a href="training.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Training</a></li>
-                <li><a href="forms.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Forms</a></li>
-                <li><a href="roster.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Roster</a></li>
-                <li><a href="hr.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">HR Info</a></li>
-                <li><a href="report.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Report Generator</a></li>
-                <li><a href="charges.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Charge Calculator</a></li>
-                <li><a href="info.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Common Information</a></li>
-            </ul>
-        </nav>
-        <!-- Settings Icon -->
-        <img src="settings.png" alt="Settings" id="settingsIcon" class="ml-4 cursor-pointer">
+            <div class="flex items-center ml-4">
+                <button id="settings-btn" class="p-2 rounded-full hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                </button>
+                <button id="hamburgerBtn" class="hamburger-menu p-2 rounded-md hover:bg-white/10 focus:outline-none md:hidden ml-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </div>
     </header>
-    <!-- Main Content Section -->
-    <main class="flex-grow container mx-auto p-6 md:p-10">
-        <section class="bg-white rounded-lg shadow-xl p-6 md:p-8 mb-8">
-            <h2 class="text-3xl md:text-4xl font-extrabold text-blue-800 mb-6 border-b-4 border-blue-500 pb-2">Commonly Used Police Information</h2>
-            <p class="text-lg text-gray-700 leading-relaxed mb-6">
-                This page provides essential information for officers while on duty, including 10-codes, speed limits, Miranda Rights, in-game commands, and more.
-            </p>
 
-            <!-- Useful 10 Codes - Moved to a horizontal box at the top -->
-            <div class="bg-blue-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 w-full mb-6">
-                <h3 class="text-2xl font-semibold text-blue-700 mb-3 flex items-center">
-                    <svg class="w-6 h-6 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.001 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
-                    Useful 10 Codes
-                </h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                    <!-- Each 10-code in its own light box -->
-                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <strong class="text-blue-800">10-02:</strong> Clear Communication
-                    </div>
-                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <strong class="text-blue-800">10-03:</strong> Stop Communication
-                    </div>
-                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <strong class="text-blue-800">10-04:</strong> Affirmative / OK
-                    </div>
-                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <strong class="text-blue-800">10-07:</strong> Taking a Break
-                    </div>
-                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <strong class="text-blue-800">10-08:</strong> Back On Duty
-                    </div>
-                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <strong class="text-blue-800">10-09:</strong> Repeat last.
-                    </div>
-                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <strong class="text-blue-800">10-10:</strong> Fight in Progress
-                    </div>
-                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <strong class="text-blue-800">10-11:</strong> Discharge of a firearm.
-                    </div>
-                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <strong class="text-blue-800">10-13:</strong> Suspicious Handoff
-                    </div>
-                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <strong class="text-blue-800">10-20:</strong> Location
-                    </div>
-                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <strong class="text-blue-800">10-23:</strong> Arrived on scene.
-                    </div>
-                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <strong class="text-blue-800">10-25:</strong> In person meeting.
-                    </div>
-                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <strong class="text-blue-800">10-28:</strong> License/Registration Check
-                    </div>
-                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <strong class="text-blue-800">10-29:</strong> Background Check
-                    </div>
-                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <strong class="text-blue-800">10-32:</strong> Additional units
-                    </div>
-                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <strong class="text-blue-800">10-35:</strong> Vehicle Theft
-                    </div>
-                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <strong class="text-blue-800">10-38:</strong> Traffic stop.
-                    </div>
-                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <strong class="text-blue-800">10-41:</strong> Beginning shift.
-                    </div>
-                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <strong class="text-blue-800">10-42:</strong> Ending shift.
-                    </div>
-                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <strong class="text-blue-800">10-50:</strong> Vehicle accident.
-                    </div>
-                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <strong class="text-blue-800">10-51:</strong> Tow truck needed.
-                    </div>
-                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <strong class="text-blue-800">10-52:</strong> Ambulance needed.
-                    </div>
-                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <strong class="text-blue-800">10-60:</strong> Shots fired from a vehicle
-                    </div>
-                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <strong class="text-blue-800">10-76:</strong> Enroute.
-                    </div>
-                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <strong class="text-blue-800">10-77:</strong> Estimated Time of Arrival
-                    </div>
-                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <strong class="text-blue-800">10-78:</strong> Need assistance.
-                    </div>
-                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <strong class="text-blue-800">10-80:</strong> Vehicle pursuit.
-                    </div>
-                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <strong class="text-blue-800">10-85:</strong> Supervisor needed.
-                    </div>
-                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <strong class="text-blue-800">10-90:</strong> Robbery.
-                    </div>
-                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <strong class="text-blue-800">10-95:</strong> Suspect in custody.
-                    </div>
-                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <strong class="text-blue-800">10-98:</strong> Jail break.
-                    </div>
-                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <strong class="text-blue-800">11-99:</strong> Officer in distress.
-                    </div>
-                    <div class="bg-white p-3 rounded-lg shadow-sm hover:shadow-md transition-shadow duration-300">
-                        <strong class="text-blue-800">11-99b:</strong> Officer in distress. (Low Risk)
-                    </div>
+    <!-- Main Content -->
+    <main class="container mx-auto p-6 md:p-10">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl md:text-5xl font-extrabold mb-3">Common Police Information</h2>
+            <p class="text-lg md:text-xl text-[var(--text-secondary)] max-w-3xl mx-auto">A quick reference guide for essential information, including 10-codes, speed limits, Miranda Rights, and in-game commands.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
+            <!-- 10 Codes -->
+            <div class="info-card rounded-lg shadow-md p-6 md:col-span-2 xl:col-span-3">
+                <h3 class="text-2xl font-bold mb-4 text-[var(--accent-color)]">Useful 10 Codes</h3>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4 text-sm">
+                    <p><strong class="font-semibold">10-02:</strong> Clear Comms</p>
+                    <p><strong class="font-semibold">10-03:</strong> Stop Comms</p>
+                    <p><strong class="font-semibold">10-04:</strong> Affirmative</p>
+                    <p><strong class="font-semibold">10-07:</strong> Break</p>
+                    <p><strong class="font-semibold">10-08:</strong> Back On Duty</p>
+                    <p><strong class="font-semibold">10-09:</strong> Repeat</p>
+                    <p><strong class="font-semibold">10-10:</strong> Fight</p>
+                    <p><strong class="font-semibold">10-11:</strong> Firearm Discharge</p>
+                    <p><strong class="font-semibold">10-13:</strong> Suspicious Handoff</p>
+                    <p><strong class="font-semibold">10-20:</strong> Location</p>
+                    <p><strong class="font-semibold">10-23:</strong> Arrived</p>
+                    <p><strong class="font-semibold">10-25:</strong> Meeting</p>
+                    <p><strong class="font-semibold">10-28:</strong> Reg Check</p>
+                    <p><strong class="font-semibold">10-29:</strong> Background Check</p>
+                    <p><strong class="font-semibold">10-32:</strong> Units Needed</p>
+                    <p><strong class="font-semibold">10-35:</strong> Vehicle Theft</p>
+                    <p><strong class="font-semibold">10-38:</strong> Traffic Stop</p>
+                    <p><strong class="font-semibold">10-41:</strong> Start of Shift</p>
+                    <p><strong class="font-semibold">10-42:</strong> End of Shift</p>
+                    <p><strong class="font-semibold">10-50:</strong> Vehicle Accident</p>
+                    <p><strong class="font-semibold">10-51:</strong> Tow Needed</p>
+                    <p><strong class="font-semibold">10-52:</strong> Ambulance Needed</p>
+                    <p><strong class="font-semibold">10-60:</strong> Shots from Vehicle</p>
+                    <p><strong class="font-semibold">10-76:</strong> Enroute</p>
+                    <p><strong class="font-semibold">10-77:</strong> ETA</p>
+                    <p><strong class="font-semibold">10-78:</strong> Assistance Needed</p>
+                    <p><strong class="font-semibold">10-80:</strong> Pursuit</p>
+                    <p><strong class="font-semibold">10-85:</strong> Supervisor Needed</p>
+                    <p><strong class="font-semibold">10-90:</strong> Robbery</p>
+                    <p><strong class="font-semibold">10-95:</strong> Suspect in Custody</p>
+                    <p><strong class="font-semibold">10-98:</strong> Jail Break</p>
+                    <p><strong class="font-semibold text-red-500">11-99:</strong> Officer Distress</p>
+                    <p><strong class="font-semibold text-orange-500">11-99b:</strong> Officer Distress (Low Risk)</p>
                 </div>
             </div>
 
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-                <!-- Speed Limits -->
-                <div class="bg-green-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-                    <h3 class="text-2xl font-semibold text-green-700 mb-3 flex items-center">
-                        <svg class="w-6 h-6 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                        Speed Limits
-                    </h3>
-                    <ul class="list-disc list-inside text-gray-600 space-y-2">
-                        <li>City: 50 MPH / 80 KPH</li>
-                        <li>Route 68 / Joshua Road: 60 MPH / 96 KPH</li>
-                        <li>Highway: 80 MPH / 129 KPH</li>
-                    </ul>
-                </div>
-
-                <!-- Miranda Rights -->
-                <div class="bg-yellow-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-                    <h3 class="text-2xl font-semibold text-yellow-700 mb-3 flex items-center">
-                        <svg class="w-6 h-6 mr-2 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h10a2 2 0 002-2V8m-2 0V5a2 2 0 00-2-2H9a2 2 0 00-2 2v3m0 0h8m-8 0H5m3 4h.01M15 12h.01M12 12h.01M15 16h.01M12 16h.01M9 16h.01"></path></svg>
-                        Miranda Rights
-                    </h3>
-                    <p class="text-gray-600 leading-relaxed">
-                        添ou have the right to remain silent. Anything you say or do can and will be used against you in a court of law. You have the right to an attorney. If you cannot afford one, one will be provided to you by the state if available. Do you understand these rights as I have read them to you?"
-                    </p>
-                    <p class="text-gray-600 leading-relaxed mt-2 italic">
-                        (Optional) "If so, do you still wish to speak with me?"
-                    </p>
-                </div>
-
-                <!-- Ingame Commands -->
-                <div class="bg-red-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-                    <h3 class="text-2xl font-semibold text-red-700 mb-3 flex items-center">
-                        <svg class="w-6 h-6 mr-2 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
-                        Ingame Commands
-                    </h3>
-                    <ul class="list-disc list-inside text-gray-600 space-y-2">
-                        <li><strong class="font-semibold">F1:</strong> Radial menu for most police interactions</li>
-                        <li><strong class="font-semibold">K:</strong> Police database/Investlog</li>
-                        <li><strong class="font-semibold">/timer for cash/seizecash:</strong> Seizes cash of suspect</li>
-                        <li><strong class="font-semibold">/callsign:</strong> Sets callsign in MDT</li>
-                        <li><strong class="font-semibold">/map:</strong> Opens map</li>
-                        <li><strong class="font-semibold">/polcharge:</strong> Charge command</li>
-                    </ul>
-                </div>
-
-                <!-- Situation Codes -->
-                <div class="bg-purple-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-                    <h3 class="text-2xl font-semibold text-purple-700 mb-3 flex items-center">
-                        <svg class="w-6 h-6 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
-                        Situation Codes
-                    </h3>
-                    <ul class="list-disc list-inside text-gray-600 space-y-2">
-                        <li><strong class="font-semibold">Code 0:</strong> Headpop/Crash</li>
-                        <li><strong class="font-semibold">Code 1:</strong> No Lights/Sirens</li>
-                        <li><strong class="font-semibold">Code 2:</strong> Lights Only</li>
-                        <li><strong class="font-semibold">Code 3:</strong> Lights and Sirens</li>
-                        <li><strong class="font-semibold">Code 4:</strong> Scene Clear</li>
-                        <li><strong class="font-semibold">Code 5:</strong> High Risk Stop</li>
-                        <li><strong class="font-semibold">Code 6:</strong> Investigating the Area</li>
-                    </ul>
-                </div>
-
-                <!-- Disclaimer -->
-                <div class="bg-indigo-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-                    <h3 class="text-2xl font-semibold text-indigo-700 mb-3 flex items-center">
-                        <svg class="w-6 h-6 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                        Disclaimer
-                    </h3>
-                    <p class="text-gray-600 leading-relaxed">
-                        Any legal weapon used in the facilitation of a crime becomes illegal and you can charge them with illegal possession of a weapon. You also revoke their weapon license if the legal weapon was used in the commission of the crime or have previous felonies.
-                    </p>
-                </div>
-
-                <!-- Frequencies -->
-                <div class="bg-pink-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-                    <h3 class="text-2xl font-semibold text-pink-700 mb-3 flex items-center">
-                        <svg class="w-6 h-6 mr-2 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.001 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path></svg>
-                        Frequencies
-                    </h3>
-                    <ul class="list-disc list-inside text-gray-600 space-y-2">
-                        <li><strong class="font-semibold">Ch. 1:</strong> LSPD</li>
-                        <li><strong class="font-semibold">Ch. 2:</strong> EMS</li>
-                        <li><strong class="font-semibold">Ch. 3:</strong> PD - Alternate 1</li>
-                        <li><strong class="font-semibold">Ch. 4:</strong> PD - Alternate 2</li>
-                        <li><strong class="font-semibold">Ch. 7:</strong> DOJ (Restricted)</li>
-                    </ul>
-                </div>
-
-                <!-- Guilty Plea -->
-                <div class="bg-teal-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-                    <h3 class="text-2xl font-semibold text-teal-700 mb-3 flex items-center">
-                        <svg class="w-6 h-6 mr-2 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.001 12.001 0 002.92 12c0 3.072 1.47 5.862 3.813 7.758L12 22l5.267-3.692A12.001 12.001 0 0021.08 12c0-3.072-1.47-5.862-3.813-7.758z"></path></svg>
-                        Guilty Plea
-                    </h3>
-                    <p class="text-gray-600 leading-relaxed">
-                        A person can enter a plea of "guilty' by admitting in court that he or she committed the offense for which he she is charged. The Jury can render a verdict of "guilty' if it finds beyond a reasonable doubt, based on the evidence, that the defendant committed the offense.
-                    </p>
-                </div>
-
-                <!-- Not Guilty Plea -->
-                <div class="bg-orange-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-                    <h3 class="text-2xl font-semibold text-orange-700 mb-3 flex items-center">
-                        <svg class="w-6 h-6 mr-2 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                        Not Guilty Plea
-                    </h3>
-                    <p class="text-gray-600 leading-relaxed">
-                        A person can enter the plea of "not guilty" by contesting the charges brought against him or her by the prosecution. The court will then set up a trial date for both parties to decide the fate of the defense.
-                    </p>
-                </div>
-
-                <!-- Phonetic Alphabet -->
-                <div class="bg-gray-50 p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300">
-                    <h3 class="text-2xl font-semibold text-gray-700 mb-3 flex items-center">
-                        <svg class="w-6 h-6 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                        Phonetic Alphabet
-                    </h3>
-                    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-2 text-gray-600">
-                        <span><strong class="font-semibold">Alpha</strong></span>
-                        <span><strong class="font-semibold">Bravo</strong></span>
-                        <span><strong class="font-semibold">Charlie</strong></span>
-                        <span><strong class="font-semibold">Delta</strong></span>
-                        <span><strong class="font-semibold">Echo</strong></span>
-                        <span><strong class="font-semibold">Foxtrot</strong></span>
-                        <span><strong class="font-semibold">Golf</strong></span>
-                        <span><strong class="font-semibold">Hotel</strong></span>
-                        <span><strong class="font-semibold">India</strong></span>
-                        <span><strong class="font-semibold">Juliett</strong></span>
-                        <span><strong class="font-semibold">Kilo</strong></span>
-                        <span><strong class="font-semibold">Lima</strong></span>
-                        <span><strong class="font-semibold">Mike</strong></span>
-                        <span><strong class="font-semibold">November</strong></span>
-                        <span><strong class="font-semibold">Oscar</strong></span>
-                        <span><strong class="font-semibold">Papa</strong></span>
-                        <span><strong class="font-semibold">Quebec</strong></span>
-                        <span><strong class="font-semibold">Romeo</strong></span>
-                        <span><strong class="font-semibold">Sierra</strong></span>
-                        <span><strong class="font-semibold">Tango</strong></span>
-                        <span><strong class="font-semibold">Uniform</strong></span>
-                        <span><strong class="font-semibold">Victor</strong></span>
-                        <span><strong class="font-semibold">Whiskey</strong></span>
-                        <span><strong class="font-semibold">X-Ray</strong></span>
-                        <span><strong class="font-semibold">Yankee</strong></span>
-                        <span><strong class="font-semibold">Zulu</strong></span>
-                    </div>
-                </div>
-
-            </div>
-        </section>
+            <!-- Other Cards -->
+            <div class="info-card rounded-lg shadow-md p-6"><h3 class="text-2xl font-bold mb-4 text-[var(--accent-color)]">Speed Limits</h3><ul class="list-disc list-inside space-y-2"><li>City: 50 MPH / 80 KPH</li><li>Route 68 / Joshua Road: 60 MPH / 96 KPH</li><li>Highway: 80 MPH / 129 KPH</li></ul></div>
+            <div class="info-card rounded-lg shadow-md p-6"><h3 class="text-2xl font-bold mb-4 text-[var(--accent-color)]">Miranda Rights</h3><p class="leading-relaxed">"You have the right to remain silent. Anything you say or do can and will be used against you in a court of law. You have the right to an attorney. If you cannot afford one, one will be provided to you. Do you understand these rights?"</p></div>
+            <div class="info-card rounded-lg shadow-md p-6"><h3 class="text-2xl font-bold mb-4 text-[var(--accent-color)]">Ingame Commands</h3><ul class="list-disc list-inside space-y-2"><li><strong class="font-semibold">F1:</strong> Radial Menu</li><li><strong class="font-semibold">K:</strong> Police Database</li><li><strong class="font-semibold">/seizecash:</strong> Seize Cash</li><li><strong class="font-semibold">/callsign:</strong> Set Callsign</li><li><strong class="font-semibold">/polcharge:</strong> Charge Command</li></ul></div>
+            <div class="info-card rounded-lg shadow-md p-6"><h3 class="text-2xl font-bold mb-4 text-[var(--accent-color)]">Situation Codes</h3><ul class="list-disc list-inside space-y-2"><li><strong>Code 0:</strong> Headpop/Crash</li><li><strong>Code 1:</strong> No Lights/Sirens</li><li><strong>Code 2:</strong> Lights Only</li><li><strong>Code 3:</strong> Lights & Sirens</li><li><strong>Code 4:</strong> Scene Clear</li><li><strong>Code 5:</strong> High Risk Stop</li><li><strong>Code 6:</strong> Investigating Area</li></ul></div>
+            <div class="info-card rounded-lg shadow-md p-6"><h3 class="text-2xl font-bold mb-4 text-[var(--accent-color)]">Frequencies</h3><ul class="list-disc list-inside space-y-2"><li><strong>Ch. 1:</strong> LSPD</li><li><strong>Ch. 2:</strong> EMS</li><li><strong>Ch. 3:</strong> PD - Alternate 1</li><li><strong>Ch. 4:</strong> PD - Alternate 2</li><li><strong>Ch. 7:</strong> DOJ (Restricted)</li></ul></div>
+            <div class="info-card rounded-lg shadow-md p-6"><h3 class="text-2xl font-bold mb-4 text-[var(--accent-color)]">Phonetic Alphabet</h3><div class="grid grid-cols-2 sm:grid-cols-3 gap-2 text-sm"><span><strong>A</strong>lpha</span><span><strong>B</strong>ravo</span><span><strong>C</strong>harlie</span><span><strong>D</strong>elta</span><span><strong>E</strong>cho</span><span><strong>F</strong>oxtrot</span><span><strong>G</strong>olf</span><span><strong>H</strong>otel</span><span><strong>I</strong>ndia</span><span><strong>J</strong>uliett</span><span><strong>K</strong>ilo</span><span><strong>L</strong>ima</span><span><strong>M</strong>ike</span><span><strong>N</strong>ovember</span><span><strong>O</strong>scar</span><span><strong>P</strong>apa</span><span><strong>Q</strong>uebec</span><span><strong>R</strong>omeo</span><span><strong>S</strong>ierra</span><span><strong>T</strong>ango</span><span><strong>U</strong>niform</span><span><strong>V</strong>ictor</span><span><strong>W</strong>hiskey</span><span><strong>X</strong>-Ray</span><span><strong>Y</strong>ankee</span><span><strong>Z</strong>ulu</span></div></div>
+        </div>
     </main>
 
-    <!-- Footer Section - Reused from hr.html -->
-    <footer class="bg-gray-800 text-white py-10 px-6 md:px-12 rounded-t-lg">
-        <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-            <!-- Internal Contact Info -->
-            <div>
-                <h4 class="text-xl font-semibold mb-4 text-blue-300">Internal Contacts</h4>
-                <ul class="space-y-2 text-sm">
-                    <li><a href="https://discord.gg/7FwxdpfDTM" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Discord</a></li>
-                    <li><a href="https://discord.com/channels/1383775098464370768/1383775099777318972" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Chat</a></li>
-                    <li><a href="https://discord.com/channels/1383775098464370768/1383782578976456735" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Cadet Support</a></li>
-                </ul>
-            </div>
-            <!-- Internal Quick Links -->
-            <div>
-                <h4 class="text-xl font-semibold mb-4 text-blue-300">Quick Access</h4>
-                <ul class="space-y-2 text-sm">
-                    <li><a href="https://docs.google.com/document/d/1etjilZ1dAHGviw33MV5Zs-b5dXqcSHyoYIHvHiRIyy4/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">LSPD SOP</a></li>
-                    <li><a href="https://docs.google.com/document/d/1hKQ4fw9b1_yQELhPi1p1b4M6uiSaYb7bBp-9C6GVTdY/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Los Santos Police Department Interview Procedure & Questions</a></li>
-                    <li><a href="https://docs.google.com/document/d/1d004FfAhZBgESn88Mx21N3CGqXlcoNeP9_sadn_ePak/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Promotional Pathway & Subdivision Assignment Policy</a></li>
-                    <li><a href="https://docs.google.com/document/d/14QIEsYMWpTssti1xGbGWiMxQ2b0jbiYxuMmvV8XWUUo/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Highway Enforcement and Apprehension Team (HEAT) Activation Policy</a></li>
-                    <li><a href="https://docs.google.com/document/d/1Ggf7SS5voiIjr3iSLB3VtAc47JN3aDjm2J_gYnpoZ6s/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Disciplinary Guidelines</a></li>
-                    <li><a href="https://nlspd.net/" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">LSPD Website</a></li>
-                </ul>
-            </div>
-            <!-- Copyright & Internal System Info -->
-            <div>
-                <h4 class="text-xl font-semibold mb-4 text-blue-300">System Information</h4>
-                <p class="text-gray-500 text-sm mb-2">Unauthorized Access Strictly Prohibited</p>
-                <p class="text-gray-500 text-sm mb-2">For LSPD Personnel Use Only</p>
-                <p class="text-500 text-sm mb-2">Created and Maintained by FiveM "NightLife RP"</p>
-                <p class="text-gray-500 text-sm">&copy; 2025 Los Santos Police Department Internal Systems.</p>
-            </div>
-        </div>
-        <!-- Font Awesome for any potential internal icons (though less needed here) -->
-        <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-    </footer>
+    <!-- Modals -->
+    <div id="settings-modal" class="modal-overlay"><div class="modal-box text-[var(--text-primary)]"><h2 class="text-2xl font-bold mb-6">Settings</h2><div class="mb-6"><h3 class="text-lg font-semibold mb-3">Website Theme</h3><div class="space-y-2"><label class="flex items-center"><input type="radio" name="theme" value="light" class="form-radio h-4 w-4 text-blue-600"><span class="ml-2">Light Mode</span></label><label class="flex items-center"><input type="radio" name="theme" value="dark" class="form-radio h-4 w-4 text-blue-600"><span class="ml-2">Dark Mode</span></label></div></div><div class="mb-6"><h3 class="text-lg font-semibold mb-3">Data Management</h3><div class="flex flex-col space-y-3"><button id="clear-data-btn" class="w-full bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition">Clear All Local Data</button><button id="view-data-btn" class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition">View Stored Data</button></div></div><div class="mt-8 text-right"><button id="close-settings-btn" class="bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-200 px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition">Close</button></div></div></div>
+    <div id="view-data-modal" class="modal-overlay"><div class="modal-box data-modal-box text-[var(--text-primary)]"><h2 class="text-2xl font-bold mb-4">Local Storage Data</h2><div id="data-container" class="space-y-4 text-sm"></div><div class="mt-6 text-right"><button id="close-view-data-btn" class="bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-200 px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition">Close</button></div></div></div>
+    <div id="confirm-modal" class="modal-overlay"><div class="modal-box text-[var(--text-primary)]"><h2 id="confirm-title" class="text-xl font-bold mb-4">Are you sure?</h2><p id="confirm-text" class="mb-6">This action cannot be undone.</p><div class="flex justify-end space-x-4"><button id="confirm-cancel-btn" class="bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-200 px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition">Cancel</button><button id="confirm-ok-btn" class="bg-red-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-700 transition">Confirm</button></div></div></div>
 
-    <!-- Settings Modal -->
-    <div id="settingsModal" class="modal-overlay hidden">
-        <div class="modal-content">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">Settings</h3>
-
-            <div class="mb-6">
-                <h4 class="text-lg font-semibold text-gray-700 mb-2">Website Theme</h4>
-                <div class="radio-option">
-                    <input type="radio" id="lightMode" name="theme" value="light" class="text-blue-600">
-                    <label for="lightMode">Light Mode</label>
-                </div>
-                <div class="radio-option">
-                    <input type="radio" id="darkMode" name="theme" value="dark" class="text-blue-600">
-                    <label for="darkMode">Dark Mode</label>
-                </div>
-            </div>
-
-            <div class="mb-6">
-                <h4 class="text-lg font-semibold text-gray-700 mb-2">Data Management</h4>
-                <button id="clearAllDataBtn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md w-full mb-2">
-                    Clear All Local Data
-                </button>
-                <button id="viewDataBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md w-full">
-                    View Stored Data
-                </button>
-            </div>
-
-            <div class="flex justify-end mt-4">
-                <button id="closeSettingsModalBtn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">
-                    Close
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Data Viewer Modal -->
-    <div id="dataViewerModal" class="modal-overlay hidden">
-        <div class="modal-content">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">Local Storage Data</h3>
-            <div id="dataViewerContent" class="space-y-4">
-                <!-- Data will be loaded here dynamically -->
-            </div>
-            <div class="flex justify-end mt-4">
-                <button id="closeDataViewerModalBtn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">
-                    Close
-                </button>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Delete All Data Confirmation Modal -->
-    <div id="confirmDeleteModal" class="modal-overlay hidden">
-        <div class="modal-content text-center">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">Confirm Data Deletion</h3>
-            <p class="text-gray-700 mb-6">
-                Are you sure you want to completely delete ALL website data from your device?
-                This includes any saved preferences.
-                This action cannot be undone.
-            </p>
-            <div class="flex justify-center space-x-4">
-                <button id="confirmDeleteYesBtn"
-                        class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">
-                    Yes, Delete All
-                </button>
-                <button id="confirmDeleteNoBtn"
-                        class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">
-                    No, Keep Data
-                </button>
-            </div>
-        </div>
-    </div>
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-10 px-6 md:px-12"><div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8"><div><h4 class="text-xl font-semibold mb-4 text-blue-300">Internal Contacts</h4><ul class="space-y-2 text-sm"><li><a href="https://discord.gg/7FwxdpfDTM" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition">Discord</a></li><li><a href="#" class="text-gray-400 hover:text-white hover:underline transition">UPD Support</a></li><li><a href="#" class="text-gray-400 hover:text-white hover:underline transition">UPD Chat</a></li></ul></div><div><h4 class="text-xl font-semibold mb-4 text-blue-300">Quick Access</h4><ul class="space-y-2 text-sm"><li><a href="SOP.html" class="text-gray-400 hover:text-white hover:underline transition">UPD SOP</a></li><li><a href="training.html" class="text-gray-400 hover:text-white hover:underline transition">Training</a></li><li><a href="privacypolicy.html" class="text-gray-400 hover:text-white hover:underline transition">Privacy Policy</a></li></ul></div><div><h4 class="text-xl font-semibold mb-4 text-blue-300">System Information</h4><p class="text-gray-500 text-sm">&copy; 2025 Unified Police Department Internal Systems.</p></div></div></footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const settingsIcon = document.getElementById('settingsIcon');
-            const settingsModal = document.getElementById('settingsModal');
-            const closeSettingsModalBtn = document.getElementById('closeSettingsModalBtn');
-            const lightModeRadio = document.getElementById('lightMode');
-            const darkModeRadio = document.getElementById('darkMode');
-            const clearAllDataBtn = document.getElementById('clearAllDataBtn');
-            const viewDataBtn = document.getElementById('viewDataBtn');
+        (() => {
+            // --- DOM ELEMENTS ---
+            const settingsModal = document.getElementById('settings-modal');
+            const themeRadios = document.querySelectorAll('input[name="theme"]');
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const navLinks = document.getElementById('nav-links');
+            const settingsBtn = document.getElementById('settings-btn');
+            const closeSettingsBtn = document.getElementById('close-settings-btn');
+            const viewDataBtn = document.getElementById('view-data-btn');
+            const clearDataBtn = document.getElementById('clear-data-btn');
+            const viewDataModal = document.getElementById('view-data-modal');
+            const closeViewDataBtn = document.getElementById('close-view-data-btn');
+            const dataContainer = document.getElementById('data-container');
+            const confirmModal = document.getElementById('confirm-modal');
+            const confirmOkBtn = document.getElementById('confirm-ok-btn');
+            const confirmCancelBtn = document.getElementById('confirm-cancel-btn');
 
-            const dataViewerModal = document.getElementById('dataViewerModal');
-            const dataViewerContent = document.getElementById('dataViewerContent');
-            const closeDataViewerModalBtn = document.getElementById('closeDataViewerModalBtn');
+            // --- STATE ---
+            let confirmCallback = null;
 
-            const confirmDeleteModal = document.getElementById('confirmDeleteModal');
-            const confirmDeleteYesBtn = document.getElementById('confirmDeleteYesBtn');
-            const confirmDeleteNoBtn = document.getElementById('confirmDeleteNoBtn');
-
-            // --- Theme Switching Logic ---
+            // --- FUNCTIONS ---
             const applyTheme = (theme) => {
                 if (theme === 'dark') {
-                    document.body.classList.add('dark-mode');
-                    document.body.classList.remove('light-mode');
-                    if (darkModeRadio) darkModeRadio.checked = true;
+                    document.documentElement.classList.add('dark');
+                    themeRadios.forEach(radio => radio.value === 'dark' ? radio.checked = true : false);
                 } else {
-                    document.body.classList.remove('dark-mode');
-                    document.body.classList.add('light-mode');
-                    if (lightModeRadio) lightModeRadio.checked = true;
+                    document.documentElement.classList.remove('dark');
+                    themeRadios.forEach(radio => radio.value === 'light' ? radio.checked = true : false);
                 }
-                localStorage.setItem('theme', theme);
             };
 
-            // Initialize theme based on local storage or default to light
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            applyTheme(savedTheme);
-
-            if (lightModeRadio) {
-                lightModeRadio.addEventListener('change', () => applyTheme('light'));
-            }
-            if (darkModeRadio) {
-                darkModeRadio.addEventListener('change', () => applyTheme('dark'));
+            const openConfirmModal = (callback) => {
+                confirmCallback = callback;
+                confirmModal.classList.add('is-open');
+            };
+            const closeConfirmModal = () => {
+                confirmModal.classList.remove('is-open');
+                confirmCallback = null;
             }
 
-            // --- Settings Modal Logic ---
-            if (settingsIcon) {
-                settingsIcon.addEventListener('click', () => {
-                    settingsModal.classList.remove('hidden');
-                    // Ensure correct radio button is checked when opening modal
-                    const currentTheme = localStorage.getItem('theme') || 'light';
-                    if (currentTheme === 'dark') {
-                        if (darkModeRadio) darkModeRadio.checked = true;
-                    } else {
-                        if (lightModeRadio) lightModeRadio.checked = true;
-                    }
-                });
-            }
+            // --- EVENT LISTENERS ---
+            document.addEventListener('DOMContentLoaded', () => {
+                const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                applyTheme(savedTheme);
 
-            if (closeSettingsModalBtn) {
-                closeSettingsModalBtn.addEventListener('click', () => {
-                    settingsModal.classList.add('hidden');
-                });
-            }
+                themeRadios.forEach(radio => radio.addEventListener('change', (e) => {
+                    localStorage.setItem('theme', e.target.value);
+                    applyTheme(e.target.value);
+                }));
 
-            if (settingsModal) {
-                settingsModal.addEventListener('click', (e) => {
-                    if (e.target === settingsModal) {
-                        settingsModal.classList.add('hidden');
-                    }
-                });
-            }
+                hamburgerBtn.addEventListener('click', (e) => { e.stopPropagation(); navLinks.classList.toggle('nav-mobile-active'); });
 
-            // --- Clear All Data Logic ---
-            if (clearAllDataBtn) {
-                clearAllDataBtn.addEventListener('click', () => {
-                    settingsModal.classList.add('hidden'); // Hide settings modal first
-                    confirmDeleteModal.classList.remove('hidden'); // Show confirmation modal
-                });
-            }
+                settingsBtn.addEventListener('click', () => settingsModal.classList.add('is-open'));
+                closeSettingsBtn.addEventListener('click', () => settingsModal.classList.remove('is-open'));
 
-            if (confirmDeleteYesBtn) {
-                confirmDeleteYesBtn.addEventListener('click', () => {
-                    localStorage.clear(); // Clears all data from local storage for this domain
-                    console.log('All website data cleared from local storage.');
-                    confirmDeleteModal.classList.add('hidden');
-                    location.reload(); // Reload the page to reflect changes
-                });
-            }
-
-            if (confirmDeleteNoBtn) {
-                confirmDeleteNoBtn.addEventListener('click', () => {
-                    confirmDeleteModal.classList.add('hidden');
-                    settingsModal.classList.remove('hidden'); // Show settings modal again
-                });
-            }
-
-            if (confirmDeleteModal) {
-                confirmDeleteModal.addEventListener('click', (e) => {
-                    if (e.target === confirmDeleteModal) {
-                        confirmDeleteModal.classList.add('hidden');
-                        settingsModal.classList.remove('hidden'); // Show settings modal again
-                    }
-                });
-            }
-
-
-            // --- Data Viewer Logic ---
-            if (viewDataBtn) {
                 viewDataBtn.addEventListener('click', () => {
-                    settingsModal.classList.add('hidden'); // Hide settings modal
-                    dataViewerModal.classList.remove('hidden');
-                    displayLocalStorageData();
+                    dataContainer.innerHTML = '';
+                    for (let i = 0; i < localStorage.length; i++) {
+                        const key = localStorage.key(i);
+                        const value = localStorage.getItem(key);
+                        const itemEl = document.createElement('div');
+                        itemEl.className = 'p-3 bg-[var(--bg-tertiary)] rounded-md';
+                        itemEl.innerHTML = `<strong class="text-[var(--accent-color)]">${key}:</strong><pre class="whitespace-pre-wrap break-all">${value}</pre>`;
+                        dataContainer.appendChild(itemEl);
+                    }
+                    if (localStorage.length === 0) dataContainer.innerHTML = '<p>No local data found.</p>';
+                    viewDataModal.classList.add('is-open');
                 });
-            }
+                closeViewDataBtn.addEventListener('click', () => viewDataModal.classList.remove('is-open'));
 
-            if (closeDataViewerModalBtn) {
-                closeDataViewerModalBtn.addEventListener('click', () => {
-                    dataViewerModal.classList.add('hidden');
-                    settingsModal.classList.remove('hidden'); // Show settings modal again
+                clearDataBtn.addEventListener('click', () => {
+                    openConfirmModal(() => {
+                        Object.keys(localStorage).forEach(key => { if (key !== 'theme') localStorage.removeItem(key); });
+                        location.reload();
+                    });
                 });
-            }
 
-            if (dataViewerModal) {
-                dataViewerModal.addEventListener('click', (e) => {
-                    if (e.target === dataViewerModal) {
-                        dataViewerModal.classList.add('hidden');
-                        settingsModal.classList.remove('hidden'); // Show settings modal again
-                    }
-                });
-            }
-
-            function displayLocalStorageData() {
-                dataViewerContent.innerHTML = ''; // Clear existing content
-
-                let hasData = false;
-
-                // Display Logged In Officer (if applicable, though info.html doesn't have direct login)
-                const loggedInOfficer = localStorage.getItem('loggedInOfficer');
-                if (loggedInOfficer) {
-                    try {
-                        const officer = JSON.parse(loggedInOfficer);
-                        const officerDiv = document.createElement('div');
-                        officerDiv.className = 'data-viewer-item';
-                        officerDiv.innerHTML = `
-                                <p class="title">Officer Logged In</p>
-                                <p class="description">${officer.name} (Badge: ${officer.badge})</p>
-                            `;
-                        dataViewerContent.appendChild(officerDiv);
-                        hasData = true;
-                    } catch (e) {
-                        console.error("Error parsing loggedInOfficer from local storage:", e);
-                    }
-                }
-
-                // Display Website Theme
-                const currentTheme = localStorage.getItem('theme');
-                if (currentTheme) {
-                    const themeDiv = document.createElement('div');
-                    themeDiv.className = 'data-viewer-item';
-                    themeDiv.innerHTML = `
-                            <p class="title">Website Theme</p>
-                            <p class="description">${currentTheme.charAt(0).toUpperCase() + currentTheme.slice(1)} Mode</p>
-                        `;
-                    dataViewerContent.appendChild(themeDiv);
-                    hasData = true;
-                }
-
-                // Display Other Stored Data
-                let otherDataCount = 0;
-                for (let i = 0; i < localStorage.length; i++) {
-                    const key = localStorage.key(i);
-                    // Skip keys already displayed or internal keys
-                    if (key === 'loggedInOfficer' || key === 'theme' || key === 'adminReportGeneratorData' || key === 'cookieConsent') {
-                        continue;
-                    }
-
-                    let value;
-                    try {
-                        // Try to parse as JSON, otherwise keep as string
-                        value = JSON.parse(localStorage.getItem(key));
-                        // If it's an object/array, stringify it nicely
-                        if (typeof value === 'object' && value !== null) {
-                            value = JSON.stringify(value, null, 2);
-                        }
-                    } catch (e) {
-                        value = localStorage.getItem(key);
-                    }
-
-                    if (otherDataCount === 0) {
-                        const otherDataHeader = document.createElement('div');
-                        otherDataHeader.className = 'data-viewer-item mt-4';
-                        otherDataHeader.innerHTML = `<p class="title">Other Stored Data</p>`;
-                        dataViewerContent.appendChild(otherDataHeader);
-                    }
-
-                    const dataDiv = document.createElement('div');
-                    dataDiv.className = 'data-viewer-item';
-                    dataDiv.innerHTML = `
-                            <p class="title">${key}</p>
-                            <p class="description">${value}</p>
-                        `;
-                    dataViewerContent.appendChild(dataDiv);
-                    hasData = true;
-                    otherDataCount++;
-                }
-
-                if (!hasData) {
-                    dataViewerContent.innerHTML = '<p class="text-gray-500 text-center py-4">No user-specific data currently stored in local storage.</p>';
-                }
-            }
-        });
+                confirmOkBtn.addEventListener('click', () => { if (confirmCallback) confirmCallback(); closeConfirmModal(); });
+                confirmCancelBtn.addEventListener('click', closeConfirmModal);
+            });
+        })();
     </script>
 </body>
 </html>
