@@ -204,22 +204,16 @@
                     </div>
                     <!-- Text editor toolbar (mocked with icons) -->
                     <div class="flex space-x-2 mb-2 p-2 rounded-t-lg bg-gray-700">
-                        <button class="text-white hover:text-gray-300"><b>B</b></button>
-                        <button class="text-white hover:text-gray-300"><i>I</i></button>
-                        <button class="text-white hover:text-gray-300"><u>H</u></button>
-                        <button class="text-white hover:text-gray-300">...</button>
-                        <button class="text-white hover:text-gray-300">▤</button>
-                        <button class="text-white hover:text-gray-300">🖼️</button>
-                        <button class="text-white hover:text-gray-300">🔗</button>
-                        <button class="text-white hover:text-gray-300">
-                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
-                        </button>
+                        <button id="bold-btn" class="text-white hover:text-gray-300 px-2 py-1 rounded" title="Bold"><b>B</b></button>
+                        <button id="italic-btn" class="text-white hover:text-gray-300 px-2 py-1 rounded" title="Italic"><i>I</i></button>
+                        <button id="link-btn" class="text-white hover:text-gray-300 px-2 py-1 rounded" title="Insert Link">🔗</button>
+                        <button id="image-btn" class="text-white hover:text-gray-300 px-2 py-1 rounded" title="Insert Image">🖼️</button>
                     </div>
                     <!-- Loading state container for the description -->
                     <div id="description-loading-container" class="hidden flex justify-center items-center flex-grow bg-gray-700 rounded-b-lg">
                         <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
                     </div>
-                    <textarea id="report-description" placeholder="Enter a description..." class="w-full flex-grow p-2 bg-gray-700 text-white rounded-b-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-600"></textarea>
+                    <textarea id="report-description" placeholder="Enter the initial debrief or summary of the incident here..." class="w-full flex-grow p-2 bg-gray-700 text-white rounded-b-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-600"></textarea>
                 </div>
             </div>
 
@@ -542,6 +536,18 @@
             <div class="flex justify-end space-x-2">
                 <button id="cancelDeleteBtn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">Cancel</button>
                 <button id="confirmDeleteBtn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">Yes, Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for custom prompts (link/image URL) -->
+    <div id="promptModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3 id="promptModalTitle" class="text-xl font-bold text-gray-100 mb-4">Enter Value</h3>
+            <input type="text" id="promptModalInput" placeholder="Enter value..." class="w-full p-3 mb-4 bg-gray-700 text-white rounded-md border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-blue-600 transition-colors duration-200">
+            <div class="flex justify-end space-x-2">
+                <button id="closePromptModalBtn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">Cancel</button>
+                <button id="savePromptModalBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">OK</button>
             </div>
         </div>
     </div>
@@ -1316,10 +1322,111 @@
             });
 
             // ===============================================
+            // Text Editor Toolbar Functionality
+            // ===============================================
+            const boldBtn = document.getElementById('bold-btn');
+            const italicBtn = document.getElementById('italic-btn');
+            const linkBtn = document.getElementById('link-btn');
+            const imageBtn = document.getElementById('image-btn');
+            const reportTextarea = document.getElementById('report-description');
+
+            // NEW: Custom prompt modal elements
+            const promptModal = document.getElementById('promptModal');
+            const promptModalTitle = document.getElementById('promptModalTitle');
+            const promptModalInput = document.getElementById('promptModalInput');
+            const savePromptModalBtn = document.getElementById('savePromptModalBtn');
+            const closePromptModalBtn = document.getElementById('closePromptModalBtn');
+            let promptCallback = null; // To store the action to perform on save
+
+            closePromptModalBtn.addEventListener('click', () => {
+                promptModal.classList.add('hidden');
+                promptCallback = null;
+            });
+
+            savePromptModalBtn.addEventListener('click', () => {
+                if (promptCallback) {
+                    promptCallback(promptModalInput.value);
+                }
+                promptModal.classList.add('hidden');
+                promptCallback = null;
+            });
+
+            function showPrompt(title, placeholder, callback) {
+                promptModalTitle.textContent = title;
+                promptModalInput.placeholder = placeholder;
+                promptModalInput.value = '';
+                promptCallback = callback;
+                promptModal.classList.remove('hidden');
+                promptModalInput.focus();
+            }
+
+
+            function applyMarkdown(startTag, endTag) {
+                const start = reportTextarea.selectionStart;
+                const end = reportTextarea.selectionEnd;
+                const selectedText = reportTextarea.value.substring(start, end);
+                const textBefore = reportTextarea.value.substring(0, start);
+                const textAfter = reportTextarea.value.substring(end);
+
+                if (start === end) {
+                    // If no text is selected, just insert the tags and place the cursor in between
+                    reportTextarea.value = textBefore + startTag + endTag + textAfter;
+                    reportTextarea.selectionStart = start + startTag.length;
+                    reportTextarea.selectionEnd = start + startTag.length;
+                } else {
+                    // If text is selected, wrap it
+                    reportTextarea.value = textBefore + startTag + selectedText + endTag + textAfter;
+                    reportTextarea.selectionStart = start + startTag.length;
+                    reportTextarea.selectionEnd = end + startTag.length;
+                }
+                reportTextarea.focus();
+            }
+
+            boldBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                applyMarkdown('**', '**');
+            });
+
+            italicBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                applyMarkdown('*', '*');
+            });
+
+            linkBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                const start = reportTextarea.selectionStart;
+                const end = reportTextarea.selectionEnd;
+                const selectedText = reportTextarea.value.substring(start, end) || 'link text';
+
+                showPrompt("Enter URL", "https://example.com", (url) => {
+                    if (url) {
+                        const textBefore = reportTextarea.value.substring(0, start);
+                        const textAfter = reportTextarea.value.substring(end);
+                        const markdownLink = `[${selectedText}](${url})`;
+                        reportTextarea.value = textBefore + markdownLink + textAfter;
+                        reportTextarea.focus();
+                    }
+                });
+            });
+
+            imageBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                showPrompt("Enter Image URL", "https://example.com/image.png", (imageUrl) => {
+                    if (imageUrl) {
+                        const start = reportTextarea.selectionStart;
+                        const textBefore = reportTextarea.value.substring(0, start);
+                        const textAfter = reportTextarea.value.substring(start);
+                        const markdownImage = `![image](${imageUrl})`;
+                        reportTextarea.value = textBefore + markdownImage + textAfter;
+                        reportTextarea.focus();
+                    }
+                });
+            });
+
+            // ===============================================
             // AI Report Generation Functionality
             // ===============================================
             const generateReportBtn = document.getElementById('generate-report-btn');
-            const reportDescription = document.getElementById('report-description');
             const descriptionLoadingContainer = document.getElementById('description-loading-container');
             const caseTitle = document.getElementById('caseTitle');
 
@@ -1453,6 +1560,7 @@
 
             generateReportBtn.addEventListener('click', async () => {
                 // Show loading spinner and hide textarea
+                const userDebrief = reportDescription.value.trim();
                 reportDescription.classList.add('hidden');
                 descriptionLoadingContainer.classList.remove('hidden');
 
@@ -1496,90 +1604,113 @@
                     const returnW = returnWeapons.value;
                     const criminalPlea = plea.value;
 
-                    // Determine the perspective for the AI prompt
-                    let officerName = 'an experienced police officer';
+                    // Get current date and time
+                    const now = new Date();
+                    const formattedDate = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+                    const formattedTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+
+                    // Determine the reporting officer and assisting officers
+                    let officerName = 'the reporting officer';
+                    let assistingOfficersText = 'None';
                     if (officers.length > 0) {
                         officerName = officers[0];
+                        if (officers.length > 1) {
+                            assistingOfficersText = officers.slice(1).join(', ');
+                        }
                     }
 
-                    // Format weapons data for the prompt
+                    // Format data for the prompt into clean markdown lists
                     const weaponsText = weapons.length > 0
-                        ? weapons.map(w => `- Type: ${w.type}, Model: ${w.model}, Serial: ${w.serial}, Custom: ${w.isCustom ? 'Yes' : 'No'}, F9: ${w.isF9 ? 'Yes' : 'No'}`).join('\n')
-                        : 'None';
+                        ? weapons.map(w => `- **Type:** ${w.type} | **Model:** ${w.model} | **Serial:** ${w.serial} | **Custom:** ${w.isCustom ? 'Yes' : 'No'} | **F9:** ${w.isF9 ? 'Yes' : 'No'}`).join('\n')
+                        : '- None';
 
-                    // Format vehicle data for the prompt
                     const vehiclesText = vehicles.length > 0
-                        ? vehicles.map(v => `- Model: ${v.model}, Owner: ${v.owner}, Plate: ${v.plate}, Impounded: ${v.impounded ? 'Yes' : 'No'}`).join('\n')
-                        : 'None';
+                        ? vehicles.map(v => `- **Model:** ${v.model} | **Owner:** ${v.owner} | **Plate:** ${v.plate} | **Impounded:** ${v.impounded ? 'Yes' : 'No'}`).join('\n')
+                        : '- None';
 
-                    // Format civilian data for the prompt
                     const civiliansText = civilians.length > 0
-                        ? civilians.map(c => `- Name: ${c.name}, Role: ${c.role}`).join('\n')
-                        : 'None';
+                        ? civilians.map(c => `- **Name:** ${c.name} | **Role:** ${c.role}`).join('\n')
+                        : '- None';
 
-                    // Format criminal data for the prompt
                     const criminalsText = criminals.length > 0
-                        ? criminals.map(c => `  - Name: ${c.name}, Fingerprint: ${c.fingerprint}\n    Charges: ${c.charges.length > 0 ? c.charges.join(', ') : 'None'}`).join('\n')
-                        : 'None';
+                        ? criminals.map(c => `- **Name:** ${c.name}\n  - **Fingerprint:** ${c.fingerprint}\n  - **Charges:** ${c.charges.length > 0 ? c.charges.join('; ') : 'None'}`).join('\n\n')
+                        : '- None';
+
+                    const evidenceText = evidence.length > 0 ? evidence.map(e => `- ${e}`).join('\n') : '- None';
+
 
                     // UPDATED: Create the detailed prompt for the Gemini API
                     const prompt = `
-You are ${officerName}, a highly detailed and professional Unified Police Department officer. Your task is to write a formal, objective, and comprehensive police report based on the data provided. You must fill out every section of the following template with as much detail as possible, using a professional tone.
+You are Officer ${officerName}. Your task is to write a formal and comprehensive police report from your first-person perspective (e.g., "I arrived on the scene...", "My partners and I observed..."). The report must be written in **Markdown format**.
 
-**OFFICIAL UNIFIED POLICE DEPARTMENT REPORT**
+You will reformat the user-provided 'Initial Debrief' into the 'Chronological Incident Debrief' section. You must strictly adhere to the facts provided in the user's debrief and **not invent any new details, times, or actions**. Use the other provided data points to fill out the structured sections of the report.
 
-**I. Administrative Details**
-* **Location of Incident:** ${postal}
-* **Responding Officers:** ${officers.length > 0 ? officers.join(', ') : 'N/A'}
-* **Linked Report Numbers:** ${linkedReports.length > 0 ? linkedReports.join(', ') : 'None'}
-* **Report Tags:** ${tags.length > 0 ? tags.join(', ') : 'None'}
+**User's Initial Debrief for Reformatting:**
+"${userDebrief}"
 
-**II. Chronological Incident Debrief**
-(Provide a detailed, narrative summary of the events as they occurred. Describe the initial call or observation, the actions taken by officers, the behavior of all involved parties, and the sequence of events leading to the conclusion of the incident. Weave in details about the location, vehicles, and people involved.)
+---
 
-**III. Persons Involved**
-* **Civilians:**
-(List each civilian, their role, and any relevant observations. Use the provided data.)
+# OFFICIAL UNIFIED POLICE DEPARTMENT REPORT
+
+### I. Administrative Details
+- **Date of Report:** ${formattedDate}
+- **Time of Report:** ${formattedTime}
+- **Location of Incident:** ${postal}
+- **Reporting Officer:** ${officerName}
+- **Assisting Officers:** ${assistingOfficersText}
+- **Linked Report Numbers:** ${linkedReports.length > 0 ? linkedReports.join(', ') : 'None'}
+- **Report Tags:** ${tags.length > 0 ? tags.join(', ') : 'None'}
+
+### II. Chronological Incident Debrief
+(Rephrase the 'User's Initial Debrief' above into a professional, first-person narrative. **DO NOT ADD OR INVENT ANY INFORMATION** that is not present in the user's text. Format paragraphs appropriately.)
+
+### III. Persons Involved
+
+#### Civilians
 ${civiliansText}
-* **Arrested Individuals (Suspects/Criminals):**
-(List each criminal by name, fingerprint ID, and detail their involvement in the incident.)
+
+#### Arrested Individuals (Suspects/Criminals)
 ${criminalsText}
 
-**IV. Justification for Actions and Charges**
-* **Justification for Level of Force:** (Explain precisely why the selected level of force—'${forceLevel}'—was necessary and appropriate for the situation described in the debrief.)
-* **Justification for Charges:** (For each criminal listed, provide a point-by-point justification for every charge applied. Connect each charge directly to specific actions, evidence, or testimony from the incident.)
+### IV. Justification for Actions and Charges
 
-**V. Evidence and Property**
-* **Vehicles Involved:**
-(List all vehicles, including model, owner, plate, and impound status.)
+#### Justification for Level of Force
+(From my perspective, explain precisely why the selected level of force—'${forceLevel}'—was necessary and appropriate for the situation, based *only* on the information in the debrief.)
+
+#### Justification for Charges
+(For each criminal listed, provide a point-by-point justification for every charge applied. Connect each charge directly to specific actions or evidence mentioned in the debrief or data.)
+
+### V. Evidence and Property
+
+#### Vehicles Involved
 ${vehiclesText}
-* **Weapons Involved:**
-(List all weapons, including type, model, serial number, and whether they were custom or F9.)
+
+#### Weapons Involved
 ${weaponsText}
-* **Evidence Seized:**
-(List all items seized as evidence.)
-${evidence.length > 0 ? evidence.map(e => `- ${e}`).join('\n') : 'None'}
-* **Evidence Locker Number(s):** ${evidenceLockerNumbers.length > 0 ? evidenceLockerNumbers.join(', ') : 'None'}
-* **Disposition of Weapons:** Can weapons be returned? ${returnW}
 
-**VI. Post-Arrest Procedures**
-* **Medical Treatment:** Was medical treatment administered? ${medical}
-* **GSR Test:** Was a Gunshot Residue test performed? Result: ${gsr}
-* **Miranda Rights:** Were the suspect(s) read their Miranda Rights? ${miranda}
-* **Legal Representation:** Did the suspect(s) request legal representation? ${legal}
-* **Plea:** What was the plea entered by the suspect(s)? ${criminalPlea}
+#### Evidence Seized
+${evidenceText}
 
-**--- END OF REPORT ---**
+- **Evidence Locker Number(s):** ${evidenceLockerNumbers.length > 0 ? evidenceLockerNumbers.join(', ') : 'None'}
+- **Disposition of Weapons:** Can weapons be returned? ${returnW}
 
-Now, generate the full report based on this template and the provided data. Be thorough and professional.
-                                `;
+### VI. Post-Arrest Procedures
+- **Medical Treatment:** Was medical treatment administered? ${medical}
+- **GSR Test:** Was a Gunshot Residue test performed? Result: ${gsr}
+- **Miranda Rights:** Were the suspect(s) read their Miranda Rights? ${miranda}
+- **Legal Representation:** Did the suspect(s) request legal representation? ${legal}
+- **Plea:** What was the plea entered by the suspect(s)? ${criminalPlea}
+
+---
+**END OF REPORT**
+`;
 
                     // API call to the Gemini 2.5 Flash model
                     const callGeminiApi = async () => {
                         const chatHistory = [];
                         chatHistory.push({ role: "user", parts: [{ text: prompt }] });
                         const payload = { contents: chatHistory };
-                        const apiKey = "AIzaSyAbU7k_19bBgnGpFtX742tYGwLySd_U3fI"; // Your API key here
+                        const apiKey = "AIzaSyAbU7k_19bBgnGpFtX742tYGwLySd_U3fI"; // API key is managed by the environment
                         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
 
                         const response = await fetch(apiUrl, {
