@@ -13,6 +13,7 @@
             font-family: 'Inter', sans-serif;
             background-color: #0d1117; /* A dark github-like background */
             color: #c9d1d9; /* Light text color */
+            padding-bottom: 350px; /* Add padding to prevent calculator from overlapping content */
         }
         /* Custom scrollbar for a more integrated look */
         ::-webkit-scrollbar {
@@ -44,15 +45,35 @@
             }
         /* Styling for the offense cards */
         .offense-card {
-            background-color: #B91C1C; /* A deep red */
-            border: 1px solid #dc2626;
-            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            background-color: #B91C1C; /* A deep red for felonies */
+            border: 2px solid #dc2626;
+            transition: all 0.2s ease-in-out;
+            cursor: pointer;
         }
 
             .offense-card:hover {
                 transform: translateY(-5px);
                 box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.2);
             }
+
+            .offense-card.selected {
+                border-color: #3b82f6; /* Bright blue border for selected */
+                transform: scale(1.05);
+                box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+            }
+            /* Styling for infraction cards */
+            .offense-card.infraction {
+                background-color: #4a5568; /* A neutral gray for infractions */
+                border-color: #718096;
+            }
+
+                .offense-card.infraction .text-red-200 {
+                    color: #e2e8f0;
+                }
+
+                .offense-card.infraction .text-red-100 {
+                    color: #cbd5e0;
+                }
         /* Loader animation */
         .loader {
             border: 4px solid #30363d;
@@ -61,7 +82,7 @@
             width: 40px;
             height: 40px;
             animation: spin 1s linear infinite;
-            margin: 5rem auto; /* Center loader */
+            margin: 5rem auto;
         }
 
         @keyframes spin {
@@ -73,24 +94,22 @@
                 transform: rotate(360deg);
             }
         }
-        /* The mobile menu is hidden by default and shown with JavaScript */
+        /* Mobile menu styles */
         .nav-links {
             display: none;
             position: absolute;
             top: 100%;
             left: 0;
             width: 100%;
-            background-color: rgba(17, 24, 39, 0.9); /* Dark blue with transparency */
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            background-color: rgba(17, 24, 39, 0.95);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             padding: 1rem;
         }
 
-            /* Show menu on mobile */
             .nav-links.show-menu {
                 display: block;
             }
 
-        /* Force nav to be flex for desktop */
         @media (min-width: 768px) {
             .nav-links {
                 display: flex;
@@ -100,32 +119,56 @@
                 padding: 0;
             }
         }
-        /* Style for the currently active page link */
+
         .current-page {
             color: #ffffff;
-            background-color: #1d4ed8; /* A distinct blue for the active page */
+            background-color: #1d4ed8;
+        }
+        /* Calculator Panel Styles */
+        #calculator-panel {
+            position: fixed;
+            bottom: 0;
+            right: 0;
+            width: 100%;
+            max-width: 420px;
+            background-color: #161b22;
+            border-top-left-radius: 0.75rem;
+            border-top: 1px solid #30363d;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.4);
+            z-index: 100;
+            transform: translateY(100%);
+            transition: transform 0.3s ease-in-out;
+        }
+
+            #calculator-panel.visible {
+                transform: translateY(0);
+            }
+
+        #selected-charges-list {
+            max-height: 150px;
+        }
+        /* Collapsible Category Styles */
+        .offense-grid {
+            transition: max-height 0.3s ease-out;
+            overflow: hidden;
+        }
+
+        .chevron-icon {
+            transition: transform 0.3s ease-in-out;
         }
     </style>
 </head>
 <body class="bg-gray-900 font-sans leading-normal tracking-normal">
 
-    <!-- Header Section from report.html -->
+    <!-- Header Section -->
     <header class="bg-gray-800 text-white shadow-lg py-4 px-6 md:px-12 flex items-center justify-between sticky top-0 z-50 rounded-b-lg relative">
         <div class="flex items-center">
-            <!-- UPD Logo -->
             <img src="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png" alt="UPD Logo" class="mr-4 w-16 h-16 object-contain" onerror="this.onerror=null; this.src='https://placehold.co/64x64/1f2937/ffffff?text=LSPD';">
-            <!-- Responsive font size -->
             <h1 class="text-2xl md:text-3xl font-bold">Unified Police Department</h1>
         </div>
-
-        <!-- Hamburger Menu Button for Mobile -->
         <button id="hamburgerBtn" class="hamburger-menu text-white focus:outline-none md:hidden">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-4 6h4"></path>
-            </svg>
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-4 6h4"></path></svg>
         </button>
-
-        <!-- Navigation Menu -->
         <nav class="nav-links md:flex md:flex-grow md:justify-end">
             <ul class="flex flex-col md:flex-row md:flex-wrap md:justify-end space-y-2 md:space-y-0 md:space-x-4 text-sm font-medium">
                 <li><a href="index.html" class="nav-item-link text-gray-300 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-gray-700">Dashboard</a></li>
@@ -144,43 +187,103 @@
     <!-- Main Content Area -->
     <main class="flex-1 p-4 sm:p-6 lg:p-8">
         <header class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
-            <div>
-                <h1 class="text-3xl font-bold text-white">Offences</h1>
-            </div>
+            <div><h1 class="text-3xl font-bold text-white">Offences</h1></div>
             <div class="flex items-center mt-4 sm:mt-0 w-full sm:w-auto">
                 <input type="text" id="offenseSearch" placeholder="Search Offences..." class="search-input w-full sm:w-64 px-4 py-2 rounded-md text-white focus:outline-none">
             </div>
         </header>
-
-        <!-- This container will be populated with data from the CSV -->
         <div id="offenses-container" class="space-y-8">
-            <!-- Loader will be shown here while data is loading -->
             <div class="loader" id="loader"></div>
         </div>
     </main>
 
-    <!-- Footer Section from report.html -->
+    <!-- Calculator Panel -->
+    <div id="calculator-panel">
+        <div class="p-4">
+            <div class="flex justify-between items-center mb-2">
+                <h3 class="text-lg font-bold text-white">Sentence Calculator</h3>
+                <button id="clear-selection-btn" class="text-sm bg-red-600 hover:bg-red-700 text-white font-semibold py-1 px-3 rounded-md transition">Clear</button>
+            </div>
+            <div id="selected-charges-list" class="bg-gray-900 p-2 rounded-md overflow-y-auto border border-gray-700">
+                <p class="text-gray-500 text-center text-sm">No charges selected.</p>
+            </div>
+
+            <!-- Totals -->
+            <div class="grid grid-cols-2 gap-4 mt-4 text-center">
+                <div>
+                    <p class="text-sm text-gray-400">Total Fine</p>
+                    <p id="total-fine" class="text-xl font-bold text-green-400">$0</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-400">Total Time</p>
+                    <p id="total-time" class="text-xl font-bold text-red-400">0 Months</p>
+                </div>
+            </div>
+
+            <!-- Reductions -->
+            <div class="mt-4 pt-4 border-t border-gray-700">
+                <h4 class="font-semibold text-center mb-2">Sentence Reductions (%)</h4>
+                <div class="flex justify-center items-center space-x-2 mb-3">
+                    <div class="flex items-center">
+                        <input id="reduction-both" type="radio" value="both" name="reduction-type" class="w-4 h-4 text-blue-600 bg-gray-700 border-gray-600 focus:ring-blue-500" checked>
+                        <label for="reduction-both" class="ml-2 text-sm font-medium text-gray-300">Both</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input id="reduction-fine" type="radio" value="fine" name="reduction-type" class="w-4 h-4 text-blue-600 bg-gray-700 border-gray-600 focus:ring-blue-500">
+                        <label for="reduction-fine" class="ml-2 text-sm font-medium text-gray-300">Fine</label>
+                    </div>
+                    <div class="flex items-center">
+                        <input id="reduction-time" type="radio" value="time" name="reduction-type" class="w-4 h-4 text-blue-600 bg-gray-700 border-gray-600 focus:ring-blue-500">
+                        <label for="reduction-time" class="ml-2 text-sm font-medium text-gray-300">Time</label>
+                    </div>
+                </div>
+                <div class="grid grid-cols-4 gap-2 mb-2">
+                    <button class="reduction-btn text-sm bg-gray-700 hover:bg-blue-600 rounded p-1" data-value="5">5%</button>
+                    <button class="reduction-btn text-sm bg-gray-700 hover:bg-blue-600 rounded p-1" data-value="10">10%</button>
+                    <button class="reduction-btn text-sm bg-gray-700 hover:bg-blue-600 rounded p-1" data-value="15">15%</button>
+                    <button class="reduction-btn text-sm bg-gray-700 hover:bg-blue-600 rounded p-1" data-value="25">25%</button>
+                    <button class="reduction-btn text-sm bg-gray-700 hover:bg-blue-600 rounded p-1" data-value="50">50%</button>
+                    <button class="reduction-btn text-sm bg-gray-700 hover:bg-blue-600 rounded p-1" data-value="75">75%</button>
+                    <input type="number" id="custom-reduction" placeholder="Custom" class="col-span-2 text-sm bg-gray-800 border border-gray-600 rounded p-1 text-center focus:ring-blue-500 focus:border-blue-500">
+                </div>
+            </div>
+
+            <!-- Final Totals -->
+            <div class="grid grid-cols-2 gap-4 mt-3 pt-3 border-t border-gray-700 text-center">
+                <div>
+                    <p class="text-sm text-gray-400">Final Fine</p>
+                    <p id="final-fine" class="text-2xl font-bold text-green-300">$0</p>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-400">Final Time</p>
+                    <p id="final-time" class="text-2xl font-bold text-red-300">0 Months</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Section -->
     <footer class="bg-gray-800 text-white py-10 px-6 md:px-12 rounded-t-lg mt-8">
         <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
                 <h4 class="text-xl font-semibold mb-4 text-gray-300">Internal Contacts</h4>
                 <ul class="space-y-2 text-sm">
-                    <li><a href="https://discord.gg/7FwxdpfDTM" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Discord</a></li>
-                    <li><a href="https://discord.com/channels/1383775098464370768/1396398235660058685" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Support</a></li>
-                    <li><a href="https://discord.com/channels/1383775098464370768/1396398240840290374" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Chat</a></li>
-                    <li><a href="https://discord.com/channels/1383775098464370768/1396398235660058685" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Internal Affairs</a></li>
-                    <li><a href="https://discord.com/channels/1383775098464370768/1396398239678333030" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Announcements</a></li>
+                    <li><a href="https://discord.gg/7FwxdpfDTM" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline">Discord</a></li>
+                    <li><a href="https://discord.com/channels/1383775098464370768/1396398235660058685" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline">UPD Support</a></li>
+                    <li><a href="https://discord.com/channels/1383775098464370768/1396398240840290374" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline">UPD Chat</a></li>
+                    <li><a href="https://discord.com/channels/1383775098464370768/1396398235660058685" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline">UPD Internal Affairs</a></li>
+                    <li><a href="https://discord.com/channels/1383775098464370768/1396398239678333030" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline">UPD Announcements</a></li>
                 </ul>
             </div>
             <div>
                 <h4 class="text-xl font-semibold mb-4 text-gray-300">Quick Access</h4>
                 <ul class="space-y-2 text-sm">
-                    <li><a href="https://docs.google.com/document/d/1etjilZ1dAHGviw33MV5Zs-b5dXqcSHyoYIHvHiRIyy4/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD SOP</a></li>
-                    <li><a href="https://docs.google.com/document/d/1hKQ4fw9b1_yQELhPi1p1b4M6uiSaYb7bBp-9C6GVTdY/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Unified Police Department Interview Procedure & Questions</a></li>
-                    <li><a href="https://docs.google.com/document/d/1d004FfAhZBgESn88Mx21N3CGqXlcoNeP9_sadn_ePak/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Promotional Pathway & Subdivision Assignment Policy</a></li>
-                    <li><a href="https://docs.google.com/document/d/14QIEsYMWpTssti1xGbGWiMxQ2b0jbiYxuMmvV8XWUUo/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Highway Enforcement and Apprehension Team (HEAT) Activation Policy</a></li>
-                    <li><a href="https://docs.google.com/document/d/1Ggf7SS5voiIjr3iSLB3VtAc47JN3aDjm2J_gYnpoZ6s/edit?blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Disciplinary Guidelines</a></li>
-                    <li><a href="privacypolicy.html" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Privacy Policy</a></li>
+                    <li><a href="https://docs.google.com/document/d/1etjilZ1dAHGviw33MV5Zs-b5dXqcSHyoYIHvHiRIyy4/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline">UPD SOP</a></li>
+                    <li><a href="https://docs.google.com/document/d/1hKQ4fw9b1_yQELhPi1p1b4M6uiSaYb7bBp-9C6GVTdY/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline">Interview Procedure</a></li>
+                    <li><a href="https://docs.google.com/document/d/1d004FfAhZBgESn88Mx21N3CGqXlcoNeP9_sadn_ePak/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline">Promotional Pathway</a></li>
+                    <li><a href="https://docs.google.com/document/d/14QIEsYMWpTssti1xGbGWiMxQ2b0jbiYxuMmvV8XWUUo/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline">HEAT Policy</a></li>
+                    <li><a href="https://docs.google.com/document/d/1Ggf7SS5voiIjr3iSLB3VtAc47JN3aDjm2J_gYnpoZ6s/edit?blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline">Disciplinary Guidelines</a></li>
+                    <li><a href="privacypolicy.html" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline">Privacy Policy</a></li>
                 </ul>
             </div>
             <div>
@@ -191,167 +294,277 @@
                 <p class="text-gray-500 text-sm">&copy; 2025 Unified Police Department Internal Systems.</p>
             </div>
         </div>
-        <!-- Font Awesome for any potential internal icons (though less needed here) -->
         <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
     </footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // Hamburger menu functionality
+            // UI Elements
             const hamburgerBtn = document.getElementById('hamburgerBtn');
             const navLinks = document.querySelector('.nav-links');
-
-            hamburgerBtn.addEventListener('click', () => {
-                navLinks.classList.toggle('show-menu');
-            });
-
             const offensesContainer = document.getElementById('offenses-container');
             const searchInput = document.getElementById('offenseSearch');
             const loader = document.getElementById('loader');
+            const calculatorPanel = document.getElementById('calculator-panel');
+            const selectedChargesList = document.getElementById('selected-charges-list');
+            const totalFineEl = document.getElementById('total-fine');
+            const totalTimeEl = document.getElementById('total-time');
+            const finalFineEl = document.getElementById('final-fine');
+            const finalTimeEl = document.getElementById('final-time');
+            const clearSelectionBtn = document.getElementById('clear-selection-btn');
+            const customReductionInput = document.getElementById('custom-reduction');
 
-            // The CSV link provided by the user
+            // State
+            let allOffenses = [];
+            let selectedOffenses = [];
+            let reductionPercent = 0;
+
             const CSV_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQa6HZQ9JM5Unzwe4zZDX8A21m6zV4oGvDuEbSEqA9f3m3CqplUUUlmCScNHf79a8Sr1nem0div9YT2/pub?output=csv';
 
-            /**
-             * Fetches and processes the charge data from the Google Sheet CSV.
-             */
+            // --- Initialization ---
+            hamburgerBtn.addEventListener('click', () => navLinks.classList.toggle('show-menu'));
+            loadOffenses();
+
+            // --- Data Fetching and Parsing ---
             async function loadOffenses() {
                 try {
                     const response = await fetch(CSV_URL);
-                    if (!response.ok) {
-                        throw new Error(`Network response was not ok: ${response.statusText}`);
-                    }
+                    if (!response.ok) throw new Error(`Network response was not ok: ${response.statusText}`);
                     const csvText = await response.text();
-                    const data = parseCSV(csvText);
-                    renderOffenses(data);
+                    allOffenses = parseCSV(csvText);
+                    renderOffenses(allOffenses);
                 } catch (error) {
                     console.error('Failed to load or parse offense data:', error);
-                    offensesContainer.innerHTML = `<p class="text-red-400 text-center">Failed to load offense data. Please check the console for details and ensure the CSV link is correct and public.</p>`;
+                    offensesContainer.innerHTML = `<p class="text-red-400 text-center">Failed to load offense data.</p>`;
                 } finally {
-                    loader.style.display = 'none'; // Hide loader
+                    loader.style.display = 'none';
                 }
             }
 
-            /**
-             * Parses the raw CSV text into a structured array of categories and offenses.
-             * @param {string} text - The raw CSV text.
-             * @returns {Array} - An array of category objects.
-             */
             function parseCSV(text) {
                 const lines = text.trim().split(/\r?\n/);
-                const categories = [];
-                let currentCategory = null;
+                const offenses = [];
+                let currentCategory = "Uncategorized";
 
                 lines.forEach(line => {
-                    // FIX: Check if the line starts with '---' to identify it as a category header.
                     if (line.startsWith('---')) {
-                        // FIX: Extract category name from the part of the string before any commas to avoid including them in the title.
-                        const categoryName = line.split(',')[0].replace(/---/g, '').split(':')[1]?.trim() || 'Unnamed Category';
-                        currentCategory = {
-                            title: categoryName,
-                            offenses: []
-                        };
-                        categories.push(currentCategory);
-                    } else if (currentCategory && line.trim() !== '' && !line.startsWith('Penal Code')) {
-                        // This is a data line
-                        const values = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/); // Split by comma, handles commas inside quotes
+                        currentCategory = line.split(',')[0].replace(/---/g, '').split(':')[1]?.trim() || 'Unnamed Category';
+                        return;
+                    }
+                    if (line.trim() === '' || line.startsWith('Penal Code')) return;
 
-                        if (values.length >= 5) { // Ensure there are enough columns
-                            const offense = {
-                                name: values[1]?.replace(/"/g, '').trim() || 'N/A',
-                                description: values[2]?.replace(/"/g, '').trim() || '',
-                                jailTime: values[3]?.replace(/"/g, '').trim() || '0',
-                                fine: values[4]?.replace(/"/g, '').trim() || '$0',
-                                // The design shows "Felony" for all cards.
-                                classification: 'Felony'
-                            };
-                            // Only add if the offense has a valid name
-                            if (offense.name && offense.name !== 'N/A' && offense.name !== '') {
-                                currentCategory.offenses.push(offense);
-                            }
-                        }
+                    const values = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                    let offenseData = null;
+                    const isInfraction = values.length >= 3 && values[1]?.trim() === '';
+
+                    if (isInfraction) {
+                        offenseData = {
+                            category: 'Traffic Infractions',
+                            name: values[2]?.replace(/"/g, '').trim() || 'N/A',
+                            description: values[4]?.replace(/"/g, '').trim() || '',
+                            jailTime: parseInt(values[3]?.replace(/"/g, '').trim()) || 0,
+                            fine: 0,
+                            classification: 'Infraction'
+                        };
+                    } else if (values.length >= 5) {
+                        offenseData = {
+                            category: currentCategory,
+                            name: values[1]?.replace(/"/g, '').trim() || 'N/A',
+                            description: values[2]?.replace(/"/g, '').trim() || '',
+                            jailTime: parseInt(values[3]?.replace(/"/g, '').trim()) || 0,
+                            fine: parseInt(values[4]?.replace(/"/g, '').replace(/\$/g, '')) || 0,
+                            classification: 'Felony'
+                        };
+                    }
+
+                    if (offenseData && offenseData.name !== 'N/A') {
+                        offenses.push(offenseData);
                     }
                 });
-                return categories;
+                return offenses;
             }
 
-            /**
-             * Renders the structured data into HTML and injects it into the DOM.
-             * @param {Array} categories - The array of category objects.
-             */
-            function renderOffenses(categories) {
-                offensesContainer.innerHTML = ''; // Clear previous content
+            // --- Rendering ---
+            function renderOffenses(offensesToRender) {
+                const grouped = offensesToRender.reduce((acc, offense) => {
+                    (acc[offense.category] = acc[offense.category] || []).push(offense);
+                    return acc;
+                }, {});
 
-                if (categories.length === 0) {
-                    offensesContainer.innerHTML = `<p class="text-gray-400 text-center">No categories found in the data source.</p>`;
+                offensesContainer.innerHTML = Object.entries(grouped).map(([category, offenses]) => `
+                        <section class="category-section">
+                            <div class="category-header flex justify-between items-center p-2 rounded-md bg-gray-800 cursor-pointer mb-4">
+                                <h3 class="text-xl font-semibold text-white">${category}</h3>
+                                <svg class="chevron-icon w-6 h-6 text-gray-400 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                            </div>
+                            <div class="offense-grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 hidden">
+                                ${offenses.map(offense => createOffenseCardHTML(offense)).join('')}
+                            </div>
+                        </section>
+                    `).join('');
+            }
+
+            function createOffenseCardHTML(offense) {
+                const cardClass = offense.classification === 'Infraction' ? 'infraction' : '';
+                return `
+                        <div class="offense-card rounded-lg p-4 text-white flex flex-col justify-between h-full ${cardClass}" data-name="${offense.name}">
+                            <div>
+                                <h4 class="font-bold text-md mb-1">${offense.name}</h4>
+                                <p class="text-xs text-gray-300 mb-2">${offense.description || 'No description available.'}</p>
+                                <p class="text-sm font-medium text-red-200">${offense.classification}</p>
+                            </div>
+                            <div class="mt-2 text-right">
+                                <p class="text-xs text-red-100">${offense.jailTime} Months / $${offense.fine.toLocaleString()}</p>
+                            </div>
+                        </div>`;
+            }
+
+            // --- Event Delegation for Toggling Categories ---
+            offensesContainer.addEventListener('click', (e) => {
+                const header = e.target.closest('.category-header');
+                if (header) {
+                    const grid = header.nextElementSibling;
+                    const icon = header.querySelector('.chevron-icon');
+                    grid.classList.toggle('hidden');
+                    grid.classList.toggle('grid'); // Use grid for display
+                    icon.classList.toggle('rotate-180');
+                } else {
+                    const card = e.target.closest('.offense-card');
+                    if (card) {
+                        toggleChargeSelection(card.dataset.name);
+                    }
+                }
+            });
+
+            // --- Calculator Logic ---
+            function toggleChargeSelection(offenseName) {
+                const card = document.querySelector(`.offense-card[data-name="${offenseName}"]`);
+                const index = selectedOffenses.findIndex(o => o.name === offenseName);
+
+                if (index > -1) {
+                    selectedOffenses.splice(index, 1);
+                    card?.classList.remove('selected');
+                } else {
+                    const offenseData = allOffenses.find(o => o.name === offenseName);
+                    if (offenseData) {
+                        selectedOffenses.push(offenseData);
+                        card?.classList.add('selected');
+                    }
+                }
+                updateCalculator();
+            }
+
+            function updateCalculator() {
+                if (selectedOffenses.length > 0) {
+                    calculatorPanel.classList.add('visible');
+                } else {
+                    calculatorPanel.classList.remove('visible');
+                }
+                renderSelectedCharges();
+                calculateAndDisplayTotals();
+            }
+
+            function renderSelectedCharges() {
+                if (selectedOffenses.length === 0) {
+                    selectedChargesList.innerHTML = `<p class="text-gray-500 text-center text-sm">No charges selected.</p>`;
+                    return;
+                }
+                selectedChargesList.innerHTML = selectedOffenses.map(o => `
+                        <div class="text-sm flex justify-between items-center p-1 bg-gray-800 rounded mb-1">
+                            <span class="truncate pr-2">${o.name}</span>
+                            <span class="whitespace-nowrap text-gray-400">$${o.fine.toLocaleString()} / ${o.jailTime}m</span>
+                        </div>
+                    `).join('');
+            }
+
+            function calculateAndDisplayTotals() {
+                const totals = selectedOffenses.reduce((acc, o) => {
+                    acc.fine += o.fine;
+                    acc.time += o.jailTime;
+                    return acc;
+                }, { fine: 0, time: 0 });
+
+                totalFineEl.textContent = `$${totals.fine.toLocaleString()}`;
+                totalTimeEl.textContent = `${totals.time} Months`;
+
+                const reductionType = document.querySelector('input[name="reduction-type"]:checked').value;
+                let finalFine = totals.fine;
+                let finalTime = totals.time;
+
+                const reductionDecimal = reductionPercent / 100;
+
+                if (reductionType === 'both' || reductionType === 'fine') {
+                    finalFine = Math.round(totals.fine * (1 - reductionDecimal));
+                }
+                if (reductionType === 'both' || reductionType === 'time') {
+                    finalTime = Math.round(totals.time * (1 - reductionDecimal));
+                }
+
+                finalFineEl.textContent = `$${finalFine.toLocaleString()}`;
+                finalTimeEl.textContent = `${finalTime} Months`;
+            }
+
+            function clearSelections() {
+                selectedOffenses = [];
+                document.querySelectorAll('.offense-card.selected').forEach(c => c.classList.remove('selected'));
+                customReductionInput.value = '';
+                reductionPercent = 0;
+                updateCalculator();
+            }
+
+            // --- Search and Filter Logic ---
+            searchInput.addEventListener('input', () => {
+                const searchTerm = searchInput.value.toLowerCase();
+
+                // If search is empty, collapse all and reset view
+                if (searchTerm === "") {
+                    renderOffenses(allOffenses); // Re-render to reset to default collapsed state
+                    // Re-apply selected class if any
+                    selectedOffenses.forEach(so => {
+                        const card = document.querySelector(`.offense-card[data-name="${so.name}"]`);
+                        card?.classList.add('selected');
+                    });
                     return;
                 }
 
-                categories.forEach(category => {
-                    if (category.offenses.length === 0) return; // Don't render empty categories
+                // Filter offenses based on search term
+                const filteredOffenses = allOffenses.filter(o =>
+                    o.name.toLowerCase().includes(searchTerm) ||
+                    o.description.toLowerCase().includes(searchTerm)
+                );
+                renderOffenses(filteredOffenses);
 
-                    const categorySection = document.createElement('section');
-                    categorySection.className = 'category-section';
+                // Expand all categories when searching
+                document.querySelectorAll('.offense-grid').forEach(grid => grid.classList.remove('hidden'));
+                document.querySelectorAll('.chevron-icon').forEach(icon => icon.classList.add('rotate-180'));
 
-                    let offensesHTML = '';
-                    category.offenses.forEach(offense => {
-                        offensesHTML += `
-                                <div class="offense-card rounded-lg p-4 text-white flex flex-col justify-between h-full" data-name="${offense.name.toLowerCase()}">
-                                    <div>
-                                        <h4 class="font-bold text-md mb-1">${offense.name}</h4>
-                                        <p class="text-sm font-medium text-red-200">${offense.classification}</p>
-                                    </div>
-                                    <div class="mt-2">
-                                        <p class="text-xs text-red-100">${offense.jailTime} Months - ${offense.fine}</p>
-                                    </div>
-                                </div>
-                            `;
-                    });
-
-                    categorySection.innerHTML = `
-                            <div class="flex justify-between items-center mb-4">
-                                <h3 class="text-xl font-semibold text-white">${category.title}</h3>
-                            </div>
-                            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-                                ${offensesHTML}
-                            </div>
-                        `;
-                    offensesContainer.appendChild(categorySection);
+                // Re-apply selected class to filtered cards
+                selectedOffenses.forEach(so => {
+                    const card = document.querySelector(`.offense-card[data-name="${so.name}"]`);
+                    card?.classList.add('selected');
                 });
-            }
+            });
 
-            /**
-             * Filters the displayed offenses based on the search input.
-             */
-            function filterOffenses() {
-                const searchTerm = searchInput.value.toLowerCase();
-                const allCards = document.querySelectorAll('.offense-card');
+            // --- Other Event Listeners ---
+            clearSelectionBtn.addEventListener('click', clearSelections);
 
-                allCards.forEach(card => {
-                    const offenseName = card.dataset.name;
-                    if (offenseName.includes(searchTerm)) {
-                        card.style.display = 'flex';
-                    } else {
-                        card.style.display = 'none';
-                    }
+            document.querySelectorAll('.reduction-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    reductionPercent = parseFloat(btn.dataset.value);
+                    customReductionInput.value = reductionPercent;
+                    calculateAndDisplayTotals();
                 });
+            });
 
-                // Hide category sections if all their offenses are hidden
-                document.querySelectorAll('.category-section').forEach(section => {
-                    const visibleCards = section.querySelectorAll('.offense-card[style*="display: flex"]');
-                    if (visibleCards.length === 0) {
-                        section.style.display = 'none';
-                    } else {
-                        section.style.display = 'block';
-                    }
-                });
-            }
+            customReductionInput.addEventListener('input', () => {
+                reductionPercent = parseFloat(customReductionInput.value) || 0;
+                calculateAndDisplayTotals();
+            });
 
-            // Event listener for the search input
-            searchInput.addEventListener('input', filterOffenses);
+            document.querySelectorAll('input[name="reduction-type"]').forEach(radio => {
+                radio.addEventListener('change', calculateAndDisplayTotals);
+            });
 
-            // Initial load of the offense data
-            loadOffenses();
         });
     </script>
 </body>

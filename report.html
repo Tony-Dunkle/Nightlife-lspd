@@ -1209,12 +1209,23 @@
 
                     const columns = parseCsvLine(line);
 
-                    const penalCode = columns[penalCodeIndex] ? columns[penalCodeIndex].replace(/^"|"$/g, '').trim() : '';
-                    const chargeName = columns[chargeNameIndex] ? columns[chargeNameIndex].replace(/^"|"$/g, '').trim() : '';
-                    const chargeDescription = columns[chargeDescriptionIndex] ? columns[chargeDescriptionIndex].replace(/^"|"$/g, '').trim() : '';
-                    const jailTime = columns[jailTimeIndex] ? columns[jailTimeIndex].replace(/^"|"$/g, '').trim() : 'N/A';
-                    const fineAmount = columns[fineAmountIndex] ? columns[fineAmountIndex].replace(/^"|"$/g, '').trim() : 'N/A';
-                    const felonyStatus = columns[felonyIndex] ? columns[felonyIndex].replace(/^"|"$/g, '').trim() : 'N/A';
+                    let penalCode = columns[penalCodeIndex] ? columns[penalCodeIndex].replace(/^"|"$/g, '').trim() : '';
+                    let chargeName = columns[chargeNameIndex] ? columns[chargeNameIndex].replace(/^"|"$/g, '').trim() : '';
+                    let chargeDescription = columns[chargeDescriptionIndex] ? columns[chargeDescriptionIndex].replace(/^"|"$/g, '').trim() : '';
+                    let jailTime = columns[jailTimeIndex] ? columns[jailTimeIndex].replace(/^"|"$/g, '').trim() : 'N/A';
+                    let fineAmount = columns[fineAmountIndex] ? columns[fineAmountIndex].replace(/^"|"$/g, '').trim() : 'N/A';
+                    let felonyStatus = columns[felonyIndex] ? columns[felonyIndex].replace(/^"|"$/g, '').trim() : 'N/A';
+                    let category = currentCategory;
+
+                    // Special handling for traffic infractions based on their unique structure
+                    if (penalCode.toLowerCase().includes('infraction') && !chargeName) {
+                        chargeName = columns[chargeDescriptionIndex] || '';
+                        chargeDescription = columns[fineAmountIndex] || '';
+                        fineAmount = columns[jailTimeIndex] || 'N/A';
+                        jailTime = '0';
+                        felonyStatus = 'Infraction';
+                        category = "Traffic Infractions";
+                    }
 
                     if (penalCode && chargeName) {
                         charges.push({
@@ -1224,7 +1235,7 @@
                             jailTime,
                             fineAmount,
                             felonyStatus,
-                            category: currentCategory
+                            category
                         });
                     }
                 }
@@ -1255,7 +1266,13 @@
 
                     groupedCharges[category].forEach(charge => {
                         const chargeElement = document.createElement('div');
-                        chargeElement.className = 'charge-item p-3 rounded-md cursor-pointer bg-gray-700 hover:bg-red-700 transition-colors duration-200 border border-gray-600 flex flex-col justify-between';
+
+                        let baseColorClass = 'bg-red-800 hover:bg-red-700'; // Default to red for felonies/other serious crimes
+                        if (charge.felonyStatus && charge.felonyStatus.toLowerCase() === 'infraction') {
+                            baseColorClass = 'bg-gray-700 hover:bg-gray-600';
+                        }
+
+                        chargeElement.className = `charge-item p-3 rounded-md cursor-pointer ${baseColorClass} transition-colors duration-200 border border-gray-600 flex flex-col justify-between`;
                         chargeElement.dataset.charge = `${charge.penalCode}: ${charge.chargeName}`;
 
                         chargeElement.innerHTML = `
@@ -1370,7 +1387,9 @@
             chargeSearchInput.addEventListener('input', (e) => {
                 const searchTerm = e.target.value.toLowerCase();
                 const filteredCharges = allCharges.filter(charge =>
-                    charge.chargeName.toLowerCase().includes(searchTerm) || charge.penalCode.toLowerCase().includes(searchTerm)
+                    charge.chargeName.toLowerCase().includes(searchTerm) ||
+                    charge.penalCode.toLowerCase().includes(searchTerm) ||
+                    charge.chargeDescription.toLowerCase().includes(searchTerm)
                 );
                 populateChargeList(filteredCharges);
             });
