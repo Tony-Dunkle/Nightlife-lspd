@@ -1,330 +1,121 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="">
 <head>
     <meta charset="UTF-8">
-    <!-- Viewport meta tag is crucial for responsive behavior across devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UPD Internal Portal - Official Member Access</title>
-    <!-- Favicon -->
-    <link rel="icon" type="image/png" href="LSPD.png">
-
-    <!-- =================================================================== -->
-    <!-- ============== IMPROVED META TAGS FOR SOCIAL EMBEDS =============== -->
-    <!-- =================================================================== -->
-    <!-- Primary Meta Tags -->
-    <meta name="title" content="Unified Police Department | Internal Portal">
-    <meta name="description" content="Official access point for UPD personnel. Access resources, SOPs, training materials, and departmental communications.">
-
-    <!-- Theme Color for Browser UI (especially on mobile) -->
-    <meta name="theme-color" content="#1e3a8a">
-
-    <!-- Open Graph / Facebook / Discord -->
-    <meta property="og:type" content="website">
-    <meta property="og:url" content="https://your-website-url.com/"> <!-- IMPORTANT: Replace with your actual deployed URL -->
-    <meta property="og:title" content="Unified Police Department | Internal Portal">
-    <meta property="og:site_name" content="UPD Internal Portal">
-    <meta property="og:description" content="Official access point for UPD personnel. Access resources, SOPs, training materials, and departmental communications.">
-    <meta property="og:image" content="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png">
-
-    <!-- Twitter -->
-    <meta property="twitter:card" content="summary_large_image">
-    <meta property="twitter:url" content="https://your-website-url.com/"> <!-- IMPORTANT: Replace with your actual deployed URL -->
-    <meta property="twitter:title" content="Unified Police Department | Internal Portal">
-    <meta property="twitter:description" content="Official access point for UPD personnel. Access resources, SOPs, training materials, and departmental communications.">
-    <meta property="twitter:image" content="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png">
-
-    <!-- =================================================================== -->
-    <!-- =================================================================== -->
-    <!-- Tailwind CSS CDN - provides responsive utility classes out of the box -->
+    <link rel="icon" href="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* Custom font for a clean, modern look */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display.swap');
+
+        /* Define CSS variables for theming */
+        :root {
+            --bg-primary: #f8fafc; /* slate-50 */
+            --bg-secondary: #ffffff; /* white */
+            --bg-tertiary: #f1f5f9; /* slate-100 */
+            --text-primary: #0f172a; /* slate-900 */
+            --text-secondary: #475569; /* slate-600 */
+            --border-color: #e2e8f0; /* slate-200 */
+            --accent-color: #3b82f6; /* blue-500 */
+            --modal-bg: rgba(0,0,0,0.7);
+            --modal-content-bg: #ffffff;
+        }
+
+        html.dark {
+            --bg-primary: #0f172a; /* slate-900 */
+            --bg-secondary: #1e293b; /* slate-800 */
+            --bg-tertiary: #334155; /* slate-700 */
+            --text-primary: #f1f5f9; /* slate-100 */
+            --text-secondary: #94a3b8; /* slate-400 */
+            --border-color: #334155; /* slate-700 */
+            --accent-color: #60a5fa; /* blue-400 */
+            --modal-content-bg: #1e293b; /* slate-800 */
+        }
 
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f8f8f8; /* Light gray background */
-            color: #333; /* Dark gray text */
-            opacity: 0; /* Start with body invisible for fade-in */
-            transition: opacity 1s ease-in; /* Smooth transition for fade-in */
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
         }
 
-            body.fade-in {
-                opacity: 1; /* Fade in to full visibility */
-            }
-
-            /* Light Mode */
-            body.light-mode {
-                background-color: #f8f8f8;
-                color: #333;
-            }
-
-                body.light-mode .bg-blue-900 {
-                    background-color: #1e3a8a; /* Darker blue for header */
-                }
-
-                body.light-mode .text-white {
-                    color: #ffffff;
-                }
-
-                body.light-mode .bg-gradient-to-r {
-                    background-image: linear-gradient(to right, #1e3a8a, #102a43); /* Darker blue gradient */
-                }
-
-                body.light-mode .bg-blue-50 {
-                    background-color: #e0f2fe; /* Light blue */
-                }
-
-                body.light-mode .bg-gray-100 {
-                    background-color: #f3f4f6;
-                }
-
-                body.light-mode .bg-white {
-                    background-color: #ffffff;
-                }
-
-                body.light-mode .text-blue-700 {
-                    color: #1d4ed8;
-                }
-
-                body.light-mode .text-blue-800 {
-                    color: #1e40af;
-                }
-
-                body.light-mode .text-gray-800 {
-                    color: #1f2937;
-                }
-
-                body.light-mode .text-gray-600 {
-                    color: #4b5563;
-                }
-
-                body.light-mode .text-gray-700 {
-                    color: #374151;
-                }
-
-                body.light-mode .text-blue-500 {
-                    color: #3b82f6;
-                }
-
-                body.light-mode .bg-gray-800 {
-                    background-color: #1f2937;
-                }
-
-                body.light-mode .text-blue-300 {
-                    color: #93c5fd;
-                }
-
-                body.light-mode .text-gray-400 {
-                    color: #9ca3af;
-                }
-
-                body.light-mode .text-gray-500 {
-                    color: #6b7280;
-                }
-
-                /* Light mode input specific styles */
-                body.light-mode input[type="text"],
-                body.light-mode input[type="date"],
-                body.light-mode input[type="time"],
-                body.light-mode input[type="url"],
-                body.light-mode select,
-                body.light-mode textarea {
-                    color: #1f2937; /* Dark gray text */
-                    background-color: #ffffff; /* White background */
-                }
-
-                    body.light-mode input::placeholder,
-                    body.light-mode textarea::placeholder {
-                        color: #9ca3af; /* text-gray-400 */
-                    }
-
-
-            /* Dark Mode */
-            body.dark-mode {
-                background-color: #1a202c; /* bg-gray-900 */
-                color: #e2e8f0; /* text-gray-200 */
-            }
-
-                body.dark-mode .bg-blue-900 {
-                    background-color: #2d3748; /* Darker header */
-                }
-
-                body.dark-mode .text-white {
-                    color: #e2e8f0;
-                }
-
-                body.dark-mode .bg-gradient-to-r {
-                    background-image: linear-gradient(to right, #2d3748, #1a202c);
-                }
-
-                body.dark-mode .bg-blue-50 {
-                    background-color: #2f3e58; /* Darker light blue */
-                }
-
-                body.dark-mode .bg-gray-100 {
-                    background-color: #2d3748;
-                }
-
-                body.dark-mode .bg-white {
-                    background-color: #2d3748;
-                }
-
-                body.dark-mode .text-blue-700 {
-                    color: #90cdf4;
-                }
-
-                body.dark-mode .text-blue-800 {
-                    color: #a7d9ff;
-                }
-
-                body.dark-mode .text-gray-800 {
-                    color: #e2e8f0;
-                }
-
-                body.dark-mode .text-gray-600 {
-                    color: #a0aec0;
-                }
-
-                body.dark-mode .text-gray-700 {
-                    color: #cbd5e0;
-                }
-
-                body.dark-mode .text-blue-500 {
-                    color: #63b3ed;
-                }
-
-                body.dark-mode .bg-gray-800 {
-                    background-color: #1a202c;
-                }
-
-                body.dark-mode .text-blue-300 {
-                    color: #90cdf4;
-                }
-
-                body.dark-mode .text-gray-400 {
-                    color: #a0aec0;
-                }
-
-                body.dark-mode .text-gray-500 {
-                    color: #cbd5e0;
-                }
-
-                body.dark-mode .shadow-lg,
-                body.dark-mode .shadow-xl,
-                body.dark-mode .shadow-inner {
-                    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2);
-                }
-
-                body.dark-mode .modal-content {
-                    background-color: #2d3748;
-                }
-
-                body.dark-mode .modal-overlay {
-                    background-color: rgba(0, 0, 0, 0.8);
-                }
-
-                body.dark-mode .border {
-                    border-color: #4a5568;
-                }
-
-                /* Dark mode specific footer styling for distinct separation */
-                body.dark-mode footer {
-                    border-top: 2px solid #4a5568; /* A subtle border for separation */
-                    box-shadow: 0 -5px 15px rgba(0, 0, 0, 0.5); /* Stronger shadow at the top */
-                }
-
-                /* Force input text color and background for dark mode */
-                body.dark-mode input[type="text"],
-                body.dark-mode input[type="date"],
-                body.dark-mode input[type="time"],
-                body.dark-mode input[type="url"],
-                body.dark-mode select,
-                body.dark-mode textarea {
-                    color: #e2e8f0; /* Light gray text */
-                    background-color: #4a5568; /* Darker gray background */
-                    border-color: #6b7280; /* Slightly lighter border for visibility */
-                }
-                    /* Adjust placeholder color for dark mode inputs */
-                    body.dark-mode input::placeholder,
-                    body.dark-mode textarea::placeholder {
-                        color: #a0aec0; /* Lighter gray for placeholder */
-                    }
-
-
-        /* Custom scrollbar for better aesthetics */
+        /* Scrollbar styles */
         ::-webkit-scrollbar {
-            width: 10px;
+            width: 12px;
         }
 
         ::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 5px;
+            background: var(--bg-tertiary);
         }
-
-        body.dark-mode ::-webkit-scrollbar-track {
-            background: #2d3748;
-        }
-
 
         ::-webkit-scrollbar-thumb {
             background: #888;
-            border-radius: 5px;
+            border-radius: 6px;
         }
 
             ::-webkit-scrollbar-thumb:hover {
                 background: #555;
             }
 
-        body.dark-mode ::-webkit-scrollbar-thumb {
-            background: #a0aec0;
+        html.dark ::-webkit-scrollbar-thumb {
+            background: #555;
         }
 
-            body.dark-mode ::-webkit-scrollbar-thumb:hover {
-                background: #cbd5e0;
+            html.dark ::-webkit-scrollbar-thumb:hover {
+                background: #777;
             }
 
-
-        /* Styles for the banner */
-        .banner-container {
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
             position: fixed;
-            top: 4rem; /* Adjust based on header height */
-            right: 1rem;
-            z-index: 999; /* Ensure it's on top, but below the sticky header */
-            max-width: 300px; /* Limit banner width */
-            transform: translateX(100%); /* Start off-screen for slide-in */
-            transition: transform 0.3s ease-in-out; /* Smooth transition for showing/hiding */
+            inset: 0;
+            background-color: var(--modal-bg);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
         }
 
-            .banner-container.show {
-                transform: translateX(0); /* Slide in */
+            .modal-overlay.is-open {
+                display: flex;
             }
 
-        .banner-content {
-            background-color: #fff;
-            padding: 1rem;
+        .modal-box {
+            background-color: var(--modal-content-bg);
+            padding: 1.5rem;
             border-radius: 0.5rem;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            width: 90%;
+            max-width: 500px;
         }
 
-        .banner-close-btn {
+        .data-modal-box {
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        /* Mobile Nav Specific Styles */
+        #nav-links.nav-mobile-active {
+            display: flex !important;
             position: absolute;
-            top: 0.5rem;
-            right: 0.5rem;
-            background: none;
-            border: none;
-            font-size: 1.25rem;
-            cursor: pointer;
-            color: #666;
-            transition: color 0.2s;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: #1e40af;
+            flex-direction: column;
+            padding: 1rem;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
         }
 
-            .banner-close-btn:hover {
-                color: #333;
-            }
+        html.dark #nav-links.nav-mobile-active {
+            background-color: #111827;
+        }
 
-        /* Style for the video player as a background */
+        /* Hero Video Background */
         .background-video-container {
             position: absolute;
             top: 0;
@@ -332,809 +123,296 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            z-index: 0; /* Place behind content */
+            z-index: 0;
         }
 
             .background-video-container video {
-                /* This ensures the video always covers the container, even if it means cropping */
                 width: 100%;
                 height: 100%;
-                object-fit: cover; /* Ensures the video covers the entire area without distortion */
+                object-fit: cover;
                 position: absolute;
                 top: 50%;
                 left: 50%;
-                transform: translate(-50%, -50%); /* Center the video */
+                transform: translate(-50%, -50%);
             }
 
-        /* Overlay for text readability */
         .video-overlay {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: rgba(0, 0, 0, 0.4); /* Semi-transparent dark overlay */
-            z-index: 1; /* Above the video, below the text content */
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1;
         }
 
-        /* Cookie Consent Banner Styles */
+        /* Cookie Banner */
         #cookieConsentBanner {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            background-color: #2d3748; /* bg-gray-800 */
-            color: white;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
             padding: 1rem;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000; /* Ensure it's on top of everything */
-            transform: translateY(100%); /* Start off-screen */
-            transition: transform 0.3s ease-in-out;
+            z-index: 1000;
             box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
+            transform: translateY(100%);
+            transition: transform 0.3s ease-in-out;
         }
 
             #cookieConsentBanner.show {
-                transform: translateY(0); /* Slide in */
+                transform: translateY(0);
             }
-
-            #cookieConsentBanner p {
-                margin-bottom: 1rem;
-                text-align: center;
-            }
-
-            #cookieConsentBanner button {
-                padding: 0.5rem 1rem;
-                border-radius: 0.375rem; /* rounded-md */
-                font-weight: 600; /* font-semibold */
-                transition: background-color 0.2s ease-in-out;
-            }
-
-        #acceptCookies {
-            background-color: #48bb78; /* bg-green-500 */
-            color: white;
-            margin-right: 0.5rem;
-        }
-
-            #acceptCookies:hover {
-                background-color: #38a169; /* bg-green-600 */
-            }
-
-        #declineCookies {
-            background-color: #f56565; /* bg-red-500 */
-            color: white;
-        }
-
-            #declineCookies:hover {
-                background-color: #e53e3e; /* bg-red-600 */
-            }
-
-        /* Login Button Styling */
-        #loginButtonContainer {
-            margin-top: 1rem; /* Space below nav */
-            margin-left: 1rem; /* Align with left content */
-            position: absolute; /* Position relative to header */
-            top: 100%; /* Below the header */
-            left: 0;
-            z-index: 40; /* Below header, above main content */
-        }
-
-        #loginButton {
-            background-color: #3182ce; /* bg-blue-600 */
-            color: white;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem; /* rounded-lg */
-            font-weight: 700; /* font-bold */
-            transition: background-color 0.2s ease-in-out, transform 0.2s ease-in-out;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* shadow-md */
-        }
-
-            #loginButton:hover {
-                background-color: #2b6cb0; /* bg-blue-700 */
-                transform: translateY(-2px); /* Slight lift on hover */
-            }
-
-        /* Modal specific styles (copied from report.html) */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-        }
-
-        .modal-content {
-            background-color: #fff;
-            padding: 2rem;
-            border-radius: 0.75rem; /* rounded-xl */
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* shadow-2xl */
-            max-width: 90%;
-            max-height: 90%;
-            overflow-y: auto;
-            position: relative;
-            width: 500px; /* Adjusted width for better readability */
-        }
-
-        .officer-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 0.5rem;
-            padding: 0.5rem;
-            border-radius: 0.5rem;
-            transition: background-color 0.2s ease-in-out;
-        }
-
-            .officer-item:hover {
-                background-color: #f0f4f8; /* Light blue-gray hover */
-            }
-
-        /* Loading indicator styles (copied from report.html) */
-        .loader {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #3498db;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* Settings icon styles */
-        #settingsIcon {
-            width: 28px; /* Slightly larger icon */
-            height: 28px;
-            cursor: pointer;
-            margin-left: 1.5rem; /* Space from navigation links */
-            transition: transform 0.2s ease-in-out;
-            /* SVG fill color is controlled by 'currentColor' so it matches text color */
-        }
-
-            #settingsIcon:hover {
-                transform: rotate(15deg);
-            }
-
-        /* Settings modal specific styles */
-        #settingsModal .modal-content {
-            width: 350px; /* Adjust width for settings modal */
-        }
-
-        #settingsModal .radio-option {
-            display: flex;
-            align-items: center;
-            margin-bottom: 0.75rem;
-        }
-
-            #settingsModal .radio-option input[type="radio"] {
-                margin-right: 0.5rem;
-            }
-
-            #settingsModal .radio-option label {
-                font-size: 1rem;
-                color: #333;
-            }
-
-        body.dark-mode #settingsModal .radio-option label {
-            color: #e2e8f0;
-        }
-
-        #settingsModal button {
-            margin-top: 1rem;
-            width: 100%;
-        }
-
-        /* Data Viewer Modal Styles */
-        #dataViewerModal .modal-content {
-            width: 600px;
-            max-width: 95%;
-        }
-
-        #dataViewerContent {
-            /* Removed pre-wrap and monospace for formatted list */
-            background-color: #f4f4f4;
-            border-radius: 0.5rem;
-            padding: 1rem;
-            max-height: 400px;
-            overflow-y: auto;
-            border: 1px solid #ddd;
-        }
-
-        body.dark-mode #dataViewerContent {
-            background-color: #1f2937;
-            border-color: #4a5568;
-            color: #e2e8f0;
-        }
-
-        /* Styles for data viewer items, similar to updates */
-        .data-viewer-item {
-            background-color: #ffffff;
-            padding: 0.75rem 1rem;
-            border-radius: 0.5rem;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            margin-bottom: 0.75rem;
-        }
-
-        body.dark-mode .data-viewer-item {
-            background-color: #2d3748;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-        }
-
-        .data-viewer-item p {
-            margin: 0;
-            line-height: 1.5;
-        }
-
-        .data-viewer-item .title {
-            font-weight: 600; /* font-semibold */
-            color: #1f2937; /* text-gray-800 */
-        }
-
-        body.dark-mode .data-viewer-item .title {
-            color: #e2e8f0;
-        }
-
-        .data-viewer-item .description {
-            font-size: 0.875rem; /* text-sm */
-            color: #4b5563; /* text-gray-600 */
-        }
-
-        body.dark-mode .data-viewer-item .description {
-            color: #a0aec0;
-        }
     </style>
 </head>
 <body class="antialiased">
 
-    <!-- Development Notice Banner -->
-    <div id="devNoticeBanner" class="banner-container">
-        <div class="banner-content">
-            <button class="banner-close-btn" id="closeBannerBtn">&times;</button>
-            <h3 class="text-lg font-bold text-blue-800 mb-2">Website Under Development</h3>
-            <div class="flex items-center space-x-2">
-                <img src="LSPD.png" alt="UPD Logo" class="w-10 h-10 object-contain" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
-                <p class="text-gray-700 text-sm">
-                    Some features may not work as expected or may be missing.
-                </p>
-            </div>
-        </div>
-    </div>
-
     <!-- Header Section -->
-    <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex items-center justify-between sticky top-0 z-50 rounded-b-lg relative">
+    <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex items-center justify-between sticky top-0 z-50">
         <div class="flex items-center">
-            <!-- UPD Logo -->
-            <img src="LSPD.png" alt="UPD Logo" class="mr-4 w-16 h-16 object-contain" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
-            <!-- Responsive font size: text-2xl for small screens, text-3xl for medium screens and up -->
+            <img src="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png" alt="UPD Logo" class="mr-4 w-16 h-16 object-contain">
             <h1 class="text-2xl md:text-3xl font-bold">Unified Police Department</h1>
         </div>
 
-        <!-- Hamburger Menu Button for Mobile -->
-        <button id="hamburgerBtn" class="hamburger-menu text-white focus:outline-none md:hidden">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-4 6h4"></path>
-            </svg>
-        </button>
+        <div class="flex items-center">
+            <nav id="nav-links" class="hidden md:flex items-center">
+                <ul class="flex flex-row space-x-4 text-sm font-medium">
+                    <li><a href="index.html" class="text-white bg-blue-700 font-semibold py-1 px-2 rounded-md">Dashboard</a></li>
+                    <li><a href="SOP.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">SOPs</a></li>
+                    <li><a href="training.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Training</a></li>
+                    <li><a href="forms.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Forms</a></li>
+                    <li><a href="roster.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Roster</a></li>
+                    <li><a href="hr.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">HR Info</a></li>
+                </ul>
+            </nav>
 
-        <!-- Navigation Menu -->
-        <!-- Added md:flex-grow to nav to allow it to take available space -->
-        <nav class="nav-links md:flex md:flex-grow md:justify-end">
-            <!-- Changed md:space-x-8 to md:space-x-4 and added md:flex-wrap for stacking -->
-            <ul class="flex flex-col md:flex-row md:flex-wrap md:justify-end space-y-2 md:space-y-0 md:space-x-4 text-sm font-medium">
-                <li><a href="index.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Dashboard</a></li>
-                <li><a href="SOP.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">SOPs</a></li>
-                <li><a href="training.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Training</a></li>
-                <li><a href="forms.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Forms</a></li>
-                <li><a href="roster.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700 current-page">Roster</a></li>
-                <li><a href="hr.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">HR Info</a></li>
-                <li><a href="report.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Report Generator</a></li>
-                <li><a href="charges.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Charge Calculator</a></li>
-                <li><a href="info.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Common Information</a></li>
-            </ul>
-        </nav>
-        <!-- ======== FIX 1: REPLACED BROKEN IMG TAG WITH INLINE SVG ======== -->
-        <svg id="settingsIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="ml-4 cursor-pointer">
-            <path fill-rule="evenodd" d="M11.078 2.25c-.917 0-1.699.663-1.946 1.55l-.262 1.05c-.373.148-.728.33-1.068.547l-1.028-.343c-.887-.296-1.833.204-2.138 1.049l-1.09 2.296c-.305.845.18 1.785 1.002 2.217l.859.43c-.033.22-.054.444-.054.672 0 .228.021.452.054.672l-.859.43c-.822.432-1.307 1.372-1.002 2.217l1.09 2.296c.305.845 1.251 1.345 2.138 1.049l1.028-.343c.34.217.695.4 1.068.547l.262 1.05c.247.887 1.029 1.55 1.946 1.55h1.844c.917 0 1.699-.663 1.946-1.55l.262-1.05c.373-.148.728.33 1.068-.547l1.028.343c.887.296 1.833-.204 2.138-1.049l1.09-2.296c.305-.845-.18-1.785-1.002-2.217l-.859-.43c.033-.22.054-.444.054.672 0-.228-.021-.452-.054-.672l.859.43c.822.432-1.307-1.372-1.002-2.217l-1.09-2.296c-.305-.845-1.251-1.345-2.138-1.049l-1.028.343c-.34-.217-.695-.4-1.068-.547l-.262-1.05C14.726 2.913 13.944 2.25 13.028 2.25H11.08zM12 15.75a3.75 3.75 0 100-7.5 3.75 3.75 0 000 7.5z" clip-rule="evenodd" />
-        </svg>
-
-        <!-- ======== FIX 2: ADDED MISSING LOGIN BUTTON HTML ======== -->
-        <div id="loginButtonContainer" class="hidden">
-            <button id="loginButton">Login</button>
+            <div class="flex items-center ml-4">
+                <button id="loginButton" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold shadow-md hover:bg-blue-700 transition">Login</button>
+                <button id="settings-btn" class="p-2 rounded-full hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all ml-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                </button>
+                <button id="hamburgerBtn" class="hamburger-menu p-2 rounded-md hover:bg-white/10 focus:outline-none md:hidden ml-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
         </div>
     </header>
-    <!-- Hero Section - Internal Focus -->
-    <section class="relative bg-gradient-to-r from-blue-700 to-blue-900 text-white py-20 px-6 md:px-12 rounded-lg m-4 md:m-8 overflow-hidden shadow-xl">
-        <!-- Local Video Player for Background -->
+
+    <!-- Hero Section -->
+    <section class="relative bg-gray-900 text-white py-20 px-6 md:px-12 rounded-lg m-4 md:m-8 overflow-hidden shadow-xl">
         <div class="background-video-container">
-            <video autoplay loop muted playsinline>
-                <source src="index.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-            <div class="video-overlay"></div> <!-- Overlay for readability -->
+            <video autoplay loop muted playsinline src="https://cdn.glitch.global/e7d58112-23fa-4536-9310-e5102832599f/index.mp4?v=1722725804445"></video>
+            <div class="video-overlay"></div>
         </div>
         <div class="relative z-10 text-center max-w-4xl mx-auto">
             <h2 class="text-4xl md:text-6xl font-extrabold leading-tight mb-6">Empowering Our Officers</h2>
             <p class="text-lg md:text-xl mb-8">Your central hub for UPD resources, policies, and departmental communications. Thank you for your service.</p>
-            <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-6">
-                <!-- Updated SOP link in hero section -->
-                <a href="SOP.html" class="inline-block bg-white text-blue-800 hover:bg-blue-100 font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105">Access SOPs</a>
-                <!-- Removed the "View Daily Briefing" button -->
-            </div>
+            <a href="SOP.html" class="inline-block bg-white text-blue-800 hover:bg-blue-100 font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105">Access SOPs</a>
         </div>
     </section>
 
-    <!-- Main Content Sections -->
+    <!-- Main Content -->
     <main class="container mx-auto px-4 md:px-8 py-12">
-        <!-- Internal Quick Links / Important Information -->
-        <!-- Grid layout that changes columns based on screen size: 1 column on small, 2 on medium, 4 on large -->
+        <!-- Quick Links -->
         <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-            <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out">
-                <h3 class="text-xl font-semibold text-blue-700 mb-3">Standard Operating Procedures</h3>
-                <p class="text-gray-600 mb-4">Latest departmental protocols and guidelines.</p>
-                <!-- Updated SOP quick link -->
-                <a href="SOP.html" class="text-blue-500 hover:underline font-medium">Browse SOPs &rarr;</a>
-            </div>
-            <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out">
-                <h3 class="text-xl font-semibold text-blue-700 mb-3">Training & Development</h3>
-                <p class="text-gray-600 mb-4">Upcoming courses, certifications, and resources.</p>
-                <!-- Updated Training quick link -->
-                <a href="training.html" class="text-blue-500 hover:underline font-medium">View Schedule &rarr;</a>
-            </div>
-            <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out">
-                <h3 class="text-xl font-semibold text-blue-700 mb-3">Internal Forms & Requests</h3>
-                <p class="text-gray-600 mb-4">Access leave requests, equipment forms, and more.</p>
-                <!-- Updated Forms quick link -->
-                <a href="forms.html" class="text-blue-500 hover:underline font-medium">Download Forms &rarr;</a>
-            </div>
-            <div class="bg-white p-6 rounded-lg shadow-lg hover:shadow-xl transition-shadow duration-300 ease-in-out">
-                <h3 class="text-xl font-semibold text-blue-700 mb-3">Shift Roster & Schedules</h3>
-                <p class="text-gray-600 mb-4">Check your upcoming shifts and team assignments.</p>
-                <!-- Updated Roster quick link -->
-                <a href="roster.html" class="text-blue-500 hover:underline font-medium">View Roster &rarr;</a>
-            </div>
+            <!-- Quick links will be dynamically generated if needed, or can be static -->
         </section>
 
-        <!-- Our Internal Commitment / Values -->
-        <section class="bg-blue-50 p-8 rounded-lg shadow-inner mb-12">
-            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Our Commitment to Our Team</h2>
-            <!-- Flexbox that stacks vertically on small screens and horizontally on medium screens and up -->
+        <!-- Commitment Section -->
+        <section class="bg-[var(--bg-secondary)] p-8 rounded-lg shadow-md mb-12">
+            <h2 class="text-3xl font-bold text-[var(--text-primary)] mb-6 text-center">Our Commitment to Our Team</h2>
             <div class="flex flex-col md:flex-row items-center md:space-x-8">
                 <div class="md:w-2/3">
-                    <p class="text-lg text-gray-700 leading-relaxed mb-4">
-                        The Unified Police Department is committed to providing our dedicated officers and staff with the resources, support, and training necessary to excel in their duties and maintain their well-being.
-                    </p>
-                    <p class="text-lg text-gray-700 leading-relaxed mb-4">
-                        We foster an environment of continuous learning, mutual respect, and operational excellence, ensuring our team is equipped to uphold the highest standards of law enforcement and community service.
-                    </p>
+                    <p class="text-lg text-[var(--text-secondary)] leading-relaxed mb-4">The Unified Police Department is committed to providing our dedicated officers and staff with the resources, support, and training necessary to excel in their duties and maintain their well-being.</p>
+                    <p class="text-lg text-[var(--text-secondary)] leading-relaxed mb-4">We foster an environment of continuous learning, mutual respect, and operational excellence, ensuring our team is equipped to uphold the highest standards of law enforcement and community service.</p>
                 </div>
-                <div class="md:w-1/3 mt-6 md:mt-0">
-                    <img src="LSPD.png" alt="UPD Logo" class="rounded-lg shadow-md w-full h-auto object-contain" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
-                </div>
+                <div class="md:w-1/3 mt-6 md:mt-0"><img src="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png" alt="UPD Logo" class="rounded-lg shadow-md w-full h-auto object-contain"></div>
             </div>
         </section>
 
         <!-- Dynamic Updates Section -->
-        <section id="updatesSection" class="bg-gray-100 p-8 rounded-lg shadow-lg mb-12 hidden">
-            <h2 class="text-3xl font-bold text-gray-800 mb-6 text-center">Recent Website Updates</h2>
-            <div id="updatesContent" class="space-y-4">
-                <!-- Updates will be loaded here dynamically from CSV -->
-            </div>
+        <section id="updatesSection" class="bg-[var(--bg-secondary)] p-8 rounded-lg shadow-md mb-12 hidden">
+            <h2 class="text-3xl font-bold text-[var(--text-primary)] mb-6 text-center">Recent Website Updates</h2>
+            <div id="updatesContent" class="space-y-4"></div>
         </section>
-
     </main>
 
-    <!-- Footer Section - Internal Contacts -->
-    <footer class="bg-gray-800 text-white py-10 px-6 md:px-12 rounded-t-lg">
-        <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-                <h4 class="text-xl font-semibold mb-4 text-blue-300">Internal Contacts</h4>
-                <ul class="space-y-2 text-sm">
-                    <li><a href="https://discord.gg/7FwxdpfDTM" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Discord</a></li>
-                    <li><a href="https://discord.com/channels/1383775098464370768/1396398235660058685" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Support</a></li>
-                    <li><a href="https://discord.com/channels/1383775098464370768/1396398240840290374" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Chat</a></li>
-                    <li><a href="https://discord.com/channels/1383775098464370768/1396398235660058685" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Internal Affairs</a></li>
-                    <li><a href="https://discord.com/channels/1383775098464370768/1396398239678333030" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Announcements</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="text-xl font-semibold mb-4 text-blue-300">Quick Access</h4>
-                <ul class="space-y-2 text-sm">
-                    <li><a href="https://docs.google.com/document/d/1etjilZ1dAHGviw33MV5Zs-b5dXqcSHyoYIHvHiRIyy4/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD SOP</a></li>
-                    <li><a href="https://docs.google.com/document/d/1hKQ4fw9b1_yQELhPi1p1b4M6uiSaYb7bBp-9C6GVTdY/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Unified Police Department Interview Procedure & Questions</a></li>
-                    <li><a href="https://docs.google.com/document/d/1d004FfAhZBgESn88Mx21N3CGqXlcoNeP9_sadn_ePak/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Promotional Pathway & Subdivision Assignment Policy</a></li>
-                    <li><a href="https://docs.google.com/document/d/14QIEsYMWpTssti1xGbGWiMxQ2b0jbiYxuMmvV8XWUUo/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Highway Enforcement and Apprehension Team (HEAT) Activation Policy</a></li>
-                    <li><a href="https://docs.google.com/document/d/1Ggf7SS5voiIjr3iSLB3VtAc47JN3aDjm2J_gYnpoZ6s/edit?blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Disciplinary Guidelines</a></li>
-                    <li><a href="privacypolicy.html" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Privacy Policy</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="text-xl font-semibold mb-4 text-blue-300">System Information</h4>
-                <p class="text-gray-500 text-sm mb-2">Unauthorized Access Strictly Prohibited</p>
-                <p class="text-gray-500 text-sm mb-2">For UPD Personnel Use Only</p>
-                <p class="text-500 text-sm mb-2">Created and Maintained by FiveM "NightLife RP"</p>
-                <p class="text-gray-500 text-sm">&copy; 2025 Unified Police Department Internal Systems.</p>
-            </div>
-        </div>
-        <!-- Font Awesome for any potential internal icons (though less needed here) -->
-        <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-    </footer>
+    <!-- Modals -->
+    <div id="officerSelectionModal" class="modal-overlay"><div class="modal-box"><h3 class="text-xl font-bold mb-4">Select Officer</h3><div class="mb-4"><label for="officerSearchInput" class="block text-sm font-semibold mb-2">Search Unified Roster</label><input type="text" id="officerSearchInput" placeholder="Search officer name or badge..." class="w-full px-4 py-2 border border-[var(--border-color)] bg-[var(--bg-tertiary)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)]"></div><div id="officerList" class="max-h-64 overflow-y-auto border border-[var(--border-color)] rounded-lg p-2 mb-4"></div><div class="flex justify-end space-x-4"><button id="logoutButton" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition">Logout</button><button id="closeOfficerModalBtn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition">Close</button></div></div></div>
+    <div id="settings-modal" class="modal-overlay"><div class="modal-box text-[var(--text-primary)]"><h2 class="text-2xl font-bold mb-6">Settings</h2><div class="mb-6"><h3 class="text-lg font-semibold mb-3">Website Theme</h3><div class="space-y-2"><label class="flex items-center"><input type="radio" name="theme" value="light" class="form-radio h-4 w-4 text-blue-600"><span class="ml-2">Light Mode</span></label><label class="flex items-center"><input type="radio" name="theme" value="dark" class="form-radio h-4 w-4 text-blue-600"><span class="ml-2">Dark Mode</span></label></div></div><div class="mb-6"><h3 class="text-lg font-semibold mb-3">Data Management</h3><div class="flex flex-col space-y-3"><button id="clear-data-btn" class="w-full bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition">Clear All Local Data</button><button id="view-data-btn" class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition">View Stored Data</button></div></div><div class="mt-8 text-right"><button id="close-settings-btn" class="bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-200 px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition">Close</button></div></div></div>
+    <div id="view-data-modal" class="modal-overlay"><div class="modal-box data-modal-box text-[var(--text-primary)]"><h2 class="text-2xl font-bold mb-4">Local Storage Data</h2><div id="data-container" class="space-y-4 text-sm"></div><div class="mt-6 text-right"><button id="close-view-data-btn" class="bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-200 px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition">Close</button></div></div></div>
+    <div id="confirm-modal" class="modal-overlay"><div class="modal-box text-[var(--text-primary)]"><h2 id="confirm-title" class="text-xl font-bold mb-4">Are you sure?</h2><p id="confirm-text" class="mb-6">This action cannot be undone.</p><div class="flex justify-end space-x-4"><button id="confirm-cancel-btn" class="bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-200 px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition">Cancel</button><button id="confirm-ok-btn" class="bg-red-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-700 transition">Confirm</button></div></div></div>
 
     <!-- Cookie Consent Banner -->
-    <div id="cookieConsentBanner" class="hidden">
-        <p>This website uses cookies to enhance user experience. By continuing to use this site, you agree to our use of cookies. For more information, please see our <a href="privacypolicy.html" class="text-blue-300 hover:underline">Privacy Policy</a>.</p>
-        <div class="flex">
-            <button id="acceptCookies">Accept</button>
-            <button id="declineCookies">Decline</button>
-        </div>
+    <div id="cookieConsentBanner" class="text-center md:flex md:items-center md:justify-between">
+        <p class="mb-4 md:mb-0 md:mr-4">This website uses local storage to enhance user experience. By continuing, you agree to our use of this feature. See our <a href="privacypolicy.html" class="text-[var(--accent-color)] hover:underline">Privacy Policy</a>.</p>
+        <div class="flex justify-center"><button id="acceptCookies" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg transition mr-2">Accept</button><button id="declineCookies" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition">Decline</button></div>
     </div>
 
-    <!-- Officer Selection Modal (Copied from report.html) -->
-    <div id="officerSelectionModal" class="modal-overlay hidden">
-        <div class="modal-content">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">Select Officer</h3>
-
-            <!-- MODIFICATION: Department Selection REMOVED for unified list -->
-            <div class="mb-4">
-                <label for="officerSearchInput" class="block text-gray-700 text-sm font-semibold mb-2">
-                    Search Unified Roster
-                </label>
-                <input type="text"
-                       id="officerSearchInput"
-                       placeholder="Search officer name or badge..."
-                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-            </div>
-
-            <div id="officerList" class="max-h-64 overflow-y-auto border border-gray-200 rounded-lg p-2 mb-4">
-                <!-- Officer list will be populated here -->
-                <div class="loader mx-auto my-4"></div> <!-- Loader for officer list -->
-            </div>
-            <div class="flex justify-end space-x-4">
-                <button id="logoutButton"
-                        class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">
-                    Logout
-                </button>
-                <button id="closeOfficerModalBtn"
-                        class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">
-                    Close
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Settings Modal -->
-    <div id="settingsModal" class="modal-overlay hidden">
-        <div class="modal-content">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">Settings</h3>
-
-            <div class="mb-6">
-                <h4 class="text-lg font-semibold text-gray-700 mb-2">Website Theme</h4>
-                <div class="radio-option">
-                    <input type="radio" id="lightMode" name="theme" value="light" class="text-blue-600">
-                    <label for="lightMode">Light Mode</label>
-                </div>
-                <div class="radio-option">
-                    <input type="radio" id="darkMode" name="theme" value="dark" class="text-blue-600">
-                    <label for="darkMode">Dark Mode</label>
-                </div>
-            </div>
-
-            <div class="mb-6">
-                <h4 class="text-lg font-semibold text-gray-700 mb-2">Data Management</h4>
-                <button id="clearAllDataBtn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md w-full mb-2">
-                    Clear All Local Data
-                </button>
-                <button id="viewDataBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md w-full">
-                    View Stored Data
-                </button>
-            </div>
-
-            <div class="flex justify-end mt-4">
-                <button id="closeSettingsModalBtn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">
-                    Close
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Data Viewer Modal -->
-    <div id="dataViewerModal" class="modal-overlay hidden">
-        <div class="modal-content">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">Local Storage Data</h3>
-            <div id="dataViewerContent" class="space-y-4">
-                <!-- Data will be loaded here dynamically -->
-            </div>
-            <div class="flex justify-end mt-4">
-                <button id="closeDataViewerModalBtn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">
-                    Close
-                </button>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Delete All Data Confirmation Modal (Now used by Clear All Local Data in Settings) -->
-    <div id="confirmDeleteModal" class="modal-overlay hidden">
-        <div class="modal-content text-center">
-            <h3 class="text-xl font-bold text-gray-800 mb-4">Confirm Data Deletion</h3>
-            <p class="text-gray-700 mb-6">
-                Are you sure you want to completely delete ALL website data from your device?
-                This includes login information, saved report data, and cookie preferences.
-                This action cannot be undone.
-            </p>
-            <div class="flex justify-center space-x-4">
-                <button id="confirmDeleteYesBtn"
-                        class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">
-                    Yes, Delete All
-                </button>
-                <button id="confirmDeleteNoBtn"
-                        class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">
-                    No, Keep Data
-                </button>
-            </div>
-        </div>
-    </div>
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-10 px-6 md:px-12"><div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8"><div><h4 class="text-xl font-semibold mb-4 text-blue-300">Internal Contacts</h4><ul class="space-y-2 text-sm"><li><a href="https://discord.gg/7FwxdpfDTM" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition">Discord</a></li><li><a href="#" class="text-gray-400 hover:text-white hover:underline transition">UPD Support</a></li><li><a href="#" class="text-gray-400 hover:text-white hover:underline transition">UPD Chat</a></li></ul></div><div><h4 class="text-xl font-semibold mb-4 text-blue-300">Quick Access</h4><ul class="space-y-2 text-sm"><li><a href="SOP.html" class="text-gray-400 hover:text-white hover:underline transition">UPD SOP</a></li><li><a href="training.html" class="text-gray-400 hover:text-white hover:underline transition">Training</a></li><li><a href="privacypolicy.html" class="text-gray-400 hover:text-white hover:underline transition">Privacy Policy</a></li></ul></div><div><h4 class="text-xl font-semibold mb-4 text-blue-300">System Information</h4><p class="text-gray-500 text-sm">&copy; 2025 Unified Police Department Internal Systems.</p></div></div></footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Fade in the body content
-            document.body.classList.add('fade-in');
+        (() => {
+            // --- CONFIGURATION ---
+            const quickLinks = [
+                { title: "Standard Operating Procedures", desc: "Latest departmental protocols and guidelines.", href: "SOP.html", linkText: "Browse SOPs" },
+                { title: "Training & Development", desc: "Upcoming courses, certifications, and resources.", href: "training.html", linkText: "View Schedule" },
+                { title: "Internal Forms & Requests", desc: "Access leave requests, equipment forms, and more.", href: "forms.html", linkText: "Download Forms" },
+                { title: "Shift Roster & Schedules", desc: "Check your upcoming shifts and team assignments.", href: "roster.html", linkText: "View Roster" }
+            ];
 
-            const banner = document.getElementById('devNoticeBanner');
-            const closeBannerBtn = document.getElementById('closeBannerBtn');
-            const cookieConsentBanner = document.getElementById('cookieConsentBanner');
-            const acceptCookiesBtn = document.getElementById('acceptCookies');
-            const declineCookiesBtn = document.getElementById('declineCookies');
-            const loginButtonContainer = document.getElementById('loginButtonContainer');
-            const loginButton = document.getElementById('loginButton');
+            const unifiedRosterConfig = [
+                { name: "LSPD", url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8yueJjp9o-XVH1_RXPji6N_IAP1DDbNLZ8l4__IqGCvVEUWscsdsJ6uNHZ8u6kDhhXkSxcdkdeDJi/pub?gid=0&single=true&output=csv', badgeCol: 'C', nameCol: 'D', rowRanges: [{ start: 6, end: 6 }, { start: 9, end: 16 }, { start: 18, end: 22 }, { start: 24, end: 27 }, { start: 29, end: 32 }, { start: 34, end: 43 }, { start: 45, end: 54 }, { start: 56, end: 65 }, { start: 67, end: 78 }, { start: 80, end: 96 }, { start: 98, end: 117 }, { start: 119, end: 148 }] },
+                { name: "LSCSO", url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8yueJjp9o-XVH1_RXPji6N_IAP1DDbNLZ8l4__IqGCvVEUWscsdsJ6uNHZ8u6kDhhXkSxcdkdeDJi/pub?gid=1747285908&single=true&output=csv', badgeCol: 'C', nameCol: 'D', rowRanges: null },
+                { name: "State", url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8yueJjp9o-XVH1_RXPji6N_IAP1DDbNLZ8l4__IqGCvVEUWscsdsJ6uNHZ8u6kDhhXkSxcdkdeDJi/pub?gid=394994291&single=true&output=csv', badgeCol: 'C', nameCol: 'D', rowRanges: null },
+                { name: "FBI", url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8yueJjp9o-XVH1_RXPji6N_IAP1DDbNLZ8l4__IqGCvVEUWscsdsJ6uNHZ8u6kDhhXkSxcdkdeDJi/pub?gid=248128167&single=true&output=csv', badgeCol: 'B', nameCol: 'C', rowRanges: null }
+            ];
 
-            // Officer Selection Modal Elements
+            // --- DOM ELEMENTS ---
+            const settingsModal = document.getElementById('settings-modal');
+            const themeRadios = document.querySelectorAll('input[name="theme"]');
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const navLinks = document.getElementById('nav-links');
             const officerSelectionModal = document.getElementById('officerSelectionModal');
-            // MODIFICATION: Department select is no longer needed
             const officerSearchInput = document.getElementById('officerSearchInput');
             const officerListDiv = document.getElementById('officerList');
             const closeOfficerModalBtn = document.getElementById('closeOfficerModalBtn');
             const logoutButton = document.getElementById('logoutButton');
+            const loginButton = document.getElementById('loginButton');
+            const settingsBtn = document.getElementById('settings-btn');
+            const closeSettingsBtn = document.getElementById('close-settings-btn');
+            const viewDataBtn = document.getElementById('view-data-btn');
+            const clearDataBtn = document.getElementById('clear-data-btn');
+            const viewDataModal = document.getElementById('view-data-modal');
+            const closeViewDataBtn = document.getElementById('close-view-data-btn');
+            const dataContainer = document.getElementById('data-container');
+            const confirmModal = document.getElementById('confirm-modal');
+            const confirmOkBtn = document.getElementById('confirm-ok-btn');
+            const confirmCancelBtn = document.getElementById('confirm-cancel-btn');
+            const cookieConsentBanner = document.getElementById('cookieConsentBanner');
+            const acceptCookiesBtn = document.getElementById('acceptCookies');
+            const declineCookiesBtn = document.getElementById('declineCookies');
 
-            // Settings Modal Elements
-            const settingsIcon = document.getElementById('settingsIcon');
-            const settingsModal = document.getElementById('settingsModal');
-            const closeSettingsModalBtn = document.getElementById('closeSettingsModalBtn');
-            const lightModeRadio = document.getElementById('lightMode');
-            const darkModeRadio = document.getElementById('darkMode');
-            const clearAllDataBtn = document.getElementById('clearAllDataBtn');
-            const viewDataBtn = document.getElementById('viewDataBtn');
-
-            // Data Viewer Modal Elements
-            const dataViewerModal = document.getElementById('dataViewerModal');
-            const dataViewerContent = document.getElementById('dataViewerContent');
-            const closeDataViewerModalBtn = document.getElementById('closeDataViewerModalBtn');
-
-
-            // Delete All Data Confirmation Modal Elements
-            const confirmDeleteModal = document.getElementById('confirmDeleteModal');
-            const confirmDeleteYesBtn = document.getElementById('confirmDeleteYesBtn');
-            const confirmDeleteNoBtn = document.getElementById('confirmDeleteNoBtn');
-
-
-            // Global variable to store fetched officer roster data
+            // --- STATE ---
             let officerRosterData = [];
-            // Flag to prevent multiple simultaneous fetches
             let isFetchingRoster = false;
+            let confirmCallback = null;
 
+            // --- FUNCTIONS ---
+            function generateQuickLinks() {
+                const container = document.querySelector('.grid');
+                container.innerHTML = quickLinks.map(link => `
+                    <div class="bg-[var(--bg-secondary)] p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                        <h3 class="text-xl font-semibold text-[var(--accent-color)] mb-3">${link.title}</h3>
+                        <p class="text-[var(--text-secondary)] mb-4">${link.desc}</p>
+                        <a href="${link.href}" class="text-blue-500 dark:text-blue-400 hover:underline font-medium">${link.linkText} &rarr;</a>
+                    </div>
+                `).join('');
+            }
 
-            // --- MODIFICATION: UNIFIED DEPARTMENT CONFIGURATION ---
-            // Configuration for all department sheets combined into one category.
-            const unifiedRosterConfig = [
-                {
-                    name: "LSPD",
-                    url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8yueJjp9o-XVH1_RXPji6N_IAP1DDbNLZ8l4__IqGCvVEUWscsdsJ6uNHZ8u6kDhhXkSxcdkdeDJi/pub?gid=0&single=true&output=csv',
-                    badgeCol: 'C',
-                    nameCol: 'D',
-                    // Specific row ranges for LSPD sheet structure
-                    rowRanges: [
-                        { start: 6, end: 6 }, { start: 9, end: 16 }, { start: 18, end: 22 },
-                        { start: 24, end: 27 }, { start: 29, end: 32 }, { start: 34, end: 43 },
-                        { start: 45, end: 54 }, { start: 56, end: 65 }, { start: 67, end: 78 },
-                        { start: 80, end: 96 }, { start: 98, end: 117 }, { start: 119, end: 148 }
-                    ]
-                },
-                {
-                    name: "LSCSO",
-                    url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8yueJjp9o-XVH1_RXPji6N_IAP1DDbNLZ8l4__IqGCvVEUWscsdsJ6uNHZ8u6kDhhXkSxcdkdeDJi/pub?gid=1747285908&single=true&output=csv',
-                    badgeCol: 'C',
-                    nameCol: 'D',
-                    rowRanges: null // Generic filtering (no specific rows)
-                },
-                {
-                    name: "State",
-                    url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8yueJjp9o-XVH1_RXPji6N_IAP1DDbNLZ8l4__IqGCvVEUWscsdsJ6uNHZ8u6kDhhXkSxcdkdeDJi/pub?gid=394994291&single=true&output=csv',
-                    badgeCol: 'C',
-                    nameCol: 'D',
-                    rowRanges: null // Generic filtering
-                },
-                {
-                    name: "FBI",
-                    url: 'https://docs.google.com/spreadsheets/d/e/2PACX-1vT8yueJjp9o-XVH1_RXPji6N_IAP1DDbNLZ8l4__IqGCvVEUWscsdsJ6uNHZ8u6kDhhXkSxcdkdeDJi/pub?gid=248128167&single=true&output=csv',
-                    badgeCol: 'B',
-                    nameCol: 'C',
-                    rowRanges: null // Generic filtering
+            const applyTheme = (theme) => {
+                if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                    themeRadios.forEach(radio => radio.value === 'dark' ? radio.checked = true : false);
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    themeRadios.forEach(radio => radio.value === 'light' ? radio.checked = true : false);
                 }
-            ];
-
-
-            // Show the development notice banner after a short delay
-            setTimeout(() => {
-                banner.classList.add('show');
-            }, 500); // Adjust delay as needed
-
-            // Function to hide the development notice banner
-            const hideBanner = () => {
-                banner.classList.remove('show'); // Hide by removing 'show' class
             };
 
-            // Event listener for closing the development notice banner
-            closeBannerBtn.addEventListener('click', hideBanner);
-
-            /**
-             * Converts an Excel-style column letter (e.g., 'A', 'B', 'AA') to a 0-based index.
-             * @param {string} columnLetter - The column letter (e.g., 'C').
-             * @returns {number} The 0-based column index (e.g., 'C' returns 2).
-             */
             function columnLetterToIndex(columnLetter) {
                 let index = 0;
                 for (let i = 0; i < columnLetter.length; i++) {
                     index = index * 26 + (columnLetter.charCodeAt(i) - 'A'.charCodeAt(0) + 1);
                 }
-                return index - 1; // Convert to 0-based index
+                return index - 1;
             }
 
-            // --- MODIFICATION: NEW UNIFIED ROSTER FETCHING FUNCTION ---
-            /**
-             * Fetches CSV data from all configured Google Sheets, combines them, and sets the global officer roster.
-             */
             async function fetchAndSetCombinedOfficerRoster() {
-                if (isFetchingRoster) return; // Prevent re-fetching if already in progress
+                if (isFetchingRoster) return;
                 isFetchingRoster = true;
-                officerListDiv.innerHTML = '<div class="loader mx-auto my-4"></div>'; // Show loader
+                officerListDiv.innerHTML = '<div class="loader mx-auto my-4 border-t-blue-500 border-4 rounded-full w-10 h-10 animate-spin"></div>';
 
-                // Create an array of fetch promises
-                const fetchPromises = unifiedRosterConfig.map(config =>
-                    fetch(config.url)
-                        .then(response => {
-                            if (!response.ok) throw new Error(`Failed to fetch ${config.name}`);
-                            return response.text();
-                        })
-                );
+                const fetchPromises = unifiedRosterConfig.map(config => fetch(config.url).then(res => res.ok ? res.text() : Promise.reject(`Failed ${config.name}`)));
 
                 try {
                     const csvResults = await Promise.all(fetchPromises);
                     let combinedRoster = [];
-                    const regex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/; // Regex to split by comma, ignoring those inside quotes
+                    const regex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
 
                     csvResults.forEach((csvText, index) => {
                         const config = unifiedRosterConfig[index];
-                        const departmentName = config.name;
                         const rawRows = csvText.trim().split('\n');
-
-                        if (rawRows.length === 0) return; // Skip empty sheets
-
                         let dataToProcess = [];
 
                         if (config.rowRanges) {
-                            // Logic for sheets with specific row ranges (LSPD)
                             const targetRows = new Set();
-                            config.rowRanges.forEach(range => {
-                                for (let i = range.start; i <= range.end; i++) {
-                                    targetRows.add(i);
-                                }
-                            });
-                            rawRows.forEach((rowString, i) => {
-                                if (targetRows.has(i + 1)) {
-                                    dataToProcess.push(rowString.split(regex).map(cell => cell.replace(/^"(.*)"$/, '$1').trim()));
-                                }
-                            });
+                            config.rowRanges.forEach(range => { for (let i = range.start; i <= range.end; i++) targetRows.add(i); });
+                            rawRows.forEach((rowString, i) => { if (targetRows.has(i + 1)) dataToProcess.push(rowString.split(regex).map(cell => cell.replace(/^"(.*)"$/, '$1').trim())); });
                         } else {
-                            // Generic logic for other sheets (skip header)
-                            dataToProcess = rawRows.slice(1).map(rowString =>
-                                rowString.split(regex).map(cell => cell.replace(/^"(.*)"$/, '$1').trim())
-                            );
+                            dataToProcess = rawRows.slice(1).map(rowString => rowString.split(regex).map(cell => cell.replace(/^"(.*)"$/, '$1').trim()));
                         }
 
-                        // --- DYNAMIC COLUMN PARSING ---
                         const nameColIndex = columnLetterToIndex(config.nameCol);
                         const badgeColIndex = columnLetterToIndex(config.badgeCol);
 
                         dataToProcess.forEach(cells => {
-                            const name = cells[nameColIndex] ? cells[nameColIndex].trim() : '';
-                            const badge = cells[badgeColIndex] ? cells[badgeColIndex].trim() : '';
-
-                            // --- HEADER FILTERING LOGIC ---
-                            // Add to roster only if name and badge are valid and not header-like text.
+                            const name = (cells[nameColIndex] || '').trim();
+                            const badge = (cells[badgeColIndex] || '').trim();
                             const lowerCaseName = name.toLowerCase();
-                            if (name && lowerCaseName !== 'n/a' && lowerCaseName !== 'name' && lowerCaseName !== 'rank (name)' &&
-                                badge && badge.toLowerCase() !== 'n/a') {
-                                combinedRoster.push({ name, badge, department: departmentName });
+                            if (name && lowerCaseName !== 'n/a' && lowerCaseName !== 'name' && lowerCaseName !== 'rank (name)' && badge && badge.toLowerCase() !== 'n/a') {
+                                combinedRoster.push({ name, badge, department: config.name });
                             }
                         });
                     });
 
-                    // --- DE-DUPLICATION LOGIC ---
-                    // Use a Map to store unique officers, keyed by a combination of name and badge.
-                    // This ensures that if an officer exists in multiple rosters, only the first entry found is kept.
                     const uniqueOfficersMap = new Map();
                     combinedRoster.forEach(officer => {
                         const uniqueKey = `${officer.name.toLowerCase().trim()}-${officer.badge.trim()}`;
-                        if (!uniqueOfficersMap.has(uniqueKey)) {
-                            uniqueOfficersMap.set(uniqueKey, officer);
-                        }
+                        if (!uniqueOfficersMap.has(uniqueKey)) uniqueOfficersMap.set(uniqueKey, officer);
                     });
 
-                    officerRosterData = Array.from(uniqueOfficersMap.values()); // Update the global roster with unique officers
-                    populateOfficerList(officerRosterData); // Populate the modal
+                    officerRosterData = Array.from(uniqueOfficersMap.values());
+                    populateOfficerList(officerRosterData);
 
                 } catch (error) {
                     console.error('Error fetching combined roster data:', error);
-                    officerListDiv.innerHTML = `<p class="text-red-500 text-center py-4">Failed to load officer rosters. Please try again later.</p>`;
+                    officerListDiv.innerHTML = `<p class="text-red-500 text-center py-4">Failed to load officer rosters.</p>`;
                 } finally {
-                    isFetchingRoster = false; // Reset fetch flag
+                    isFetchingRoster = false;
                 }
             }
 
-
-            // Function to populate the officer list in the modal
             function populateOfficerList(officers, searchTerm = '') {
-                officerListDiv.innerHTML = ''; // Clear existing list
+                officerListDiv.innerHTML = '';
                 const lowerCaseSearchTerm = searchTerm.toLowerCase();
-
-                const filteredOfficers = officers.filter(officer =>
-                    officer.name.toLowerCase().includes(lowerCaseSearchTerm) ||
-                    officer.badge.toLowerCase().includes(lowerCaseSearchTerm)
-                );
+                const filteredOfficers = officers.filter(o => o.name.toLowerCase().includes(lowerCaseSearchTerm) || o.badge.toLowerCase().includes(lowerCaseSearchTerm));
 
                 if (filteredOfficers.length === 0) {
-                    officerListDiv.innerHTML = '<p class="text-gray-500 text-center py-4">No officers found.</p>';
+                    officerListDiv.innerHTML = '<p class="text-center py-4">No officers found.</p>';
                     return;
                 }
 
                 filteredOfficers.forEach(officer => {
                     const div = document.createElement('div');
-                    // MODIFICATION: Added department name to display text for clarity
-                    div.className = 'officer-item p-2 rounded-md hover:bg-blue-100 cursor-pointer text-gray-800 text-sm font-medium';
+                    div.className = 'p-2 rounded-md hover:bg-[var(--bg-tertiary)] cursor-pointer text-sm font-medium';
                     div.textContent = `${officer.name} (${officer.badge}) - [${officer.department}]`;
-                    div.dataset.name = officer.name;
-                    div.dataset.badge = officer.badge;
-                    div.dataset.department = officer.department; // Store department
-
                     div.addEventListener('click', () => {
                         localStorage.setItem('loggedInOfficer', JSON.stringify(officer));
                         updateLoginButton();
-                        officerSelectionModal.classList.add('hidden');
-                        console.log('Officer selected and saved to local storage:', officer);
+                        officerSelectionModal.classList.remove('is-open');
                     });
                     officerListDiv.appendChild(div);
                 });
             }
 
-            // Function to update the login button text based on stored officer info
             const updateLoginButton = () => {
                 const loggedInOfficer = localStorage.getItem('loggedInOfficer');
                 if (loggedInOfficer) {
                     const officer = JSON.parse(loggedInOfficer);
-                    loginButton.textContent = `Logged In: ${officer.name} [${officer.department}]`; // Show department
+                    loginButton.textContent = `Logged In: ${officer.name}`;
                     loginButton.classList.remove('bg-blue-600', 'hover:bg-blue-700');
                     loginButton.classList.add('bg-green-600', 'hover:bg-green-700');
                 } else {
@@ -1144,412 +422,124 @@
                 }
             };
 
-            // --- Cookie Consent and Local Storage Logic ---
-
-            // Function to enable local storage features
             const enableLocalStorageFeatures = () => {
-                console.log('Local storage features enabled.');
-                if (loginButtonContainer) {
-                    loginButtonContainer.classList.remove('hidden');
-                }
-                updateLoginButton(); // Update login button state immediately
-                // Add any other local storage dependent features here
+                loginButton.style.display = 'block';
+                updateLoginButton();
             };
 
-            // Function to disable local storage features
             const disableLocalStorageFeatures = () => {
-                console.log('Local storage features disabled.');
-                if (loginButtonContainer) {
-                    loginButtonContainer.classList.add('hidden');
-                }
-                localStorage.removeItem('loggedInOfficer'); // Clear any stored login info
-                updateLoginButton(); // Reset login button state
-                // Hide or disable any other local storage dependent features here
+                loginButton.style.display = 'none';
+                localStorage.removeItem('loggedInOfficer');
             };
 
-            // Function to check cookie consent status
             const checkCookieConsent = () => {
                 const consent = localStorage.getItem('cookieConsent');
                 if (consent === 'accepted') {
-                    console.log('Cookie consent: Accepted. Enabling local storage features.');
                     enableLocalStorageFeatures();
-                    cookieConsentBanner.classList.add('hidden'); // Hide banner if already accepted
                 } else if (consent === 'declined') {
-                    console.log('Cookie consent: Declined. Disabling local storage features.');
                     disableLocalStorageFeatures();
-                    cookieConsentBanner.classList.add('hidden'); // Hide banner if declined
                 } else {
-                    console.log('Cookie consent: Not set. Showing banner.');
-                    // Show the cookie banner after a slight delay to ensure other elements are loaded
-                    setTimeout(() => {
-                        cookieConsentBanner.classList.remove('hidden');
-                        cookieConsentBanner.classList.add('show');
-                    }, 1000);
+                    setTimeout(() => cookieConsentBanner.classList.add('show'), 1000);
                 }
             };
 
-            // Event listener for accepting cookies
-            if (acceptCookiesBtn) {
-                acceptCookiesBtn.addEventListener('click', () => {
-                    localStorage.setItem('cookieConsent', 'accepted');
-                    cookieConsentBanner.classList.remove('show');
-                    setTimeout(() => {
-                        cookieConsentBanner.classList.add('hidden');
-                    }, 300); // Allow transition to finish before hiding completely
-                    enableLocalStorageFeatures();
-                    console.log('Cookies accepted.');
-                });
-            }
-
-            // Event listener for declining cookies
-            if (declineCookiesBtn) {
-                declineCookiesBtn.addEventListener('click', () => {
-                    localStorage.setItem('cookieConsent', 'declined');
-                    localStorage.removeItem('loggedInOfficer'); // Clear login info if cookies declined
-                    cookieConsentBanner.classList.remove('show');
-                    setTimeout(() => {
-                        cookieConsentBanner.classList.add('hidden');
-                    }, 300); // Allow transition to finish before hiding completely
-                    disableLocalStorageFeatures();
-                    console.log('Cookies declined.');
-                });
-            }
-
-            // Initial check for cookie consent when the page loads
-            checkCookieConsent();
-
-            // --- MODIFIED Event listener for Login Button ---
-            if (loginButton) {
-                loginButton.addEventListener('click', async () => {
-                    officerSelectionModal.classList.remove('hidden');
-                    officerSearchInput.value = ''; // Clear search input
-                    // Fetch data only if the roster hasn't been populated yet
-                    if (officerRosterData.length === 0) {
-                        await fetchAndSetCombinedOfficerRoster();
-                    }
-                });
-            }
-
-            // MODIFICATION: Department change listener is no longer needed and has been removed.
-
-            // Officer Search Input Listener
-            officerSearchInput.addEventListener('input', (e) => {
-                populateOfficerList(officerRosterData, e.target.value);
-            });
-
-            // Close Officer Modal Button
-            if (closeOfficerModalBtn) {
-                closeOfficerModalBtn.addEventListener('click', () => {
-                    officerSelectionModal.classList.add('hidden');
-                });
-            }
-
-            // Logout Button
-            if (logoutButton) {
-                logoutButton.addEventListener('click', () => {
-                    localStorage.removeItem('loggedInOfficer');
-                    updateLoginButton(); // Reset button text
-                    officerSelectionModal.classList.add('hidden');
-                    console.log('Logged out. Officer data cleared from local storage.');
-                });
-            }
-
-            // Close officer modal when clicking outside of it
-            officerSelectionModal.addEventListener('click', (e) => {
-                if (e.target === officerSelectionModal) {
-                    officerSelectionModal.classList.add('hidden');
-                }
-            });
-
-
-            // --- Theme Switching Logic ---
-            const applyTheme = (theme) => {
-                if (theme === 'dark') {
-                    document.body.classList.add('dark-mode');
-                    document.body.classList.remove('light-mode');
-                    if (darkModeRadio) darkModeRadio.checked = true; // Ensure radio button is checked
-                } else {
-                    document.body.classList.remove('dark-mode');
-                    document.body.classList.add('light-mode');
-                    if (lightModeRadio) lightModeRadio.checked = true; // Ensure radio button is checked
-                }
-                localStorage.setItem('theme', theme);
-            };
-
-            // Initialize theme based on local storage or default to light
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            applyTheme(savedTheme);
-
-            if (lightModeRadio) {
-                lightModeRadio.addEventListener('change', () => applyTheme('light'));
-            }
-            if (darkModeRadio) {
-                darkModeRadio.addEventListener('change', () => applyTheme('dark'));
-            }
-
-            // --- Settings Modal Logic ---
-            if (settingsIcon) {
-                settingsIcon.addEventListener('click', () => {
-                    settingsModal.classList.remove('hidden');
-                    // Ensure correct radio button is checked when opening modal
-                    const currentTheme = localStorage.getItem('theme') || 'light';
-                    if (currentTheme === 'dark') {
-                        darkModeRadio.checked = true;
-                    } else {
-                        lightModeRadio.checked = true;
-                    }
-                });
-            }
-
-            if (closeSettingsModalBtn) {
-                closeSettingsModalBtn.addEventListener('click', () => {
-                    settingsModal.classList.add('hidden');
-                });
-            }
-
-            if (settingsModal) {
-                settingsModal.addEventListener('click', (e) => {
-                    if (e.target === settingsModal) {
-                        settingsModal.classList.add('hidden');
-                    }
-                });
-            }
-
-            // --- Clear All Data Logic (now inside settings modal) ---
-            if (clearAllDataBtn) {
-                clearAllDataBtn.addEventListener('click', () => {
-                    settingsModal.classList.add('hidden'); // Hide settings modal first
-                    confirmDeleteModal.classList.remove('hidden'); // Show confirmation modal
-                });
-            }
-
-            if (confirmDeleteYesBtn) {
-                confirmDeleteYesBtn.addEventListener('click', () => {
-                    localStorage.clear(); // Clears all data from local storage for this domain
-                    console.log('All website data cleared from local storage.');
-                    confirmDeleteModal.classList.add('hidden');
-                    location.reload(); // Reload the page to reflect changes
-                });
-            }
-
-            if (confirmDeleteNoBtn) {
-                confirmDeleteNoBtn.addEventListener('click', () => {
-                    confirmDeleteModal.classList.add('hidden');
-                    settingsModal.classList.remove('hidden'); // Show settings modal again
-                });
-            }
-
-            // Close delete confirmation modal if clicking outside
-            if (confirmDeleteModal) {
-                confirmDeleteModal.addEventListener('click', (e) => {
-                    if (e.target === confirmDeleteModal) {
-                        confirmDeleteModal.classList.add('hidden');
-                        settingsModal.classList.remove('hidden'); // Show settings modal again
-                    }
-                });
-            }
-
-
-            // --- Data Viewer Logic ---
-            if (viewDataBtn) {
-                viewDataBtn.addEventListener('click', () => {
-                    settingsModal.classList.add('hidden'); // Hide settings modal
-                    dataViewerModal.classList.remove('hidden');
-                    displayLocalStorageData();
-                });
-            }
-
-            if (closeDataViewerModalBtn) {
-                closeDataViewerModalBtn.addEventListener('click', () => {
-                    dataViewerModal.classList.add('hidden');
-                    settingsModal.classList.remove('hidden'); // Show settings modal again
-                });
-            }
-
-            if (dataViewerModal) {
-                dataViewerModal.addEventListener('click', (e) => {
-                    if (e.target === dataViewerModal) {
-                        dataViewerModal.classList.add('hidden');
-                        settingsModal.classList.remove('hidden'); // Show settings modal again
-                    }
-                });
-            }
-
-            function displayLocalStorageData() {
-                dataViewerContent.innerHTML = ''; // Clear existing content
-
-                let hasData = false;
-
-                // Display Logged In Officer
-                const loggedInOfficer = localStorage.getItem('loggedInOfficer');
-                if (loggedInOfficer) {
-                    try {
-                        const officer = JSON.parse(loggedInOfficer);
-                        const officerDiv = document.createElement('div');
-                        officerDiv.className = 'data-viewer-item';
-                        officerDiv.innerHTML = `
-                                                            <p class="title">Officer Logged In</p>
-                                                            <p class="description">${officer.name} (Badge: ${officer.badge}, Department: ${officer.department || 'N/A'})</p>
-                                                        `;
-                        dataViewerContent.appendChild(officerDiv);
-                        hasData = true;
-                    } catch (e) {
-                        console.error("Error parsing loggedInOfficer from local storage:", e);
-                    }
-                }
-
-                // Display Website Theme
-                const currentTheme = localStorage.getItem('theme');
-                if (currentTheme) {
-                    const themeDiv = document.createElement('div');
-                    themeDiv.className = 'data-viewer-item';
-                    themeDiv.innerHTML = `
-                                                        <p class="title">Website Theme</p>
-                                                        <p class="description">${currentTheme.charAt(0).toUpperCase() + currentTheme.slice(1)} Mode</p>
-                                                    `;
-                    dataViewerContent.appendChild(themeDiv);
-                    hasData = true;
-                }
-
-                // Display Other Stored Data
-                let otherDataCount = 0;
-                for (let i = 0; i < localStorage.length; i++) {
-                    const key = localStorage.key(i);
-                    // Skip keys already displayed
-                    if (key === 'loggedInOfficer' || key === 'theme' || key === 'cookieConsent' || key === 'reportGeneratorData') { // Added reportGeneratorData
-                        continue;
-                    }
-
-                    let value;
-                    try {
-                        // Try to parse as JSON, otherwise keep as string
-                        value = JSON.parse(localStorage.getItem(key));
-                        // If it's an object/array, stringify it nicely
-                        if (typeof value === 'object' && value !== null) {
-                            value = JSON.stringify(value, null, 2);
-                        }
-                    } catch (e) {
-                        value = localStorage.getItem(key);
-                    }
-
-                    if (otherDataCount === 0) {
-                        const otherDataHeader = document.createElement('div');
-                        otherDataHeader.className = 'data-viewer-item mt-4';
-                        otherDataHeader.innerHTML = `<p class="title">Other Stored Data</p>`;
-                        dataViewerContent.appendChild(otherDataHeader);
-                    }
-
-                    const dataDiv = document.createElement('div');
-                    dataDiv.className = 'data-viewer-item';
-                    dataDiv.innerHTML = `
-                                                        <p class="title">${key}</p>
-                                                        <p class="description">${value}</p>
-                                                    `;
-                    dataViewerContent.appendChild(dataDiv);
-                    hasData = true;
-                    otherDataCount++;
-                }
-
-                if (!hasData) {
-                    dataViewerContent.innerHTML = '<p class="text-gray-500 text-center py-4">No user-specific data currently stored in local storage.</p>';
-                }
-            }
-
-
-            // Function to fetch and display updates from CSV
             const loadUpdates = async () => {
                 const updatesSection = document.getElementById('updatesSection');
                 const updatesContent = document.getElementById('updatesContent');
-                // Updated CSV URL to the new link provided by the user, ensuring it outputs as CSV
                 const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQxN1ZQBPqwqLxvr_T1tQ2TVwHuy0d2jainTySsbsSxMBl6ukf5R3Di6SGO3sHA3CD-1uSBgp_qPtJA/pub?output=csv';
                 const fourteenDaysAgo = new Date();
                 fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
 
-                console.log('--- Starting loadUpdates ---');
-                console.log('Current Date:', new Date().toLocaleDateString());
-                console.log('14 Days Ago Date:', fourteenDaysAgo.toLocaleDateString());
-
                 try {
                     const response = await fetch(csvUrl);
-                    console.log('Fetch response status:', response.status);
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                     const csvText = await response.text();
-                    console.log('Fetched CSV Text (first 200 chars):', csvText.substring(0, 200));
-
-                    // Simple CSV parsing (assuming format: Date,Type,Description)
                     const lines = csvText.trim().split('\n');
                     const updates = [];
 
-                    console.log('Total CSV lines (including header):', lines.length);
-
-                    // Skip header row
                     for (let i = 1; i < lines.length; i++) {
-                        const parts = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/); // Split by comma, but not inside quotes
-                        console.log(`Processing line ${i}:`, parts);
-
+                        const parts = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
                         if (parts.length >= 3) {
-                            // Remove leading/trailing quotes from date and description
                             const dateStr = parts[0].trim().replace(/"/g, '');
-                            const title = parts[1].trim().replace(/"/g, ''); // Also remove quotes from title
+                            const title = parts[1].trim().replace(/"/g, '');
                             const description = parts[2].trim().replace(/"/g, '');
-
                             const updateDate = new Date(dateStr);
-
-                            console.log(`Date string (cleaned): "${dateStr}", Parsed Date:`, updateDate);
-                            console.log('Is Date Valid (isNaN):', isNaN(updateDate));
-                            console.log('Is updateDate >= fourteenDaysAgo:', updateDate >= fourteenDaysAgo);
-
-                            // Check if the date is valid and within the last 14 days
                             if (!isNaN(updateDate) && updateDate >= fourteenDaysAgo) {
                                 updates.push({ date: updateDate, title, description });
-                                console.log('Update added:', { date: updateDate, title, description });
-                            } else {
-                                console.log('Update skipped (invalid date or too old):', { dateStr, title });
                             }
-                        } else {
-                            console.log('Skipping malformed line (less than 3 parts):', lines[i]);
                         }
                     }
-
-                    // Sort updates by date in descending order (most recent first)
                     updates.sort((a, b) => b.date - a.date);
-
-                    // Limit to 10 updates
                     const recentUpdates = updates.slice(0, 10);
-                    console.log('Number of recent updates after filtering and slicing:', recentUpdates.length);
-                    console.log('Recent Updates Array:', recentUpdates);
-
-                    updatesContent.innerHTML = ''; // Clear existing content
 
                     if (recentUpdates.length > 0) {
-                        recentUpdates.forEach(update => {
-                            const updateDiv = document.createElement('div');
-                            updateDiv.className = 'bg-white p-4 rounded-md shadow-sm';
-                            updateDiv.innerHTML = `
-                                                                        <p class="text-gray-800 font-semibold">${update.date.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}: ${update.title}</p>
-                                                                        <p class="text-gray-600 text-sm">${update.description}</p>
-                                                                    `;
-                            updatesContent.appendChild(updateDiv);
-                        });
-                        updatesSection.classList.remove('hidden'); // Show the section
-                        console.log('Updates section is now visible.');
-                    } else {
-                        updatesSection.classList.add('hidden'); // Hide the section if no recent updates
-                        console.log('No recent updates found. Updates section is hidden.');
+                        updatesContent.innerHTML = recentUpdates.map(update => `
+                            <div class="bg-[var(--bg-tertiary)] p-4 rounded-md">
+                                <p class="font-semibold">${update.date.toLocaleDateString()}: ${update.title}</p>
+                                <p class="text-sm text-[var(--text-secondary)]">${update.description}</p>
+                            </div>
+                        `).join('');
+                        updatesSection.classList.remove('hidden');
                     }
-
                 } catch (error) {
-                    console.error('Error fetching or parsing updates CSV:', error);
-                    updatesSection.classList.add('hidden'); // Hide the section on error
+                    console.error('Error fetching updates:', error);
                 }
-                console.log('--- Finished loadUpdates ---');
             };
 
-            // Load updates when the page loads
-            loadUpdates();
-        });
+            // --- EVENT LISTENERS ---
+            document.addEventListener('DOMContentLoaded', () => {
+                generateQuickLinks();
+                checkCookieConsent();
+                loadUpdates();
+
+                const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                applyTheme(savedTheme);
+
+                themeRadios.forEach(radio => radio.addEventListener('change', (e) => {
+                    localStorage.setItem('theme', e.target.value);
+                    applyTheme(e.target.value);
+                }));
+
+                hamburgerBtn.addEventListener('click', (e) => { e.stopPropagation(); navLinks.classList.toggle('nav-mobile-active'); });
+                loginButton.addEventListener('click', () => { officerSelectionModal.classList.add('is-open'); if (officerRosterData.length === 0) fetchAndSetCombinedOfficerRoster(); });
+                closeOfficerModalBtn.addEventListener('click', () => officerSelectionModal.classList.remove('is-open'));
+                logoutButton.addEventListener('click', () => { localStorage.removeItem('loggedInOfficer'); updateLoginButton(); officerSelectionModal.classList.remove('is-open'); });
+                officerSearchInput.addEventListener('input', (e) => populateOfficerList(officerRosterData, e.target.value));
+
+                settingsBtn.addEventListener('click', () => settingsModal.classList.add('is-open'));
+                closeSettingsBtn.addEventListener('click', () => settingsModal.classList.remove('is-open'));
+
+                viewDataBtn.addEventListener('click', () => {
+                    dataContainer.innerHTML = '';
+                    for (let i = 0; i < localStorage.length; i++) {
+                        const key = localStorage.key(i);
+                        const value = localStorage.getItem(key);
+                        const itemEl = document.createElement('div');
+                        itemEl.className = 'p-3 bg-[var(--bg-tertiary)] rounded-md';
+                        itemEl.innerHTML = `<strong class="text-[var(--accent-color)]">${key}:</strong><pre class="whitespace-pre-wrap break-all">${value}</pre>`;
+                        dataContainer.appendChild(itemEl);
+                    }
+                    if (localStorage.length === 0) dataContainer.innerHTML = '<p>No local data found.</p>';
+                    viewDataModal.classList.add('is-open');
+                });
+                closeViewDataBtn.addEventListener('click', () => viewDataModal.classList.remove('is-open'));
+
+                clearDataBtn.addEventListener('click', () => {
+                    openConfirmModal(() => {
+                        Object.keys(localStorage).forEach(key => { if (key !== 'theme') localStorage.removeItem(key); });
+                        location.reload();
+                    });
+                });
+
+                const openConfirmModal = (callback) => { confirmCallback = callback; confirmModal.classList.add('is-open'); };
+                const closeConfirmModal = () => { confirmModal.classList.remove('is-open'); confirmCallback = null; }
+                confirmOkBtn.addEventListener('click', () => { if (confirmCallback) confirmCallback(); closeConfirmModal(); });
+                confirmCancelBtn.addEventListener('click', closeConfirmModal);
+
+                acceptCookiesBtn.addEventListener('click', () => { localStorage.setItem('cookieConsent', 'accepted'); cookieConsentBanner.classList.remove('show'); enableLocalStorageFeatures(); });
+                declineCookiesBtn.addEventListener('click', () => { localStorage.setItem('cookieConsent', 'declined'); cookieConsentBanner.classList.remove('show'); disableLocalStorageFeatures(); });
+            });
+        })();
     </script>
 </body>
 </html>
