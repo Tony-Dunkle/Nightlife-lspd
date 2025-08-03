@@ -491,16 +491,12 @@
             cursor: pointer;
             margin-left: 1.5rem; /* Space from navigation links */
             transition: transform 0.2s ease-in-out;
-            filter: brightness(0) invert(1); /* Makes the icon white */
+            /* SVG fill color is controlled by 'currentColor' so it matches text color */
         }
 
             #settingsIcon:hover {
                 transform: rotate(15deg);
             }
-
-        body.dark-mode #settingsIcon {
-            filter: none; /* Keep original color or adjust if necessary for dark mode */
-        }
 
         /* Settings modal specific styles */
         #settingsModal .modal-content {
@@ -639,8 +635,15 @@
                 <li><a href="info.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Common Information</a></li>
             </ul>
         </nav>
-        <!-- Settings Icon -->
-        <img src="settings.png" alt="Settings" id="settingsIcon" class="ml-4 cursor-pointer">
+        <!-- ======== FIX 1: REPLACED BROKEN IMG TAG WITH INLINE SVG ======== -->
+        <svg id="settingsIcon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="ml-4 cursor-pointer">
+            <path fill-rule="evenodd" d="M11.078 2.25c-.917 0-1.699.663-1.946 1.55l-.262 1.05c-.373.148-.728.33-1.068.547l-1.028-.343c-.887-.296-1.833.204-2.138 1.049l-1.09 2.296c-.305.845.18 1.785 1.002 2.217l.859.43c-.033.22-.054.444-.054.672 0 .228.021.452.054.672l-.859.43c-.822.432-1.307 1.372-1.002 2.217l1.09 2.296c.305.845 1.251 1.345 2.138 1.049l1.028-.343c.34.217.695.4 1.068.547l.262 1.05c.247.887 1.029 1.55 1.946 1.55h1.844c.917 0 1.699-.663 1.946-1.55l.262-1.05c.373-.148.728.33 1.068-.547l1.028.343c.887.296 1.833-.204 2.138-1.049l1.09-2.296c.305-.845-.18-1.785-1.002-2.217l-.859-.43c.033-.22.054-.444.054.672 0-.228-.021-.452-.054-.672l.859.43c.822.432-1.307-1.372-1.002-2.217l-1.09-2.296c-.305-.845-1.251-1.345-2.138-1.049l-1.028.343c-.34-.217-.695-.4-1.068-.547l-.262-1.05C14.726 2.913 13.944 2.25 13.028 2.25H11.08zM12 15.75a3.75 3.75 0 100-7.5 3.75 3.75 0 000 7.5z" clip-rule="evenodd" />
+        </svg>
+
+        <!-- ======== FIX 2: ADDED MISSING LOGIN BUTTON HTML ======== -->
+        <div id="loginButtonContainer" class="hidden">
+            <button id="loginButton">Login</button>
+        </div>
     </header>
     <!-- Hero Section - Internal Focus -->
     <section class="relative bg-gradient-to-r from-blue-700 to-blue-900 text-white py-20 px-6 md:px-12 rounded-lg m-4 md:m-8 overflow-hidden shadow-xl">
@@ -927,8 +930,8 @@
 
             // Configuration for different department sheets (same as report.html)
             const departmentSheetConfig = {
-                "LSPD": { // Renamed LSPD to UPD
-                    sheetId: '2PACX-1vT8yueJjp9o-XVH1_RXPji6N_IAP1DDbNLZ8l4__IqGCvVEUWscsdsJ6uNHZ8u6kDhhXkSxcdkdeDJi', // Corrected LSPD sheetId
+                "UPD": { // Renamed from LSPD to UPD for consistency
+                    sheetId: '2PACX-1vT8yueJjp9o-XVH1_RXPji6N_IAP1DDbNLZ8l4__IqGCvVEUWscsdsJ6uNHZ8u6kDhhXkSxcdkdeDJi',
                     gid: '0',
                     rowRanges: [
                         { start: 6, end: 6 },
