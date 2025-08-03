@@ -595,11 +595,11 @@
                     const newItem = document.createElement('li');
                     newItem.className = "flex items-center space-x-2 p-2 border border-gray-700 rounded-md bg-gray-700 text-white";
                     newItem.innerHTML = `
-                                <input type="text" value="${itemText}" class="w-full p-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600">
-                                <button class="remove-item-btn bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-xs transition-colors duration-200">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                </button>
-                            `;
+                                    <input type="text" value="${itemText}" class="w-full p-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600">
+                                    <button class="remove-item-btn bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-xs transition-colors duration-200">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                    </button>
+                                `;
                     list.appendChild(newItem);
 
                     // Add event listener to the new remove button
@@ -656,16 +656,16 @@
                     const newVehicleItem = document.createElement('li');
                     newVehicleItem.className = "flex flex-col space-y-1 p-2 border border-gray-700 rounded-md bg-gray-700 text-white";
                     newVehicleItem.innerHTML = `
-                            <div class="flex justify-between items-center w-full">
-                                <span class="font-bold text-base">${model || 'N/A'}</span>
-                                <button class="remove-item-btn bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-xs transition-colors duration-200">
-                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                </button>
-                            </div>
-                            <p class="text-xs text-gray-300">Owner: ${owner || 'N/A'}</p>
-                            <p class="text-xs text-gray-300">Plate: ${plate || 'N/A'}</p>
-                            <p class="text-xs ${impounded ? 'text-yellow-400' : 'text-gray-500'}">Impounded</p>
-                        `;
+                                <div class="flex justify-between items-center w-full">
+                                    <span class="font-bold text-base">${model || 'N/A'}</span>
+                                    <button class="remove-item-btn bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-xs transition-colors duration-200">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                    </button>
+                                </div>
+                                <p class="text-xs text-gray-300">Owner: ${owner || 'N/A'}</p>
+                                <p class="text-xs text-gray-300">Plate: ${plate || 'N/A'}</p>
+                                <p class="text-xs ${impounded ? 'text-yellow-400' : 'text-gray-500'}">Impounded</p>
+                            `;
                     vehiclesList.appendChild(newVehicleItem);
 
                     newVehicleItem.querySelector('.remove-item-btn').addEventListener('click', (e) => {
@@ -713,11 +713,11 @@
                     const newCivilianItem = document.createElement('li');
                     newCivilianItem.className = "flex justify-between items-center p-2 border border-gray-700 rounded-md bg-gray-700 text-white";
                     newCivilianItem.innerHTML = `
-                            <span>${name} - <span class="text-gray-400">${role}</span></span>
-                            <button class="remove-item-btn bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-xs transition-colors duration-200">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                            </button>
-                        `;
+                                <span>${name} - <span class="text-gray-400">${role}</span></span>
+                                <button class="remove-item-btn bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-xs transition-colors duration-200">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                </button>
+                            `;
                     civiliansList.appendChild(newCivilianItem);
 
                     newCivilianItem.querySelector('.remove-item-btn').addEventListener('click', (e) => {
@@ -807,19 +807,19 @@
                     const newWeaponItem = document.createElement('li');
                     newWeaponItem.className = "flex flex-col space-y-1 p-2 border border-gray-700 rounded-md bg-gray-700 text-white";
                     newWeaponItem.innerHTML = `
-                                <div class="flex justify-between items-center w-full">
-                                    <span class="font-bold text-base">${type || 'N/A'}</span>
-                                    <button class="remove-item-btn bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-xs transition-colors duration-200">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                    </button>
-                                </div>
-                                <p class="text-xs text-gray-300">Model: ${model || 'N/A'}</p>
-                                <p class="text-xs text-gray-300">Serial: ${serial || 'N/A'}</p>
-                                <div class="flex space-x-4 mt-2">
-                                    <p class="text-xs ${isCustom ? 'text-green-400' : 'text-gray-500'}">Custom</p>
-                                    <p class="text-xs ${isF9 ? 'text-green-400' : 'text-gray-500'}">F9</p>
-                                </div>
-                            `;
+                                    <div class="flex justify-between items-center w-full">
+                                        <span class="font-bold text-base">${type || 'N/A'}</span>
+                                        <button class="remove-item-btn bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-xs transition-colors duration-200">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                        </button>
+                                    </div>
+                                    <p class="text-xs text-gray-300">Model: ${model || 'N/A'}</p>
+                                    <p class="text-xs text-gray-300">Serial: ${serial || 'N/A'}</p>
+                                    <div class="flex space-x-4 mt-2">
+                                        <p class="text-xs ${isCustom ? 'text-green-400' : 'text-gray-500'}">Custom</p>
+                                        <p class="text-xs ${isF9 ? 'text-green-400' : 'text-gray-500'}">F9</p>
+                                    </div>
+                                `;
                     weaponsList.appendChild(newWeaponItem);
 
                     // Add event listener to the new remove button
@@ -1047,11 +1047,11 @@
                         const newItem = document.createElement('li');
                         newItem.className = "flex items-center space-x-2 p-2 border border-gray-700 rounded-md bg-gray-700 text-white";
                         newItem.innerHTML = `
-                                    <input type="text" value="${officer}" class="w-full p-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600">
-                                    <button class="remove-item-btn bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-xs transition-colors duration-200">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                    </button>
-                                `;
+                                        <input type="text" value="${officer}" class="w-full p-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600">
+                                        <button class="remove-item-btn bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-xs transition-colors duration-200">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                        </button>
+                                    `;
                         officersList.appendChild(newItem);
 
                         // Add event listener to the new remove button
@@ -1220,21 +1220,21 @@
                     const newCriminalItem = document.createElement('li');
                     newCriminalItem.className = 'p-4 border border-gray-700 rounded-md bg-gray-800';
                     newCriminalItem.innerHTML = `
-                                <div class="flex items-center justify-between mb-2">
-                                    <h4 class="font-bold text-lg">${criminalName}</h4>
-                                    <button class="remove-item-btn bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-xs transition-colors duration-200">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                    </button>
-                                </div>
-                                ${fingerprintId ? `<p class="text-sm text-gray-400 mb-2"><strong>Fingerprint:</strong> ${fingerprintId}</p>` : ''}
-                                <div class="mt-2 space-y-2">
-                                    <h5 class="text-md font-semibold">Charges:</h5>
-                                    <ul class="charges-list list-disc list-inside space-y-1 text-gray-400">
-                                        <li class="text-sm">No charges added yet.</li>
-                                    </ul>
-                                    <button class="add-charge-btn bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded-full transition-colors duration-200 mt-2">+ Add Charge</button>
-                                </div>
-                            `;
+                                    <div class="flex items-center justify-between mb-2">
+                                        <h4 class="font-bold text-lg">${criminalName}</h4>
+                                        <button class="remove-item-btn bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-xs transition-colors duration-200">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                        </button>
+                                    </div>
+                                    ${fingerprintId ? `<p class="text-sm text-gray-400 mb-2"><strong>Fingerprint:</strong> ${fingerprintId}</p>` : ''}
+                                    <div class="mt-2 space-y-2">
+                                        <h5 class="text-md font-semibold">Charges:</h5>
+                                        <ul class="charges-list list-disc list-inside space-y-1 text-gray-400">
+                                            <li class="text-sm">No charges added yet.</li>
+                                        </ul>
+                                        <button class="add-charge-btn bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded-full transition-colors duration-200 mt-2">+ Add Charge</button>
+                                    </div>
+                                `;
                     criminalsList.appendChild(newCriminalItem);
 
                     // Add event listener for the criminal's remove button
@@ -1292,11 +1292,11 @@
                         const newChargeItem = document.createElement('li');
                         newChargeItem.className = 'flex items-center justify-between text-sm';
                         newChargeItem.innerHTML = `
-                                    <span>${chargeText}</span>
-                                    <button class="remove-charge-btn text-red-400 hover:text-red-500 transition-colors duration-200">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                    </button>
-                                `;
+                                        <span>${chargeText}</span>
+                                        <button class="remove-charge-btn text-red-400 hover:text-red-500 transition-colors duration-200">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                        </button>
+                                    `;
                         currentChargesList.appendChild(newChargeItem);
 
                         // Add event listener to the new remove charge button
@@ -1504,66 +1504,82 @@
 
                     // Format weapons data for the prompt
                     const weaponsText = weapons.length > 0
-                        ? weapons.map(w => `Type: ${w.type}, Model: ${w.model}, Serial: ${w.serial}, Custom: ${w.isCustom ? 'Yes' : 'No'}, F9: ${w.isF9 ? 'Yes' : 'No'}`).join('\n')
+                        ? weapons.map(w => `- Type: ${w.type}, Model: ${w.model}, Serial: ${w.serial}, Custom: ${w.isCustom ? 'Yes' : 'No'}, F9: ${w.isF9 ? 'Yes' : 'No'}`).join('\n')
                         : 'None';
 
                     // Format vehicle data for the prompt
                     const vehiclesText = vehicles.length > 0
-                        ? vehicles.map(v => `Model: ${v.model}, Owner: ${v.owner}, Plate: ${v.plate}, Impounded: ${v.impounded ? 'Yes' : 'No'}`).join('\n')
+                        ? vehicles.map(v => `- Model: ${v.model}, Owner: ${v.owner}, Plate: ${v.plate}, Impounded: ${v.impounded ? 'Yes' : 'No'}`).join('\n')
                         : 'None';
 
                     // Format civilian data for the prompt
                     const civiliansText = civilians.length > 0
-                        ? civilians.map(c => `Name: ${c.name}, Role: ${c.role}`).join('\n')
+                        ? civilians.map(c => `- Name: ${c.name}, Role: ${c.role}`).join('\n')
                         : 'None';
 
-                    // Create a simple string of all charges for the AI prompt
-                    const allChargesText = criminals.flatMap(c => c.charges).join(', ');
+                    // Format criminal data for the prompt
+                    const criminalsText = criminals.length > 0
+                        ? criminals.map(c => `  - Name: ${c.name}, Fingerprint: ${c.fingerprint}\n    Charges: ${c.charges.length > 0 ? c.charges.join(', ') : 'None'}`).join('\n')
+                        : 'None';
 
-                    // Create the detailed prompt for the Gemini API
+                    // UPDATED: Create the detailed prompt for the Gemini API
                     const prompt = `
-                            You are ${officerName}, an officer tasked with writing a formal police report.
-                            Please fill out the following template using the provided data.
-                            Write a concise and professional summary for the 'Debrief' section.
-                            For the 'Justification of Charges' section, explain why the charges were given based on the provided list of charges.
+You are ${officerName}, a highly detailed and professional Unified Police Department officer. Your task is to write a formal, objective, and comprehensive police report based on the data provided. You must fill out every section of the following template with as much detail as possible, using a professional tone.
 
-                            Debrief:
-                            Justification of Charges:
-                            Postal/Location: ${postal}
-                            Evidence/Items Seized: ${evidence.length > 0 ? evidence.join(', ') : 'None'}
-                            Evidence Locker Number(s): ${evidenceLockerNumbers.length > 0 ? evidenceLockerNumbers.join(', ') : 'None'}
-                            Level of Force: ${forceLevel}
-                            Medical Treatment (Y | N): ${medical}
-                            GSR Test (positive | negative): ${gsr}
-                            Legal Representation: ${legal}
-                            Mirandized (Y | N): ${miranda}
-                            Can return weapons (Y | N): ${returnW}
-                            Plea (guilty | not guilty | no contest): ${criminalPlea}
+**OFFICIAL UNIFIED POLICE DEPARTMENT REPORT**
 
-                            Additional Data for context:
-                            - **Linked Reports:** ${linkedReports.length > 0 ? linkedReports.join(', ') : 'None'}
-                            - **Tags:** ${tags.length > 0 ? tags.join(', ') : 'None'}
-                            - **Weapons Involved:**
-                            ${weaponsText}
-                            - **Vehicles Involved:**
-                            ${vehiclesText}
-                            - **Civilians Involved:**
-                            ${civiliansText}
-                            - **Officers Involved:** ${officers.length > 0 ? officers.join(', ') : 'None'}
-                            - **Criminals Involved:**
-                            ${criminals.length > 0 ? criminals.map(c => `  - Name: ${c.name}, Fingerprint: ${c.fingerprint}, Charges: ${c.charges.length > 0 ? c.charges.join(', ') : 'None'}`).join('\n') : 'None'}
+**I. Administrative Details**
+* **Location of Incident:** ${postal}
+* **Responding Officers:** ${officers.length > 0 ? officers.join(', ') : 'N/A'}
+* **Linked Report Numbers:** ${linkedReports.length > 0 ? linkedReports.join(', ') : 'None'}
+* **Report Tags:** ${tags.length > 0 ? tags.join(', ') : 'None'}
 
-                            - **All Charges:** ${allChargesText || 'None'}
+**II. Chronological Incident Debrief**
+(Provide a detailed, narrative summary of the events as they occurred. Describe the initial call or observation, the actions taken by officers, the behavior of all involved parties, and the sequence of events leading to the conclusion of the incident. Weave in details about the location, vehicles, and people involved.)
 
-                            Do not add any additional fields or information that is not requested.
-                            `;
+**III. Persons Involved**
+* **Civilians:**
+(List each civilian, their role, and any relevant observations. Use the provided data.)
+${civiliansText}
+* **Arrested Individuals (Suspects/Criminals):**
+(List each criminal by name, fingerprint ID, and detail their involvement in the incident.)
+${criminalsText}
+
+**IV. Justification for Actions and Charges**
+* **Justification for Level of Force:** (Explain precisely why the selected level of force—'${forceLevel}'—was necessary and appropriate for the situation described in the debrief.)
+* **Justification for Charges:** (For each criminal listed, provide a point-by-point justification for every charge applied. Connect each charge directly to specific actions, evidence, or testimony from the incident.)
+
+**V. Evidence and Property**
+* **Vehicles Involved:**
+(List all vehicles, including model, owner, plate, and impound status.)
+${vehiclesText}
+* **Weapons Involved:**
+(List all weapons, including type, model, serial number, and whether they were custom or F9.)
+${weaponsText}
+* **Evidence Seized:**
+(List all items seized as evidence.)
+${evidence.length > 0 ? evidence.map(e => `- ${e}`).join('\n') : 'None'}
+* **Evidence Locker Number(s):** ${evidenceLockerNumbers.length > 0 ? evidenceLockerNumbers.join(', ') : 'None'}
+* **Disposition of Weapons:** Can weapons be returned? ${returnW}
+
+**VI. Post-Arrest Procedures**
+* **Medical Treatment:** Was medical treatment administered? ${medical}
+* **GSR Test:** Was a Gunshot Residue test performed? Result: ${gsr}
+* **Miranda Rights:** Were the suspect(s) read their Miranda Rights? ${miranda}
+* **Legal Representation:** Did the suspect(s) request legal representation? ${legal}
+* **Plea:** What was the plea entered by the suspect(s)? ${criminalPlea}
+
+**--- END OF REPORT ---**
+
+Now, generate the full report based on this template and the provided data. Be thorough and professional.
+                                `;
 
                     // API call to the Gemini 2.5 Flash model
                     const callGeminiApi = async () => {
                         const chatHistory = [];
                         chatHistory.push({ role: "user", parts: [{ text: prompt }] });
                         const payload = { contents: chatHistory };
-                        const apiKey = "AIzaSyAbU7k_19bBgnGpFtX742tYGwLySd_U3fI";
+                        const apiKey = "AIzaSyAbU7k_19bBgnGpFtX742tYGwLySd_U3fI"; // Your API key here
                         const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
 
                         const response = await fetch(apiUrl, {
