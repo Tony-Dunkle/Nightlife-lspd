@@ -252,8 +252,8 @@
                     <li><a href="forms.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Forms</a></li>
                     <li><a href="roster.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Roster</a></li>
                     <li><a href="hr.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">HR Info</a></li>
-                    <li><a href="report.html" class="text-white bg-blue-700 font-semibold py-1 px-2 rounded-md">Report Generator</a></li>
-                    <li><a href="charges.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Charge Calculator</a></li>
+                    <li><a href="report.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Report Generator</a></li>
+                    <li><a href="charges.html" class="text-white bg-blue-700 font-semibold py-1 px-2 rounded-md">Charge Calculator</a></li>
                     <li><a href="info.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Common Information</a></li>
                 </ul>
             </nav>
@@ -506,47 +506,104 @@
                 }
 
                 function parseCSV(text) {
+                    // Helper function to correctly parse a single CSV line, handling quotes
+                    function parseCsvLine(line) {
+                        const result = [];
+                        let current = '';
+                        let inQuotes = false;
+                        for (let i = 0; i < line.length; i++) {
+                            const char = line[i];
+                            if (char === '"') {
+                                inQuotes = !inQuotes;
+                            } else if (char === ',' && !inQuotes) {
+                                result.push(current.trim());
+                                current = '';
+                            } else {
+                                current += char;
+                            }
+                        }
+                        result.push(current.trim());
+                        return result;
+                    }
+
                     const lines = text.trim().split(/\r?\n/);
                     const offenses = [];
+                    let headers = [];
+                    let headerFound = false;
+                    let dataStartIndex = 0;
+
+                    for (let i = 0; i < lines.length; i++) {
+                        const line = lines[i].trim();
+                        if (line.toLowerCase().includes('penal code') && line.toLowerCase().includes('charge name') && line.toLowerCase().includes('fine amount')) {
+                            headers = parseCsvLine(line).map(h => h.toLowerCase().replace(/"/g, '').trim());
+                            dataStartIndex = i + 1;
+                            headerFound = true;
+                            break;
+                        }
+                    }
+
+                    if (!headerFound) {
+                        console.error("Could not find required headers in CSV: 'Penal Code', 'Charge Name', 'Fine Amount'");
+                        return [];
+                    }
+
+                    const chargeNameIndex = headers.indexOf('charge name');
+                    const chargeDescriptionIndex = headers.indexOf('charge description');
+                    const jailTimeIndex = headers.indexOf('jail time (months)');
+                    const fineAmountIndex = headers.indexOf('fine amount');
+                    const classificationIndex = headers.indexOf('felony/infraction');
+
                     let currentCategory = "Uncategorized";
 
-                    lines.forEach(line => {
+                    for (let i = dataStartIndex; i < lines.length; i++) {
+                        const line = lines[i].trim();
+                        if (!line) continue;
+
                         if (line.startsWith('---')) {
                             currentCategory = line.split(',')[0].replace(/---/g, '').split(':')[1]?.trim() || 'Unnamed Category';
-                            return;
+                            if (currentCategory.toLowerCase().includes('traffic')) {
+                                currentCategory = 'Traffic Infractions';
+                            }
+                            continue;
                         }
-                        if (line.trim() === '' || line.startsWith('Penal Code')) return;
 
-                        const values = line.split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                        const values = parseCsvLine(line);
                         let offenseData = null;
-                        const isInfraction = values.length >= 3 && values[1]?.trim() === '';
+                        const chargeName = values[chargeNameIndex]?.replace(/"/g, '').trim() || '';
 
-                        if (isInfraction) {
+                        // Special handling for infractions which have an empty charge name
+                        if (chargeName === '' && (values[chargeDescriptionIndex]?.replace(/"/g, '').trim() || '') !== '') {
+                            const nameFromDescription = values[chargeDescriptionIndex]?.replace(/"/g, '').trim();
+                            const fineString = values[jailTimeIndex]?.replace(/"/g, '').replace(/\$/g, '').replace(/,/g, '') || '0';
+
                             offenseData = {
                                 category: 'Traffic Infractions',
-                                name: values[2]?.replace(/"/g, '').trim() || 'N/A',
-                                description: values[4]?.replace(/"/g, '').trim() || '',
-                                jailTime: parseInt(values[3]?.replace(/"/g, '').trim()) || 0,
-                                fine: 0,
+                                name: nameFromDescription,
+                                description: values[fineAmountIndex]?.replace(/"/g, '').trim() || '',
+                                jailTime: 0,
+                                fine: parseInt(fineString) || 0,
                                 classification: 'Infraction'
                             };
-                        } else if (values.length >= 5) {
+                        } else if (chargeName !== '') { // Normal handling for other charges
+                            const fineString = values[fineAmountIndex]?.replace(/"/g, '').replace(/\$/g, '').replace(/,/g, '') || '0';
+
                             offenseData = {
                                 category: currentCategory,
-                                name: values[1]?.replace(/"/g, '').trim() || 'N/A',
-                                description: values[2]?.replace(/"/g, '').trim() || '',
-                                jailTime: parseInt(values[3]?.replace(/"/g, '').trim()) || 0,
-                                fine: parseInt(values[4]?.replace(/"/g, '').replace(/\$/g, '')) || 0,
-                                classification: 'Felony'
+                                name: chargeName,
+                                description: values[chargeDescriptionIndex]?.replace(/"/g, '').trim() || '',
+                                jailTime: parseInt(values[jailTimeIndex]?.replace(/"/g, '').trim()) || 0,
+                                fine: parseInt(fineString) || 0,
+                                classification: values[classificationIndex]?.replace(/"/g, '').trim() || 'Felony'
                             };
                         }
 
-                        if (offenseData && offenseData.name !== 'N/A') {
+                        if (offenseData) {
                             offenses.push(offenseData);
                         }
-                    });
+                    }
                     return offenses;
                 }
+
 
                 function renderOffenses(offensesToRender) {
                     const grouped = offensesToRender.reduce((acc, offense) => {

@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LSPD Internal Portal - Applications</title>
-    <link rel="icon" href="LSPD.png" type="image/png"> <!-- Favicon added here -->
+    <link rel="icon" href="LSPD.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -13,14 +13,13 @@
             font-family: 'Inter', sans-serif;
             background-color: #f8f8f8;
             color: #333;
-            /* Flexbox to push footer to the bottom */
             display: flex;
             flex-direction: column;
-            min-height: 100vh; /* Ensure body takes full viewport height */
+            min-height: 100vh;
         }
 
         main {
-            flex-grow: 1; /* Allow main content to grow and push footer down */
+            flex-grow: 1;
         }
 
         ::-webkit-scrollbar {
@@ -60,14 +59,14 @@
             background-color: rgba(0, 0, 0, 0.7);
             display: flex;
             justify-content: center;
-            align-items: center; /* Ensures vertical centering */
+            align-items: center;
             z-index: 1000;
             opacity: 0;
             visibility: hidden;
             transition: opacity 0.3s ease, visibility 0.3s ease;
-            overflow-y: auto; /* Allow scrolling for modal overlay if needed (e.g., small screens + wide padding) */
-            padding: 20px; /* Add padding for small screens, ensures modal doesn't touch edges */
-            box-sizing: border-box; /* Include padding in element's total width and height */
+            overflow-y: auto;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
             .modal-overlay.active {
@@ -77,17 +76,17 @@
 
         .modal-content {
             background-color: #fff;
-            padding: 2rem; /* Increased padding to give more space for close button and content */
+            padding: 2rem;
             border-radius: 0.75rem;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
             width: 100%;
-            max-width: 700px; /* Max width for readability */
+            max-width: 700px;
             position: relative;
             transform: translateY(20px);
             transition: transform 0.3s ease;
-            max-height: calc(100vh - 40px); /* Limit height to viewport minus padding */
-            overflow-y: auto; /* Enable scrolling for modal content if it overflows */
-            box-sizing: border-box; /* Ensures padding is included in max-height calculation */
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+            box-sizing: border-box;
         }
 
         .modal-overlay.active .modal-content {
@@ -96,8 +95,8 @@
 
         .modal-close-button {
             position: absolute;
-            top: 1rem; /* Adjust to ensure it's within padding */
-            right: 1rem; /* Adjust to ensure it's within padding */
+            top: 1rem;
+            right: 1rem;
             background: none;
             border: none;
             font-size: 1.5rem;
@@ -165,7 +164,7 @@
                 border-radius: 50%;
                 transform: scale(0);
                 transition: transform 0.2s ease;
-                box-shadow: inset 1em 1em #3b82f6; /* Custom checkmark color */
+                box-shadow: inset 1em 1em #3b82f6;
             }
 
             .radio-group input[type="radio"]:checked::before {
@@ -181,7 +180,7 @@
             font-weight: 600;
             cursor: pointer;
             transition: background-color 0.3s ease, transform 0.1s ease;
-            border: none; /* Ensure no default button border */
+            border: none;
         }
 
             .submit-button:hover:not(:disabled) {
@@ -204,23 +203,37 @@
             border-radius: 0.5rem;
             font-weight: 500;
             text-align: center;
-            display: none; /* Hidden by default */
+            display: none;
         }
 
             .submission-message.success {
-                background-color: #d1fae5; /* green-100 */
-                color: #065f46; /* green-800 */
+                background-color: #d1fae5;
+                color: #065f46;
             }
 
             .submission-message.error {
-                background-color: #fee2e2; /* red-100 */
-                color: #991b1b; /* red-800 */
+                background-color: #fee2e2;
+                color: #991b1b;
             }
+
+        /* Responsive Header Navigation Styles */
+        #nav-links.nav-mobile-active {
+            display: flex !important;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: #1e40af; /* A slightly lighter shade for the dropdown */
+            flex-direction: column;
+            padding: 1rem;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+            z-index: 40; /* Ensure it's below the header but above other content */
+        }
     </style>
 </head>
 <body class="antialiased">
     <!-- Header Section -->
-    <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex items-center justify-between sticky top-0 z-50 rounded-b-lg relative">
+    <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex items-center justify-between sticky top-0 z-50">
         <div class="flex items-center">
             <!-- LSPD Logo -->
             <img src="LSPD.png" alt="LSPD Logo" class="mr-4 w-16 h-16 object-contain" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
@@ -228,29 +241,25 @@
             <h1 class="text-2xl md:text-3xl font-bold">Los Santos Police Department</h1>
         </div>
 
-        <!-- Hamburger Menu Button for Mobile -->
-        <button id="hamburgerBtn" class="hamburger-menu text-white focus:outline-none md:hidden">
-            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-4 6h4"></path>
-            </svg>
-        </button>
+        <div class="flex items-center">
+            <nav id="nav-links" class="hidden md:flex items-center">
+                <ul class="flex flex-col md:flex-row md:space-x-4 text-sm font-medium">
+                    <li><a href="index.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Dashboard</a></li>
+                    <li><a href="SOP.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">SOPs</a></li>
+                    <li><a href="training.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Training</a></li>
+                    <li><a href="forms.html" class="text-white bg-blue-700 font-semibold py-1 px-2 rounded-md">Forms</a></li>
+                    <li><a href="roster.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Roster</a></li>
+                    <li><a href="hr.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">HR Info</a></li>
+                    <li><a href="report.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Report Generator</a></li>
+                    <li><a href="charges.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Charge Calculator</a></li>
+                    <li><a href="info.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Common Information</a></li>
+                </ul>
+            </nav>
 
-        <!-- Navigation Menu -->
-        <!-- Added md:flex-grow to nav to allow it to take available space -->
-        <nav class="nav-links md:flex md:flex-grow md:justify-end">
-            <!-- Changed md:space-x-8 to md:space-x-4 and added md:flex-wrap for stacking -->
-            <ul class="flex flex-col md:flex-row md:flex-wrap md:justify-end space-y-2 md:space-y-0 md:space-x-4 text-sm font-medium">
-                <li><a href="index.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700 current-page">Dashboard</a></li>
-                <li><a href="SOP.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">SOPs</a></li>
-                <li><a href="training.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Training</a></li>
-                <li><a href="forms.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Forms</a></li>
-                <li><a href="roster.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Roster</a></li>
-                <li><a href="hr.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">HR Info</a></li>
-                <li><a href="report.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Report Generator</a></li>
-                <li><a href="charges.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Charge Calculator</a></li>
-                <li><a href="info.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Common Information</a></li>
-            </ul>
-        </nav>
+            <button id="hamburgerBtn" class="hamburger-menu p-2 rounded-md hover:bg-white/10 focus:outline-none md:hidden ml-2">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+            </button>
+        </div>
     </header>
 
     <!-- Hero Section for Applications -->
@@ -729,11 +738,43 @@
     </footer>
 
     <script>
-        // IMPORTANT: This placeholder assumes a server-side process will replace
-        // ${{ secrets.webhook }} with the actual Discord webhook URL before serving
-        // this HTML file to the client's browser. Client-side JavaScript cannot directly
-        // access GitHub secrets or local file paths for security reasons.
-        const DISCORD_WEBHOOK_URL = "${{ secrets.WEBHOOK }}";
+        // URL for the CSV spreadsheet containing webhook information
+        const SPREADSHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQxN1ZQBPqwqLxvr_T1tQ2TVwHuy0d2jainTySsbsSxMBl6ukf5R3Di6SGO3sHA3CD-1uSBgp_qPtJA/pub?gid=1211481486&single=true&output=csv';
+        const SPREADSHEET_VIEW_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQxN1ZQBPqwqLxvr_T1tQ2TVwHuy0d2jainTySsbsSxMBl6ukf5R3Di6SGO3sHA3CD-1uSBgp_qPtJA/pubhtml';
+
+        let webhookData = null; // Variable to store the parsed data from the spreadsheet
+
+        // Function to fetch and parse the spreadsheet data
+        async function fetchAndParseSpreadsheet() {
+            try {
+                const response = await fetch(SPREADSHEET_URL);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const csvText = await response.text();
+                const [headers, data] = csvText.trim().split('\n').slice(0, 2).map(row => row.split(','));
+
+                if (headers.length !== data.length) {
+                    throw new Error('CSV headers and data row have mismatched lengths.');
+                }
+
+                const parsedData = {};
+                headers.forEach((header, index) => {
+                    const key = header.replace(/:/g, '').trim().replace(/"/g, '');
+                    const value = data[index].trim().replace(/"/g, '');
+                    parsedData[key] = value;
+                });
+
+                webhookData = parsedData;
+                console.log('Successfully fetched and parsed webhook data:', webhookData);
+
+                return parsedData;
+
+            } catch (error) {
+                console.error('Could not fetch or parse spreadsheet data:', error);
+                return null;
+            }
+        }
 
         // Generic function to open a modal
         function openModal(modalId) {
@@ -741,30 +782,27 @@
             const modal = document.getElementById(modalId);
             if (modal) {
                 modal.classList.add('active');
-                document.body.style.overflow = 'hidden'; // Prevent scrolling on the main page
+                document.body.style.overflow = 'hidden';
                 console.log(`Modal ${modalId} should now be active.`);
 
-                // Reset and hide previous submission messages and errors for this modal
                 const submissionMessage = modal.querySelector('.submission-message');
                 if (submissionMessage) {
                     submissionMessage.style.display = 'none';
                     submissionMessage.classList.remove('success', 'error');
                 }
-                // Word count message box (specific to word count validation)
                 const wordCountMessageBox = modal.querySelector('#wordCountMessageBox');
                 if (wordCountMessageBox) {
                     wordCountMessageBox.style.display = 'none';
                 }
 
-                // For application modals, re-initialize word count and enable button
                 const textarea = modal.querySelector('textarea[name*="why"]');
                 if (textarea) {
-                    textarea.dispatchEvent(new Event('input')); // Initialize word count
+                    textarea.dispatchEvent(new Event('input'));
                 }
                 const submitButton = modal.querySelector('button[type="submit"]');
                 if (submitButton) {
-                    submitButton.disabled = false; // Ensure button is enabled when opening
-                    submitButton.textContent = 'Submit Application'; // Reset button text
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Submit Application';
                 }
             } else {
                 console.error(`Modal with ID ${modalId} not found.`);
@@ -777,13 +815,9 @@
             const modal = document.getElementById(modalId);
             if (modal) {
                 modal.classList.remove('active');
-                document.body.style.overflow = ''; // Restore scrolling
+                document.body.style.overflow = '';
                 console.log(`Modal ${modalId} should now be inactive.`);
-                // Reset the form within the modal if it's an application modal
-                const form = modal.querySelector('form');
-                if (form) {
-                    resetForm(form);
-                }
+                // The form is no longer reset on modal close. Data persists until successful submission.
             } else {
                 console.error(`Modal with ID ${modalId} not found for closing.`);
             }
@@ -792,16 +826,14 @@
         // Generic function to reset a form
         function resetForm(form) {
             form.reset();
-            // Also reset word count display for any textarea in the form
-            const whyTextarea = form.querySelector('textarea[name*="why"]'); // Targeting textareas with 'why' in their name
+            const whyTextarea = form.querySelector('textarea[name*="why"]');
             const whyWordCountElement = form.querySelector(`p[id^="${form.id.substring(0, form.id.indexOf('ApplicationForm'))}_why"][id$="WordCount"]`);
 
             if (whyTextarea && whyWordCountElement) {
                 whyWordCountElement.textContent = '0 words';
                 whyWordCountElement.classList.remove('text-green-600', 'text-red-600');
-                whyWordCountElement.classList.add('text-gray-500'); // Or initial color
+                whyWordCountElement.classList.add('text-gray-500');
             }
-            // Hide any previous error messages specific to this form
             const messageBox = form.querySelector('.submission-message');
             if (messageBox) {
                 messageBox.style.display = 'none';
@@ -811,7 +843,6 @@
                 wordCountMessageBox.style.display = 'none';
             }
 
-            // Ensure button is enabled and text reset
             const submitButton = form.querySelector('button[type="submit"]');
             if (submitButton) {
                 submitButton.disabled = false;
@@ -854,7 +885,7 @@
 
         // Modified function to handle form submission - sends to Discord webhook
         async function handleFormSubmission(event, formId, unitName, color) {
-            event.preventDefault(); // Prevent default form submission
+            event.preventDefault();
             console.log(`Form submission triggered for: ${formId}`);
 
             const form = document.getElementById(formId);
@@ -864,16 +895,14 @@
             const whyWordCountMessageBox = form.querySelector('#wordCountMessageBox');
             const minWords = whyTextarea ? parseInt(whyTextarea.getAttribute('minlength')) : 0;
 
-            // Clear previous messages
             submissionMessage.style.display = 'none';
             if (whyWordCountMessageBox) {
                 whyWordCountMessageBox.style.display = 'none';
             }
 
-            submitButton.disabled = true; // Disable button immediately
-            submitButton.textContent = 'Submitting...'; // Change button text
+            submitButton.disabled = true;
+            submitButton.textContent = 'Submitting...';
 
-            // Client-side validation for word count if applicable
             if (whyTextarea && minWords > 0) {
                 const whyText = whyTextarea.value.trim();
                 const words = whyText === '' ? 0 : whyText.split(/\s+/).length;
@@ -888,28 +917,46 @@
                     }
                     whyWordCountMessageBox.innerHTML = `<p class="font-bold">Error:</p><p>Please ensure your answer to "Why do you want to join ${unitName}?" has at least ${minWords} words.</p>`;
                     whyWordCountMessageBox.style.display = 'block';
-                    submitButton.disabled = false; // Re-enable button on validation failure
+                    submitButton.disabled = false;
                     submitButton.textContent = 'Submit Application';
-                    return; // Stop submission
+                    return;
                 }
             }
 
             const formData = getFormData(formId);
 
-            // Construct Discord embed
+            let webhookUrl = '';
+            if (formId === 'cidApplicationForm') {
+                if (webhookData && webhookData.Webhook) {
+                    webhookUrl = webhookData.Webhook;
+                } else {
+                    submissionMessage.className = 'submission-message error';
+                    submissionMessage.textContent = 'Error: No webhook URL found for this form. Please contact support.';
+                    submissionMessage.style.display = 'block';
+                    submitButton.disabled = false;
+                    submitButton.textContent = 'Submit Application';
+                    return;
+                }
+            } else {
+                submissionMessage.className = 'submission-message error';
+                submissionMessage.textContent = 'Error: This form is not configured for submission yet. Please contact support.';
+                submissionMessage.style.display = 'block';
+                submitButton.disabled = false;
+                submitButton.textContent = 'Submit Application';
+                return;
+            }
+
             const fields = [];
             for (const key in formData) {
-                // Skip the signature field for the Discord embed title, it will be added as a field
                 if (key === 'signature') continue;
 
-                // Format radio button values nicely
                 let value = formData[key];
                 if (value === 'Yes' || value === 'No') {
                     value = `**${value}**`;
                 }
 
                 fields.push({
-                    name: key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()), // Convert camelCase to Title Case
+                    name: key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase()),
                     value: value,
                     inline: key.includes('Id') || key.includes('Name') || key.includes('Record') || key.includes('SOPs') || key.includes('Driving') || key.includes('Standards') || key.includes('experience') || key.includes('knowledge') || key.includes('physicalFitness') || key.includes('flightExperience') || key.includes('regulationsKnowledge') || key.includes('animalExperience') || key.includes('protocolsFamiliarity')
                 });
@@ -918,17 +965,17 @@
             const embed = {
                 title: `New ${unitName} Application from ${formData.signature || formData.inGameName || 'Unknown'}`,
                 description: `A new application has been submitted for the **${unitName}** unit.`,
-                color: color, // Dynamic color based on unit
+                color: color,
                 fields: fields,
                 timestamp: new Date().toISOString(),
                 footer: {
-                    text: 'LSPD Internal Portal Application System',
-                    icon_url: 'LSPD.png' // Placeholder for LSPD logo
+                    text: 'LSPD Internal Portal Application System | View Data: ' + SPREADSHEET_VIEW_URL,
+                    icon_url: 'https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png'
                 }
             };
 
             try {
-                const response = await fetch(DISCORD_WEBHOOK_URL, {
+                const response = await fetch(webhookUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -941,12 +988,11 @@
                     submissionMessage.className = 'submission-message success';
                     submissionMessage.textContent = 'Application submitted successfully! You may now close this window.';
                     submissionMessage.style.display = 'block';
-                    // Reset form and close modal after a short delay
                     setTimeout(() => {
                         resetForm(form);
                         const modalId = form.closest('.modal-overlay').id;
                         closeModal(modalId);
-                    }, 3000); // Close after 3 seconds
+                    }, 3000);
                 } else {
                     console.error('Failed to send webhook:', response.status, response.statusText);
                     const errorText = await response.text();
@@ -954,7 +1000,7 @@
                     submissionMessage.className = 'submission-message error';
                     submissionMessage.textContent = `Failed to submit application. Error: ${response.status} ${response.statusText}. Please try again or contact IT support.`;
                     submissionMessage.style.display = 'block';
-                    submitButton.disabled = false; // Re-enable button on error
+                    submitButton.disabled = false;
                     submitButton.textContent = 'Submit Application';
                 }
             } catch (error) {
@@ -962,7 +1008,7 @@
                 submissionMessage.className = 'submission-message error';
                 submissionMessage.textContent = `An unexpected error occurred: ${error.message}. Please check your internet connection and try again.`;
                 submissionMessage.style.display = 'block';
-                submitButton.disabled = false; // Re-enable button on error
+                submitButton.disabled = false;
                 submitButton.textContent = 'Submit Application';
             }
         }
@@ -1013,14 +1059,33 @@
         setupWordCount('k9_whyK9', 'k9_whyK9WordCount', 50);
 
         // --- Event Listeners for Form Submissions ---
-        document.getElementById('heatApplicationForm').addEventListener('submit', (e) => handleFormSubmission(e, 'heatApplicationForm', 'HEAT', 0xFF0000)); // Red
-        document.getElementById('cidApplicationForm').addEventListener('submit', (e) => handleFormSubmission(e, 'cidApplicationForm', 'CID', 0x003366)); // Dark Blue
-        document.getElementById('swatApplicationForm').addEventListener('submit', (e) => handleFormSubmission(e, 'swatApplicationForm', 'SWAT', 0x333333)); // Dark Gray
-        document.getElementById('asuApplicationForm').addEventListener('submit', (e) => handleFormSubmission(e, 'asuApplicationForm', 'ASU', 0x6699FF)); // Light Blue
-        document.getElementById('k9ApplicationForm').addEventListener('submit', (e) => handleFormSubmission(e, 'k9ApplicationForm', 'K9', 0x996633)); // Brown
+        document.getElementById('heatApplicationForm').addEventListener('submit', (e) => handleFormSubmission(e, 'heatApplicationForm', 'HEAT', 0xFF0000));
+        document.getElementById('cidApplicationForm').addEventListener('submit', (e) => handleFormSubmission(e, 'cidApplicationForm', 'CID', 0x003366));
+        document.getElementById('swatApplicationForm').addEventListener('submit', (e) => handleFormSubmission(e, 'swatApplicationForm', 'SWAT', 0x333333));
+        document.getElementById('asuApplicationForm').addEventListener('submit', (e) => handleFormSubmission(e, 'asuApplicationForm', 'ASU', 0x6699FF));
+        document.getElementById('k9ApplicationForm').addEventListener('submit', (e) => handleFormSubmission(e, 'k9ApplicationForm', 'K9', 0x996633));
 
-        // This line will now open the infoModal on page load.
+        // --- Header Hamburger Menu Logic ---
         document.addEventListener('DOMContentLoaded', () => {
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const navLinks = document.getElementById('nav-links');
+
+            if (hamburgerBtn && navLinks) {
+                hamburgerBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    navLinks.classList.toggle('nav-mobile-active');
+                });
+            }
+
+            // Close mobile nav when clicking outside
+            document.addEventListener('click', (e) => {
+                if (navLinks.classList.contains('nav-mobile-active') && !navLinks.contains(e.target) && !hamburgerBtn.contains(e.target)) {
+                    navLinks.classList.remove('nav-mobile-active');
+                }
+            });
+
+            // Fetch webhook data and open info modal on page load
+            fetchAndParseSpreadsheet();
             openModal('infoModal');
         });
     </script>
