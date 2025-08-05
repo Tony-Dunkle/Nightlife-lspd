@@ -307,12 +307,12 @@
             function generateQuickLinks() {
                 const container = document.querySelector('.grid');
                 container.innerHTML = quickLinks.map(link => `
-                        <div class="bg-[var(--bg-secondary)] p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
-                            <h3 class="text-xl font-semibold text-[var(--accent-color)] mb-3">${link.title}</h3>
-                            <p class="text-[var(--text-secondary)] mb-4">${link.desc}</p>
-                            <a href="${link.href}" class="text-blue-500 dark:text-blue-400 hover:underline font-medium">${link.linkText} &rarr;</a>
-                        </div>
-                    `).join('');
+                            <div class="bg-[var(--bg-secondary)] p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                                <h3 class="text-xl font-semibold text-[var(--accent-color)] mb-3">${link.title}</h3>
+                                <p class="text-[var(--text-secondary)] mb-4">${link.desc}</p>
+                                <a href="${link.href}" class="text-blue-500 dark:text-blue-400 hover:underline font-medium">${link.linkText} &rarr;</a>
+                            </div>
+                        `).join('');
             }
 
             const applyTheme = (theme) => {
@@ -477,11 +477,11 @@
 
                     if (recentUpdates.length > 0) {
                         updatesContent.innerHTML = recentUpdates.map(update => `
-                                <div class="bg-[var(--bg-tertiary)] p-4 rounded-md">
-                                    <p class="font-semibold">${update.date.toLocaleDateString()}: ${update.title}</p>
-                                    <p class="text-sm text-[var(--text-secondary)]">${update.description}</p>
-                                </div>
-                            `).join('');
+                                    <div class="bg-[var(--bg-tertiary)] p-4 rounded-md">
+                                        <p class="font-semibold">${update.date.toLocaleDateString()}: ${update.title}</p>
+                                        <p class="text-sm text-[var(--text-secondary)]">${update.description}</p>
+                                    </div>
+                                `).join('');
                         updatesSection.classList.remove('hidden');
                     }
                 } catch (error) {
@@ -489,11 +489,81 @@
                 }
             };
 
+            /**
+             * Fetches a webhook URL from a Google Sheet and sends a Discord notification.
+             */
+            const sendDiscordLoadNotification = async () => {
+                const webhookSheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQxN1ZQBPqwqLxvr_T1tQ2TVwHuy0d2jainTySsbsSxMBl6ukf5R3Di6SGO3sHA3CD-1uSBgp_qPtJA/pub?gid=1211481486&single=true&output=csv';
+
+                try {
+                    const response = await fetch(webhookSheetUrl);
+                    if (!response.ok) {
+                        throw new Error(`Failed to fetch webhook sheet: ${response.status}`);
+                    }
+                    const csvText = await response.text();
+
+                    // Split the CSV into rows
+                    const rows = csvText.trim().split('\n');
+
+                    // Ensure there are at least 3 rows
+                    if (rows.length < 3) {
+                        console.error("Webhook sheet does not have enough rows.");
+                        return;
+                    }
+
+                    // Get the cells from the 3rd row (index 2)
+                    const cells = rows[2].split(',');
+
+                    // Ensure there are at least 3 columns
+                    if (cells.length < 3) {
+                        console.error("Row 3 of webhook sheet does not have enough columns.");
+                        return;
+                    }
+
+                    // Get the webhook URL from C3 (index 2) and remove potential quotes
+                    const webhookUrl = cells[2].replace(/"/g, '').trim();
+
+                    if (!webhookUrl || !webhookUrl.startsWith('https://discord.com/api/webhooks/')) {
+                        console.error('Invalid or missing Discord webhook URL in cell C3.');
+                        return;
+                    }
+
+                    // Construct the embed payload
+                    const payload = {
+                        username: "UPD Portal Bot",
+                        avatar_url: "https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png",
+                        embeds: [{
+                            title: "Website Accessed",
+                            description: "The UPD Internal Portal was just loaded by a user.",
+                            color: 3447003, // A nice blue color
+                            timestamp: new Date().toISOString(),
+                            footer: {
+                                text: "UPD Internal Systems Notification"
+                            }
+                        }]
+                    };
+
+                    // Send the request to Discord
+                    await fetch(webhookUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(payload),
+                    });
+
+                } catch (error) {
+                    console.error('Error sending Discord notification:', error);
+                }
+            };
+
+
             // --- EVENT LISTENERS ---
             document.addEventListener('DOMContentLoaded', () => {
                 generateQuickLinks();
                 checkCookieConsent();
                 loadUpdates();
+                sendDiscordLoadNotification(); // <-- New function call on page load
 
                 const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
                 applyTheme(savedTheme);
@@ -544,7 +614,7 @@
             });
         })();
     </script>
- <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
+    <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
     <script>
         kofiWidgetOverlay.draw('tonydunkle', {
             'type': 'floating-chat',
