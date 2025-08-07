@@ -27,6 +27,30 @@
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, addDoc, getDoc, getDocs, onSnapshot, collection, query } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        window.firebase = {
+            initializeApp,
+            getAuth,
+            signInAnonymously,
+            onAuthStateChanged,
+            getFirestore,
+            doc,
+            setDoc,
+            addDoc,
+            getDoc,
+            getDocs,
+            onSnapshot,
+            collection,
+            query
+        };
+    </script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display.swap');
 
@@ -141,15 +165,11 @@
             transition: transform 0.3s ease, opacity 0.3s ease;
         }
 
-        #addChargeModal .report-modal-content {
+        #addChargeModal .report-modal-content, #viewReportsModal .report-modal-content {
             width: 80vw;
             max-width: 1200px;
         }
 
-        .report-modal-overlay.hidden .report-modal-content {
-            transform: translateY(-50px);
-            opacity: 0;
-        }
 
         /* Style for selected officers and charges */
         .officer-item.selected, .charge-item.selected {
@@ -186,6 +206,8 @@
             </nav>
 
             <div class="flex items-center ml-4">
+                <button id="save-report-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out mr-2">Save Report</button>
+                <button id="view-saved-reports-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out mr-2">View Saved Reports</button>
                 <button id="settings-btn" class="p-2 rounded-full hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all">
                     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                 </button>
@@ -561,6 +583,19 @@
             </div>
         </div>
     </div>
+    <div id="viewReportsModal" class="report-modal-overlay hidden">
+        <div class="report-modal-content">
+            <h3 class="text-xl font-bold mb-4">Saved Reports</h3>
+            <div id="saved-reports-loading" class="flex justify-center items-center h-24">
+                <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
+            </div>
+            <div id="saved-reports-list" class="space-y-2 max-h-[60vh] overflow-y-auto mb-4 p-2 bg-gray-800 rounded-md"></div>
+            <div class="flex justify-end space-x-2">
+                <button id="closeViewReportsModalBtn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">Close</button>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Settings Modals from index.html -->
     <div id="settings-modal" class="settings-modal-overlay"><div class="modal-box text-[var(--text-primary)]"><h2 class="text-2xl font-bold mb-6">Settings</h2><div class="mb-6"><h3 class="text-lg font-semibold mb-3">Website Theme</h3><div class="space-y-2"><label class="flex items-center"><input type="radio" name="theme" value="light" class="form-radio h-4 w-4 text-blue-600"><span class="ml-2">Light Mode</span></label><label class="flex items-center"><input type="radio" name="theme" value="dark" class="form-radio h-4 w-4 text-blue-600"><span class="ml-2">Dark Mode</span></label></div></div><div class="mb-6"><h3 class="text-lg font-semibold mb-3">Data Management</h3><div class="flex flex-col space-y-3"><button id="clear-data-btn" class="w-full bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition">Clear All Local Data</button><button id="view-data-btn" class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition">View Stored Data</button></div></div><div class="mt-8 text-right"><button id="close-settings-btn" class="bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-200 px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition">Close</button></div></div></div>
@@ -569,7 +604,178 @@
 
 
     <!-- Combined JavaScript -->
-    <script>
+    <script type="module">
+        // --- Firebase Setup ---
+        let db, auth, userId;
+
+        // This configuration will be the primary and only one used.
+        const firebaseConfig = {
+            apiKey: "AIzaSyCXRY1CS75Gr8QYgbWNLXZKSFG6F8AvteE",
+            authDomain: "upd-report-system.firebaseapp.com",
+            projectId: "upd-report-system",
+            storageBucket: "upd-report-system.firebasestorage.app",
+            messagingSenderId: "125180180871",
+            appId: "1:125180180871:web:1886595bc6950c3f93bb22",
+            measurementId: "G-BEPXF99FW1"
+        };
+
+        const appId = 'report-generator'; // A unique ID for this app
+
+        try {
+            const app = window.firebase.initializeApp(firebaseConfig);
+            auth = window.firebase.getAuth(app);
+            db = window.firebase.getFirestore(app);
+            console.log("Firebase Initialized");
+
+            window.firebase.onAuthStateChanged(auth, async (user) => {
+                if (user) {
+                    userId = user.uid;
+                    console.log("User is signed in with UID:", userId);
+                    loadReportsFromFirestore();
+                } else {
+                    try {
+                        // Since we are using a specific, hardcoded Firebase project,
+                        // we must sign in anonymously and not use a platform-provided token.
+                        await window.firebase.signInAnonymously(auth);
+                    } catch (error) {
+                        console.error("Error signing in anonymously:", error);
+                    }
+                }
+            });
+
+        } catch (e) {
+            console.error("Error initializing Firebase:", e);
+        }
+
+        // --- Firestore Functions ---
+        const saveReportToFirestore = async () => {
+            if (!db || !userId) {
+                alert("Firebase is not ready. Please try again in a moment.");
+                return;
+            }
+
+            const reportData = getReportDataAsObject();
+            reportData.authorId = userId; // Tag report with user's ID
+            reportData.createdAt = new Date().toISOString();
+
+            try {
+                const docRef = await window.firebase.addDoc(window.firebase.collection(db, `artifacts/${appId}/public/data/reports`), reportData);
+                console.log("Report saved with ID: ", docRef.id);
+                alert("Report saved successfully!");
+                clearReportData(); // Optionally clear the form after saving
+            } catch (error) {
+                console.error("Error saving report to Firestore: ", error);
+                alert("Failed to save report. See console for details.");
+            }
+        };
+
+        const loadReportsFromFirestore = () => {
+            if (!db) return;
+            const reportsCollection = window.firebase.collection(db, `artifacts/${appId}/public/data/reports`);
+            const q = window.firebase.query(reportsCollection); // Removed orderBy to avoid index requirement
+
+            const loadingEl = document.getElementById('saved-reports-loading');
+            const listEl = document.getElementById('saved-reports-list');
+
+            window.firebase.onSnapshot(q, (querySnapshot) => {
+                loadingEl.classList.add('hidden');
+                listEl.innerHTML = '';
+                if (querySnapshot.empty) {
+                    listEl.innerHTML = '<p class="text-center text-gray-400">No saved reports found.</p>';
+                    return;
+                }
+
+                const reports = [];
+                querySnapshot.forEach(doc => {
+                    reports.push({ id: doc.id, ...doc.data() });
+                });
+
+                // Sort in memory
+                reports.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+
+                reports.forEach(report => {
+                    const reportEl = document.createElement('div');
+                    reportEl.className = 'p-3 rounded-md cursor-pointer bg-gray-700 hover:bg-gray-600 transition-colors duration-200 border border-gray-600';
+                    reportEl.dataset.reportId = report.id;
+
+                    const reportTitle = report.reportFields?.caseTitle || 'Untitled Report';
+                    const reportingOfficer = report.reportLists?.['officers-list']?.match(/value="([^"]+)"/)?.[1] || 'Unknown Officer';
+                    const reportDate = new Date(report.createdAt).toLocaleString();
+
+                    reportEl.innerHTML = `
+                            <h4 class="font-bold text-white">${reportTitle}</h4>
+                            <p class="text-sm text-gray-300">Filed by: ${reportingOfficer}</p>
+                            <p class="text-xs text-gray-400">Date: ${reportDate}</p>
+                        `;
+                    reportEl.addEventListener('click', () => loadSpecificReport(report.id));
+                    listEl.appendChild(reportEl);
+                });
+            }, (error) => {
+                console.error("Error getting reports: ", error);
+                loadingEl.classList.add('hidden');
+                listEl.innerHTML = '<p class="text-center text-red-400">Failed to load reports.</p>';
+            });
+        };
+
+        const loadSpecificReport = async (reportId) => {
+            if (!db) return;
+            try {
+                const docRef = window.firebase.doc(db, `artifacts/${appId}/public/data/reports`, reportId);
+                const docSnap = await window.firebase.getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    const reportData = docSnap.data();
+                    populateFormWithData(reportData);
+                    document.getElementById('viewReportsModal').classList.add('hidden');
+                } else {
+                    console.log("No such document!");
+                    alert("Could not find the selected report.");
+                }
+            } catch (error) {
+                console.error("Error loading specific report: ", error);
+                alert("Failed to load the report.");
+            }
+        };
+
+        const getReportDataAsObject = () => {
+            const data = {
+                reportFields: {},
+                reportLists: {}
+            };
+            reportFieldsToSave.forEach(id => {
+                const element = document.getElementById(id);
+                data.reportFields[id] = element.tagName === 'H1' ? element.textContent : element.value;
+            });
+            reportListsToSave.forEach(id => {
+                data.reportLists[id] = document.getElementById(id).innerHTML;
+            });
+            return data;
+        };
+
+        const populateFormWithData = (data) => {
+            if (data.reportFields) {
+                Object.keys(data.reportFields).forEach(id => {
+                    const element = document.getElementById(id);
+                    if (element) {
+                        if (element.tagName === 'H1') element.textContent = data.reportFields[id];
+                        else element.value = data.reportFields[id];
+                    }
+                });
+            }
+            if (data.reportLists) {
+                Object.keys(data.reportLists).forEach(id => {
+                    const listElement = document.getElementById(id);
+                    if (listElement) {
+                        listElement.innerHTML = data.reportLists[id];
+                        reAttachListEventListeners(listElement);
+                    }
+                });
+            }
+            updateReturnWeaponStatus();
+        };
+
+
         document.addEventListener('DOMContentLoaded', () => {
             // --- HEADER & SETTINGS LOGIC (from index.html) ---
             (() => {
@@ -588,6 +794,11 @@
                 const confirmModal = document.getElementById('confirm-modal');
                 const confirmOkBtn = document.getElementById('confirm-ok-btn');
                 const confirmCancelBtn = document.getElementById('confirm-cancel-btn');
+                const saveReportBtn = document.getElementById('save-report-btn');
+                const viewSavedReportsBtn = document.getElementById('view-saved-reports-btn');
+                const viewReportsModal = document.getElementById('viewReportsModal');
+                const closeViewReportsModalBtn = document.getElementById('closeViewReportsModalBtn');
+
 
                 // --- STATE ---
                 let confirmCallback = null;
@@ -609,7 +820,6 @@
                 };
 
                 const closeConfirmModal = () => {
-                    confirmModal.classList.remove('is-open');
                     confirmCallback = null;
                 }
 
@@ -649,12 +859,22 @@
                     });
                 });
 
+                saveReportBtn.addEventListener('click', saveReportToFirestore);
+                viewSavedReportsBtn.addEventListener('click', () => {
+                    viewReportsModal.classList.remove('hidden');
+                    // Data is loaded via onSnapshot, so it should be up to date
+                });
+                closeViewReportsModalBtn.addEventListener('click', () => {
+                    viewReportsModal.classList.add('hidden');
+                });
+
                 confirmOkBtn.addEventListener('click', () => { if (confirmCallback) confirmCallback(); closeConfirmModal(); });
                 confirmCancelBtn.addEventListener('click', closeConfirmModal);
             })();
 
 
             // --- REPORT GENERATOR LOGIC (Original from report.html) ---
+            // This is a global scope IIFE now, accessible by Firebase functions
             (() => {
                 // Reusable modal for adding general items (Evidence, Tags, etc.)
                 const addItemModal = document.getElementById('addItemModal');
@@ -689,11 +909,11 @@
                         const newItem = document.createElement('li');
                         newItem.className = "flex items-center space-x-2 p-2 border border-gray-700 rounded-md bg-gray-700 text-white";
                         newItem.innerHTML = `
-                                                    <input type="text" value="${itemText}" class="w-full p-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600">
-                                                    <button class="remove-item-btn bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-xs transition-colors duration-200">
-                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                                    </button>
-                                                `;
+                                                        <input type="text" value="${itemText}" class="w-full p-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600">
+                                                        <button class="remove-item-btn bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-xs transition-colors duration-200">
+                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                                        </button>
+                                                    `;
                         list.appendChild(newItem);
                         newItem.querySelector('.remove-item-btn').addEventListener('click', (e) => {
                             e.target.closest('li').remove();
@@ -743,16 +963,16 @@
                         const newVehicleItem = document.createElement('li');
                         newVehicleItem.className = "flex flex-col space-y-1 p-2 border border-gray-700 rounded-md bg-gray-700 text-white";
                         newVehicleItem.innerHTML = `
-                                                <div class="flex justify-between items-center w-full">
-                                                    <span class="font-bold text-base">${model || 'N/A'}</span>
-                                                    <button class="remove-item-btn bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-xs transition-colors duration-200">
-                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                                    </button>
-                                                </div>
-                                                <p class="text-xs text-gray-300">Owner: ${owner || 'N/A'}</p>
-                                                <p class="text-xs text-gray-300">Plate: ${plate || 'N/A'}</p>
-                                                <p class="text-xs ${impounded ? 'text-yellow-400' : 'text-gray-500'}">Impounded</p>
-                                            `;
+                                                    <div class="flex justify-between items-center w-full">
+                                                        <span class="font-bold text-base">${model || 'N/A'}</span>
+                                                        <button class="remove-item-btn bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-xs transition-colors duration-200">
+                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                                        </button>
+                                                    </div>
+                                                    <p class="text-xs text-gray-300">Owner: ${owner || 'N/A'}</p>
+                                                    <p class="text-xs text-gray-300">Plate: ${plate || 'N/A'}</p>
+                                                    <p class="text-xs ${impounded ? 'text-yellow-400' : 'text-gray-500'}">Impounded</p>
+                                                `;
                         vehiclesList.appendChild(newVehicleItem);
                         newVehicleItem.querySelector('.remove-item-btn').addEventListener('click', (e) => {
                             e.target.closest('li').remove();
@@ -794,11 +1014,11 @@
                         const newCivilianItem = document.createElement('li');
                         newCivilianItem.className = "flex justify-between items-center p-2 border border-gray-700 rounded-md bg-gray-700 text-white";
                         newCivilianItem.innerHTML = `
-                                                <span>${name} - <span class="text-gray-400">${role}</span></span>
-                                                <button class="remove-item-btn bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-xs transition-colors duration-200">
-                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                                </button>
-                                            `;
+                                                    <span>${name} - <span class="text-gray-400">${role}</span></span>
+                                                    <button class="remove-item-btn bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-xs transition-colors duration-200">
+                                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                                    </button>
+                                                `;
                         civiliansList.appendChild(newCivilianItem);
                         newCivilianItem.querySelector('.remove-item-btn').addEventListener('click', (e) => {
                             e.target.closest('li').remove();
@@ -824,7 +1044,7 @@
                 const weaponsList = document.getElementById('weapons-list');
                 const returnWeaponsDropdown = document.getElementById('return-weapons');
 
-                function updateReturnWeaponStatus() {
+                window.updateReturnWeaponStatus = function () {
                     const weaponItems = weaponsList.querySelectorAll('li');
                     let hasSpecialWeapon = false;
                     if (weaponsList.firstElementChild && weaponsList.firstElementChild.textContent.includes('NO WEAPONS INVOLVED')) {
@@ -874,19 +1094,19 @@
                         const newWeaponItem = document.createElement('li');
                         newWeaponItem.className = "flex flex-col space-y-1 p-2 border border-gray-700 rounded-md bg-gray-700 text-white";
                         newWeaponItem.innerHTML = `
-                                                    <div class="flex justify-between items-center w-full">
-                                                        <span class="font-bold text-base">${type || 'N/A'}</span>
-                                                        <button class="remove-item-btn bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-xs transition-colors duration-200">
-                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                                        </button>
-                                                    </div>
-                                                    <p class="text-xs text-gray-300">Model: ${model || 'N/A'}</p>
-                                                    <p class="text-xs text-gray-300">Serial: ${serial || 'N/A'}</p>
-                                                    <div class="flex space-x-4 mt-2">
-                                                        <p class="text-xs ${isCustom ? 'text-green-400' : 'text-gray-500'}">Custom</p>
-                                                        <p class="text-xs ${isF9 ? 'text-green-400' : 'text-gray-500'}">F9</p>
-                                                    </div>
-                                                `;
+                                                        <div class="flex justify-between items-center w-full">
+                                                            <span class="font-bold text-base">${type || 'N/A'}</span>
+                                                            <button class="remove-item-btn bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-xs transition-colors duration-200">
+                                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                                            </button>
+                                                        </div>
+                                                        <p class="text-xs text-gray-300">Model: ${model || 'N/A'}</p>
+                                                        <p class="text-xs text-gray-300">Serial: ${serial || 'N/A'}</p>
+                                                        <div class="flex space-x-4 mt-2">
+                                                            <p class="text-xs ${isCustom ? 'text-green-400' : 'text-gray-500'}">Custom</p>
+                                                            <p class="text-xs ${isF9 ? 'text-green-400' : 'text-gray-500'}">F9</p>
+                                                        </div>
+                                                    `;
                         weaponsList.appendChild(newWeaponItem);
                         newWeaponItem.querySelector('.remove-item-btn').addEventListener('click', (e) => {
                             e.target.closest('li').remove();
@@ -1065,11 +1285,11 @@
                             const newItem = document.createElement('li');
                             newItem.className = "flex items-center space-x-2 p-2 border border-gray-700 rounded-md bg-gray-700 text-white";
                             newItem.innerHTML = `
-                                                        <input type="text" value="${officer}" class="w-full p-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600">
-                                                        <button class="remove-item-btn bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-xs transition-colors duration-200">
-                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                                        </button>
-                                                    `;
+                                                            <input type="text" value="${officer}" class="w-full p-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600">
+                                                            <button class="remove-item-btn bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-xs transition-colors duration-200">
+                                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                                            </button>
+                                                        `;
                             officersList.appendChild(newItem);
 
                             newItem.querySelector('.remove-item-btn').addEventListener('click', (e) => {
@@ -1242,16 +1462,16 @@
                             chargeElement.className = `charge-item p-3 rounded-md cursor-pointer ${baseColorClass} transition-colors duration-200 border border-gray-600 flex flex-col justify-between`;
                             chargeElement.dataset.charge = `${charge.penalCode}: ${charge.chargeName}`;
                             chargeElement.innerHTML = `
-                                                <div>
-                                                    <p class="font-bold text-white">${charge.chargeName}</p>
-                                                    <p class="text-xs text-gray-400">${charge.penalCode}</p>
-                                                    <p class="text-sm text-gray-300 mt-2">${charge.chargeDescription}</p>
-                                                </div>
-                                                <div class="text-right mt-2">
-                                                    <p class="text-xs text-gray-300">${charge.jailTime} Months / ${charge.fineAmount}</p>
-                                                    <p class="text-xs font-semibold ${charge.felonyStatus && charge.felonyStatus.toLowerCase() === 'felony' ? 'text-red-400' : 'text-green-400'}">${charge.felonyStatus || ''}</p>
-                                                </div>
-                                            `;
+                                                    <div>
+                                                        <p class="font-bold text-white">${charge.chargeName}</p>
+                                                        <p class="text-xs text-gray-400">${charge.penalCode}</p>
+                                                        <p class="text-sm text-gray-300 mt-2">${charge.chargeDescription}</p>
+                                                    </div>
+                                                    <div class="text-right mt-2">
+                                                        <p class="text-xs text-gray-300">${charge.jailTime} Months / ${charge.fineAmount}</p>
+                                                        <p class="text-xs font-semibold ${charge.felonyStatus && charge.felonyStatus.toLowerCase() === 'felony' ? 'text-red-400' : 'text-green-400'}">${charge.felonyStatus || ''}</p>
+                                                    </div>
+                                                `;
                             if (selectedCharges.includes(chargeElement.dataset.charge)) {
                                 chargeElement.classList.add('selected');
                             }
@@ -1294,21 +1514,21 @@
                         const newCriminalItem = document.createElement('li');
                         newCriminalItem.className = 'p-4 border border-gray-700 rounded-md bg-gray-800';
                         newCriminalItem.innerHTML = `
-                                                    <div class="flex items-center justify-between mb-2">
-                                                        <h4 class="font-bold text-lg">${criminalName}</h4>
-                                                        <button class="remove-item-btn bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-xs transition-colors duration-200">
-                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                                        </button>
-                                                    </div>
-                                                    ${fingerprintId ? `<p class="text-sm text-gray-400 mb-2"><strong>Fingerprint:</strong> ${fingerprintId}</p>` : ''}
-                                                    <div class="mt-2 space-y-2">
-                                                        <h5 class="text-md font-semibold">Charges:</h5>
-                                                        <ul class="charges-list list-disc list-inside space-y-1 text-gray-400">
-                                                            <li class="text-sm">No charges added yet.</li>
-                                                        </ul>
-                                                        <button class="add-charge-btn bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded-full transition-colors duration-200 mt-2">+ Add Charge</button>
-                                                    </div>
-                                                `;
+                                                        <div class="flex items-center justify-between mb-2">
+                                                            <h4 class="font-bold text-lg">${criminalName}</h4>
+                                                            <button class="remove-item-btn bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-xs transition-colors duration-200">
+                                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                                            </button>
+                                                        </div>
+                                                        ${fingerprintId ? `<p class="text-sm text-gray-400 mb-2"><strong>Fingerprint:</strong> ${fingerprintId}</p>` : ''}
+                                                        <div class="mt-2 space-y-2">
+                                                            <h5 class="text-md font-semibold">Charges:</h5>
+                                                            <ul class="charges-list list-disc list-inside space-y-1 text-gray-400">
+                                                                <li class="text-sm">No charges added yet.</li>
+                                                            </ul>
+                                                            <button class="add-charge-btn bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded-full transition-colors duration-200 mt-2">+ Add Charge</button>
+                                                        </div>
+                                                    `;
                         criminalsList.appendChild(newCriminalItem);
                         newCriminalItem.querySelector('.remove-item-btn').addEventListener('click', (e) => {
                             e.target.closest('li').remove();
@@ -1355,11 +1575,11 @@
                             const newChargeItem = document.createElement('li');
                             newChargeItem.className = 'flex items-center justify-between text-sm';
                             newChargeItem.innerHTML = `
-                                                        <span>${chargeText}</span>
-                                                        <button class="remove-charge-btn text-red-400 hover:text-red-500 transition-colors duration-200">
-                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                                        </button>
-                                                    `;
+                                                            <span>${chargeText}</span>
+                                                            <button class="remove-charge-btn text-red-400 hover:text-red-500 transition-colors duration-200">
+                                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                                                            </button>
+                                                        `;
                             currentChargesList.appendChild(newChargeItem);
                             newChargeItem.querySelector('.remove-charge-btn').addEventListener('click', (e) => {
                                 e.target.closest('li').remove();
@@ -1721,8 +1941,8 @@ ${evidenceText}
                 });
 
                 // Local Storage & Delete Functionality
-                const reportFieldsToSave = ['caseTitle', 'report-description', 'postal-location', 'level-of-force', 'medical-treatment', 'gsr-test', 'legal-representation', 'mirandized', 'return-weapons', 'plea'];
-                const reportListsToSave = ['evidence-list', 'linked-reports-list', 'evidence-locker-list', 'tags-list', 'weapons-list', 'vehicles-list', 'civilians-list', 'officers-list', 'criminals-list'];
+                window.reportFieldsToSave = ['caseTitle', 'report-description', 'postal-location', 'level-of-force', 'medical-treatment', 'gsr-test', 'legal-representation', 'mirandized', 'return-weapons', 'plea'];
+                window.reportListsToSave = ['evidence-list', 'linked-reports-list', 'evidence-locker-list', 'tags-list', 'weapons-list', 'vehicles-list', 'civilians-list', 'officers-list', 'criminals-list'];
 
                 function saveReportData() {
                     const data = {};
@@ -1758,7 +1978,7 @@ ${evidenceText}
                     }
                 }
 
-                function reAttachListEventListeners(listElement) {
+                window.reAttachListEventListeners = function (listElement) {
                     listElement.querySelectorAll('.remove-item-btn').forEach(button => {
                         button.addEventListener('click', (e) => {
                             const listItem = e.target.closest('li');
@@ -1794,23 +2014,8 @@ ${evidenceText}
                     }
                 }
 
-                function clearReportData() {
+                window.clearReportData = function () {
                     localStorage.removeItem('policeReportData');
-                }
-
-                loadReportData();
-                window.addEventListener('beforeunload', saveReportData);
-
-                const deleteBtn = document.getElementById('deleteBtn');
-                const deleteConfirmationModal = document.getElementById('deleteConfirmationModal');
-                const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
-                const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
-
-                deleteBtn.addEventListener('click', () => deleteConfirmationModal.classList.remove('hidden'));
-                cancelDeleteBtn.addEventListener('click', () => deleteConfirmationModal.classList.add('hidden'));
-                confirmDeleteBtn.addEventListener('click', () => {
-                    clearReportData();
-                    deleteConfirmationModal.classList.add('hidden');
                     document.getElementById('caseTitle').textContent = 'New Case';
                     document.getElementById('report-description').value = '';
                     postalLocation.value = '';
@@ -1831,6 +2036,21 @@ ${evidenceText}
                     document.getElementById('civilians-list').innerHTML = `<li class="p-2 border border-gray-700 rounded-md">NO CIVILIANS INVOLVED</li>`;
                     document.getElementById('officers-list').innerHTML = `<li class="p-2 border border-gray-700 rounded-md">NO OFFICERS INVOLVED</li>`;
                     document.getElementById('criminals-list').innerHTML = `<li class="p-2 border border-gray-700 rounded-md">NO CRIMINALS INVOLVED</li>`;
+                }
+
+                loadReportData();
+                window.addEventListener('beforeunload', saveReportData);
+
+                const deleteBtn = document.getElementById('deleteBtn');
+                const deleteConfirmationModal = document.getElementById('deleteConfirmationModal');
+                const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
+                const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
+
+                deleteBtn.addEventListener('click', () => deleteConfirmationModal.classList.remove('hidden'));
+                cancelDeleteBtn.addEventListener('click', () => deleteConfirmationModal.classList.add('hidden'));
+                confirmDeleteBtn.addEventListener('click', () => {
+                    clearReportData();
+                    deleteConfirmationModal.classList.add('hidden');
                 });
             })();
         });
