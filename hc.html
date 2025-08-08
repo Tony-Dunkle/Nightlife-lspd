@@ -177,18 +177,9 @@
 
             <!-- Officer Login Management -->
             <div class="lg:col-span-1 bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg">
-                <div class="flex justify-between items-center mb-4 border-b pb-2 border-slate-200 dark:border-slate-700">
+                <div id="officer-management-header" class="flex justify-between items-center mb-4 border-b pb-2 border-slate-200 dark:border-slate-700">
                     <h2 class="text-2xl font-bold">Officer Management</h2>
-                    <button id="add-officer-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition">Add Officer</button>
-                </div>
-
-                <!-- Role Simulation Dropdown -->
-                <div class="mb-4">
-                    <label for="simulated-role" class="block text-sm font-medium text-slate-700 dark:text-slate-300">Simulate Logged-in As:</label>
-                    <select id="simulated-role" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-slate-600 dark:bg-slate-700 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
-                        <option value="Website Account Manager">Website Account Manager</option>
-                        <option value="Account Manager">Account Manager</option>
-                    </select>
+                    <button id="add-officer-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition hidden">Add Officer</button>
                 </div>
 
                 <div id="personnel-list-container" class="space-y-3 max-h-[60vh] overflow-y-auto pr-2">
@@ -359,16 +350,24 @@
                         userId = user.uid;
                         console.log("User is signed in with UID:", userId);
                         loadReportsFromFirestore();
-                        loadPersonnel(); // Load personnel data
+                        loadPersonnel();
+                        setPermissions();
                     } else {
-                        console.log("No user signed in. Attempting to sign in.");
+                        console.log("No user signed in.");
+                        // Redirect if not logged in and not on the login page itself
+                        if (window.location.pathname.indexOf('index.html') === -1) {
+                            // window.location.href = 'index.html';
+                        }
                     }
                 });
 
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                     await window.firebase.signInWithCustomToken(auth, __initial_auth_token);
                 } else {
-                    await window.firebase.signInAnonymously(auth);
+                    // Only sign in anonymously if there's no other user session
+                    if (!auth.currentUser) {
+                        await window.firebase.signInAnonymously(auth);
+                    }
                 }
 
             } catch (e) {
@@ -392,15 +391,30 @@
         const tempPasswordDisplay = document.getElementById('temp-password-display');
         const closePasswordModalBtn = document.getElementById('close-password-modal-btn');
         const copyPasswordBtn = document.getElementById('copy-password-btn');
-        const simulatedRoleSelect = document.getElementById('simulated-role');
         const officerRoleSelect = document.getElementById('officer-role');
         const confirmRemoveModal = document.getElementById('confirm-remove-modal');
         let officerToRemoveId = null;
+        let currentUserRole = null;
 
         const rolesByManager = {
             "Website Account Manager": ["Account Manager", "Officer", "FTO", "Subdivision Lead"],
             "Account Manager": ["Officer", "FTO", "Subdivision Lead"]
         };
+
+        const setPermissions = () => {
+            const userProfile = JSON.parse(localStorage.getItem('userProfile'));
+            if (userProfile && userProfile.role) {
+                currentUserRole = userProfile.role;
+                if (rolesByManager[currentUserRole]) {
+                    addOfficerBtn.classList.remove('hidden');
+                } else {
+                    addOfficerBtn.classList.add('hidden');
+                }
+            } else {
+                addOfficerBtn.classList.add('hidden');
+            }
+        };
+
 
         const generatePassword = (length = 12) => {
             const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
@@ -496,8 +510,7 @@
         };
 
         const populateRoleDropdown = () => {
-            const managerRole = simulatedRoleSelect.value;
-            const roles = rolesByManager[managerRole] || [];
+            const roles = rolesByManager[currentUserRole] || [];
             officerRoleSelect.innerHTML = '';
             roles.forEach(role => {
                 const option = document.createElement('option');
@@ -716,8 +729,7 @@
                 }
             });
 
-            // Add event listener for the role simulation
-            simulatedRoleSelect.addEventListener('change', populateRoleDropdown);
+            setPermissions();
         });
 
     </script>
