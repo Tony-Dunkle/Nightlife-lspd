@@ -13,32 +13,30 @@
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        setTimeout(() => {
-            // Prioritize the platform-provided config, but use the hardcoded one as a fallback.
-            const firebaseConfig = typeof __firebase_config !== 'undefined'
-                ? JSON.parse(__firebase_config)
-                : {
-                    apiKey: "AIzaSyDU7DRAxCzqu81DTa7k0DXaBRcMpk0sElc",
-                    authDomain: "upd-system.firebaseapp.com",
-                    projectId: "upd-system",
-                    storageBucket: "upd-system.appspot.com",
-                    messagingSenderId: "28223003678",
-                    appId: "1:28223003678:web:d1f8a6b0c2e3a4b5c6d7e8"
-                };
+        // Prioritize the platform-provided config, but use the hardcoded one as a fallback.
+        const firebaseConfig = typeof __firebase_config !== 'undefined'
+            ? JSON.parse(__firebase_config)
+            : {
+                apiKey: "AIzaSyDU7DRAxCzqu81DTa7k0DXaBRcMpk0sElc",
+                authDomain: "upd-system.firebaseapp.com",
+                projectId: "upd-system",
+                storageBucket: "upd-system.appspot.com",
+                messagingSenderId: "28223003678",
+                appId: "1:28223003678:web:d1f8a6b0c2e3a4b5c6d7e8"
+            };
 
-            // Initialize Firebase
-            const app = initializeApp(firebaseConfig);
-            const auth = getAuth(app);
-            const db = getFirestore(app);
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-            window.firebaseAuth = auth;
-            window.db = db;
-            window.signInWithEmailAndPassword = signInWithEmailAndPassword;
-            window.onAuthStateChanged = onAuthStateChanged;
-            window.signOut = signOut;
-            window.doc = doc;
-            window.getDoc = getDoc;
-        }, 500); // 500ms delay
+        window.firebaseAuth = auth;
+        window.db = db;
+        window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+        window.onAuthStateChanged = onAuthStateChanged;
+        window.signOut = signOut;
+        window.doc = doc;
+        window.getDoc = getDoc;
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display.swap');
