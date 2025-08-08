@@ -16,11 +16,12 @@
 
     <!-- Login Check -->
     <script>
-        // This script checks if the user is logged in by looking at sessionStorage.
-        // It should run before the rest of the page loads to prevent content flashing.
+        // This script checks for a login flag in sessionStorage.
+        // If the flag is not set, it immediately writes a style to the document
+        // that hides the main page content and shows the login prompt overlay.
+        // This prevents any flash of protected content for non-logged-in users.
         if (sessionStorage.getItem('isLoggedIn') !== 'true') {
-            // If not logged in, redirect to the index/login page.
-            window.location.href = 'index.html';
+            document.write('<style>#page-content { display: none; } #login-prompt-overlay { display: flex; }</style>');
         }
     </script>
 
@@ -144,90 +145,102 @@
 </head>
 <body class="antialiased bg-gray-100 dark:bg-slate-900">
 
-    <!-- Header Section -->
-    <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex items-center justify-between sticky top-0 z-50">
-        <div class="flex items-center">
-            <img src="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png" alt="UPD Logo" class="mr-4 w-16 h-16 object-contain">
-            <h1 class="text-2xl md:text-3xl font-bold">UPD High Command</h1>
-        </div>
+    <!-- Login Prompt Overlay -->
+    <div id="login-prompt-overlay" class="fixed inset-0 bg-slate-900 z-[100] flex-col items-center justify-center text-white p-8 text-center hidden">
+        <img src="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png" alt="UPD Logo" class="w-24 h-24 object-contain mb-6">
+        <h1 class="text-3xl font-bold mb-2">Access Denied</h1>
+        <p class="text-slate-400 mb-8">You must be logged in to access the High Command Center.</p>
+        <a href="index.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition text-lg">
+            Proceed to Login
+        </a>
+    </div>
 
-        <div class="flex items-center">
-            <nav id="nav-links" class="hidden md:flex items-center">
-                <ul class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 text-sm font-medium">
-                    <li><a href="index.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Dashboard</a></li>
-                    <li><a href="report.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Report Generator</a></li>
-                    <li><a href="high-command.html" class="text-white bg-blue-700 font-semibold py-1 px-2 rounded-md">High Command</a></li>
-                </ul>
-            </nav>
-
-            <div class="flex items-center ml-4">
-                <button id="settings-btn" class="p-2 rounded-full hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                </button>
-                <button id="hamburgerBtn" class="hamburger-menu p-2 rounded-md hover:bg-white/10 focus:outline-none md:hidden ml-2">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-                </button>
+    <div id="page-content">
+        <!-- Header Section -->
+        <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex items-center justify-between sticky top-0 z-50">
+            <div class="flex items-center">
+                <img src="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png" alt="UPD Logo" class="mr-4 w-16 h-16 object-contain">
+                <h1 class="text-2xl md:text-3xl font-bold">UPD High Command</h1>
             </div>
-        </div>
-    </header>
 
-    <!-- Main Content -->
-    <main class="container mx-auto p-4 md:p-8">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="flex items-center">
+                <nav id="nav-links" class="hidden md:flex items-center">
+                    <ul class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 text-sm font-medium">
+                        <li><a href="index.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Dashboard</a></li>
+                        <li><a href="report.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Report Generator</a></li>
+                        <li><a href="high-command.html" class="text-white bg-blue-700 font-semibold py-1 px-2 rounded-md">High Command</a></li>
+                    </ul>
+                </nav>
 
-            <!-- Officer Login Management -->
-            <div class="lg:col-span-1 bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg">
-                <div id="officer-management-header" class="flex justify-between items-center mb-4 border-b pb-2 border-slate-200 dark:border-slate-700">
-                    <h2 class="text-2xl font-bold">Officer Management</h2>
-                    <button id="add-officer-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition hidden">Add Officer</button>
+                <div class="flex items-center ml-4">
+                    <button id="settings-btn" class="p-2 rounded-full hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    </button>
+                    <button id="hamburgerBtn" class="hamburger-menu p-2 rounded-md hover:bg-white/10 focus:outline-none md:hidden ml-2">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    </button>
                 </div>
+            </div>
+        </header>
 
-                <div id="personnel-list-container" class="space-y-3 max-h-[60vh] overflow-y-auto pr-2">
-                    <!-- Loading State -->
-                    <div id="personnel-loading" class="flex justify-center items-center h-48">
-                        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+        <!-- Main Content -->
+        <main class="container mx-auto p-4 md:p-8">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                <!-- Officer Login Management -->
+                <div class="lg:col-span-1 bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg">
+                    <div id="officer-management-header" class="flex justify-between items-center mb-4 border-b pb-2 border-slate-200 dark:border-slate-700">
+                        <h2 class="text-2xl font-bold">Officer Management</h2>
+                        <button id="add-officer-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition hidden">Add Officer</button>
                     </div>
-                    <!-- Personnel will be dynamically loaded here -->
-                </div>
-            </div>
 
-            <!-- View Reports -->
-            <div class="lg:col-span-2 bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg">
-                <h2 class="text-2xl font-bold mb-4 border-b pb-2 border-slate-200 dark:border-slate-700">View All Reports</h2>
-                <div id="reports-container" class="space-y-4 max-h-[70vh] overflow-y-auto pr-2">
-                    <!-- Loading State -->
-                    <div id="reports-loading" class="flex justify-center items-center h-48">
-                        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+                    <div id="personnel-list-container" class="space-y-3 max-h-[60vh] overflow-y-auto pr-2">
+                        <!-- Loading State -->
+                        <div id="personnel-loading" class="flex justify-center items-center h-48">
+                            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+                        </div>
+                        <!-- Personnel will be dynamically loaded here -->
                     </div>
-                    <!-- Reports will be injected here by JavaScript -->
+                </div>
+
+                <!-- View Reports -->
+                <div class="lg:col-span-2 bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg">
+                    <h2 class="text-2xl font-bold mb-4 border-b pb-2 border-slate-200 dark:border-slate-700">View All Reports</h2>
+                    <div id="reports-container" class="space-y-4 max-h-[70vh] overflow-y-auto pr-2">
+                        <!-- Loading State -->
+                        <div id="reports-loading" class="flex justify-center items-center h-48">
+                            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+                        </div>
+                        <!-- Reports will be injected here by JavaScript -->
+                    </div>
                 </div>
             </div>
-        </div>
-    </main>
+        </main>
 
-    <!-- Footer Section -->
-    <footer class="bg-slate-800 text-white py-10 px-6 md:px-12 mt-8">
-        <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-                <h4 class="text-xl font-semibold mb-4 text-slate-300">Internal Contacts</h4>
-                <ul class="space-y-2 text-sm">
-                    <li><a href="#" class="text-slate-400 hover:text-white hover:underline transition">Discord</a></li>
-                    <li><a href="#" class="text-slate-400 hover:text-white hover:underline transition">UPD Support</a></li>
-                </ul>
+        <!-- Footer Section -->
+        <footer class="bg-slate-800 text-white py-10 px-6 md:px-12 mt-8">
+            <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h4 class="text-xl font-semibold mb-4 text-slate-300">Internal Contacts</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="text-slate-400 hover:text-white hover:underline transition">Discord</a></li>
+                        <li><a href="#" class="text-slate-400 hover:text-white hover:underline transition">UPD Support</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-xl font-semibold mb-4 text-slate-300">Quick Access</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="text-slate-400 hover:text-white hover:underline transition">UPD SOP</a></li>
+                        <li><a href="#" class="text-slate-400 hover:text-white hover:underline transition">Disciplinary Guidelines</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-xl font-semibold mb-4 text-slate-300">System Information</h4>
+                    <p class="text-slate-500 text-sm">&copy; 2025 Unified Police Department Internal Systems.</p>
+                </div>
             </div>
-            <div>
-                <h4 class="text-xl font-semibold mb-4 text-slate-300">Quick Access</h4>
-                <ul class="space-y-2 text-sm">
-                    <li><a href="#" class="text-slate-400 hover:text-white hover:underline transition">UPD SOP</a></li>
-                    <li><a href="#" class="text-slate-400 hover:text-white hover:underline transition">Disciplinary Guidelines</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="text-xl font-semibold mb-4 text-slate-300">System Information</h4>
-                <p class="text-slate-500 text-sm">&copy; 2025 Unified Police Department Internal Systems.</p>
-            </div>
-        </div>
-    </footer>
+        </footer>
+    </div>
 
     <!-- MODALS -->
     <!-- Add/Edit Officer Modal -->
@@ -346,32 +359,19 @@
                 console.log("Firebase Initialized for High Command");
 
                 window.firebase.onAuthStateChanged(auth, (user) => {
-                    if (user) {
+                    if (user && !user.isAnonymous) {
                         userId = user.uid;
                         console.log("User is signed in with UID:", userId);
                         loadReportsFromFirestore();
                         loadPersonnel();
                         setPermissions();
                     } else {
-                        console.log("No user signed in.");
-                        // Redirect if not logged in and not on the login page itself
-                        if (window.location.pathname.indexOf('index.html') === -1) {
-                            // window.location.href = 'index.html';
-                        }
+                        console.log("No authenticated user found or user is anonymous.");
                     }
                 });
 
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    await window.firebase.signInWithCustomToken(auth, __initial_auth_token);
-                } else {
-                    // Only sign in anonymously if there's no other user session
-                    if (!auth.currentUser) {
-                        await window.firebase.signInAnonymously(auth);
-                    }
-                }
-
             } catch (e) {
-                console.error("Error initializing Firebase or authenticating:", e);
+                console.error("Error initializing Firebase:", e);
                 document.getElementById('reports-loading').innerHTML = '<p class="text-red-500">Could not connect to the database.</p>';
                 document.getElementById('personnel-loading').innerHTML = '<p class="text-red-500">Could not connect to the database.</p>';
             }
