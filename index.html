@@ -374,19 +374,30 @@
                     const userDocSnap = await window.getDoc(userDocRef);
 
                     let userName = user.email; // Default to email
+                    let userRole = 'Officer'; // Default role
                     highCommandLink.classList.add('hidden'); // Hide by default
 
                     if (userDocSnap.exists()) {
                         const userData = userDocSnap.data();
                         userName = userData.name || user.email; // Use name from DB, fallback to email
+                        userRole = userData.role || 'Officer';
 
                         // Check for High Command role
-                        if (userData.role === 'High Command') {
+                        if (userRole === 'High Command') {
                             highCommandLink.classList.remove('hidden');
                         }
                     } else {
                         console.log("No such user document!");
                     }
+
+                    const userProfile = {
+                        uid: user.uid,
+                        name: userName,
+                        email: user.email,
+                        role: userRole
+                    };
+                    localStorage.setItem('userProfile', JSON.stringify(userProfile));
+
 
                     loginButton.classList.add('hidden');
                     userInfoDiv.classList.remove('hidden');
@@ -395,6 +406,7 @@
 
                 } else {
                     // User is logged out
+                    localStorage.removeItem('userProfile');
                     loginButton.classList.remove('hidden');
                     userInfoDiv.classList.add('hidden');
                     userInfoDiv.classList.remove('flex');
