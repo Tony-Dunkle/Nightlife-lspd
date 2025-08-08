@@ -335,17 +335,15 @@
         // --- Firebase Setup ---
         let db, auth, userId;
 
-        const firebaseConfig = typeof __firebase_config !== 'undefined'
-            ? JSON.parse(__firebase_config)
-            : {
-                apiKey: "AIzaSyDU7DRAxCzqu81DTa7k0DXaBRcMpk0sElc",
-                authDomain: "upd-system.firebaseapp.com",
-                projectId: "upd-system",
-                storageBucket: "upd-system.appspot.com",
-                messagingSenderId: "28223003678",
-                appId: "1:28223003678:web:ded0f28a8d0ca717d3839d", // Example App ID
-                measurementId: "G-XXXXXXXXXX" // Optional
-            };
+        const firebaseConfig = {
+            apiKey: "AIzaSyDU7DRAxCzqu81DTa7k0DXaBRcMpk0sElc",
+            authDomain: "upd-system.firebaseapp.com",
+            projectId: "upd-system",
+            storageBucket: "upd-system.appspot.com",
+            messagingSenderId: "28223003678",
+            appId: "1:28223003678:web:a19a9a8eb33fe74202220f",
+            measurementId: "G-83NX0KXZ1Y"
+        };
 
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
@@ -414,12 +412,12 @@
         };
 
         const loadPersonnel = () => {
-             if (!db) return;
-             const q = window.firebase.query(personnelCollectionRef());
-             window.firebase.onSnapshot(q, (snapshot) => {
+            if (!db) return;
+            const q = window.firebase.query(personnelCollectionRef());
+            window.firebase.onSnapshot(q, (snapshot) => {
                 personnelLoading.style.display = 'none';
                 personnelListContainer.innerHTML = '';
-                if(snapshot.empty) {
+                if (snapshot.empty) {
                     personnelListContainer.innerHTML = '<p class="text-center text-slate-500 dark:text-slate-400">No personnel found.</p>';
                     return;
                 }
@@ -432,27 +430,27 @@
                     const toggleButtonColor = person.status === 'active' ? 'bg-orange-500 hover:bg-orange-600' : 'bg-green-600 hover:bg-green-700';
 
                     personEl.innerHTML = `
-                        <div class="flex items-center justify-between">
-                            <div>
-                                <p class="font-semibold">${person.name}</p>
-                                <p class="text-sm text-slate-500 dark:text-slate-400">${person.email || ''}</p>
-                                <p class="text-sm text-slate-500 dark:text-slate-400">${person.rank} - ${person.role}</p>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="font-semibold">${person.name}</p>
+                                    <p class="text-sm text-slate-500 dark:text-slate-400">${person.email || ''}</p>
+                                    <p class="text-sm text-slate-500 dark:text-slate-400">${person.rank} - ${person.role}</p>
+                                </div>
+                                <p class="text-sm font-bold ${statusColor}">${person.status.charAt(0).toUpperCase() + person.status.slice(1)}</p>
                             </div>
-                            <p class="text-sm font-bold ${statusColor}">${person.status.charAt(0).toUpperCase() + person.status.slice(1)}</p>
-                        </div>
-                        <div class="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-slate-200 dark:border-slate-600">
-                            <button data-id="${person.id}" class="reset-pass-btn text-xs bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-2 rounded-md transition">Reset Pass</button>
-                            <button data-id="${person.id}" data-status="${person.status}" class="toggle-status-btn text-xs ${toggleButtonColor} text-white font-bold py-1 px-2 rounded-md transition">${toggleButtonText}</button>
-                            <button data-id="${person.id}" data-name="${person.name}" class="remove-btn text-xs bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-md transition">Remove</button>
-                        </div>
-                    `;
+                            <div class="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-slate-200 dark:border-slate-600">
+                                <button data-id="${person.id}" class="reset-pass-btn text-xs bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-2 rounded-md transition">Reset Pass</button>
+                                <button data-id="${person.id}" data-status="${person.status}" class="toggle-status-btn text-xs ${toggleButtonColor} text-white font-bold py-1 px-2 rounded-md transition">${toggleButtonText}</button>
+                                <button data-id="${person.id}" data-name="${person.name}" class="remove-btn text-xs bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-md transition">Remove</button>
+                            </div>
+                        `;
                     personnelListContainer.appendChild(personEl);
                 });
-             }, (error) => {
+            }, (error) => {
                 console.error("Error loading personnel:", error);
                 personnelLoading.style.display = 'none';
                 personnelListContainer.innerHTML = '<p class="text-red-500">Failed to load personnel.</p>';
-             });
+            });
         };
 
         personnelListContainer.addEventListener('click', (e) => {
@@ -643,10 +641,10 @@
                     const reportDate = new Date(reportData.createdAt).toLocaleString();
 
                     reportEl.innerHTML = `
-                        <h3 class="font-bold text-lg text-blue-600 dark:text-blue-400">${reportTitle}</h3>
-                        <p class="text-sm text-slate-600 dark:text-slate-300">Filed by: ${reportingOfficer}</p>
-                        <p class="text-xs text-slate-400 dark:text-slate-500">Date: ${reportDate}</p>
-                    `;
+                            <h3 class="font-bold text-lg text-blue-600 dark:text-blue-400">${reportTitle}</h3>
+                            <p class="text-sm text-slate-600 dark:text-slate-300">Filed by: ${reportingOfficer}</p>
+                            <p class="text-xs text-slate-400 dark:text-slate-500">Date: ${reportDate}</p>
+                        `;
 
                     reportEl.addEventListener('click', () => openReportModal(reportData));
                     reportsContainer.appendChild(reportEl);
@@ -678,7 +676,7 @@
 
         reportDetailModal.addEventListener('click', (e) => {
             if (e.target === reportDetailModal) {
-                 reportDetailModal.classList.remove('is-open');
+                reportDetailModal.classList.remove('is-open');
             }
         });
 
