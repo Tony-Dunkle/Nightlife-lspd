@@ -30,6 +30,7 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
+        window.firebaseApp = app;
         window.firebaseAuth = auth;
         window.db = db;
         window.signInWithEmailAndPassword = signInWithEmailAndPassword;
@@ -518,9 +519,8 @@
                 loadUpdates();
                 sendDiscordLoadNotification();
 
-                if (window.firebaseAuth) {
-                    window.onAuthStateChanged(window.firebaseAuth, updateLoginUI);
-                }
+                // Set up the auth state listener immediately
+                window.onAuthStateChanged(window.firebaseAuth, updateLoginUI);
 
 
                 const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
