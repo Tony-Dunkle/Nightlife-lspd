@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPD MDT - High Command</title>
+    <link rel="icon" href="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png" type="image/png">
+
+    <!-- General Meta Tags -->
+    <meta name="description" content="High Command dashboard for the Unified Police Department to manage personnel and review reports.">
+    <meta name="author" content="Unified Police Department">
+    <meta name="keywords" content="police, high command, UPD, law enforcement, MDT, admin">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Login Check -->
+    <script>
+        // This script checks if the user is logged in by looking at sessionStorage.
+        // It should run before the rest of the page loads to prevent content flashing.
+        if (sessionStorage.getItem('isLoggedIn') !== 'true') {
+            // If not logged in, redirect to the index/login page.
+            window.location.href = 'index.html';
+        }
+    </script>
+
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, query, onSnapshot, addDoc, updateDoc, deleteDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        window.firebase = {
+            initializeApp,
+            getAuth,
+            signInAnonymously,
+            onAuthStateChanged,
+            signInWithCustomToken,
+            createUserWithEmailAndPassword,
+            getFirestore,
+            doc,
+            getDoc,
+            collection,
+            query,
+            onSnapshot,
+            addDoc,
+            updateDoc,
+            deleteDoc,
+            setDoc
+        };
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display.swap');
+
+        /* CSS variables for theming */
+        :root {
+            --bg-primary: #f8fafc; /* slate-50 */
+            --bg-secondary: #ffffff; /* white */
+            --bg-tertiary: #f1f5f9; /* slate-100 */
+            --text-primary: #0f172a; /* slate-900 */
+            --text-secondary: #475569; /* slate-600 */
+            --border-color: #e2e8f0; /* slate-200 */
+            --accent-color: #3b82f6; /* blue-500 */
+            --modal-bg: rgba(0,0,0,0.7);
+            --modal-content-bg: #ffffff;
+        }
+
+        html.dark {
+            --bg-primary: #0f172a; /* slate-900 */
+            --bg-secondary: #1e293b; /* slate-800 */
+            --bg-tertiary: #334155; /* slate-700 */
+            --text-primary: #f1f5f9; /* slate-100 */
+            --text-secondary: #94a3b8; /* slate-400 */
+            --border-color: #334155; /* slate-700 */
+            --accent-color: #60a5fa; /* blue-400 */
+            --modal-content-bg: #1e293b; /* slate-800 */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Mobile Nav Specific Styles */
+        #nav-links.nav-mobile-active {
+            display: flex !important;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: #1e40af;
+            flex-direction: column;
+            padding: 1rem;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+
+        html.dark #nav-links.nav-mobile-active {
+            background-color: #111827;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+            .modal-overlay.is-open {
+                opacity: 1;
+                pointer-events: auto;
+            }
+
+        .modal-content {
+            background-color: var(--modal-content-bg);
+            color: var(--text-primary);
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 90%;
+            width: 80vw;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+            transform: translateY(-20px);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .modal-overlay.is-open .modal-content {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="antialiased bg-gray-100 dark:bg-slate-900">
+
+    <!-- Header Section -->
+    <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex items-center justify-between sticky top-0 z-50">
+        <div class="flex items-center">
+            <img src="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png" alt="UPD Logo" class="mr-4 w-16 h-16 object-contain">
+            <h1 class="text-2xl md:text-3xl font-bold">UPD High Command</h1>
+        </div>
+
+        <div class="flex items-center">
+            <nav id="nav-links" class="hidden md:flex items-center">
+                <ul class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 text-sm font-medium">
+                    <li><a href="index.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Dashboard</a></li>
+                    <li><a href="report.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Report Generator</a></li>
+                    <li><a href="high-command.html" class="text-white bg-blue-700 font-semibold py-1 px-2 rounded-md">High Command</a></li>
+                </ul>
+            </nav>
+
+            <div class="flex items-center ml-4">
+                <button id="settings-btn" class="p-2 rounded-full hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                </button>
+                <button id="hamburgerBtn" class="hamburger-menu p-2 rounded-md hover:bg-white/10 focus:outline-none md:hidden ml-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto p-4 md:p-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+            <!-- Officer Login Management -->
+            <div class="lg:col-span-1 bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg">
+                <div class="flex justify-between items-center mb-4 border-b pb-2 border-slate-200 dark:border-slate-700">
+                    <h2 class="text-2xl font-bold">Officer Management</h2>
+                    <button id="add-officer-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition">Add Officer</button>
+                </div>
+
+                <!-- Role Simulation Dropdown -->
+                <div class="mb-4">
+                    <label for="simulated-role" class="block text-sm font-medium text-slate-700 dark:text-slate-300">Simulate Logged-in As:</label>
+                    <select id="simulated-role" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 dark:border-slate-600 dark:bg-slate-700 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md">
+                        <option value="Website Account Manager">Website Account Manager</option>
+                        <option value="Account Manager">Account Manager</option>
+                    </select>
+                </div>
+
+                <div id="personnel-list-container" class="space-y-3 max-h-[60vh] overflow-y-auto pr-2">
+                    <!-- Loading State -->
+                    <div id="personnel-loading" class="flex justify-center items-center h-48">
+                        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+                    </div>
+                    <!-- Personnel will be dynamically loaded here -->
+                </div>
+            </div>
+
+            <!-- View Reports -->
+            <div class="lg:col-span-2 bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg">
+                <h2 class="text-2xl font-bold mb-4 border-b pb-2 border-slate-200 dark:border-slate-700">View All Reports</h2>
+                <div id="reports-container" class="space-y-4 max-h-[70vh] overflow-y-auto pr-2">
+                    <!-- Loading State -->
+                    <div id="reports-loading" class="flex justify-center items-center h-48">
+                        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+                    </div>
+                    <!-- Reports will be injected here by JavaScript -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Section -->
+    <footer class="bg-slate-800 text-white py-10 px-6 md:px-12 mt-8">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+                <h4 class="text-xl font-semibold mb-4 text-slate-300">Internal Contacts</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="text-slate-400 hover:text-white hover:underline transition">Discord</a></li>
+                    <li><a href="#" class="text-slate-400 hover:text-white hover:underline transition">UPD Support</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-xl font-semibold mb-4 text-slate-300">Quick Access</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="#" class="text-slate-400 hover:text-white hover:underline transition">UPD SOP</a></li>
+                    <li><a href="#" class="text-slate-400 hover:text-white hover:underline transition">Disciplinary Guidelines</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-xl font-semibold mb-4 text-slate-300">System Information</h4>
+                <p class="text-slate-500 text-sm">&copy; 2025 Unified Police Department Internal Systems.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- MODALS -->
+    <!-- Add/Edit Officer Modal -->
+    <div id="add-officer-modal" class="modal-overlay">
+        <div class="modal-content !w-auto !max-w-md">
+            <h2 class="text-2xl font-bold mb-6">Add New Officer</h2>
+            <form id="add-officer-form" class="space-y-4">
+                <div>
+                    <label for="officer-name" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Officer Name</label>
+                    <input type="text" id="officer-name" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="officer-email" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Email</label>
+                    <input type="email" id="officer-email" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="officer-role" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Role</label>
+                    <select id="officer-role" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <!-- Options will be populated by JS -->
+                    </select>
+                </div>
+                <div>
+                    <label for="officer-rank" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Rank</label>
+                    <input type="text" id="officer-rank" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" id="cancel-add-officer-btn" class="bg-slate-200 dark:bg-slate-600 hover:bg-slate-300 dark:hover:bg-slate-500 text-slate-800 dark:text-slate-200 font-bold py-2 px-4 rounded-lg transition">Cancel</button>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition">Save Officer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Show Temporary Password Modal -->
+    <div id="show-password-modal" class="modal-overlay">
+        <div class="modal-content !w-auto !max-w-md text-center">
+            <h2 class="text-2xl font-bold mb-4">Officer Account Created!</h2>
+            <p class="mb-4 text-slate-600 dark:text-slate-400">Please provide the following temporary password to the officer. They will be required to change it upon first login.</p>
+            <div class="relative bg-slate-100 dark:bg-slate-700 p-3 rounded-lg">
+                <input id="temp-password-display" type="text" readonly class="w-full bg-transparent text-center font-mono text-lg font-bold">
+                <button id="copy-password-btn" class="absolute top-1/2 right-2 -translate-y-1/2 p-2 rounded-md hover:bg-slate-200 dark:hover:bg-slate-600">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                </button>
+            </div>
+            <p id="copy-feedback" class="text-sm text-green-500 h-5 mt-1"></p>
+            <button id="close-password-modal-btn" class="mt-4 w-full bg-slate-600 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded-lg transition">Close</button>
+        </div>
+    </div>
+
+    <!-- Remove Confirmation Modal -->
+    <div id="confirm-remove-modal" class="modal-overlay">
+        <div class="modal-content !w-auto !max-w-md">
+            <h2 class="text-xl font-bold mb-4">Confirm Removal</h2>
+            <p id="confirm-remove-text" class="mb-6 text-slate-600 dark:text-slate-400">Are you sure you want to remove this officer? This action cannot be undone.</p>
+            <div class="flex justify-end space-x-4">
+                <button id="confirm-cancel-btn" class="bg-slate-200 dark:bg-slate-600 hover:bg-slate-300 dark:hover:bg-slate-500 text-slate-800 dark:text-slate-200 font-bold py-2 px-4 rounded-lg transition">Cancel</button>
+                <button id="confirm-ok-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition">Remove</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Report Detail Modal -->
+    <div id="report-detail-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h2 id="modal-report-title" class="text-2xl font-bold">Report Details</h2>
+                <button id="close-report-modal-btn" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div id="modal-report-body" class="prose dark:prose-invert max-w-none">
+                <!-- Report content will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal-overlay">
+        <div class="modal-content !w-auto !max-w-md">
+            <h2 class="text-2xl font-bold mb-6">Settings</h2>
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold mb-3">Website Theme</h3>
+                <div class="space-y-2">
+                    <label class="flex items-center"><input type="radio" name="theme" value="light" class="form-radio h-4 w-4 text-blue-600"><span class="ml-2">Light Mode</span></label>
+                    <label class="flex items-center"><input type="radio" name="theme" value="dark" class="form-radio h-4 w-4 text-blue-600"><span class="ml-2">Dark Mode</span></label>
+                </div>
+            </div>
+            <div class="mt-8 text-right">
+                <button id="close-settings-btn" class="bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-200 px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition">Close</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="module">
+        // --- Firebase Setup ---
+        let db, auth, userId;
+
+        const firebaseConfig = typeof __firebase_config !== 'undefined'
+            ? JSON.parse(__firebase_config)
+            : {
+                apiKey: "AIzaSyDU7DRAxCzqu81DTa7k0DXaBRcMpk0sElc",
+                authDomain: "upd-system.firebaseapp.com",
+                projectId: "upd-system",
+                storageBucket: "upd-system.appspot.com",
+                messagingSenderId: "28223003678",
+                appId: "1:28223003678:web:ded0f28a8d0ca717d3839d", // Example App ID
+                measurementId: "G-XXXXXXXXXX" // Optional
+            };
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        const initializeFirebase = async () => {
+            try {
+                const app = window.firebase.initializeApp(firebaseConfig);
+                auth = window.firebase.getAuth(app);
+                db = window.firebase.getFirestore(app);
+                console.log("Firebase Initialized for High Command");
+
+                window.firebase.onAuthStateChanged(auth, (user) => {
+                    if (user) {
+                        userId = user.uid;
+                        console.log("User is signed in with UID:", userId);
+                        loadReportsFromFirestore();
+                        loadPersonnel(); // Load personnel data
+                    } else {
+                        console.log("No user signed in. Attempting to sign in.");
+                    }
+                });
+
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await window.firebase.signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await window.firebase.signInAnonymously(auth);
+                }
+
+            } catch (e) {
+                console.error("Error initializing Firebase or authenticating:", e);
+                document.getElementById('reports-loading').innerHTML = '<p class="text-red-500">Could not connect to the database.</p>';
+                document.getElementById('personnel-loading').innerHTML = '<p class="text-red-500">Could not connect to the database.</p>';
+            }
+        };
+
+        initializeFirebase();
+
+        // --- Personnel Management ---
+        const personnelCollectionRef = () => window.firebase.collection(db, `artifacts/${appId}/public/data/personnel`);
+        const personnelListContainer = document.getElementById('personnel-list-container');
+        const personnelLoading = document.getElementById('personnel-loading');
+        const addOfficerModal = document.getElementById('add-officer-modal');
+        const addOfficerForm = document.getElementById('add-officer-form');
+        const cancelAddOfficerBtn = document.getElementById('cancel-add-officer-btn');
+        const addOfficerBtn = document.getElementById('add-officer-btn');
+        const showPasswordModal = document.getElementById('show-password-modal');
+        const tempPasswordDisplay = document.getElementById('temp-password-display');
+        const closePasswordModalBtn = document.getElementById('close-password-modal-btn');
+        const copyPasswordBtn = document.getElementById('copy-password-btn');
+        const simulatedRoleSelect = document.getElementById('simulated-role');
+        const officerRoleSelect = document.getElementById('officer-role');
+        const confirmRemoveModal = document.getElementById('confirm-remove-modal');
+        let officerToRemoveId = null;
+
+        const rolesByManager = {
+            "Website Account Manager": ["Account Manager", "Officer", "FTO", "Subdivision Lead"],
+            "Account Manager": ["Officer", "FTO", "Subdivision Lead"]
+        };
+
+        const generatePassword = (length = 12) => {
+            const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
+            let password = "";
+            for (let i = 0, n = charset.length; i < length; ++i) {
+                password += charset.charAt(Math.floor(Math.random() * n));
+            }
+            return password;
+        };
+
+        const loadPersonnel = () => {
+             if (!db) return;
+             const q = window.firebase.query(personnelCollectionRef());
+             window.firebase.onSnapshot(q, (snapshot) => {
+                personnelLoading.style.display = 'none';
+                personnelListContainer.innerHTML = '';
+                if(snapshot.empty) {
+                    personnelListContainer.innerHTML = '<p class="text-center text-slate-500 dark:text-slate-400">No personnel found.</p>';
+                    return;
+                }
+                snapshot.forEach(doc => {
+                    const person = { id: doc.id, ...doc.data() };
+                    const personEl = document.createElement('div');
+                    personEl.className = 'p-3 bg-slate-50 dark:bg-slate-700 rounded-lg shadow-sm';
+                    const statusColor = person.status === 'active' ? 'text-green-500' : 'text-red-500';
+                    const toggleButtonText = person.status === 'active' ? 'Disable' : 'Enable';
+                    const toggleButtonColor = person.status === 'active' ? 'bg-orange-500 hover:bg-orange-600' : 'bg-green-600 hover:bg-green-700';
+
+                    personEl.innerHTML = `
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <p class="font-semibold">${person.name}</p>
+                                <p class="text-sm text-slate-500 dark:text-slate-400">${person.email || ''}</p>
+                                <p class="text-sm text-slate-500 dark:text-slate-400">${person.rank} - ${person.role}</p>
+                            </div>
+                            <p class="text-sm font-bold ${statusColor}">${person.status.charAt(0).toUpperCase() + person.status.slice(1)}</p>
+                        </div>
+                        <div class="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-slate-200 dark:border-slate-600">
+                            <button data-id="${person.id}" class="reset-pass-btn text-xs bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-2 rounded-md transition">Reset Pass</button>
+                            <button data-id="${person.id}" data-status="${person.status}" class="toggle-status-btn text-xs ${toggleButtonColor} text-white font-bold py-1 px-2 rounded-md transition">${toggleButtonText}</button>
+                            <button data-id="${person.id}" data-name="${person.name}" class="remove-btn text-xs bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-md transition">Remove</button>
+                        </div>
+                    `;
+                    personnelListContainer.appendChild(personEl);
+                });
+             }, (error) => {
+                console.error("Error loading personnel:", error);
+                personnelLoading.style.display = 'none';
+                personnelListContainer.innerHTML = '<p class="text-red-500">Failed to load personnel.</p>';
+             });
+        };
+
+        personnelListContainer.addEventListener('click', (e) => {
+            const target = e.target.closest('button');
+            if (!target) return;
+
+            if (target.classList.contains('reset-pass-btn')) {
+                resetPassword(target.dataset.id);
+            }
+            if (target.classList.contains('toggle-status-btn')) {
+                toggleStatus(target.dataset.id, target.dataset.status);
+            }
+            if (target.classList.contains('remove-btn')) {
+                openConfirmRemoveModal(target.dataset.id, target.dataset.name);
+            }
+        });
+
+        const resetPassword = async (personId) => {
+            const newPassword = generatePassword();
+            const personDocRef = window.firebase.doc(db, `artifacts/${appId}/public/data/personnel`, personId);
+            try {
+                // This only updates the password in the database, not in Firebase Auth.
+                // A full implementation would require a Cloud Function to update the auth user.
+                await window.firebase.updateDoc(personDocRef, { tempPassword: newPassword });
+                tempPasswordDisplay.value = newPassword;
+                document.querySelector('#show-password-modal h2').textContent = 'Password Reset!';
+                showPasswordModal.classList.add('is-open');
+            } catch (error) {
+                console.error("Error resetting password:", error);
+                alert("Failed to reset password.");
+            }
+        };
+
+        const toggleStatus = async (personId, currentStatus) => {
+            const newStatus = currentStatus === 'active' ? 'disabled' : 'active';
+            const personDocRef = window.firebase.doc(db, `artifacts/${appId}/public/data/personnel`, personId);
+            try {
+                await window.firebase.updateDoc(personDocRef, { status: newStatus });
+            } catch (error) {
+                console.error("Error updating status:", error);
+                alert("Failed to update status.");
+            }
+        };
+
+        const populateRoleDropdown = () => {
+            const managerRole = simulatedRoleSelect.value;
+            const roles = rolesByManager[managerRole] || [];
+            officerRoleSelect.innerHTML = '';
+            roles.forEach(role => {
+                const option = document.createElement('option');
+                option.value = role;
+                option.textContent = role;
+                officerRoleSelect.appendChild(option);
+            });
+        };
+
+        addOfficerBtn.addEventListener('click', () => {
+            populateRoleDropdown();
+            addOfficerModal.classList.add('is-open')
+        });
+        cancelAddOfficerBtn.addEventListener('click', () => addOfficerModal.classList.remove('is-open'));
+        addOfficerModal.addEventListener('click', e => e.target === addOfficerModal && addOfficerModal.classList.remove('is-open'));
+
+        addOfficerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('officer-name').value;
+            const email = document.getElementById('officer-email').value;
+            const role = document.getElementById('officer-role').value;
+            const rank = document.getElementById('officer-rank').value;
+            const password = generatePassword();
+
+            try {
+                // Step 1: Create the user in Firebase Authentication
+                const userCredential = await window.firebase.createUserWithEmailAndPassword(auth, email, password);
+                const newUserId = userCredential.user.uid;
+
+                // Step 2: Create the user profile in Firestore, using the UID from Auth as the document ID
+                const userDocRef = window.firebase.doc(db, `artifacts/${appId}/public/data/personnel`, newUserId);
+                await window.firebase.setDoc(userDocRef, {
+                    name,
+                    email,
+                    role,
+                    rank,
+                    status: 'active',
+                    createdAt: new Date().toISOString(),
+                    createdBy: userId // Save the UID of the admin who created the account
+                });
+
+                addOfficerForm.reset();
+                addOfficerModal.classList.remove('is-open');
+                tempPasswordDisplay.value = password;
+                document.querySelector('#show-password-modal h2').textContent = 'Officer Account Created!';
+                showPasswordModal.classList.add('is-open');
+
+            } catch (error) {
+                console.error("Error adding officer:", error);
+                // Provide more specific feedback to the user
+                if (error.code === 'auth/email-already-in-use') {
+                    alert('This email address is already in use by another officer.');
+                } else if (error.code === 'auth/invalid-email') {
+                    alert('Please enter a valid email address.');
+                } else {
+                    alert("Failed to add officer. See console for details.");
+                }
+            }
+        });
+
+        closePasswordModalBtn.addEventListener('click', () => showPasswordModal.classList.remove('is-open'));
+        showPasswordModal.addEventListener('click', e => e.target === showPasswordModal && showPasswordModal.classList.remove('is-open'));
+        copyPasswordBtn.addEventListener('click', () => {
+            const passwordInput = document.getElementById('temp-password-display');
+            passwordInput.select();
+            passwordInput.setSelectionRange(0, 99999);
+            try {
+                document.execCommand('copy');
+                document.getElementById('copy-feedback').textContent = 'Copied!';
+                setTimeout(() => document.getElementById('copy-feedback').textContent = '', 2000);
+            } catch (err) {
+                console.error('Failed to copy password: ', err);
+                document.getElementById('copy-feedback').textContent = 'Failed to copy!';
+                setTimeout(() => document.getElementById('copy-feedback').textContent = '', 2000);
+            }
+        });
+
+        // Remove Officer Logic
+        const openConfirmRemoveModal = (id, name) => {
+            officerToRemoveId = id;
+            document.getElementById('confirm-remove-text').textContent = `Are you sure you want to remove ${name}? This action cannot be undone.`;
+            confirmRemoveModal.classList.add('is-open');
+        };
+
+        const closeConfirmRemoveModal = () => {
+            officerToRemoveId = null;
+            confirmRemoveModal.classList.remove('is-open');
+        };
+
+        const removeOfficer = async () => {
+            if (!officerToRemoveId) return;
+            try {
+                // Note: This only removes the database record. A full implementation
+                // would require a Cloud Function to delete the user from Firebase Auth as well.
+                const personDocRef = window.firebase.doc(db, `artifacts/${appId}/public/data/personnel`, officerToRemoveId);
+                await window.firebase.deleteDoc(personDocRef);
+                closeConfirmRemoveModal();
+            } catch (error) {
+                console.error("Error removing officer:", error);
+                alert("Failed to remove officer.");
+            }
+        };
+
+        document.getElementById('confirm-cancel-btn').addEventListener('click', closeConfirmRemoveModal);
+        document.getElementById('confirm-ok-btn').addEventListener('click', removeOfficer);
+        confirmRemoveModal.addEventListener('click', e => e.target === confirmRemoveModal && closeConfirmRemoveModal());
+
+        // --- Firestore Report Loading ---
+        const loadReportsFromFirestore = () => {
+            if (!db) return;
+            const reportsContainer = document.getElementById('reports-container');
+            const reportsLoading = document.getElementById('reports-loading');
+
+            const reportsCollection = window.firebase.collection(db, `artifacts/${appId}/public/data/reports`);
+            const q = window.firebase.query(reportsCollection);
+
+            window.firebase.onSnapshot(q, (querySnapshot) => {
+                reportsLoading.style.display = 'none';
+                reportsContainer.innerHTML = '';
+
+                if (querySnapshot.empty) {
+                    reportsContainer.innerHTML = '<p class="text-center text-slate-500 dark:text-slate-400">No reports found in the database.</p>';
+                    return;
+                }
+
+                const reports = [];
+                querySnapshot.forEach(doc => {
+                    reports.push({ id: doc.id, ...doc.data() });
+                });
+
+                reports.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+
+                reports.forEach(report => {
+                    const reportData = report;
+                    const reportEl = document.createElement('div');
+                    reportEl.className = 'p-4 bg-slate-50 dark:bg-slate-700 rounded-lg shadow-sm cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-600 transition';
+                    reportEl.dataset.reportId = report.id;
+
+                    const reportTitle = reportData.reportFields?.caseTitle || 'Untitled Report';
+                    const reportingOfficer = reportData.reportLists?.['officers-list']?.match(/value="([^"]+)"/)?.[1] || 'Unknown Officer';
+                    const reportDate = new Date(reportData.createdAt).toLocaleString();
+
+                    reportEl.innerHTML = `
+                        <h3 class="font-bold text-lg text-blue-600 dark:text-blue-400">${reportTitle}</h3>
+                        <p class="text-sm text-slate-600 dark:text-slate-300">Filed by: ${reportingOfficer}</p>
+                        <p class="text-xs text-slate-400 dark:text-slate-500">Date: ${reportDate}</p>
+                    `;
+
+                    reportEl.addEventListener('click', () => openReportModal(reportData));
+                    reportsContainer.appendChild(reportEl);
+                });
+
+            }, (error) => {
+                console.error("Error fetching reports: ", error);
+                reportsLoading.style.display = 'none';
+                reportsContainer.innerHTML = '<p class="text-center text-red-500">Failed to load reports. See console for details.</p>';
+            });
+        };
+
+        // --- Modal Logic ---
+        const reportDetailModal = document.getElementById('report-detail-modal');
+        const modalReportTitle = document.getElementById('modal-report-title');
+        const modalReportBody = document.getElementById('modal-report-body');
+        const closeReportModalBtn = document.getElementById('close-report-modal-btn');
+
+        const openReportModal = (reportData) => {
+            modalReportTitle.textContent = reportData.reportFields?.caseTitle || 'Untitled Report';
+            const description = reportData.reportFields?.['report-description'] || 'No description available.';
+            modalReportBody.innerHTML = `<pre class="whitespace-pre-wrap font-sans">${description}</pre>`;
+            reportDetailModal.classList.add('is-open');
+        };
+
+        closeReportModalBtn.addEventListener('click', () => {
+            reportDetailModal.classList.remove('is-open');
+        });
+
+        reportDetailModal.addEventListener('click', (e) => {
+            if (e.target === reportDetailModal) {
+                 reportDetailModal.classList.remove('is-open');
+            }
+        });
+
+        // --- General UI Logic (Theme, Mobile Nav) ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const settingsModal = document.getElementById('settings-modal');
+            const themeRadios = document.querySelectorAll('input[name="theme"]');
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const navLinks = document.getElementById('nav-links');
+            const settingsBtn = document.getElementById('settings-btn');
+            const closeSettingsBtn = document.getElementById('close-settings-btn');
+
+            const applyTheme = (theme) => {
+                if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                    themeRadios.forEach(radio => radio.value === 'dark' ? radio.checked = true : false);
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    themeRadios.forEach(radio => radio.value === 'light' ? radio.checked = true : false);
+                }
+            };
+
+            const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            applyTheme(savedTheme);
+
+            themeRadios.forEach(radio => radio.addEventListener('change', (e) => {
+                localStorage.setItem('theme', e.target.value);
+                applyTheme(e.target.value);
+            }));
+
+            hamburgerBtn.addEventListener('click', (e) => { e.stopPropagation(); navLinks.classList.toggle('nav-mobile-active'); });
+            settingsBtn.addEventListener('click', () => settingsModal.classList.add('is-open'));
+            closeSettingsBtn.addEventListener('click', () => settingsModal.classList.remove('is-open'));
+            settingsModal.addEventListener('click', (e) => {
+                if (e.target === settingsModal) {
+                    settingsModal.classList.remove('is-open');
+                }
+            });
+
+            // Add event listener for the role simulation
+            simulatedRoleSelect.addEventListener('change', populateRoleDropdown);
+        });
+
+    </script>
+</body>
+</html>
