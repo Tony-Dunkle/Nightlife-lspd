@@ -414,6 +414,7 @@
                 }
             };
 
+            window.onAuthStateChanged(window.firebaseAuth, updateLoginUI);
 
             const loadUpdates = async () => {
                 const updatesSection = document.getElementById('updatesSection');
@@ -518,10 +519,6 @@
                 generateQuickLinks();
                 loadUpdates();
                 sendDiscordLoadNotification();
-
-                // Set up the auth state listener immediately
-                window.onAuthStateChanged(window.firebaseAuth, updateLoginUI);
-
 
                 const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
                 applyTheme(savedTheme);
