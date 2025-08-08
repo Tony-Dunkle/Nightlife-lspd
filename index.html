@@ -11,6 +11,7 @@
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         setTimeout(() => {
             // Prioritize the platform-provided config, but use the hardcoded one as a fallback.
@@ -28,11 +29,15 @@
             // Initialize Firebase
             const app = initializeApp(firebaseConfig);
             const auth = getAuth(app);
+            const db = getFirestore(app);
 
             window.firebaseAuth = auth;
+            window.db = db;
             window.signInWithEmailAndPassword = signInWithEmailAndPassword;
             window.onAuthStateChanged = onAuthStateChanged;
             window.signOut = signOut;
+            window.doc = doc;
+            window.getDoc = getDoc;
         }, 500); // 500ms delay
     </script>
     <style>
@@ -221,6 +226,10 @@
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         <span class="ml-3">Common Information</span>
                     </a>
+                    <a id="highCommandLink" href="highcommand.html" class="hidden mt-1 flex items-center px-3 py-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.789-2.75 9.566-1.74 2.777-2.5 4.434-2.5 4.434H12M12 11c0 3.517 1.009 6.789 2.75 9.566 1.74 2.777 2.5 4.434 2.5 4.434H12M12 11v-1.143c0-1.061-.416-2.078-1.172-2.834l-1.656-1.657a4.006 4.006 0 00-5.656 0l-1.657 1.657A4.006 4.006 0 002 8.857V11m10-11v-1.143c0-1.061.416-2.078 1.172-2.834l1.656-1.657a4.006 4.006 0 015.656 0l1.657 1.657A4.006 4.006 0 0122 8.857V11"></path></svg>
+                        <span class="ml-3">High Command</span>
+                    </a>
                 </div>
             </nav>
         </aside>
@@ -297,14 +306,6 @@
 
     <script type="module">
         (() => {
-            // --- CONFIGURATION ---
-            const quickLinks = [
-                { title: "Standard Operating Procedures", desc: "Latest departmental protocols and guidelines.", href: "SOP.html", linkText: "Browse SOPs" },
-                { title: "Training & Development", desc: "Upcoming courses, certifications, and resources.", href: "training.html", linkText: "View Schedule" },
-                { title: "Internal Forms & Requests", desc: "Access leave requests, equipment forms, and more.", href: "forms.html", linkText: "Download Forms" },
-                { title: "Shift Roster & Schedules", desc: "Check your upcoming shifts and team assignments.", href: "roster.html", linkText: "View Roster" }
-            ];
-
             // --- DOM ELEMENTS ---
             const sidebar = document.getElementById('sidebar');
             const settingsModal = document.getElementById('settings-modal');
@@ -338,6 +339,13 @@
             // --- FUNCTIONS ---
             function generateQuickLinks() {
                 const container = document.querySelector('.grid');
+                if (!container) return;
+                const quickLinks = [
+                    { title: "Standard Operating Procedures", desc: "Latest departmental protocols and guidelines.", href: "SOP.html", linkText: "Browse SOPs" },
+                    { title: "Training & Development", desc: "Upcoming courses, certifications, and resources.", href: "training.html", linkText: "View Schedule" },
+                    { title: "Internal Forms & Requests", desc: "Access leave requests, equipment forms, and more.", href: "forms.html", linkText: "Download Forms" },
+                    { title: "Shift Roster & Schedules", desc: "Check your upcoming shifts and team assignments.", href: "roster.html", linkText: "View Roster" }
+                ];
                 container.innerHTML = quickLinks.map(link => `
                                     <div class="bg-[var(--bg-secondary)] p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
                                         <h3 class="text-xl font-semibold text-[var(--accent-color)] mb-3">${link.title}</h3>
@@ -357,17 +365,41 @@
                 }
             };
 
-            const updateLoginUI = (user) => {
+            const updateLoginUI = async (user) => {
+                const highCommandLink = document.getElementById('highCommandLink');
+
                 if (user) {
+                    // User is logged in, fetch their data from Firestore
+                    const userDocRef = window.doc(window.db, "users", user.uid);
+                    const userDocSnap = await window.getDoc(userDocRef);
+
+                    let userName = user.email; // Default to email
+                    highCommandLink.classList.add('hidden'); // Hide by default
+
+                    if (userDocSnap.exists()) {
+                        const userData = userDocSnap.data();
+                        userName = userData.name || user.email; // Use name from DB, fallback to email
+
+                        // Check for High Command role
+                        if (userData.role === 'High Command') {
+                            highCommandLink.classList.remove('hidden');
+                        }
+                    } else {
+                        console.log("No such user document!");
+                    }
+
                     loginButton.classList.add('hidden');
                     userInfoDiv.classList.remove('hidden');
                     userInfoDiv.classList.add('flex');
-                    userEmailP.textContent = user.email;
+                    userEmailP.textContent = userName; // Display the user's name
+
                 } else {
+                    // User is logged out
                     loginButton.classList.remove('hidden');
                     userInfoDiv.classList.add('hidden');
                     userInfoDiv.classList.remove('flex');
                     userEmailP.textContent = '';
+                    highCommandLink.classList.add('hidden'); // Ensure link is hidden on logout
                 }
             };
 
@@ -375,6 +407,7 @@
             const loadUpdates = async () => {
                 const updatesSection = document.getElementById('updatesSection');
                 const updatesContent = document.getElementById('updatesContent');
+                if (!updatesSection || !updatesContent) return;
                 const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQxN1ZQBPqwqLxvr_T1tQ2TVwHuy0d2jainTySsbsSxMBl6ukf5R3Di6SGO3sHA3CD-1uSBgp_qPtJA/pub?output=csv';
                 const fourteenDaysAgo = new Date();
                 fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
@@ -476,9 +509,7 @@
                 sendDiscordLoadNotification();
 
                 if (window.firebaseAuth) {
-                    window.onAuthStateChanged(window.firebaseAuth, (user) => {
-                        updateLoginUI(user);
-                    });
+                    window.onAuthStateChanged(window.firebaseAuth, updateLoginUI);
                 }
 
 
@@ -580,14 +611,5 @@
             });
         })();
     </script>
-    <script src='https://storage.ko-fi.com/cdn/scripts/overlay-widget.js'></script>
-    <script>
-        kofiWidgetOverlay.draw('tonydunkle', {
-            'type': 'floating-chat',
-            'floating-chat.donateButton.text': 'Support me',
-            'floating-chat.donateButton.background-color': '#323842',
-            'floating-chat.donateButton.text-color': '#fff'
-        });
-    </script>
 </body>
-</ht
+</html>
