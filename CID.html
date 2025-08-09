@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPD - Criminal Investigation Division</title>
+    <link rel="icon" href="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png" type="image/png">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- Custom Styles -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* Dark Gray-Blue */
+        }
+
+        .font-mono {
+            font-family: 'Roboto Mono', monospace;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1f2937;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #4b5563;
+            border-radius: 4px;
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #6b7280;
+            }
+
+        /* Modal & Overlay Styles */
+        .login-overlay, .modal-overlay {
+            background-color: rgba(17, 24, 39, 0.9);
+            backdrop-filter: blur(5px);
+        }
+
+        /* Tab Styling */
+        .tab-button.active {
+            border-color: #3b82f6; /* Blue-500 */
+            background-color: #1f2937; /* Gray-800 */
+            color: #ffffff;
+        }
+
+        /* Priority & Status Colors */
+        .priority-low {
+            border-left-color: #22c55e;
+        }
+        /* green-500 */
+        .priority-medium {
+            border-left-color: #3b82f6;
+        }
+        /* blue-500 */
+        .priority-high {
+            border-left-color: #eab308;
+        }
+        /* yellow-500 */
+        .priority-critical {
+            border-left-color: #ef4444;
+        }
+        /* red-500 */
+
+        .status-active {
+            background-color: #3b82f6;
+        }
+        /* blue-500 */
+        .status-cold {
+            background-color: #6b7280;
+        }
+        /* gray-500 */
+        .status-closed {
+            background-color: #16a34a;
+        }
+        /* green-600 */
+
+        /* Sidebar Transition */
+        #sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+
+            #sidebar.sidebar-hidden {
+                transform: translateX(-100%);
+            }
+
+        /* Custom input styling */
+        .form-input {
+            background-color: #374151;
+            border: 1px solid #4b5563;
+            color: #d1d5db;
+        }
+
+            .form-input:focus {
+                outline: none;
+                border-color: #3b82f6;
+                box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4);
+            }
+    </style>
+</head>
+<body class="text-gray-300">
+
+    <!-- Login Overlay -->
+    <div id="login-overlay" class="hidden fixed inset-0 z-50 flex items-center justify-center login-overlay">
+        <div class="text-center p-8 bg-gray-800 border border-gray-700 rounded-lg shadow-2xl">
+            <h1 class="text-3xl font-bold text-white mb-2">Access Restricted</h1>
+            <p class="text-gray-400 mb-6">CID Portal requires authentication.</p>
+            <button id="login-btn" class="px-6 py-3 font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors">Authenticate</button>
+        </div>
+    </div>
+
+    <!-- Main Application Wrapper -->
+    <div id="app-wrapper" class="hidden flex h-screen bg-gray-900">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="absolute md:relative z-40 flex-col w-64 bg-gray-800 shadow-lg -translate-x-full md:translate-x-0">
+            <div class="flex items-center justify-center h-20 border-b border-gray-700">
+                <img src="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png" alt="UPD Logo" class="w-12 h-12">
+                <h1 class="text-xl font-bold ml-2 text-white">CID Portal</h1>
+            </div>
+            <nav class="flex-1 px-2 py-4 space-y-2">
+                <!-- Navigation Links would go here -->
+                <a href="#" class="flex items-center px-3 py-2 text-gray-300 rounded-lg bg-gray-700">
+                    <i class="ph-house-light w-6 h-6"></i><span class="ml-3">Dashboard</span>
+                </a>
+                <a href="#" class="flex items-center px-3 py-2 text-gray-400 rounded-lg hover:bg-gray-700">
+                    <i class="ph-user-list-light w-6 h-6"></i><span class="ml-3">CID Roster</span>
+                </a>
+                <a href="#" class="flex items-center px-3 py-2 text-gray-400 rounded-lg hover:bg-gray-700">
+                    <i class="ph-archive-light w-6 h-6"></i><span class="ml-3">Archives</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="flex flex-col flex-1 overflow-hidden">
+            <header class="bg-gray-900/70 backdrop-blur-sm border-b border-gray-700 sticky top-0 z-30 px-6 py-3">
+                <div class="flex items-center justify-between">
+                    <button id="hamburgerBtn" class="text-gray-400 focus:outline-none md:hidden"><i class="ph-list-light text-2xl"></i></button>
+                    <div class="flex-1"></div>
+                    <div id="user-info" class="text-sm text-gray-400 text-right">Loading...</div>
+                </div>
+            </header>
+
+            <main class="flex-1 overflow-y-auto p-4 md:p-8">
+                <!-- Page Header -->
+                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+                    <div>
+                        <h1 class="text-3xl font-extrabold text-white">CID Dashboard</h1>
+                        <p class="text-gray-400 mt-1">Live overview of all criminal investigations.</p>
+                    </div>
+                    <div id="auth-buttons" class="hidden">
+                        <button id="addCaseFileBtn" class="flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors">
+                            <i class="ph-plus-circle-light text-lg"></i> New Case File
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-gray-800 border border-gray-700 rounded-lg p-5 flex items-center gap-4"><i class="ph-folder-open-light text-4xl text-blue-400"></i><div><h4 class="font-medium text-gray-400">Active Cases</h4><p id="stat-active-cases" class="text-3xl font-bold text-white">--</p></div></div>
+                    <div class="bg-gray-800 border border-gray-700 rounded-lg p-5 flex items-center gap-4"><i class="ph-snowflake-light text-4xl text-gray-400"></i><div><h4 class="font-medium text-gray-400">Cold Cases</h4><p id="stat-cold-cases" class="text-3xl font-bold text-white">--</p></div></div>
+                    <div class="bg-gray-800 border border-gray-700 rounded-lg p-5 flex items-center gap-4"><i class="ph-archive-box-light text-4xl text-green-400"></i><div><h4 class="font-medium text-gray-400">Cases Closed</h4><p id="stat-closed-cases" class="text-3xl font-bold text-white">--</p></div></div>
+                    <div class="bg-gray-800 border border-gray-700 rounded-lg p-5 flex items-center gap-4"><i class="ph-scales-light text-4xl text-yellow-400"></i><div><h4 class="font-medium text-gray-400">Warrants Issued</h4><p id="stat-warrants" class="text-3xl font-bold text-white">--</p></div></div>
+                </div>
+
+                <!-- Main Tabs -->
+                <div class="bg-gray-800 border border-gray-700 rounded-lg">
+                    <div class="border-b border-gray-700">
+                        <nav class="flex space-x-2 p-2" id="main-tabs-container">
+                            <button data-tab="cases" class="tab-button active flex-1 md:flex-none text-sm font-semibold px-4 py-2 rounded-md border-b-2 border-transparent">Case Files</button>
+                            <button data-tab="evidence" class="tab-button flex-1 md:flex-none text-sm font-semibold px-4 py-2 rounded-md border-b-2 border-transparent">Evidence Locker</button>
+                            <button data-tab="wanted" class="tab-button flex-1 md:flex-none text-sm font-semibold px-4 py-2 rounded-md border-b-2 border-transparent">Wanted Board</button>
+                        </nav>
+                    </div>
+                    <div id="tab-content-container" class="p-4">
+                        <!-- Case Files Tab -->
+                        <div id="cases-tab" class="main-tab-content">
+                            <!-- Filters -->
+                            <div class="mb-4 flex flex-col md:flex-row gap-4">
+                                <input type="text" id="case-search-input" placeholder="Search by title, detective, or case #" class="form-input flex-grow rounded-md p-2">
+                                <select id="case-status-filter" class="form-input rounded-md p-2">
+                                    <option value="all">All Statuses</option>
+                                    <option value="Active">Active</option>
+                                    <option value="Cold">Cold</option>
+                                    <option value="Closed">Closed</option>
+                                </select>
+                            </div>
+                            <!-- Cases Table -->
+                            <div class="overflow-x-auto">
+                                <table class="w-full text-sm text-left">
+                                    <thead class="text-xs text-gray-400 uppercase bg-gray-700/50">
+                                        <tr>
+                                            <th scope="col" class="px-6 py-3">Case #</th>
+                                            <th scope="col" class="px-6 py-3">Title</th>
+                                            <th scope="col" class="px-6 py-3">Lead Detective</th>
+                                            <th scope="col" class="px-6 py-3">Status</th>
+                                            <th scope="col" class="px-6 py-3">Last Update</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="cases-table-body">
+                                        <tr><td colspan="5" class="text-center p-8 text-gray-500">Loading case files...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <!-- Evidence Locker Tab -->
+                        <div id="evidence-tab" class="main-tab-content hidden">
+                            <p class="text-center p-8 text-gray-500">Evidence Locker feature coming soon.</p>
+                        </div>
+                        <!-- Wanted Board Tab -->
+                        <div id="wanted-tab" class="main-tab-content hidden">
+                            <p class="text-center p-8 text-gray-500">Wanted Board feature coming soon.</p>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Case File Modal -->
+    <div id="caseFileModal" class="hidden fixed inset-0 z-50 modal-overlay flex items-center justify-center p-4">
+        <div class="bg-gray-800 rounded-lg shadow-2xl w-full max-w-5xl border border-gray-700 max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-gray-700">
+                <h3 id="caseFileModalTitle" class="text-xl font-bold text-white">New Case File</h3>
+                <button id="closeCaseFileModalBtn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <div class="flex-grow overflow-y-auto">
+                <form id="caseFileForm" class="p-6 space-y-6">
+                    <input type="hidden" id="caseIdInput">
+                    <!-- Top Section: Core Details -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div>
+                            <label for="caseTitleInput" class="block text-sm font-medium text-gray-300 mb-1">Case Title</label>
+                            <input type="text" id="caseTitleInput" required placeholder="e.g., Grand Senora Bank Heist" class="form-input w-full rounded-md p-2">
+                        </div>
+                        <div>
+                            <label for="leadDetectiveInput" class="block text-sm font-medium text-gray-300 mb-1">Lead Detective</label>
+                            <input type="text" id="leadDetectiveInput" required placeholder="Detective Name" class="form-input w-full rounded-md p-2">
+                        </div>
+                        <div>
+                            <label for="caseStatusInput" class="block text-sm font-medium text-gray-300 mb-1">Status</label>
+                            <select id="caseStatusInput" class="form-input w-full rounded-md p-2">
+                                <option value="Active">Active</option>
+                                <option value="Cold">Cold</option>
+                                <option value="Closed">Closed</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Modal Tabs -->
+                    <div class="border-b border-gray-700">
+                        <nav class="flex space-x-4" id="modal-tabs-container">
+                            <button type="button" data-tab="synopsis" class="modal-tab-button active py-2 px-1 border-b-2 font-medium text-sm">Synopsis</button>
+                            <button type="button" data-tab="personnel" class="modal-tab-button py-2 px-1 border-b-2 font-medium text-sm border-transparent text-gray-400">Personnel</button>
+                            <button type="button" data-tab="updates" class="modal-tab-button py-2 px-1 border-b-2 font-medium text-sm border-transparent text-gray-400">Updates</button>
+                        </nav>
+                    </div>
+                    <!-- Modal Tab Content -->
+                    <div id="modal-tab-content-container">
+                        <div id="synopsis-modal-tab" class="modal-tab-content">
+                            <label for="synopsisInput" class="block text-sm font-medium text-gray-300 mb-1">Case Synopsis</label>
+                            <textarea id="synopsisInput" rows="10" placeholder="Detailed summary of the case..." class="form-input w-full rounded-md p-2"></textarea>
+                        </div>
+                        <div id="personnel-modal-tab" class="modal-tab-content hidden">
+                            <p class="text-center p-8 text-gray-500">Personnel management coming soon.</p>
+                        </div>
+                        <div id="updates-modal-tab" class="modal-tab-content hidden">
+                            <p class="text-center p-8 text-gray-500">Case update log coming soon.</p>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="flex justify-between items-center p-4 bg-gray-900/50 border-t border-gray-700">
+                <button type="button" id="deleteCaseBtn" class="hidden px-4 py-2 text-sm font-semibold rounded-md bg-red-600 text-white hover:bg-red-700">Delete Case</button>
+                <div class="flex space-x-4">
+                    <button type="button" id="cancelCaseBtn" class="px-4 py-2 text-sm font-semibold rounded-md border border-gray-600 hover:bg-gray-700">Cancel</button>
+                    <button type="submit" form="caseFileForm" id="saveCaseBtn" class="px-6 py-2 text-sm font-semibold rounded-md bg-blue-600 text-white hover:bg-blue-700">Save</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="module">
+        // Firebase Imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, query, onSnapshot, addDoc, updateDoc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- Firebase Config ---
+        // IMPORTANT: Replace with your actual Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyDU7DRAxCzqu81DTa7k0DXaBRcMpk0sElc",
+            authDomain: "upd-system.firebaseapp.com",
+            projectId: "upd-system",
+            storageBucket: "upd-system.firebasestorage.app",
+            messagingSenderId: "28223003678",
+            appId: "1:28223003678:web:a19a9a8eb33fe74202220f",
+        };
+
+        // --- App Initialization ---
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        // --- DOM Elements ---
+        const loginOverlay = document.getElementById('login-overlay');
+        const appWrapper = document.getElementById('app-wrapper');
+        const userInfo = document.getElementById('user-info');
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const sidebar = document.getElementById('sidebar');
+        const authButtons = document.getElementById('auth-buttons');
+        const addCaseFileBtn = document.getElementById('addCaseFileBtn');
+
+        // Stats
+        const statActiveCases = document.getElementById('stat-active-cases');
+        const statColdCases = document.getElementById('stat-cold-cases');
+        const statClosedCases = document.getElementById('stat-closed-cases');
+        const statWarrants = document.getElementById('stat-warrants');
+
+        // Main Tabs
+        const mainTabsContainer = document.getElementById('main-tabs-container');
+        const mainTabContents = document.querySelectorAll('.main-tab-content');
+
+        // Case Files Tab
+        const casesTableBody = document.getElementById('cases-table-body');
+        const caseSearchInput = document.getElementById('case-search-input');
+        const caseStatusFilter = document.getElementById('case-status-filter');
+
+        // Case File Modal
+        const caseFileModal = document.getElementById('caseFileModal');
+        const caseFileModalTitle = document.getElementById('caseFileModalTitle');
+        const closeCaseFileModalBtn = document.getElementById('closeCaseFileModalBtn');
+        const caseFileForm = document.getElementById('caseFileForm');
+        const caseIdInput = document.getElementById('caseIdInput');
+        const saveCaseBtn = document.getElementById('saveCaseBtn');
+        const cancelCaseBtn = document.getElementById('cancelCaseBtn');
+        const deleteCaseBtn = document.getElementById('deleteCaseBtn');
+        const caseTitleInput = document.getElementById('caseTitleInput');
+        const leadDetectiveInput = document.getElementById('leadDetectiveInput');
+        const caseStatusInput = document.getElementById('caseStatusInput');
+        const synopsisInput = document.getElementById('synopsisInput');
+        const modalTabsContainer = document.getElementById('modal-tabs-container');
+        const modalTabContents = document.querySelectorAll('.modal-tab-content');
+
+
+        // --- State ---
+        let userProfile = null;
+        let allCases = [];
+        let unsubscribeCases = null;
+        // Mock access levels for demonstration
+        const accessConfig = {
+            canView: ["Detective", "Command", "High Command"],
+            canEdit: ["Detective", "Command", "High Command"],
+            canDelete: ["Command", "High Command"],
+        };
+
+        // --- Authentication ---
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                appWrapper.classList.remove('hidden');
+                loginOverlay.classList.add('hidden');
+
+                // Fetch user profile (replace with your actual user data structure)
+                const userDocRef = doc(db, 'users', user.uid);
+                const userDocSnap = await getDoc(userDocRef);
+                if (userDocSnap.exists()) {
+                    userProfile = { uid: user.uid, ...userDocSnap.data() };
+                } else {
+                    // Fallback for demo if user doc doesn't exist
+                    userProfile = { name: 'Demo User', role: 'Detective' };
+                }
+
+                userInfo.textContent = `${userProfile.name} | ${userProfile.role}`;
+
+                // Check permissions
+                if (accessConfig.canView.includes(userProfile.role)) {
+                    authButtons.classList.remove('hidden');
+                    initializeCIDPortal();
+                } else {
+                    // Show access denied message
+                    appWrapper.innerHTML = `<div class="w-full h-full flex items-center justify-center text-red-400 text-xl">You do not have permission to view the CID Portal.</div>`;
+                }
+
+            } else {
+                appWrapper.classList.add('hidden');
+                loginOverlay.classList.remove('hidden');
+                if (unsubscribeCases) unsubscribeCases();
+            }
+        });
+
+        // --- Main Initializer ---
+        function initializeCIDPortal() {
+            const casesCollectionRef = collection(db, `artifacts/${appId}/public/data/cid_cases`);
+            const q = query(casesCollectionRef);
+
+            unsubscribeCases = onSnapshot(q, (snapshot) => {
+                allCases = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+                renderAll();
+            });
+
+            // Add event listeners
+            addCaseFileBtn.addEventListener('click', () => openCaseFileModal());
+            closeCaseFileModalBtn.addEventListener('click', closeCaseFileModal);
+            cancelCaseBtn.addEventListener('click', closeCaseFileModal);
+            caseFileForm.addEventListener('submit', handleSaveCaseFile);
+            caseSearchInput.addEventListener('input', renderAll);
+            caseStatusFilter.addEventListener('change', renderAll);
+            mainTabsContainer.addEventListener('click', handleMainTabSwitch);
+            modalTabsContainer.addEventListener('click', handleModalTabSwitch);
+            casesTableBody.addEventListener('click', handleTableEditClick);
+        }
+
+        // --- Render Functions ---
+        function renderAll() {
+            renderDashboardStats();
+            renderCasesTable();
+        }
+
+        function renderDashboardStats() {
+            statActiveCases.textContent = allCases.filter(c => c.status === 'Active').length;
+            statColdCases.textContent = allCases.filter(c => c.status === 'Cold').length;
+            statClosedCases.textContent = allCases.filter(c => c.status === 'Closed').length;
+            // Placeholder for warrants
+            statWarrants.textContent = allCases.filter(c => c.warrantIssued).length || '0';
+        }
+
+        function renderCasesTable() {
+            const searchTerm = caseSearchInput.value.toLowerCase();
+            const statusFilter = caseStatusFilter.value;
+
+            const filteredCases = allCases.filter(c => {
+                const matchesSearch = searchTerm === '' ||
+                    c.title.toLowerCase().includes(searchTerm) ||
+                    c.leadDetective.toLowerCase().includes(searchTerm) ||
+                    c.id.toLowerCase().includes(searchTerm);
+
+                const matchesStatus = statusFilter === 'all' || c.status === statusFilter;
+
+                return matchesSearch && matchesStatus;
+            });
+
+            if (filteredCases.length === 0) {
+                casesTableBody.innerHTML = `<tr><td colspan="5" class="text-center p-8 text-gray-500">No matching case files found.</td></tr>`;
+                return;
+            }
+
+            casesTableBody.innerHTML = filteredCases.map(c => {
+                const statusClass = `status-${c.status.toLowerCase()}`;
+                const lastUpdated = c.lastUpdated ? new Date(c.lastUpdated.seconds * 1000).toLocaleDateString() : 'N/A';
+                return `
+                    <tr class="bg-gray-800 border-b border-gray-700 hover:bg-gray-700/50 cursor-pointer" data-id="${c.id}">
+                        <td class="px-6 py-4 font-mono text-xs">${c.id.substring(0,8).toUpperCase()}</td>
+                        <td class="px-6 py-4 font-semibold text-white">${c.title}</td>
+                        <td class="px-6 py-4">${c.leadDetective}</td>
+                        <td class="px-6 py-4"><span class="px-2 py-1 text-xs font-medium rounded-full text-white ${statusClass}">${c.status}</span></td>
+                        <td class="px-6 py-4">${lastUpdated}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // --- Modal Logic ---
+        function openCaseFileModal(caseData = null) {
+            caseFileForm.reset();
+            caseIdInput.value = '';
+            deleteCaseBtn.classList.add('hidden');
+
+            if (caseData) {
+                // Editing existing case
+                caseFileModalTitle.textContent = `Edit Case: ${caseData.id.substring(0,8).toUpperCase()}`;
+                caseIdInput.value = caseData.id;
+                caseTitleInput.value = caseData.title;
+                leadDetectiveInput.value = caseData.leadDetective;
+                caseStatusInput.value = caseData.status;
+                synopsisInput.value = caseData.synopsis || '';
+
+                if (accessConfig.canDelete.includes(userProfile.role)) {
+                    deleteCaseBtn.classList.remove('hidden');
+                }
+
+            } else {
+                // Creating new case
+                caseFileModalTitle.textContent = 'New Case File';
+                leadDetectiveInput.value = userProfile.name; // Default to current user
+            }
+
+            // Reset to first tab
+            handleModalTabSwitch({ target: modalTabsContainer.querySelector('[data-tab="synopsis"]') });
+            caseFileModal.classList.remove('hidden');
+        }
+
+        function closeCaseFileModal() {
+            caseFileModal.classList.add('hidden');
+        }
+
+        async function handleSaveCaseFile(e) {
+            e.preventDefault();
+            const caseId = caseIdInput.value;
+
+            const data = {
+                title: caseTitleInput.value.trim(),
+                leadDetective: leadDetectiveInput.value.trim(),
+                status: caseStatusInput.value,
+                synopsis: synopsisInput.value.trim(),
+                lastUpdated: serverTimestamp(),
+                updatedBy: userProfile.name,
+            };
+
+            try {
+                if (caseId) {
+                    // Update existing doc
+                    const docRef = doc(db, `artifacts/${appId}/public/data/cid_cases`, caseId);
+                    await updateDoc(docRef, data);
+                } else {
+                    // Create new doc
+                    data.createdBy = userProfile.name;
+                    data.createdAt = serverTimestamp();
+                    const collectionRef = collection(db, `artifacts/${appId}/public/data/cid_cases`);
+                    await addDoc(collectionRef, data);
+                }
+                closeCaseFileModal();
+            } catch (error) {
+                console.error("Error saving case file:", error);
+                alert("Could not save case file. See console for details.");
+            }
+        }
+
+        // --- Event Handlers ---
+        function handleTableEditClick(e) {
+            const row = e.target.closest('tr');
+            if (!row || !row.dataset.id) return;
+
+            const caseId = row.dataset.id;
+            const caseData = allCases.find(c => c.id === caseId);
+            if (caseData) {
+                openCaseFileModal(caseData);
+            }
+        }
+
+        function handleMainTabSwitch(e) {
+            const button = e.target.closest('.tab-button');
+            if (!button) return;
+
+            // Update button styles
+            mainTabsContainer.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            button.classList.add('active');
+
+            // Show/hide content
+            const tabId = button.dataset.tab;
+            mainTabContents.forEach(content => {
+                content.id === `${tabId}-tab` ? content.classList.remove('hidden') : content.classList.add('hidden');
+            });
+        }
+
+        function handleModalTabSwitch(e) {
+            const button = e.target.closest('.modal-tab-button');
+            if (!button) return;
+
+            // Update button styles
+            modalTabsContainer.querySelectorAll('.modal-tab-button').forEach(btn => {
+                btn.classList.remove('active', 'text-white');
+                btn.classList.add('border-transparent', 'text-gray-400');
+            });
+            button.classList.add('active', 'text-white');
+            button.classList.remove('border-transparent', 'text-gray-400');
+
+            // Show/hide content
+            const tabId = button.dataset.tab;
+            modalTabContents.forEach(content => {
+                content.id === `${tabId}-modal-tab` ? content.classList.remove('hidden') : content.classList.add('hidden');
+            });
+        }
+
+        hamburgerBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            sidebar.classList.toggle('sidebar-hidden');
+        });
+
+    </script>
+</body>
+</html>
