@@ -376,20 +376,26 @@
                 appWrapper.classList.remove('hidden');
                 loginOverlay.classList.add('hidden');
 
-                // Fetch user profile (replace with your actual user data structure)
+                // Fetch user profile
                 const userDocRef = doc(db, 'users', user.uid);
                 const userDocSnap = await getDoc(userDocRef);
                 if (userDocSnap.exists()) {
                     userProfile = { uid: user.uid, ...userDocSnap.data() };
                 } else {
                     // Fallback for demo if user doc doesn't exist
-                    userProfile = { name: 'Demo User', role: 'Detective' };
+                    userProfile = { name: 'Demo User', role: 'Detective', access: '' };
                 }
 
                 userInfo.textContent = `${userProfile.name} | ${userProfile.role}`;
 
-                // Check permissions
-                if (accessConfig.canView.includes(userProfile.role)) {
+                // Get user's role and access level for permission checks
+                const userRole = userProfile.role || '';
+                const userAccess = userProfile.access || '';
+
+                // Check view permissions against both role and access fields
+                const canView = accessConfig.canView.includes(userRole) || accessConfig.canView.includes(userAccess);
+
+                if (canView) {
                     authButtons.classList.remove('hidden');
                     initializeCIDPortal();
                 } else {
@@ -490,7 +496,9 @@
                 caseStatusInput.value = caseData.status;
                 synopsisInput.value = caseData.synopsis || '';
 
-                if (accessConfig.canDelete.includes(userProfile.role)) {
+                // Check delete permissions against both role and access fields
+                const canDelete = accessConfig.canDelete.includes(userProfile.role) || accessConfig.canDelete.includes(userProfile.access);
+                if (canDelete) {
                     deleteCaseBtn.classList.remove('hidden');
                 }
 
