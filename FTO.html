@@ -137,9 +137,15 @@
 
                 <!-- New Announcements Section -->
                 <div class="bg-gray-800 rounded-lg border border-gray-700 p-4">
-                    <h3 class="font-bold text-lg text-white mb-3">Announcements</h3>
+                    <div class="flex justify-between items-center mb-3">
+                        <h3 class="font-bold text-lg text-white">Announcements</h3>
+                        <button id="toggleArchiveBtn" class="hidden px-2 py-1 text-xs font-semibold rounded-full border border-gray-600 text-gray-300 hover:bg-gray-700 transition-colors duration-200">View Archived</button>
+                    </div>
                     <div id="announcements-container" class="space-y-4">
                         <p class="text-sm text-gray-400">No announcements yet.</p>
+                    </div>
+                    <div id="archived-container" class="hidden mt-4 space-y-4 border-t border-gray-700 pt-4">
+                        <h4 class="font-bold text-md text-white">Archived Announcements</h4>
                     </div>
                 </div>
             </aside>
@@ -195,17 +201,18 @@
     <div id="announcementModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
         <div class="bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-2xl mx-4 border border-gray-700">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-bold text-white">Create New Announcement</h3>
+                <h3 id="announcementModalTitle" class="text-lg font-bold text-white">Create New Announcement</h3>
                 <button id="closeAnnouncementModalBtn" class="text-gray-400 hover:text-white">&times;</button>
             </div>
 
             <form id="announcementForm" class="space-y-4">
+                <input type="hidden" id="announcementIdInput">
                 <div>
                     <label for="announcementTitleInput" class="block text-sm font-medium text-gray-300 mb-1">Title</label>
                     <input type="text" id="announcementTitleInput" required placeholder="Announcement Title" class="w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
                 </div>
                 <div>
-                    <label for="announcementContentInput" class="block text-sm font-medium text-gray-300 mb-1">Content (Supports simple Markdown)</label>
+                    <label for="announcementContentInput" class="block text-sm font-medium text-gray-300 mb-1">Content (Supports Markdown)</label>
                     <textarea id="announcementContentInput" required rows="6" placeholder="Write your announcement here..." class="w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"></textarea>
                 </div>
                 <div>
@@ -225,7 +232,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, query, onSnapshot, addDoc, updateDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, query, onSnapshot, addDoc, updateDoc, setDoc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- Firebase Configuration & Initialization ---
         // Provided by the user
@@ -270,18 +277,23 @@
         const userInfoElement = document.getElementById('user-info');
         const authButtons = document.getElementById('auth-buttons');
         const announcementModal = document.getElementById('announcementModal');
+        const announcementModalTitle = document.getElementById('announcementModalTitle');
         const closeAnnouncementModalBtn = document.getElementById('closeAnnouncementModalBtn');
         const cancelAnnouncementBtn = document.getElementById('cancelAnnouncementBtn');
         const announcementForm = document.getElementById('announcementForm');
+        const announcementIdInput = document.getElementById('announcementIdInput');
         const announcementTitleInput = document.getElementById('announcementTitleInput');
         const announcementContentInput = document.getElementById('announcementContentInput');
         const announcementMediaInput = document.getElementById('announcementMediaInput');
         const announcementsContainer = document.getElementById('announcements-container');
+        const archivedContainer = document.getElementById('archived-container');
+        const toggleArchiveBtn = document.getElementById('toggleArchiveBtn');
 
         // --- State and Constants ---
         const allowedAccessLevels = ["Field Training Officer", "Command", "High Command", "Commisioner", "Website Account Manager"];
         let userProfile = null;
         let userId = null;
+        let showArchived = false;
 
         // A mock checklist for a FiveM cadet's first 5 days of training
         const trainingChecklist = [
@@ -296,6 +308,9 @@
             "Patrol Vehicle Familiarization & Care",
             "Weapon and Equipment Safety Check"
         ];
+
+        // Allowed access levels for announcements management
+        const announcementManagementRoles = ["High Command", "Website Account Manager"];
 
         // --- Toast Notification ---
         const showToast = (message) => {
@@ -336,7 +351,19 @@
             recordModal.classList.add('hidden');
         };
 
-        const openAnnouncementModal = () => {
+        const openAnnouncementModal = (announcementData = null) => {
+            announcementForm.reset();
+            announcementIdInput.value = '';
+            announcementModalTitle.textContent = 'Create New Announcement';
+
+            if (announcementData) {
+                announcementIdInput.value = announcementData.id;
+                announcementModalTitle.textContent = 'Edit Announcement';
+                announcementTitleInput.value = announcementData.title;
+                announcementContentInput.value = announcementData.content;
+                announcementMediaInput.value = announcementData.mediaUrl || '';
+            }
+
             announcementModal.classList.remove('hidden');
         };
 
@@ -357,6 +384,20 @@
                     `;
                 checklistContainer.appendChild(itemDiv);
             });
+        };
+
+        const applyMarkdown = (text) => {
+            // Replaces newlines with <br> for simple line breaks
+            let html = text.replace(/\n/g, '<br/>');
+            // Bold (**text**)
+            html = html.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            // Italic (*text*)
+            html = html.replace(/\*(.*?)\*/g, '<em>$1</em>');
+            // Underline (_text_)
+            html = html.replace(/_(.*?)_/g, '<u>$1</u>');
+            // Strikethrough (~~text~~)
+            html = html.replace(/~~(.*?)~~/g, '<del>$1</del>');
+            return html;
         };
 
         const renderTrainingRecords = (records) => {
@@ -386,7 +427,7 @@
                                     </li>
                                 `).join('')}
                             </ul>
-                            ${record.notes ? `<div class="mt-4"><p class="font-semibold text-white">Notes:</p><p class="text-sm text-gray-400 whitespace-pre-wrap">${record.notes}</p></div>` : ''}
+                            ${record.notes ? `<div class="mt-4"><p class="font-semibold text-white">Notes:</p><p class="text-sm text-gray-400 whitespace-pre-wrap">${applyMarkdown(record.notes)}</p></div>` : ''}
                             ${record.recommendation && record.recommendation !== 'None' ? `<div class="mt-2"><p class="font-semibold text-white">Recommendation:</p><p class="text-sm text-blue-400">${record.recommendation}</p></div>` : ''}
                         </div>
                     `;
@@ -394,43 +435,77 @@
             });
         };
 
-        const renderAnnouncements = (announcements) => {
+        const renderAnnouncements = (allAnnouncements) => {
             announcementsContainer.innerHTML = '';
-            if (announcements.length === 0) {
+            archivedContainer.innerHTML = `<h4 class="font-bold text-md text-white">Archived Announcements</h4>`;
+
+            const activeAnnouncements = allAnnouncements.filter(a => !a.isArchived);
+            const archivedAnnouncements = allAnnouncements.filter(a => a.isArchived);
+
+            if (activeAnnouncements.length === 0) {
                 announcementsContainer.innerHTML = `<p class="text-sm text-gray-400">No announcements yet.</p>`;
-                return;
+            } else {
+                activeAnnouncements.forEach(announcement => {
+                    announcementsContainer.appendChild(createAnnouncementCard(announcement));
+                });
             }
 
-            announcements.forEach(announcement => {
-                const isVideo = announcement.mediaUrl && (announcement.mediaUrl.includes('youtube.com') || announcement.mediaUrl.includes('youtu.be'));
-                const isImage = announcement.mediaUrl && /\.(jpeg|jpg|gif|png)$/.test(announcement.mediaUrl);
-                let mediaHtml = '';
+            if (archivedAnnouncements.length > 0) {
+                toggleArchiveBtn.classList.remove('hidden');
+                archivedAnnouncements.forEach(announcement => {
+                    archivedContainer.appendChild(createAnnouncementCard(announcement));
+                });
+            } else {
+                archivedContainer.innerHTML += `<p class="text-sm text-gray-400 mt-2">No archived announcements.</p>`;
+                toggleArchiveBtn.classList.add('hidden');
+            }
+        };
 
-                if (isVideo) {
-                    const videoId = announcement.mediaUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([\w-]+)/)?.[1];
-                    if (videoId) {
-                        mediaHtml = `<iframe class="w-full h-auto aspect-video rounded-md mt-2" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
-                    }
-                } else if (isImage) {
-                    mediaHtml = `<img src="${announcement.mediaUrl}" class="w-full h-auto rounded-md mt-2" alt="Announcement image">`;
+        const createAnnouncementCard = (announcement) => {
+            const isVideo = announcement.mediaUrl && (announcement.mediaUrl.includes('youtube.com') || announcement.mediaUrl.includes('youtu.be'));
+            const isImage = announcement.mediaUrl && /\.(jpeg|jpg|gif|png)$/.test(announcement.mediaUrl);
+            let mediaHtml = '';
+
+            if (isVideo) {
+                const videoId = announcement.mediaUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([\w-]+)/)?.[1];
+                if (videoId) {
+                    mediaHtml = `<iframe class="w-full h-auto aspect-video rounded-md mt-2" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
                 }
+            } else if (isImage) {
+                mediaHtml = `<img src="${announcement.mediaUrl}" class="w-full h-auto rounded-md mt-2" alt="Announcement image">`;
+            }
 
-                // Simple markdown to HTML conversion
-                const contentHtml = announcement.content.replace(/\n/g, '<br/>');
+            const contentHtml = applyMarkdown(announcement.content);
 
-                const announcementElement = document.createElement('div');
-                announcementElement.className = 'bg-gray-700/50 rounded-lg p-3 border border-gray-600';
-                announcementElement.innerHTML = `
-                        <div class="flex items-center justify-between mb-2">
-                            <h4 class="text-md font-semibold text-white">${announcement.title}</h4>
-                            <span class="text-xs text-gray-400">${announcement.timestamp?.toDate()?.toLocaleDateString() || 'N/A'}</span>
-                        </div>
-                        <div class="text-sm text-gray-300">${contentHtml}</div>
-                        ${mediaHtml}
-                        <div class="mt-2 text-xs text-gray-500">Posted by: ${announcement.createdByUsername || 'Unknown'}</div>
-                    `;
-                announcementsContainer.appendChild(announcementElement);
-            });
+            const announcementElement = document.createElement('div');
+            announcementElement.className = 'bg-gray-700/50 rounded-lg p-3 border border-gray-600';
+            announcementElement.innerHTML = `
+                    <div class="flex items-center justify-between mb-2">
+                        <h4 class="text-md font-semibold text-white">${announcement.title}</h4>
+                        <span class="text-xs text-gray-400">${announcement.timestamp?.toDate()?.toLocaleDateString() || 'N/A'}</span>
+                    </div>
+                    <div class="text-sm text-gray-300">${contentHtml}</div>
+                    ${mediaHtml}
+                    <div class="mt-2 text-xs text-gray-500">Posted by: ${announcement.createdByUsername || 'Unknown'}</div>
+                    <div class="mt-4 flex space-x-2 justify-end">
+                        <button class="edit-announcement-btn text-sm text-blue-400 hover:text-blue-200" data-announcement-id="${announcement.id}">Edit</button>
+                        <button class="archive-announcement-btn text-sm text-yellow-400 hover:text-yellow-200" data-announcement-id="${announcement.id}">${announcement.isArchived ? 'Unarchive' : 'Archive'}</button>
+                        <button class="delete-announcement-btn text-sm text-red-400 hover:text-red-200" data-announcement-id="${announcement.id}">Delete</button>
+                    </div>
+                `;
+            return announcementElement;
+        };
+
+        const addMarkdown = (element, start, end) => {
+            const startPos = element.selectionStart;
+            const endPos = element.selectionEnd;
+            const text = element.value;
+            const selectedText = text.substring(startPos, endPos);
+            const newText = text.substring(0, startPos) + start + selectedText + end + text.substring(endPos);
+            element.value = newText;
+            element.focus();
+            element.selectionStart = startPos + start.length;
+            element.selectionEnd = endPos + start.length;
         };
 
         // --- Firestore Functions ---
@@ -489,16 +564,16 @@
 
         const addAnnouncement = async (title, content, mediaUrl) => {
             try {
-                // Ensure userProfile is not null before accessing its properties.
-                if (!userProfile) {
-                    throw new Error('User profile not loaded. Cannot post announcement.');
+                if (!userProfile || !announcementManagementRoles.includes(userProfile['access level'])) {
+                    throw new Error('User does not have permission to post announcements.');
                 }
-                await addDoc(collection(db, `artifacts/${appId}/public/data/announcements`), {
+                const newDocRef = await addDoc(collection(db, `artifacts/${appId}/public/data/announcements`), {
                     title: title,
                     content: content,
                     mediaUrl: mediaUrl,
                     createdBy: userId,
                     createdByUsername: userProfile.name,
+                    isArchived: false,
                     timestamp: serverTimestamp()
                 });
                 showToast('Announcement posted successfully!');
@@ -506,6 +581,56 @@
             } catch (e) {
                 console.error("Error adding announcement: ", e);
                 showToast('Failed to post announcement.', true);
+            }
+        };
+
+        const updateAnnouncement = async (announcementId, title, content, mediaUrl) => {
+            try {
+                if (!userProfile || !announcementManagementRoles.includes(userProfile['access level'])) {
+                    throw new Error('User does not have permission to edit announcements.');
+                }
+                const announcementRef = doc(db, `artifacts/${appId}/public/data/announcements`, announcementId);
+                await updateDoc(announcementRef, {
+                    title: title,
+                    content: content,
+                    mediaUrl: mediaUrl,
+                });
+                showToast('Announcement updated successfully!');
+                closeAnnouncementModal();
+            } catch (e) {
+                console.error("Error updating announcement: ", e);
+                showToast('Failed to update announcement.', true);
+            }
+        };
+
+        const deleteAnnouncement = async (announcementId) => {
+            if (!confirm('Are you sure you want to delete this announcement?')) return;
+            try {
+                if (!userProfile || !announcementManagementRoles.includes(userProfile['access level'])) {
+                    throw new Error('User does not have permission to delete announcements.');
+                }
+                const announcementRef = doc(db, `artifacts/${appId}/public/data/announcements`, announcementId);
+                await deleteDoc(announcementRef);
+                showToast('Announcement deleted!');
+            } catch (e) {
+                console.error("Error deleting announcement: ", e);
+                showToast('Failed to delete announcement.', true);
+            }
+        };
+
+        const toggleArchiveStatus = async (announcementId, currentStatus) => {
+            try {
+                if (!userProfile || !announcementManagementRoles.includes(userProfile['access level'])) {
+                    throw new Error('User does not have permission to archive announcements.');
+                }
+                const announcementRef = doc(db, `artifacts/${appId}/public/data/announcements`, announcementId);
+                await updateDoc(announcementRef, {
+                    isArchived: !currentStatus
+                });
+                showToast(`Announcement ${currentStatus ? 'unarchived' : 'archived'} successfully!`);
+            } catch (e) {
+                console.error("Error archiving announcement: ", e);
+                showToast('Failed to change archive status.', true);
             }
         };
 
@@ -561,8 +686,9 @@
                 // Check access level and configure the UI
                 if (allowedAccessLevels.includes(userProfile['access level'])) {
                     authButtons.classList.remove('hidden');
-                    if (userProfile['access level'] === 'High Command') {
+                    if (announcementManagementRoles.includes(userProfile['access level'])) {
                         addAnnouncementBtn.classList.remove('hidden');
+                        toggleArchiveBtn.classList.remove('hidden');
                     }
 
                     // Start listening to Firestore for real-time updates for training records
@@ -595,6 +721,11 @@
                     });
                     announcements.sort((a, b) => b.timestamp?.seconds - a.timestamp?.seconds);
                     renderAnnouncements(announcements);
+                    // Hide/Show announcement management buttons based on current user role
+                    const isHighCommand = announcementManagementRoles.includes(userProfile?.['access level']);
+                    document.querySelectorAll('.edit-announcement-btn, .archive-announcement-btn, .delete-announcement-btn').forEach(btn => {
+                        btn.style.display = isHighCommand ? 'inline-block' : 'none';
+                    });
                 }, (error) => {
                     console.error("Error getting announcements:", error);
                 });
@@ -617,10 +748,16 @@
         cancelRecordBtn.addEventListener('click', closeRecordModal);
         recordModal.addEventListener('click', (e) => { if (e.target === recordModal) closeRecordModal(); });
 
-        addAnnouncementBtn.addEventListener('click', openAnnouncementModal);
+        addAnnouncementBtn.addEventListener('click', () => openAnnouncementModal());
         closeAnnouncementModalBtn.addEventListener('click', closeAnnouncementModal);
         cancelAnnouncementBtn.addEventListener('click', closeAnnouncementModal);
         announcementModal.addEventListener('click', (e) => { if (e.target === announcementModal) closeAnnouncementModal(); });
+
+        toggleArchiveBtn.addEventListener('click', () => {
+            showArchived = !showArchived;
+            archivedContainer.classList.toggle('hidden', !showArchived);
+            toggleArchiveBtn.textContent = showArchived ? 'Hide Archived' : 'View Archived';
+        });
 
         trainingForm.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -646,9 +783,14 @@
             const title = announcementTitleInput.value.trim();
             const content = announcementContentInput.value.trim();
             const mediaUrl = announcementMediaInput.value.trim();
+            const announcementId = announcementIdInput.value;
 
             if (title && content) {
-                addAnnouncement(title, content, mediaUrl);
+                if (announcementId) {
+                    updateAnnouncement(announcementId, title, content, mediaUrl);
+                } else {
+                    addAnnouncement(title, content, mediaUrl);
+                }
             } else {
                 showToast('Title and content are required.', true);
             }
@@ -675,6 +817,70 @@
                 updateChecklistItem(recordId, itemName, isCompleted);
             }
         });
+
+        // New event listeners for announcement management buttons
+        document.addEventListener('click', async (e) => {
+            if (!announcementManagementRoles.includes(userProfile?.['access level'])) return;
+
+            const editBtn = e.target.closest('.edit-announcement-btn');
+            if (editBtn) {
+                const announcementId = editBtn.dataset.announcementId;
+                const announcementRef = doc(db, `artifacts/${appId}/public/data/announcements`, announcementId);
+                const docSnap = await getDoc(announcementRef);
+                if (docSnap.exists()) {
+                    openAnnouncementModal({ id: docSnap.id, ...docSnap.data() });
+                }
+                return;
+            }
+
+            const archiveBtn = e.target.closest('.archive-announcement-btn');
+            if (archiveBtn) {
+                const announcementId = archiveBtn.dataset.announcementId;
+                const docSnap = await getDoc(doc(db, `artifacts/${appId}/public/data/announcements`, announcementId));
+                if (docSnap.exists()) {
+                    const currentStatus = docSnap.data().isArchived;
+                    toggleArchiveStatus(announcementId, currentStatus);
+                }
+                return;
+            }
+
+            const deleteBtn = e.target.closest('.delete-announcement-btn');
+            if (deleteBtn) {
+                const announcementId = deleteBtn.dataset.announcementId;
+                deleteAnnouncement(announcementId);
+                return;
+            }
+        });
+
+        // Keybinds for Markdown in notes and announcements
+        const handleMarkdownKeybinds = (event) => {
+            if (event.ctrlKey || event.metaKey) {
+                const textarea = event.target;
+                let start, end, newText, selectedText;
+
+                switch (event.key) {
+                    case 'b': // Bold
+                        event.preventDefault();
+                        addMarkdown(textarea, '**', '**');
+                        break;
+                    case 'i': // Italic
+                        event.preventDefault();
+                        addMarkdown(textarea, '*', '*');
+                        break;
+                    case 'u': // Underline
+                        event.preventDefault();
+                        addMarkdown(textarea, '_', '_');
+                        break;
+                    case 's': // Strikethrough
+                        event.preventDefault();
+                        addMarkdown(textarea, '~~', '~~');
+                        break;
+                }
+            }
+        };
+
+        notesInput.addEventListener('keydown', handleMarkdownKeybinds);
+        announcementContentInput.addEventListener('keydown', handleMarkdownKeybinds);
     </script>
 </body>
 </html>
