@@ -422,7 +422,7 @@
                         }
 
                         // Check if the user has the required access level to access the page
-                        if (userAccessLevel === 'High Command' || userRole === 'Account Manager' || userRole === 'Personnel Manager' || userRole === 'Website Manager') {
+                        if (userAccessLevel === 'High Command' || userRole === 'Account Manager' || userRole === 'Personnel Manager' || userRole === 'Website Manager' || userAccessLevel === 'Website Manager') {
                             loadingOverlay.classList.add('hidden');
                             loginOverlay.classList.add('hidden');
                             pageContent.classList.remove('hidden');
