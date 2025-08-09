@@ -362,11 +362,12 @@
         let userProfile = null;
         let allCases = [];
         let unsubscribeCases = null;
-        // Mock access levels for demonstration
+
+        // Access levels configuration
         const accessConfig = {
-            canView: ["Detective", "Command", "High Command"],
-            canEdit: ["Detective", "Command", "High Command"],
-            canDelete: ["Command", "High Command"],
+            canView: ["Detective", "Command", "High Command", "Website Manager"],
+            canEdit: ["Detective", "Command", "High Command", "Website Manager"],
+            canDelete: ["Command", "High Command", "Website Manager"],
         };
 
         // --- Authentication ---
@@ -463,14 +464,14 @@
                 const statusClass = `status-${c.status.toLowerCase()}`;
                 const lastUpdated = c.lastUpdated ? new Date(c.lastUpdated.seconds * 1000).toLocaleDateString() : 'N/A';
                 return `
-                    <tr class="bg-gray-800 border-b border-gray-700 hover:bg-gray-700/50 cursor-pointer" data-id="${c.id}">
-                        <td class="px-6 py-4 font-mono text-xs">${c.id.substring(0,8).toUpperCase()}</td>
-                        <td class="px-6 py-4 font-semibold text-white">${c.title}</td>
-                        <td class="px-6 py-4">${c.leadDetective}</td>
-                        <td class="px-6 py-4"><span class="px-2 py-1 text-xs font-medium rounded-full text-white ${statusClass}">${c.status}</span></td>
-                        <td class="px-6 py-4">${lastUpdated}</td>
-                    </tr>
-                `;
+                        <tr class="bg-gray-800 border-b border-gray-700 hover:bg-gray-700/50 cursor-pointer" data-id="${c.id}">
+                            <td class="px-6 py-4 font-mono text-xs">${c.id.substring(0, 8).toUpperCase()}</td>
+                            <td class="px-6 py-4 font-semibold text-white">${c.title}</td>
+                            <td class="px-6 py-4">${c.leadDetective}</td>
+                            <td class="px-6 py-4"><span class="px-2 py-1 text-xs font-medium rounded-full text-white ${statusClass}">${c.status}</span></td>
+                            <td class="px-6 py-4">${lastUpdated}</td>
+                        </tr>
+                    `;
             }).join('');
         }
 
@@ -482,7 +483,7 @@
 
             if (caseData) {
                 // Editing existing case
-                caseFileModalTitle.textContent = `Edit Case: ${caseData.id.substring(0,8).toUpperCase()}`;
+                caseFileModalTitle.textContent = `Edit Case: ${caseData.id.substring(0, 8).toUpperCase()}`;
                 caseIdInput.value = caseData.id;
                 caseTitleInput.value = caseData.title;
                 leadDetectiveInput.value = caseData.leadDetective;
