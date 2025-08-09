@@ -260,6 +260,12 @@
                     <label for="officer-rank" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Rank</label>
                     <input type="text" id="officer-rank" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                 </div>
+                <div id="access-level-field" class="hidden">
+                    <label for="access-level" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Access Level</label>
+                    <select id="access-level" class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <!-- Options will be populated by JS -->
+                    </select>
+                </div>
                 <div class="flex justify-end space-x-3 pt-4">
                     <button type="button" id="cancel-add-officer-btn" class="bg-slate-200 dark:bg-slate-600 hover:bg-slate-300 dark:hover:bg-slate-500 text-slate-800 dark:text-slate-200 font-bold py-2 px-4 rounded-lg transition">Cancel</button>
                     <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition">Save Officer</button>
@@ -373,13 +379,16 @@
                         const userDocSnap = await window.firebase.getDoc(userDocRef);
 
                         let userAccessLevel = null;
+                        let userRole = null; // Correctly get the role from the database
+
                         if (userDocSnap.exists()) {
                             const userData = userDocSnap.data();
                             userAccessLevel = userData['access level'];
+                            userRole = userData['role']; // Get the 'role' field
                         }
 
                         // Check if the user has the required access level to access the page
-                        if (userAccessLevel === 'High Command' || userAccessLevel === 'Website Account Manager') {
+                        if (userAccessLevel === 'High Command' || userRole === 'Website Account Manager') {
                             loadingOverlay.classList.add('hidden');
                             loginOverlay.classList.add('hidden');
                             pageContent.classList.remove('hidden');
@@ -388,16 +397,14 @@
                             loadReportsFromFirestore();
                             loadPersonnel();
 
-                            // Set permissions for the "add officer" button
-                            if (userAccessLevel === 'Website Account Manager') {
-                                addOfficerBtn.classList.remove('hidden');
-                            }
+                            // Set permissions for the "add officer" button and dynamic role dropdown
+                            setPermissions(userRole);
 
                         } else {
                             loadingOverlay.classList.add('hidden');
                             pageContent.classList.add('hidden');
                             loginOverlay.classList.remove('hidden');
-                            loginOverlay.querySelector('p').textContent = `You are logged in as a "${userAccessLevel}", but do not have permission to view this page.`;
+                            loginOverlay.querySelector('p').textContent = `You are logged in, but do not have permission to view this page.`;
                         }
 
                     } else {
@@ -435,19 +442,23 @@
         const closePasswordModalBtn = document.getElementById('close-password-modal-btn');
         const copyPasswordBtn = document.getElementById('copy-password-btn');
         const officerRoleSelect = document.getElementById('officer-role');
+        const officerAccessLevelSelect = document.getElementById('access-level');
+        const accessLevelField = document.getElementById('access-level-field');
         const confirmRemoveModal = document.getElementById('confirm-remove-modal');
         let officerToRemoveId = null;
 
         const rolesByManager = {
-            "Website Account Manager": ["Account Manager", "Officer", "FTO", "Subdivision Lead"],
-            "High Command": ["Account Manager", "Website Account Manager", "Officer", "FTO", "Subdivision Lead"]
+            "Website Account Manager": ["Account Manager", "Officer", "FTO", "Subdivision Lead", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"],
+            "Personnel Manager": ["Officer", "FTO", "Subdivision Lead", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"]
         };
+        const accessLevelsForWebsiteManager = ["High Command", "Personnel Manager"];
 
         let currentUserRole = null;
+        let currentUserAccessLevel = null;
 
         const setPermissions = (role) => {
             currentUserRole = role;
-            if (rolesByManager[currentUserRole]) {
+            if (rolesByManager[currentUserRole] || currentUserAccessLevel === "High Command") {
                 addOfficerBtn.classList.remove('hidden');
             } else {
                 addOfficerBtn.classList.add('hidden');
@@ -547,21 +558,37 @@
             }
         };
 
-        const populateRoleDropdown = () => {
-            const userProfile = JSON.parse(localStorage.getItem('userProfile'));
-            let currentUserRole = userProfile?.role;
-            const roles = rolesByManager[currentUserRole] || [];
+        const populateRoleAndAccessLevelDropdowns = (userRole) => {
+            // Clear existing options
             officerRoleSelect.innerHTML = '';
+            officerAccessLevelSelect.innerHTML = '';
+
+            // Populate role dropdown based on the logged-in user's role
+            const roles = rolesByManager[userRole] || [];
             roles.forEach(role => {
                 const option = document.createElement('option');
                 option.value = role;
                 option.textContent = role;
                 officerRoleSelect.appendChild(option);
             });
+
+            // Show or hide the access level dropdown based on the user's role
+            if (userRole === 'Website Account Manager') {
+                accessLevelField.classList.remove('hidden');
+                accessLevelsForWebsiteManager.forEach(accessLevel => {
+                    const option = document.createElement('option');
+                    option.value = accessLevel;
+                    option.textContent = accessLevel;
+                    officerAccessLevelSelect.appendChild(option);
+                });
+            } else {
+                accessLevelField.classList.add('hidden');
+            }
         };
 
+
         addOfficerBtn.addEventListener('click', () => {
-            populateRoleDropdown();
+            populateRoleAndAccessLevelDropdowns(currentUserRole);
             addOfficerModal.classList.add('is-open')
         });
         cancelAddOfficerBtn.addEventListener('click', () => addOfficerModal.classList.remove('is-open'));
@@ -573,6 +600,7 @@
             const email = document.getElementById('officer-email').value;
             const role = document.getElementById('officer-role').value;
             const rank = document.getElementById('officer-rank').value;
+            const accessLevel = document.getElementById('access-level').value || 'Officer'; // Default to Officer if not set
             const password = generatePassword();
 
             try {
@@ -581,12 +609,14 @@
                 const newUserId = userCredential.user.uid;
 
                 // Step 2: Create the user profile in Firestore, using the UID from Auth as the document ID
-                const userDocRef = window.firebase.doc(db, `artifacts/${appId}/public/data/personnel`, newUserId);
+                // The path is now corrected to match your database structure
+                const userDocRef = window.firebase.doc(db, "users", newUserId);
                 await window.firebase.setDoc(userDocRef, {
                     name,
                     email,
                     role,
                     rank,
+                    'access level': accessLevel,
                     status: 'active',
                     createdAt: new Date().toISOString(),
                     createdBy: userId // Save the UID of the admin who created the account
