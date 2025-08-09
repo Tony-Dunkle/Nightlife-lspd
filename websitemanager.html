@@ -80,11 +80,10 @@
 <body class="text-gray-300">
 
     <!-- Login Overlay -->
-    <div id="login-overlay" class="hidden login-overlay">
+    <div id="login-overlay" class="login-overlay">
         <div class="login-prompt">
-            <h1 class="text-3xl font-bold text-white mb-2">Access Denied</h1>
-            <p class="text-gray-400 mb-6">You must be logged in to access this page.</p>
-            <button id="login-btn" class="px-6 py-3 text-lg font-semibold rounded-full bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-200">Proceed to Login</button>
+            <h1 class="text-3xl font-bold text-white mb-2">Authenticating...</h1>
+            <p class="text-gray-400 mb-6">Please wait while we verify your access.</p>
         </div>
     </div>
 
@@ -155,7 +154,6 @@
         import { getFirestore, doc, getDoc, collection, query, onSnapshot, addDoc, updateDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- Firebase Configuration & Initialization ---
-        // Provided by the user
         const firebaseConfig = {
             apiKey: "AIzaSyDU7DRAxCzqu81DTa7k0DXaBRcMpk0sElc",
             authDomain: "upd-system.firebaseapp.com",
@@ -173,7 +171,7 @@
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
-        // --- FIXED: Define correct collection paths ---
+        // --- Collection Paths ---
         const usersCollectionPath = `artifacts/${appId}/public/data/users`;
         const trainingRecordsCollectionPath = `artifacts/${appId}/public/data/trainingRecords`;
         const announcementsCollectionPath = `artifacts/${appId}/public/data/announcements`;
@@ -182,7 +180,7 @@
 
         // --- DOM Elements ---
         const loginOverlay = document.getElementById('login-overlay');
-        const loginBtn = document.getElementById('login-btn');
+        const loginPrompt = loginOverlay.querySelector('.login-prompt');
         const mainHeader = document.getElementById('main-header');
         const mainContent = document.getElementById('main-content');
         const userInfoElement = document.getElementById('user-info');
@@ -193,19 +191,6 @@
 
         // --- State and Constants ---
         const requiredAccessLevel = "Website Manager";
-
-        // --- Toast Notification ---
-        const showToast = (message) => {
-            const toast = document.createElement('div');
-            toast.textContent = message;
-            toast.className = 'toast';
-            document.body.appendChild(toast);
-            setTimeout(() => { toast.classList.add('show'); }, 100);
-            setTimeout(() => {
-                toast.classList.remove('show');
-                toast.addEventListener('transitionend', () => toast.remove());
-            }, 3000);
-        };
 
         // --- UI Functions ---
         const renderRecentRecords = (records) => {
@@ -261,97 +246,113 @@
                     `).join('');
         };
 
-        // --- Firestore Functions (Mock/Example) ---
+        const showAccessDenied = (message) => {
+            loginOverlay.classList.remove('hidden');
+            mainHeader.classList.add('hidden');
+            mainContent.classList.add('hidden');
+            loginPrompt.innerHTML = `
+                    <h1 class="text-3xl font-bold text-white mb-2">Access Denied</h1>
+                    <p class="text-gray-400 mb-6">${message}</p>
+                    <button onclick="window.location.href='index.html'" class="px-6 py-3 text-lg font-semibold rounded-full bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-200">Go Back</button>
+                `;
+        };
+
+        // --- Firestore Functions ---
         const logUserLogin = async (userDisplayName) => {
             try {
-                // --- FIXED: Use correct path for logging ---
                 await addDoc(collection(db, loginLogsCollectionPath), {
                     user: userDisplayName,
                     timestamp: serverTimestamp()
                 });
             } catch (e) {
-                console.error("Error logging in:", e);
+                console.error("Error logging user login:", e);
             }
         };
 
         const subscribeToAllData = () => {
             // Recently Added Training Records
-            // --- FIXED: Use correct path for training records ---
             const qRecords = collection(db, trainingRecordsCollectionPath);
             onSnapshot(qRecords, (snapshot) => {
                 const records = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                records.sort((a, b) => b.timestamp?.seconds - a.timestamp?.seconds);
-                renderRecentRecords(records.slice(0, 10)); // Display top 10
-            });
+                records.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+                renderRecentRecords(records.slice(0, 10));
+            }, err => console.error("Error fetching training records:", err));
 
             // Recent Announcements
-            // --- FIXED: Use correct path for announcements ---
             const qAnnouncements = collection(db, announcementsCollectionPath);
             onSnapshot(qAnnouncements, (snapshot) => {
                 const announcements = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                announcements.sort((a, b) => b.timestamp?.seconds - a.timestamp?.seconds);
-                renderRecentAnnouncements(announcements.slice(0, 5)); // Display top 5
-            });
+                announcements.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+                renderRecentAnnouncements(announcements.slice(0, 5));
+            }, err => console.error("Error fetching announcements:", err));
 
             // Recent User Account Updates
-            // --- FIXED: Use correct path for user accounts ---
             const qAccounts = collection(db, usersCollectionPath);
             onSnapshot(qAccounts, (snapshot) => {
                 const accounts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                accounts.sort((a, b) => b.lastUpdated?.seconds - a.lastUpdated?.seconds);
-                renderRecentAccounts(accounts.slice(0, 5)); // Display top 5
-            });
+                accounts.sort((a, b) => (b.lastUpdated?.seconds || 0) - (a.lastUpdated?.seconds || 0));
+                renderRecentAccounts(accounts.slice(0, 5));
+            }, err => console.error("Error fetching accounts:", err));
 
             // Login Logs
-            // --- FIXED: Use correct path for login logs ---
             const qLoginLogs = collection(db, loginLogsCollectionPath);
             onSnapshot(qLoginLogs, (snapshot) => {
                 const logs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                logs.sort((a, b) => b.timestamp?.seconds - a.timestamp?.seconds);
-                renderLoginLogs(logs.slice(0, 20)); // Display top 20
-            });
+                logs.sort((a, b) => (b.timestamp?.seconds || 0) - (a.timestamp?.seconds || 0));
+                renderLoginLogs(logs.slice(0, 20));
+            }, err => console.error("Error fetching login logs:", err));
         };
 
-        // --- Main Initialization ---
+        // --- Main Initialization & Auth Flow ---
+
+        // This listener will handle UI changes once authentication is complete.
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                // --- FIXED: Use correct path to get user document ---
                 const userDocRef = doc(db, usersCollectionPath, user.uid);
-                const userDocSnap = await getDoc(userDocRef);
+                try {
+                    const userDocSnap = await getDoc(userDocRef);
 
-                if (userDocSnap.exists()) {
-                    const userProfile = userDocSnap.data();
-                    if (userProfile['access level'] === requiredAccessLevel) {
-                        loginOverlay.classList.add('hidden');
-                        mainHeader.classList.remove('hidden');
-                        mainContent.classList.remove('hidden');
-                        userInfoElement.textContent = `${userProfile.name} | Role: ${userProfile.role}`;
-                        subscribeToAllData();
-                        logUserLogin(userProfile.name); // Log the login event
+                    if (userDocSnap.exists()) {
+                        const userProfile = userDocSnap.data();
+                        if (userProfile['access level'] === requiredAccessLevel) {
+                            loginOverlay.classList.add('hidden');
+                            mainHeader.classList.remove('hidden');
+                            mainContent.classList.remove('hidden');
+                            userInfoElement.textContent = `${userProfile.name} | Role: ${userProfile.role}`;
+                            subscribeToAllData();
+                            logUserLogin(userProfile.name);
+                        } else {
+                            showAccessDenied("You do not have the required access level for this page.");
+                        }
                     } else {
-                        // User is logged in but has incorrect access level
-                        loginOverlay.classList.remove('hidden');
-                        loginBtn.textContent = 'Go Back';
-                        loginBtn.onclick = () => window.location.href = 'index.html';
+                        showAccessDenied("User profile not found.");
                     }
-                } else {
-                    // User profile not found, likely a new user.
-                    loginOverlay.classList.remove('hidden');
-                    loginBtn.textContent = 'Go Back';
-                    loginBtn.onclick = () => window.location.href = 'index.html';
+                } catch (error) {
+                    console.error("Permission error fetching user profile:", error);
+                    showAccessDenied("There was an error verifying your permissions.");
                 }
             } else {
-                // If no user is signed in, display the login overlay
-                loginOverlay.classList.remove('hidden');
-                mainHeader.classList.add('hidden');
-                mainContent.classList.add('hidden');
+                showAccessDenied("You must be logged in to access this page.");
             }
         });
 
-        // --- Event Listeners ---
-        loginBtn.addEventListener('click', () => {
-            window.location.href = 'index.html';
-        });
+        // --- FIXED: Start the authentication process immediately ---
+        const initializeAuth = async () => {
+            try {
+                if (initialAuthToken) {
+                    await signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    // Fallback for local testing without a token
+                    await signInAnonymously(auth);
+                }
+            } catch (error) {
+                console.error("Authentication failed:", error);
+                showAccessDenied("A critical authentication error occurred.");
+            }
+        };
+
+        initializeAuth();
+
     </script>
 </body>
 </html>
