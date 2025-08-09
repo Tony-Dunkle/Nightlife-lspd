@@ -720,7 +720,7 @@
                             });
                             console.log("Login activity logged successfully.");
                         } catch (logError) {
-                            console.error("Failed to log login activity:", logError);
+                            console.error("Failed to log login activity: " + logError.message);
                         }
 
                         loginModal.classList.remove('is-open');
