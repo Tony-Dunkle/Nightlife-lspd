@@ -242,7 +242,9 @@
                 </button>
                 <div class="flex-1"></div>
                 <div class="flex items-center">
+                    <!-- The login button that gets hidden after login -->
                     <button id="loginButton" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold shadow-md hover:bg-blue-700 transition">Login</button>
+                    <!-- The user info div that becomes visible after login -->
                     <div id="userInfo" class="hidden items-center">
                         <p id="userEmail" class="mr-4 text-sm text-slate-600 dark:text-slate-300"></p>
                         <button id="logoutButton" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition">Logout</button>
@@ -346,12 +348,12 @@
                     { title: "Shift Roster & Schedules", desc: "Check your upcoming shifts and team assignments.", href: "roster.html", linkText: "View Roster" }
                 ];
                 container.innerHTML = quickLinks.map(link => `
-                                    <div class="bg-[var(--bg-secondary)] p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
-                                        <h3 class="text-xl font-semibold text-[var(--accent-color)] mb-3">${link.title}</h3>
-                                        <p class="text-[var(--text-secondary)] mb-4">${link.desc}</p>
-                                        <a href="${link.href}" class="text-blue-500 dark:text-blue-400 hover:underline font-medium">${link.linkText} &rarr;</a>
-                                    </div>
-                                `).join('');
+                                        <div class="bg-[var(--bg-secondary)] p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                                            <h3 class="text-xl font-semibold text-[var(--accent-color)] mb-3">${link.title}</h3>
+                                            <p class="text-[var(--text-secondary)] mb-4">${link.desc}</p>
+                                            <a href="${link.href}" class="text-blue-500 dark:text-blue-400 hover:underline font-medium">${link.linkText} &rarr;</a>
+                                        </div>
+                                    `).join('');
             }
 
             const applyTheme = (theme) => {
@@ -368,27 +370,37 @@
                 const highCommandLink = document.getElementById('highCommandLink');
 
                 if (user) {
-                    // User is logged in, fetch their data from Firestore
+                    // User is logged in
+                    // Hide the login button
+                    loginButton.classList.add('hidden');
+                    // Show the user info div
+                    userInfoDiv.classList.remove('hidden');
+                    userInfoDiv.classList.add('flex');
+
+                    // Fetch user data from Firestore to get their name and role
                     const userDocRef = window.doc(window.db, "users", user.uid);
                     const userDocSnap = await window.getDoc(userDocRef);
 
                     let userName = user.email; // Default to email
                     let userRole = 'Officer'; // Default role
-                    highCommandLink.classList.add('hidden'); // Hide by default
 
                     if (userDocSnap.exists()) {
                         const userData = userDocSnap.data();
                         userName = userData.name || user.email; // Use name from DB, fallback to email
                         userRole = userData.role || 'Officer';
-
-                        // Check for High Command role
-                        if (userRole === 'High Command') {
-                            highCommandLink.classList.remove('hidden');
-                        }
-                    } else {
-                        console.log("No such user document!");
                     }
 
+                    // Display the user's name
+                    userEmailP.textContent = userName;
+
+                    // Show or hide the High Command link based on role
+                    if (userRole === 'High Command') {
+                        highCommandLink.classList.remove('hidden');
+                    } else {
+                        highCommandLink.classList.add('hidden');
+                    }
+
+                    // Store user profile locally for persistence
                     const userProfile = {
                         uid: user.uid,
                         name: userName,
@@ -397,12 +409,6 @@
                     };
                     localStorage.setItem('userProfile', JSON.stringify(userProfile));
 
-
-                    loginButton.classList.add('hidden');
-                    userInfoDiv.classList.remove('hidden');
-                    userInfoDiv.classList.add('flex');
-                    userEmailP.textContent = userName; // Display the user's name
-
                 } else {
                     // User is logged out
                     localStorage.removeItem('userProfile');
@@ -410,7 +416,7 @@
                     userInfoDiv.classList.add('hidden');
                     userInfoDiv.classList.remove('flex');
                     userEmailP.textContent = '';
-                    highCommandLink.classList.add('hidden'); // Ensure link is hidden on logout
+                    highCommandLink.classList.add('hidden');
                 }
             };
 
@@ -448,11 +454,11 @@
 
                     if (recentUpdates.length > 0) {
                         updatesContent.innerHTML = recentUpdates.map(update => `
-                                            <div class="bg-[var(--bg-tertiary)] p-4 rounded-md">
-                                                <p class="font-semibold">${update.date.toLocaleDateString()}: ${update.title}</p>
-                                                <p class="text-sm text-[var(--text-secondary)]">${update.description}</p>
-                                            </div>
-                                        `).join('');
+                                                <div class="bg-[var(--bg-tertiary)] p-4 rounded-md">
+                                                    <p class="font-semibold">${update.date.toLocaleDateString()}: ${update.title}</p>
+                                                    <p class="text-sm text-[var(--text-secondary)]">${update.description}</p>
+                                                </div>
+                                            `).join('');
                         updatesSection.classList.remove('hidden');
                     }
                 } catch (error) {
