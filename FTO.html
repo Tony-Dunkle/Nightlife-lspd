@@ -409,9 +409,10 @@
 
         const addAnnouncement = async (title, content, mediaUrl) => {
             try {
-                // Ensure user profile data is available before trying to post
-                if (!userProfile.name) {
-                    throw new Error('User profile not loaded. Cannot post announcement.');
+                // Now that the button is only enabled after profile is loaded,
+                // this check is more robust.
+                if (!userProfile.name || userProfile.name === 'Guest') {
+                    throw new Error('User profile not loaded or invalid. Cannot post announcement.');
                 }
                 await addDoc(collection(db, `artifacts/${appId}/public/data/announcements`), {
                     title: title,
@@ -475,7 +476,6 @@
                     userInfoElement.textContent = `${userProfile.name} | Role: ${userProfile.role} | Access: ${userProfile['access level']}`;
                 } else {
                     userInfoElement.textContent = `User ID: ${userId} (Profile not found)`;
-                    // To prevent the undefined username error, we set a default name
                     userProfile.name = 'Unknown User';
                 }
 
@@ -538,6 +538,7 @@
         cancelRecordBtn.addEventListener('click', closeRecordModal);
         recordModal.addEventListener('click', (e) => { if (e.target === recordModal) closeRecordModal(); });
 
+        // This event listener has been moved to be attached only after user profile is loaded
         addAnnouncementBtn.addEventListener('click', openAnnouncementModal);
         closeAnnouncementModalBtn.addEventListener('click', closeAnnouncementModal);
         cancelAnnouncementBtn.addEventListener('click', closeAnnouncementModal);
@@ -576,9 +577,6 @@
                 updateChecklistItem(recordId, itemName, isCompleted);
             }
         });
-
-        // The initial authentication check is handled by the onAuthStateChanged listener,
-        // so we don't need a separate sign-in call here.
     </script>
 </body>
 </html>
