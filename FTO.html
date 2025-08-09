@@ -4,8 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Unified PD - Field Training</title>
-    <!-- Favicon mimicking the EchoSphere design but with a police theme -->
-    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%233B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-8.67"></path><path d="M22 4L12 14.01l-3-3"></path></svg>' type="image/svg+xml">
+    <!-- Favicon updated to LSPD.png -->
+    <link rel="icon" href='LSPD.png' type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -52,15 +52,47 @@
             .toast.show {
                 opacity: 1;
             }
+
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #121827; /* A darker shade of the body background */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 50;
+        }
+
+        .login-prompt {
+            text-align: center;
+            padding: 2rem;
+            background-color: #1a202c;
+            border: 1px solid #2d3748;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
     </style>
 </head>
 <body class="text-gray-300">
 
+    <!-- Login Overlay -->
+    <div id="login-overlay" class="hidden login-overlay">
+        <div class="login-prompt">
+            <h1 class="text-3xl font-bold text-white mb-2">Access Denied</h1>
+            <p class="text-gray-400 mb-6">You must be logged in to access this page.</p>
+            <button id="login-btn" class="px-6 py-3 text-lg font-semibold rounded-full bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-200">Proceed to Login</button>
+        </div>
+    </div>
+
     <!-- Header -->
-    <header class="bg-gray-800 border-b border-gray-700 sticky top-0 z-40 px-4 py-2">
+    <header id="main-header" class="bg-gray-800 border-b border-gray-700 sticky top-0 z-40 px-4 py-2 hidden">
         <div class="max-w-7xl mx-auto flex items-center justify-between">
             <div class="flex items-center space-x-2">
-                <svg class="w-8 h-8 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"></path><path d="M12 12a5 5 0 1 0 5 5 5 5 0 0 0-5-5z"></path><path d="M12 12a1 1 0 1 0 1 1 1 1 0 0 0-1-1z"></path></svg>
+                <img src="LSPD.png" alt="LSPD Logo" class="w-10 h-10">
                 <span class="text-xl font-bold text-white hidden sm:block">Unified PD Training</span>
             </div>
             <div class="flex-1 px-4 lg:px-16 flex justify-end">
@@ -74,7 +106,7 @@
     </header>
 
     <!-- Main Content -->
-    <main class="max-w-7xl mx-auto mt-4 px-4">
+    <main id="main-content" class="max-w-7xl mx-auto mt-4 px-4 hidden">
         <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
             <!-- Training Records Column -->
@@ -192,12 +224,16 @@
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
         // --- DOM Elements ---
+        const loginOverlay = document.getElementById('login-overlay');
+        const loginBtn = document.getElementById('login-btn');
+        const mainHeader = document.getElementById('main-header');
+        const mainContent = document.getElementById('main-content');
         const addRecordBtn = document.getElementById('addRecordBtn');
         const addAnnouncementBtn = document.getElementById('addAnnouncementBtn');
         const recordsContainer = document.getElementById('records-container');
         const recordModal = document.getElementById('recordModal');
-        const closeModalBtn = document.getElementById('closeRecordModalBtn');
-        const cancelBtn = document.getElementById('cancelRecordBtn');
+        const closeRecordModalBtn = document.getElementById('closeRecordModalBtn');
+        const cancelRecordBtn = document.getElementById('cancelRecordBtn');
         const trainingForm = document.getElementById('trainingForm');
         const traineeInput = document.getElementById('traineeInput');
         const trainerInput = document.getElementById('trainerInput');
@@ -216,8 +252,8 @@
         const announcementsContainer = document.getElementById('announcements-container');
 
         // --- State and Constants ---
-        const allowedRoles = ["Field Training Officer", "Command", "High Command", "Commisioner", "Website Account Manager"];
-        let userProfile = { name: 'Guest', role: 'None', accessLevel: 'None' };
+        const allowedAccessLevels = ["Field Training Officer", "Command", "High Command", "Commisioner", "Website Account Manager"];
+        let userProfile = { name: 'Guest', role: 'None', 'access level': 'None' };
         let userId = null;
 
         // A mock checklist for a FiveM cadet's first 5 days of training
@@ -373,6 +409,10 @@
 
         const addAnnouncement = async (title, content, mediaUrl) => {
             try {
+                // Ensure user profile data is available before trying to post
+                if (!userProfile.name) {
+                    throw new Error('User profile not loaded. Cannot post announcement.');
+                }
                 await addDoc(collection(db, `artifacts/${appId}/public/data/announcements`), {
                     title: title,
                     content: content,
@@ -419,9 +459,14 @@
         // --- Main Initialization ---
         onAuthStateChanged(auth, async (user) => {
             if (user) {
+                // Hide login overlay and show main content
+                loginOverlay.classList.add('hidden');
+                mainHeader.classList.remove('hidden');
+                mainContent.classList.remove('hidden');
+
                 userId = user.uid;
 
-                // Fetch user profile from the new path: `users/{userId}`
+                // Fetch user profile from the provided path
                 const userDocRef = doc(db, 'users', userId);
                 const userDocSnap = await getDoc(userDocRef);
 
@@ -430,11 +475,13 @@
                     userInfoElement.textContent = `${userProfile.name} | Role: ${userProfile.role} | Access: ${userProfile['access level']}`;
                 } else {
                     userInfoElement.textContent = `User ID: ${userId} (Profile not found)`;
+                    // To prevent the undefined username error, we set a default name
+                    userProfile.name = 'Unknown User';
                 }
 
-                if (allowedRoles.includes(userProfile['access level'])) {
+                // Check access level and configure the UI
+                if (allowedAccessLevels.includes(userProfile['access level'])) {
                     authButtons.classList.remove('hidden');
-                    // Show announcement button only for High Command
                     if (userProfile['access level'] === 'High Command') {
                         addAnnouncementBtn.classList.remove('hidden');
                     }
@@ -447,8 +494,13 @@
                             records.push({ id: doc.id, ...doc.data() });
                         });
                         renderTrainingRecords(records);
+                    }, (error) => {
+                        console.error("Error getting records:", error);
+                        // Hide loading message and show error for UI clarity
+                        loadingMessage.classList.add('hidden');
+                        noAccessMessage.textContent = 'Failed to load records due to a permission error.';
+                        noAccessMessage.classList.remove('hidden');
                     });
-
                 } else {
                     loadingMessage.classList.add('hidden');
                     noAccessMessage.classList.remove('hidden');
@@ -464,26 +516,26 @@
                     });
                     announcements.sort((a, b) => b.timestamp.seconds - a.timestamp.seconds);
                     renderAnnouncements(announcements);
+                }, (error) => {
+                    console.error("Error getting announcements:", error);
                 });
 
             } else {
-                // If no user is signed in, sign in anonymously or with the custom token
-                if (initialAuthToken) {
-                    try {
-                        await signInWithCustomToken(auth, initialAuthToken);
-                    } catch (error) {
-                        console.error("Error signing in with custom token:", error);
-                    }
-                } else {
-                    await signInAnonymously(auth);
-                }
+                // If no user is signed in, display the login overlay
+                loginOverlay.classList.remove('hidden');
+                mainHeader.classList.add('hidden');
+                mainContent.classList.add('hidden');
             }
         });
 
         // --- Event Listeners ---
+        loginBtn.addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+
         addRecordBtn.addEventListener('click', openRecordModal);
-        closeModalBtn.addEventListener('click', closeRecordModal);
-        cancelBtn.addEventListener('click', closeRecordModal);
+        closeRecordModalBtn.addEventListener('click', closeRecordModal);
+        cancelRecordBtn.addEventListener('click', closeRecordModal);
         recordModal.addEventListener('click', (e) => { if (e.target === recordModal) closeRecordModal(); });
 
         addAnnouncementBtn.addEventListener('click', openAnnouncementModal);
@@ -525,12 +577,8 @@
             }
         });
 
-        // Initialize user login on page load
-        if (initialAuthToken) {
-            signInWithCustomToken(auth, initialAuthToken).catch(console.error);
-        } else {
-            signInAnonymously(auth).catch(console.error);
-        }
+        // The initial authentication check is handled by the onAuthStateChanged listener,
+        // so we don't need a separate sign-in call here.
     </script>
 </body>
 </html>
