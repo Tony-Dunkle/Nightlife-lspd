@@ -683,20 +683,24 @@
             }
         };
 
-        const populateRoleAndAccessLevelDropdowns = (userRole, userAccessLevel) => {
+        const populateAddOfficerDropdowns = () => {
             // Clear existing options
             officerRoleSelect.innerHTML = '';
             officerAccessLevelSelect.innerHTML = '';
 
             // Determine which roles can be assigned based on the logged-in user's role
             let roles = [];
-            let accessLevels = [];
 
-            if (userRole === 'Website Account Manager') {
+            if (currentUserRole === 'Website Account Manager') {
                 roles = ["Personnel Manager", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
-                accessLevels = ["High Command", "Command", "Field Training Officer"];
                 accessLevelField.classList.remove('hidden');
-            } else if (userRole === 'Personnel Manager') {
+                accessLevelsForWebsiteManager.forEach(accessLevel => {
+                    const option = document.createElement('option');
+                    option.value = accessLevel;
+                    option.textContent = accessLevel;
+                    officerAccessLevelSelect.appendChild(option);
+                });
+            } else if (currentUserRole === 'Personnel Manager') {
                 roles = ["Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
                 accessLevelField.classList.add('hidden');
             } else {
@@ -711,21 +715,49 @@
                 option.textContent = role;
                 officerRoleSelect.appendChild(option);
             });
+        };
 
-            // Populate the access levels dropdown for Website Account Managers
-            if (userRole === 'Website Account Manager') {
+        const populateEditOfficerDropdowns = (currentRole, currentAccessLevel) => {
+            editOfficerRoleSelect.innerHTML = '';
+            editOfficerAccessLevelSelect.innerHTML = '';
+
+            let roles = [];
+            let accessLevels = [];
+
+            if (currentUserRole === 'Website Account Manager') {
+                roles = ["Personnel Manager", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
+                accessLevels = ["High Command", "Command", "Field Training Officer"];
+                editAccessLevelField.classList.remove('hidden');
+            } else if (currentUserRole === 'Personnel Manager') {
+                roles = ["Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
+                editAccessLevelField.classList.add('hidden');
+            } else {
+                roles = [];
+                editAccessLevelField.classList.add('hidden');
+            }
+
+            roles.forEach(role => {
+                const option = document.createElement('option');
+                option.value = role;
+                option.textContent = role;
+                if (role === currentRole) option.selected = true;
+                editOfficerRoleSelect.appendChild(option);
+            });
+
+            if (currentUserRole === 'Website Account Manager') {
                 accessLevels.forEach(accessLevel => {
                     const option = document.createElement('option');
                     option.value = accessLevel;
                     option.textContent = accessLevel;
-                    officerAccessLevelSelect.appendChild(option);
+                    if (accessLevel === currentAccessLevel) option.selected = true;
+                    editOfficerAccessLevelSelect.appendChild(option);
                 });
             }
         };
 
 
         addOfficerBtn.addEventListener('click', () => {
-            populateRoleAndAccessLevelDropdowns(currentUserRole, currentUserAccessLevel);
+            populateAddOfficerDropdowns(currentUserRole, currentUserAccessLevel);
             addOfficerModal.classList.add('is-open')
         });
         cancelAddOfficerBtn.addEventListener('click', () => addOfficerModal.classList.remove('is-open'));
