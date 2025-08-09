@@ -508,11 +508,18 @@
         let currentUserRole = null;
         let currentUserAccessLevel = null;
 
-        // This function sets permissions based on role and access level
+        // --- FIX: This function now correctly checks both role and access level for permissions ---
         const setPermissions = (role, accessLevel) => {
             currentUserRole = role;
             currentUserAccessLevel = accessLevel;
-            if (rolesByManager[currentUserRole] || currentUserAccessLevel === "High Command" || currentUserAccessLevel === "Command") {
+
+            // Check if either the role or the access level qualifies as a manager
+            const isManager = rolesByManager[currentUserRole] || rolesByManager[currentUserAccessLevel];
+
+            // Check if either the role or the access level is a command level
+            const isCommand = currentUserAccessLevel === "High Command" || currentUserRole === "High Command" || currentUserAccessLevel === "Command" || currentUserRole === "Command";
+
+            if (isManager || isCommand) {
                 addOfficerBtn.classList.remove('hidden');
             } else {
                 addOfficerBtn.classList.add('hidden');
@@ -716,14 +723,14 @@
             let roles = [];
             let accessLevels = [];
 
-            if (currentUserRole === 'Account Manager') {
+            if (currentUserRole === 'Account Manager' || currentUserAccessLevel === 'Account Manager') {
                 roles = ["Personnel Manager", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
                 accessLevels = ["High Command", "Command", "Field Training Officer"];
                 accessLevelField.classList.remove('hidden');
-            } else if (currentUserRole === 'Personnel Manager') {
+            } else if (currentUserRole === 'Personnel Manager' || currentUserAccessLevel === 'Personnel Manager') {
                 roles = ["Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
                 accessLevelField.classList.add('hidden');
-            } else if (currentUserRole === 'Website Manager') {
+            } else if (currentUserRole === 'Website Manager' || currentUserAccessLevel === 'Website Manager') {
                 roles = ["Account Manager", "Personnel Manager", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
                 accessLevels = ["High Command", "Command", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
                 accessLevelField.classList.remove('hidden');
@@ -739,7 +746,7 @@
                 officerRoleSelect.appendChild(option);
             });
 
-            if (currentUserRole === 'Account Manager' || currentUserRole === 'Website Manager') {
+            if (currentUserRole === 'Account Manager' || currentUserAccessLevel === 'Account Manager' || currentUserRole === 'Website Manager' || currentUserAccessLevel === 'Website Manager') {
                 accessLevels.forEach(accessLevel => {
                     const option = document.createElement('option');
                     option.value = accessLevel;
