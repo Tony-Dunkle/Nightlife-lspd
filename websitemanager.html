@@ -150,9 +150,8 @@
     <!-- Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        // --- FIXED: Removed signInAnonymously as it's not used and causes errors ---
         import { getAuth, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, query, onSnapshot, addDoc, updateDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, query, onSnapshot, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- Firebase Configuration & Initialization ---
         const firebaseConfig = {
@@ -173,7 +172,7 @@
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
         // --- Collection Paths ---
-        const usersCollectionPath = `artifacts/${appId}/public/data/users`;
+        const usersCollectionPath = `users`; // Top-level collection
         const trainingRecordsCollectionPath = `artifacts/${appId}/public/data/trainingRecords`;
         const announcementsCollectionPath = `artifacts/${appId}/public/data/announcements`;
         const loginLogsCollectionPath = `artifacts/${appId}/public/data/loginLogs`;
@@ -191,6 +190,7 @@
         const recentAccountsContainer = document.getElementById('recent-accounts');
 
         // --- State and Constants ---
+        // --- FIXED: Use the correct access level string ---
         const requiredAccessLevel = "Website Manager";
 
         // --- UI Functions ---
@@ -306,7 +306,6 @@
 
         // --- Main Initialization & Auth Flow ---
 
-        // This listener will handle UI changes once authentication is complete.
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 const userDocRef = doc(db, usersCollectionPath, user.uid);
@@ -337,13 +336,11 @@
             }
         });
 
-        // --- FIXED: Start the authentication process immediately ---
         const initializeAuth = async () => {
             try {
                 if (initialAuthToken) {
                     await signInWithCustomToken(auth, initialAuthToken);
                 } else {
-                    // If no token is provided, access is denied. Do not attempt anonymous sign-in.
                     showAccessDenied("No authentication token provided. Access denied.");
                 }
             } catch (error) {
