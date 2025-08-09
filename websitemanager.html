@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unified PD - Website Manager</title>
+    <!-- Favicon updated to LSPD.png -->
+    <link rel="icon" href='LSPD.png' type="image/png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a202c; /* bg-gray-900 */
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a202c;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #4a5568;
+            border-radius: 4px;
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #718096;
+            }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
+            border-radius: 9999px;
+            background-color: #2d3748;
+            color: white;
+            border: 1px solid #4a5568;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+
+            .toast.show {
+                opacity: 1;
+            }
+
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #121827; /* A darker shade of the body background */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 50;
+        }
+
+        .login-prompt {
+            text-align: center;
+            padding: 2rem;
+            background-color: #1a202c;
+            border: 1px solid #2d3748;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="text-gray-300">
+
+    <!-- Login Overlay -->
+    <div id="login-overlay" class="hidden login-overlay">
+        <div class="login-prompt">
+            <h1 class="text-3xl font-bold text-white mb-2">Access Denied</h1>
+            <p class="text-gray-400 mb-6">You must be logged in to access this page.</p>
+            <button id="login-btn" class="px-6 py-3 text-lg font-semibold rounded-full bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-200">Proceed to Login</button>
+        </div>
+    </div>
+
+    <!-- Header -->
+    <header id="main-header" class="bg-gray-800 border-b border-gray-700 sticky top-0 z-40 px-4 py-2 hidden">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <img src="LSPD.png" alt="LSPD Logo" class="w-10 h-10">
+                <span class="text-xl font-bold text-white hidden sm:block">Website Manager Dashboard</span>
+            </div>
+            <div class="flex-1 px-4 lg:px-16 flex justify-end">
+                <div id="user-info" class="text-sm text-gray-400">Loading user info...</div>
+            </div>
+            <div id="auth-buttons" class="hidden space-x-2">
+                <!-- No buttons needed for this dashboard view, but keeping the container for consistency -->
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-content" class="max-w-7xl mx-auto mt-4 px-4 hidden">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <!-- Primary Content Column -->
+            <div class="lg:col-span-2 space-y-4">
+                <!-- Recently Added Training Records -->
+                <div class="bg-gray-800 rounded-lg border border-gray-700 p-4">
+                    <h3 class="font-bold text-lg text-white mb-3">Recently Added Training Records</h3>
+                    <div id="recent-records" class="space-y-4">
+                        <p class="text-gray-400">Loading...</p>
+                    </div>
+                </div>
+
+                <!-- Recent User Account Activity -->
+                <div class="bg-gray-800 rounded-lg border border-gray-700 p-4">
+                    <h3 class="font-bold text-lg text-white mb-3">Recent Account Updates</h3>
+                    <div id="recent-accounts" class="space-y-4">
+                        <p class="text-gray-400">Loading...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sidebar Column -->
+            <aside class="lg:col-span-1 space-y-4">
+                <!-- Login Logs -->
+                <div class="bg-gray-800 rounded-lg border border-gray-700 p-4">
+                    <h3 class="font-bold text-lg text-white mb-3">Login Logs</h3>
+                    <div id="login-logs" class="space-y-2 max-h-96 overflow-y-auto">
+                        <p class="text-gray-400">Loading...</p>
+                    </div>
+                </div>
+
+                <!-- Recent Announcements -->
+                <div class="bg-gray-800 rounded-lg border border-gray-700 p-4">
+                    <h3 class="font-bold text-lg text-white mb-3">Recent Announcements</h3>
+                    <div id="recent-announcements" class="space-y-4">
+                        <p class="text-gray-400">Loading...</p>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, query, onSnapshot, addDoc, updateDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- Firebase Configuration & Initialization ---
+        // Provided by the user
+        const firebaseConfig = {
+            apiKey: "AIzaSyDU7DRAxCzqu81DTa7k0DXaBRcMpk0sElc",
+            authDomain: "upd-system.firebaseapp.com",
+            projectId: "upd-system",
+            storageBucket: "upd-system.firebasestorage.app",
+            messagingSenderId: "28223003678",
+            appId: "1:28223003678:web:a19a9a8eb33fe74202220f",
+            measurementId: "G-83NX0KXZ1Y"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // These variables are provided by the Canvas environment
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        // --- DOM Elements ---
+        const loginOverlay = document.getElementById('login-overlay');
+        const loginBtn = document.getElementById('login-btn');
+        const mainHeader = document.getElementById('main-header');
+        const mainContent = document.getElementById('main-content');
+        const userInfoElement = document.getElementById('user-info');
+        const recentRecordsContainer = document.getElementById('recent-records');
+        const recentAnnouncementsContainer = document.getElementById('recent-announcements');
+        const loginLogsContainer = document.getElementById('login-logs');
+        const recentAccountsContainer = document.getElementById('recent-accounts');
+
+        // --- State and Constants ---
+        const requiredAccessLevel = "Website Account Manager";
+
+        // --- Toast Notification ---
+        const showToast = (message) => {
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.className = 'toast';
+            document.body.appendChild(toast);
+            setTimeout(() => { toast.classList.add('show'); }, 100);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                toast.addEventListener('transitionend', () => toast.remove());
+            }, 3000);
+        };
+
+        // --- UI Functions ---
+        const renderRecentRecords = (records) => {
+            if (records.length === 0) {
+                recentRecordsContainer.innerHTML = `<p class="text-gray-400">No training records found.</p>`;
+                return;
+            }
+            recentRecordsContainer.innerHTML = records.map(record => `
+                <div class="bg-gray-700/50 rounded-md p-3 border border-gray-600">
+                    <p class="text-sm font-semibold text-white">${record.traineeName} trained by ${record.trainerNames.join(', ')}</p>
+                    <p class="text-xs text-gray-400">${record.timestamp?.toDate()?.toLocaleString() || 'N/A'}</p>
+                </div>
+            `).join('');
+        };
+
+        const renderRecentAnnouncements = (announcements) => {
+            if (announcements.length === 0) {
+                recentAnnouncementsContainer.innerHTML = `<p class="text-gray-400">No recent announcements.</p>`;
+                return;
+            }
+            recentAnnouncementsContainer.innerHTML = announcements.map(announcement => `
+                <div class="bg-gray-700/50 rounded-md p-3 border border-gray-600">
+                    <p class="text-sm font-semibold text-white">${announcement.title}</p>
+                    <p class="text-xs text-gray-400">${announcement.timestamp?.toDate()?.toLocaleString() || 'N/A'} by ${announcement.createdByUsername}</p>
+                </div>
+            `).join('');
+        };
+
+        const renderLoginLogs = (logs) => {
+            if (logs.length === 0) {
+                loginLogsContainer.innerHTML = `<p class="text-gray-400">No login activity.</p>`;
+                return;
+            }
+            loginLogsContainer.innerHTML = logs.map(log => `
+                <div class="flex justify-between items-center bg-gray-700/50 rounded-md p-2">
+                    <p class="text-xs text-white">${log.user} logged in</p>
+                    <p class="text-xs text-gray-400">${log.timestamp?.toDate()?.toLocaleString() || 'N/A'}</p>
+                </div>
+            `).join('');
+        };
+
+        const renderRecentAccounts = (accounts) => {
+            if (accounts.length === 0) {
+                recentAccountsContainer.innerHTML = `<p class="text-gray-400">No recent account activity.</p>`;
+                return;
+            }
+            recentAccountsContainer.innerHTML = accounts.map(account => `
+                <div class="bg-gray-700/50 rounded-md p-3 border border-gray-600">
+                    <p class="text-sm font-semibold text-white">${account.name}</p>
+                    <p class="text-xs text-gray-400">Role: ${account.role} | Access: ${account['access level']}</p>
+                    <p class="text-xs text-gray-400">Last updated: ${account.lastUpdated?.toDate()?.toLocaleString() || 'N/A'}</p>
+                </div>
+            `).join('');
+        };
+
+        // --- Firestore Functions (Mock/Example) ---
+        const logUserLogin = async (userDisplayName) => {
+            try {
+                // Assuming a loginLogs collection exists
+                await addDoc(collection(db, 'logs/loginLogs/logs'), {
+                    user: userDisplayName,
+                    timestamp: serverTimestamp()
+                });
+            } catch (e) {
+                console.error("Error logging in:", e);
+            }
+        };
+
+        const subscribeToAllData = () => {
+            // Recently Added Training Records
+            const qRecords = collection(db, `artifacts/${appId}/public/data/trainingRecords`);
+            onSnapshot(qRecords, (snapshot) => {
+                const records = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                records.sort((a,b) => b.timestamp?.seconds - a.timestamp?.seconds);
+                renderRecentRecords(records.slice(0, 10)); // Display top 10
+            });
+
+            // Recent Announcements
+            const qAnnouncements = collection(db, `artifacts/${appId}/public/data/announcements`);
+            onSnapshot(qAnnouncements, (snapshot) => {
+                const announcements = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                announcements.sort((a,b) => b.timestamp?.seconds - a.timestamp?.seconds);
+                renderRecentAnnouncements(announcements.slice(0, 5)); // Display top 5
+            });
+
+            // Recent User Account Updates
+            const qAccounts = collection(db, 'users');
+            onSnapshot(qAccounts, (snapshot) => {
+                const accounts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                accounts.sort((a, b) => b.lastUpdated?.seconds - a.lastUpdated?.seconds);
+                renderRecentAccounts(accounts.slice(0, 5)); // Display top 5
+            });
+
+            // Login Logs
+            const qLoginLogs = collection(db, `logs/loginLogs/logs`);
+            onSnapshot(qLoginLogs, (snapshot) => {
+                const logs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                logs.sort((a,b) => b.timestamp?.seconds - a.timestamp?.seconds);
+                renderLoginLogs(logs.slice(0, 20)); // Display top 20
+            });
+        };
+
+        // --- Main Initialization ---
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                const userDocRef = doc(db, 'users', user.uid);
+                const userDocSnap = await getDoc(userDocRef);
+
+                if (userDocSnap.exists()) {
+                    const userProfile = userDocSnap.data();
+                    if (userProfile['access level'] === requiredAccessLevel) {
+                        loginOverlay.classList.add('hidden');
+                        mainHeader.classList.remove('hidden');
+                        mainContent.classList.remove('hidden');
+                        userInfoElement.textContent = `${userProfile.name} | Role: ${userProfile.role}`;
+                        subscribeToAllData();
+                    } else {
+                        // User is logged in but has incorrect access level
+                        loginOverlay.classList.remove('hidden');
+                        loginBtn.textContent = 'Go Back';
+                        loginBtn.onclick = () => window.location.href = 'index.html';
+                    }
+                } else {
+                    // User profile not found, likely a new user.
+                    loginOverlay.classList.remove('hidden');
+                    loginBtn.textContent = 'Go Back';
+                    loginBtn.onclick = () => window.location.href = 'index.html';
+                }
+            } else {
+                // If no user is signed in, display the login overlay
+                loginOverlay.classList.remove('hidden');
+                mainHeader.classList.add('hidden');
+                mainContent.classList.add('hidden');
+            }
+        });
+
+        // --- Event Listeners ---
+        loginBtn.addEventListener('click', () => {
+            window.location.href = 'index.html';
+        });
+    </script>
+</body>
+</html>

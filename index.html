@@ -230,6 +230,13 @@
                         <span class="ml-3">High Command</span>
                     </a>
                 </div>
+                <div id="websiteManagerContainer" class="pt-2 hidden">
+                    <h3 class="px-3 text-xs uppercase text-slate-500 font-semibold tracking-wider">Management</h3>
+                    <a id="websiteManagerLink" href="websitemanager.html" class="mt-1 flex items-center px-3 py-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        <span class="ml-3">Website Manager</span>
+                    </a>
+                </div>
             </nav>
         </aside>
 
@@ -331,6 +338,7 @@
             const cancelLoginBtn = document.getElementById('cancelLoginBtn');
             const submitLoginBtn = document.getElementById('submitLoginBtn');
             const highCommandLink = document.getElementById('highCommandLink');
+            const websiteManagerContainer = document.getElementById('websiteManagerContainer');
 
 
             // --- STATE ---
@@ -347,12 +355,12 @@
                     { title: "Shift Roster & Schedules", desc: "Check your upcoming shifts and team assignments.", href: "roster.html", linkText: "View Roster" }
                 ];
                 container.innerHTML = quickLinks.map(link => `
-                                        <div class="bg-[var(--bg-secondary)] p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
-                                            <h3 class="text-xl font-semibold text-[var(--accent-color)] mb-3">${link.title}</h3>
-                                            <p class="text-[var(--text-secondary)] mb-4">${link.desc}</p>
-                                            <a href="${link.href}" class="text-blue-500 dark:text-blue-400 hover:underline font-medium">${link.linkText} &rarr;</a>
-                                        </div>
-                                    `).join('');
+                                            <div class="bg-[var(--bg-secondary)] p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                                                <h3 class="text-xl font-semibold text-[var(--accent-color)] mb-3">${link.title}</h3>
+                                                <p class="text-[var(--text-secondary)] mb-4">${link.desc}</p>
+                                                <a href="${link.href}" class="text-blue-500 dark:text-blue-400 hover:underline font-medium">${link.linkText} &rarr;</a>
+                                            </div>
+                                        `).join('');
             }
 
             const applyTheme = (theme) => {
@@ -394,10 +402,19 @@
                         } else {
                             highCommandLink.classList.add('hidden');
                         }
+
+                        // Check for Website Account Manager role
+                        if (userData['role'] === 'Website Account Manager') {
+                            websiteManagerContainer.classList.remove('hidden');
+                        } else {
+                            websiteManagerContainer.classList.add('hidden');
+                        }
+
                     } else {
-                        // If no user profile exists, hide the High Command link
+                        // If no user profile exists, hide the special links
                         console.log("No user profile found in Firestore. Defaulting to Officer access level.");
                         highCommandLink.classList.add('hidden');
+                        websiteManagerContainer.classList.add('hidden');
                     }
 
                     // Display the user's name
@@ -410,6 +427,7 @@
                     userInfoDiv.classList.remove('flex');
                     userEmailP.textContent = '';
                     highCommandLink.classList.add('hidden'); // Ensure link is hidden on logout
+                    websiteManagerContainer.classList.add('hidden'); // Ensure link is hidden on logout
                 }
             };
 
@@ -447,11 +465,11 @@
 
                     if (recentUpdates.length > 0) {
                         updatesContent.innerHTML = recentUpdates.map(update => `
-                                                <div class="bg-[var(--bg-tertiary)] p-4 rounded-md">
-                                                    <p class="font-semibold">${update.date.toLocaleDateString()}: ${update.title}</p>
-                                                    <p class="text-sm text-[var(--text-secondary)]">${update.description}</p>
-                                                </div>
-                                            `).join('');
+                                                    <div class="bg-[var(--bg-tertiary)] p-4 rounded-md">
+                                                        <p class="font-semibold">${update.date.toLocaleDateString()}: ${update.title}</p>
+                                                        <p class="text-sm text-[var(--text-secondary)]">${update.description}</p>
+                                                    </div>
+                                                `).join('');
                         updatesSection.classList.remove('hidden');
                     }
                 } catch (error) {
