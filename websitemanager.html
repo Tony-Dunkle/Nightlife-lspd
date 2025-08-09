@@ -150,7 +150,8 @@
     <!-- Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        // --- FIXED: Removed signInAnonymously as it's not used and causes errors ---
+        import { getAuth, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, collection, query, onSnapshot, addDoc, updateDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- Firebase Configuration & Initialization ---
@@ -342,8 +343,8 @@
                 if (initialAuthToken) {
                     await signInWithCustomToken(auth, initialAuthToken);
                 } else {
-                    // Fallback for local testing without a token
-                    await signInAnonymously(auth);
+                    // If no token is provided, access is denied. Do not attempt anonymous sign-in.
+                    showAccessDenied("No authentication token provided. Access denied.");
                 }
             } catch (error) {
                 console.error("Authentication failed:", error);
