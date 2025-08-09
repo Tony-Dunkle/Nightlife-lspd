@@ -280,7 +280,7 @@
 
         // --- State and Constants ---
         const allowedAccessLevels = ["Field Training Officer", "Command", "High Command", "Commisioner", "Website Account Manager"];
-        let userProfile = { name: 'Guest', role: 'None', 'access level': 'None' };
+        let userProfile = null;
         let userId = null;
 
         // A mock checklist for a FiveM cadet's first 5 days of training
@@ -489,10 +489,9 @@
 
         const addAnnouncement = async (title, content, mediaUrl) => {
             try {
-                // Now that the button is only enabled after profile is loaded,
-                // this check is more robust.
-                if (!userProfile.name || userProfile.name === 'Guest') {
-                    throw new Error('User profile not loaded or invalid. Cannot post announcement.');
+                // Ensure userProfile is not null before accessing its properties.
+                if (!userProfile) {
+                    throw new Error('User profile not loaded. Cannot post announcement.');
                 }
                 await addDoc(collection(db, `artifacts/${appId}/public/data/announcements`), {
                     title: title,
@@ -556,7 +555,7 @@
                     userInfoElement.textContent = `${userProfile.name} | Role: ${userProfile.role} | Access: ${userProfile['access level']}`;
                 } else {
                     userInfoElement.textContent = `User ID: ${userId} (Profile not found)`;
-                    userProfile.name = 'Unknown User';
+                    userProfile = { name: 'Unknown User', role: 'None', 'access level': 'None' }; // Set a default profile
                 }
 
                 // Check access level and configure the UI
@@ -594,7 +593,7 @@
                     querySnapshot.forEach((doc) => {
                         announcements.push({ id: doc.id, ...doc.data() });
                     });
-                    announcements.sort((a, b) => b.timestamp.seconds - a.timestamp.seconds);
+                    announcements.sort((a, b) => b.timestamp?.seconds - a.timestamp?.seconds);
                     renderAnnouncements(announcements);
                 }, (error) => {
                     console.error("Error getting announcements:", error);
@@ -639,6 +638,19 @@
                 }
             } else {
                 showToast('Please fill out all required fields.', true);
+            }
+        });
+
+        announcementForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const title = announcementTitleInput.value.trim();
+            const content = announcementContentInput.value.trim();
+            const mediaUrl = announcementMediaInput.value.trim();
+
+            if (title && content) {
+                addAnnouncement(title, content, mediaUrl);
+            } else {
+                showToast('Title and content are required.', true);
             }
         });
 
