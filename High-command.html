@@ -367,29 +367,29 @@
 
                     if (user) {
                         userId = user.uid;
-                        // Fetch the user's document from Firestore to check their role
+                        // Fetch the user's document from Firestore to check their access level
                         // This path is corrected to match the database structure you provided
                         const userDocRef = window.firebase.doc(db, "users", user.uid);
                         const userDocSnap = await window.firebase.getDoc(userDocRef);
 
-                        let userRole = null;
+                        let userAccessLevel = null;
                         if (userDocSnap.exists()) {
                             const userData = userDocSnap.data();
-                            userRole = userData.role;
+                            userAccessLevel = userData['access level'];
                         }
 
-                        // Check if the user has the required role to access the page
-                        if (userRole === 'High Command' || userRole === 'Website Account Manager') {
+                        // Check if the user has the required access level to access the page
+                        if (userAccessLevel === 'High Command' || userAccessLevel === 'Website Account Manager') {
                             loadingOverlay.classList.add('hidden');
                             loginOverlay.classList.add('hidden');
                             pageContent.classList.remove('hidden');
 
-                            // Load the page data now that the user is verified
+                            // These data loading calls are now correctly placed *after* the permission check
                             loadReportsFromFirestore();
                             loadPersonnel();
 
                             // Set permissions for the "add officer" button
-                            if (userRole === 'Website Account Manager') {
+                            if (userAccessLevel === 'Website Account Manager') {
                                 addOfficerBtn.classList.remove('hidden');
                             }
 
@@ -397,7 +397,7 @@
                             loadingOverlay.classList.add('hidden');
                             pageContent.classList.add('hidden');
                             loginOverlay.classList.remove('hidden');
-                            loginOverlay.querySelector('p').textContent = `You are logged in as a "${userRole}", but do not have permission to view this page.`;
+                            loginOverlay.querySelector('p').textContent = `You are logged in as a "${userAccessLevel}", but do not have permission to view this page.`;
                         }
 
                     } else {
