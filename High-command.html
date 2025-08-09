@@ -355,19 +355,21 @@
                 db = window.firebase.getFirestore(app);
                 console.log("Firebase Initialized for High Command");
 
-                // Sign in with the provided custom token, or anonymously as a fallback
-                if (initialAuthToken) {
-                    await window.firebase.signInWithCustomToken(auth, initialAuthToken);
-                } else {
-                    await window.firebase.signInAnonymously(auth);
+                // We must have a token to proceed.
+                if (!initialAuthToken) {
+                    console.error("No authentication token found. Redirecting to login.");
+                    window.location.href = "index.html";
+                    return;
                 }
+
+                // Sign in with the provided custom token
+                await window.firebase.signInWithCustomToken(auth, initialAuthToken);
 
                 // Listen for authentication state changes and handle UI accordingly
                 window.firebase.onAuthStateChanged(auth, async (user) => {
                     const loadingOverlay = document.getElementById('loading-overlay');
                     const pageContent = document.getElementById('page-content');
                     const loginOverlay = document.getElementById('login-prompt-overlay');
-                    const addOfficerBtn = document.getElementById('add-officer-btn');
 
                     if (user) {
                         userId = user.uid;
@@ -387,8 +389,6 @@
                             loginOverlay.classList.add('hidden');
                             pageContent.classList.remove('hidden');
 
-                            // Allow adding officers based on role
-                            addOfficerBtn.classList.remove('hidden');
                             // Load the page data now that the user is verified
                             loadReportsFromFirestore();
                             loadPersonnel();
@@ -400,18 +400,18 @@
                         }
 
                     } else {
-                        // User is not logged in, show access denied
-                        loadingOverlay.classList.add('hidden');
-                        pageContent.classList.add('hidden');
-                        loginOverlay.classList.remove('hidden');
-                        loginOverlay.querySelector('p').textContent = 'You must be logged in to access the High Command Center.';
+                        // User is not logged in, redirect to login page.
+                        console.error("User is not authenticated. Redirecting to login page.");
+                        window.location.href = "index.html";
                     }
                 });
 
             } catch (e) {
                 console.error("Error initializing Firebase:", e);
-                document.getElementById('reports-loading').innerHTML = '<p class="text-red-500">Could not connect to the database.</p>';
-                document.getElementById('personnel-loading').innerHTML = '<p class="text-red-500">Could not connect to the database.</p>';
+                // In case of any other error, redirect to login for security
+                document.getElementById('reports-loading').innerHTML = '<p class="text-red-500">Could not connect to the database. Redirecting...</p>';
+                document.getElementById('personnel-loading').innerHTML = '<p class="text-red-500">Could not connect to the database. Redirecting...</p>';
+                setTimeout(() => { window.location.href = "index.html"; }, 3000);
             }
         };
 
