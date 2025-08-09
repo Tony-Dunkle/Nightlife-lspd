@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unified PD - Website Manager</title>
+    <title>Unified PD - Website Account Manager</title>
     <!-- Favicon updated to LSPD.png -->
     <link rel="icon" href='LSPD.png' type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
@@ -93,7 +93,7 @@
         <div class="max-w-7xl mx-auto flex items-center justify-between">
             <div class="flex items-center space-x-2">
                 <img src="LSPD.png" alt="LSPD Logo" class="w-10 h-10">
-                <span class="text-xl font-bold text-white hidden sm:block">Website Manager Dashboard</span>
+                <span class="text-xl font-bold text-white hidden sm:block">Website Account Manager Dashboard</span>
             </div>
             <div class="flex-1 px-4 lg:px-16 flex justify-end">
                 <div id="user-info" class="text-sm text-gray-400">Loading user info...</div>
@@ -207,11 +207,11 @@
                 return;
             }
             recentRecordsContainer.innerHTML = records.map(record => `
-                <div class="bg-gray-700/50 rounded-md p-3 border border-gray-600">
-                    <p class="text-sm font-semibold text-white">${record.traineeName} trained by ${record.trainerNames.join(', ')}</p>
-                    <p class="text-xs text-gray-400">${record.timestamp?.toDate()?.toLocaleString() || 'N/A'}</p>
-                </div>
-            `).join('');
+                    <div class="bg-gray-700/50 rounded-md p-3 border border-gray-600">
+                        <p class="text-sm font-semibold text-white">${record.traineeName} trained by ${record.trainerNames.join(', ')}</p>
+                        <p class="text-xs text-gray-400">${record.timestamp?.toDate()?.toLocaleString() || 'N/A'}</p>
+                    </div>
+                `).join('');
         };
 
         const renderRecentAnnouncements = (announcements) => {
@@ -220,11 +220,11 @@
                 return;
             }
             recentAnnouncementsContainer.innerHTML = announcements.map(announcement => `
-                <div class="bg-gray-700/50 rounded-md p-3 border border-gray-600">
-                    <p class="text-sm font-semibold text-white">${announcement.title}</p>
-                    <p class="text-xs text-gray-400">${announcement.timestamp?.toDate()?.toLocaleString() || 'N/A'} by ${announcement.createdByUsername}</p>
-                </div>
-            `).join('');
+                    <div class="bg-gray-700/50 rounded-md p-3 border border-gray-600">
+                        <p class="text-sm font-semibold text-white">${announcement.title}</p>
+                        <p class="text-xs text-gray-400">${announcement.timestamp?.toDate()?.toLocaleString() || 'N/A'} by ${announcement.createdByUsername}</p>
+                    </div>
+                `).join('');
         };
 
         const renderLoginLogs = (logs) => {
@@ -233,11 +233,11 @@
                 return;
             }
             loginLogsContainer.innerHTML = logs.map(log => `
-                <div class="flex justify-between items-center bg-gray-700/50 rounded-md p-2">
-                    <p class="text-xs text-white">${log.user} logged in</p>
-                    <p class="text-xs text-gray-400">${log.timestamp?.toDate()?.toLocaleString() || 'N/A'}</p>
-                </div>
-            `).join('');
+                    <div class="flex justify-between items-center bg-gray-700/50 rounded-md p-2">
+                        <p class="text-xs text-white">${log.user} logged in</p>
+                        <p class="text-xs text-gray-400">${log.timestamp?.toDate()?.toLocaleString() || 'N/A'}</p>
+                    </div>
+                `).join('');
         };
 
         const renderRecentAccounts = (accounts) => {
@@ -246,12 +246,12 @@
                 return;
             }
             recentAccountsContainer.innerHTML = accounts.map(account => `
-                <div class="bg-gray-700/50 rounded-md p-3 border border-gray-600">
-                    <p class="text-sm font-semibold text-white">${account.name}</p>
-                    <p class="text-xs text-gray-400">Role: ${account.role} | Access: ${account['access level']}</p>
-                    <p class="text-xs text-gray-400">Last updated: ${account.lastUpdated?.toDate()?.toLocaleString() || 'N/A'}</p>
-                </div>
-            `).join('');
+                    <div class="bg-gray-700/50 rounded-md p-3 border border-gray-600">
+                        <p class="text-sm font-semibold text-white">${account.name}</p>
+                        <p class="text-xs text-gray-400">Role: ${account.role} | Access: ${account['access level']}</p>
+                        <p class="text-xs text-gray-400">Last updated: ${account.lastUpdated?.toDate()?.toLocaleString() || 'N/A'}</p>
+                    </div>
+                `).join('');
         };
 
         // --- Firestore Functions (Mock/Example) ---
@@ -272,7 +272,7 @@
             const qRecords = collection(db, `artifacts/${appId}/public/data/trainingRecords`);
             onSnapshot(qRecords, (snapshot) => {
                 const records = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                records.sort((a,b) => b.timestamp?.seconds - a.timestamp?.seconds);
+                records.sort((a, b) => b.timestamp?.seconds - a.timestamp?.seconds);
                 renderRecentRecords(records.slice(0, 10)); // Display top 10
             });
 
@@ -280,7 +280,7 @@
             const qAnnouncements = collection(db, `artifacts/${appId}/public/data/announcements`);
             onSnapshot(qAnnouncements, (snapshot) => {
                 const announcements = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                announcements.sort((a,b) => b.timestamp?.seconds - a.timestamp?.seconds);
+                announcements.sort((a, b) => b.timestamp?.seconds - a.timestamp?.seconds);
                 renderRecentAnnouncements(announcements.slice(0, 5)); // Display top 5
             });
 
@@ -296,7 +296,7 @@
             const qLoginLogs = collection(db, `logs/loginLogs/logs`);
             onSnapshot(qLoginLogs, (snapshot) => {
                 const logs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                logs.sort((a,b) => b.timestamp?.seconds - a.timestamp?.seconds);
+                logs.sort((a, b) => b.timestamp?.seconds - a.timestamp?.seconds);
                 renderLoginLogs(logs.slice(0, 20)); // Display top 20
             });
         };
