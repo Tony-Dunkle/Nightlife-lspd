@@ -250,7 +250,7 @@
                     <label for="officer-email" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Email</label>
                     <input type="email" id="officer-email" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                 </div>
-                <div>
+                <div id="officer-role-field">
                     <label for="officer-role" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Role</label>
                     <select id="officer-role" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                         <!-- Options will be populated by JS -->
@@ -422,7 +422,7 @@
                         }
 
                         // Check if the user has the required access level to access the page
-                        if (userAccessLevel === 'High Command' || userAccessLevel === 'Website Account Manager' || userRole === 'Personnel Manager') {
+                        if (userAccessLevel === 'High Command' || userRole === 'Website Account Manager' || userRole === 'Personnel Manager') {
                             loadingOverlay.classList.add('hidden');
                             loginOverlay.classList.add('hidden');
                             pageContent.classList.remove('hidden');
@@ -492,10 +492,20 @@
         const editAccessLevelField = document.getElementById('edit-access-level-field');
 
         const rolesByManager = {
-            "Website Account Manager": ["Personnel Manager", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"],
+            "Account Manager": ["Personnel Manager", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"],
             "Personnel Manager": ["Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"]
         };
-        const accessLevelsForWebsiteManager = ["High Command", "Command", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
+        const accessLevelsByRole = {
+            "Account Manager": ["High Command", "Command", "Field Training Officer"],
+            "Personnel Manager": ["Command", "Field Training Officer"],
+            "Field Training Officer": [],
+            "Officer": [],
+            "Air-one": [],
+            "Moto Unit": [],
+            "K9 Unit": [],
+            "Swat Officer": [],
+            "Swat Teamleader": [],
+        }
 
         let currentUserRole = null;
         let currentUserAccessLevel = null;
@@ -688,18 +698,17 @@
             officerRoleSelect.innerHTML = '';
             officerAccessLevelSelect.innerHTML = '';
 
+            // Rename the Access Level field in the Add Officer modal
+            document.querySelector('#access-level-field label').textContent = "Access Level";
+
             // Determine which roles can be assigned based on the logged-in user's role
             let roles = [];
+            let accessLevels = [];
 
-            if (currentUserRole === 'Website Account Manager') {
+            if (currentUserRole === 'Account Manager') {
                 roles = ["Personnel Manager", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
+                accessLevels = ["High Command", "Command", "Field Training Officer"];
                 accessLevelField.classList.remove('hidden');
-                accessLevelsForWebsiteManager.forEach(accessLevel => {
-                    const option = document.createElement('option');
-                    option.value = accessLevel;
-                    option.textContent = accessLevel;
-                    officerAccessLevelSelect.appendChild(option);
-                });
             } else if (currentUserRole === 'Personnel Manager') {
                 roles = ["Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
                 accessLevelField.classList.add('hidden');
@@ -715,6 +724,16 @@
                 option.textContent = role;
                 officerRoleSelect.appendChild(option);
             });
+
+            // Populate the access levels dropdown for Account Managers
+            if (currentUserRole === 'Account Manager') {
+                accessLevels.forEach(accessLevel => {
+                    const option = document.createElement('option');
+                    option.value = accessLevel;
+                    option.textContent = accessLevel;
+                    officerAccessLevelSelect.appendChild(option);
+                });
+            }
         };
 
         const populateEditOfficerDropdowns = (currentRole, currentAccessLevel) => {
@@ -724,7 +743,7 @@
             let roles = [];
             let accessLevels = [];
 
-            if (currentUserRole === 'Website Account Manager') {
+            if (currentUserRole === 'Account Manager') {
                 roles = ["Personnel Manager", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
                 accessLevels = ["High Command", "Command", "Field Training Officer"];
                 editAccessLevelField.classList.remove('hidden');
@@ -744,7 +763,7 @@
                 editOfficerRoleSelect.appendChild(option);
             });
 
-            if (currentUserRole === 'Website Account Manager') {
+            if (currentUserRole === 'Account Manager') {
                 accessLevels.forEach(accessLevel => {
                     const option = document.createElement('option');
                     option.value = accessLevel;
