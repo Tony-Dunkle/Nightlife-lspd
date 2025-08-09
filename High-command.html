@@ -359,6 +359,8 @@
                     const loadingOverlay = document.getElementById('loading-overlay');
                     const pageContent = document.getElementById('page-content');
                     const loginOverlay = document.getElementById('login-prompt-overlay');
+                    const addOfficerBtn = document.getElementById('add-officer-btn');
+
 
                     // A brief delay to allow the loading spinner to be seen
                     await new Promise(resolve => setTimeout(resolve, 500));
@@ -366,7 +368,8 @@
                     if (user) {
                         userId = user.uid;
                         // Fetch the user's document from Firestore to check their role
-                        const userDocRef = window.firebase.doc(db, `artifacts/${appId}/users/${userId}/profile`, user.uid);
+                        // This path is corrected to match the database structure you provided
+                        const userDocRef = window.firebase.doc(db, "users", user.uid);
                         const userDocSnap = await window.firebase.getDoc(userDocRef);
 
                         let userRole = null;
@@ -384,6 +387,12 @@
                             // Load the page data now that the user is verified
                             loadReportsFromFirestore();
                             loadPersonnel();
+
+                            // Set permissions for the "add officer" button
+                            if (userRole === 'Website Account Manager') {
+                                addOfficerBtn.classList.remove('hidden');
+                            }
+
                         } else {
                             loadingOverlay.classList.add('hidden');
                             pageContent.classList.add('hidden');
