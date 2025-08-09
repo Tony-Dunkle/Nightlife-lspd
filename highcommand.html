@@ -422,7 +422,7 @@
                         }
 
                         // Check if the user has the required access level to access the page
-                        if (userAccessLevel === 'High Command' || userRole === 'Account Manager' || userRole === 'Personnel Manager') {
+                        if (userAccessLevel === 'High Command' || userRole === 'Account Manager' || userRole === 'Personnel Manager' || userRole === 'Website Manager') {
                             loadingOverlay.classList.add('hidden');
                             loginOverlay.classList.add('hidden');
                             pageContent.classList.remove('hidden');
@@ -552,21 +552,21 @@
                     const toggleButtonColor = person.status === 'active' ? 'bg-orange-500 hover:bg-orange-600' : 'bg-green-600 hover:bg-green-700';
 
                     personEl.innerHTML = `
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <p class="font-semibold">${person.name || 'No Name'}</p>
-                                        <p class="text-sm text-slate-500 dark:text-slate-400">${person.email || ''}</p>
-                                        <p class="text-sm text-slate-500 dark:text-slate-400">${person.rank || 'N/A'} - ${person.role || 'N/A'}</p>
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <p class="font-semibold">${person.name || 'No Name'}</p>
+                                            <p class="text-sm text-slate-500 dark:text-slate-400">${person.email || ''}</p>
+                                            <p class="text-sm text-slate-500 dark:text-slate-400">${person.rank || 'N/A'} - ${person.role || 'N/A'}</p>
+                                        </div>
+                                        <p class="text-sm font-bold ${statusColor}">${person.status ? person.status.charAt(0).toUpperCase() + person.status.slice(1) : 'N/A'}</p>
                                     </div>
-                                    <p class="text-sm font-bold ${statusColor}">${person.status ? person.status.charAt(0).toUpperCase() + person.status.slice(1) : 'N/A'}</p>
-                                </div>
-                                <div class="grid grid-cols-4 gap-2 mt-3 pt-3 border-t border-slate-200 dark:border-slate-600">
-                                    <button data-id="${person.id}" class="edit-btn text-xs bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded-md transition">Edit</button>
-                                    <button data-id="${person.id}" class="reset-pass-btn text-xs bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-2 rounded-md transition">Reset Pass</button>
-                                    <button data-id="${person.id}" data-status="${person.status}" class="toggle-status-btn text-xs ${toggleButtonColor} text-white font-bold py-1 px-2 rounded-md transition">${toggleButtonText}</button>
-                                    <button data-id="${person.id}" data-name="${person.name}" class="remove-btn text-xs bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-md transition">Remove</button>
-                                </div>
-                            `;
+                                    <div class="grid grid-cols-4 gap-2 mt-3 pt-3 border-t border-slate-200 dark:border-slate-600">
+                                        <button data-id="${person.id}" class="edit-btn text-xs bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded-md transition">Edit</button>
+                                        <button data-id="${person.id}" class="reset-pass-btn text-xs bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-2 rounded-md transition">Reset Pass</button>
+                                        <button data-id="${person.id}" data-status="${person.status}" class="toggle-status-btn text-xs ${toggleButtonColor} text-white font-bold py-1 px-2 rounded-md transition">${toggleButtonText}</button>
+                                        <button data-id="${person.id}" data-name="${person.name}" class="remove-btn text-xs bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-md transition">Remove</button>
+                                    </div>
+                                `;
                     personnelListContainer.appendChild(personEl);
                 });
             }, (error) => {
@@ -730,6 +730,11 @@
             } else if (currentUserRole === 'Personnel Manager') {
                 roles = ["Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
                 accessLevelField.classList.add('hidden');
+            } else if (currentUserRole === 'Website Manager') {
+                // Website Manager can add all roles and access levels
+                roles = ["Account Manager", "Personnel Manager", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
+                accessLevels = ["High Command", "Command", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
+                accessLevelField.classList.remove('hidden');
             } else {
                 roles = []; // For other roles, don't allow adding new officers
                 accessLevelField.classList.add('hidden');
@@ -743,8 +748,8 @@
                 officerRoleSelect.appendChild(option);
             });
 
-            // Populate the access levels dropdown for Account Managers
-            if (currentUserRole === 'Account Manager') {
+            // Populate the access levels dropdown for Account Managers and Website Managers
+            if (currentUserRole === 'Account Manager' || currentUserRole === 'Website Manager') {
                 accessLevels.forEach(accessLevel => {
                     const option = document.createElement('option');
                     option.value = accessLevel;
@@ -768,7 +773,13 @@
             } else if (currentUserRole === 'Personnel Manager') {
                 roles = ["Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
                 editAccessLevelField.classList.add('hidden');
-            } else {
+            } else if (currentUserRole === 'Website Manager') {
+                // Website Manager can edit all roles and access levels
+                roles = ["Account Manager", "Personnel Manager", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
+                accessLevels = ["High Command", "Command", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
+                editAccessLevelField.classList.remove('hidden');
+            }
+            else {
                 roles = [];
                 editAccessLevelField.classList.add('hidden');
             }
@@ -781,7 +792,7 @@
                 editOfficerRoleSelect.appendChild(option);
             });
 
-            if (currentUserRole === 'Account Manager') {
+            if (currentUserRole === 'Account Manager' || currentUserRole === 'Website Manager') {
                 accessLevels.forEach(accessLevel => {
                     const option = document.createElement('option');
                     option.value = accessLevel;
@@ -930,10 +941,10 @@
                     const reportDate = new Date(reportData.createdAt).toLocaleString();
 
                     reportEl.innerHTML = `
-                                <h3 class="font-bold text-lg text-blue-600 dark:text-blue-400">${reportTitle}</h3>
-                                <p class="text-sm text-slate-600 dark:text-slate-300">Filed by: ${reportingOfficer}</p>
-                                <p class="text-xs text-slate-400 dark:text-slate-500">Date: ${reportDate}</p>
-                            `;
+                                    <h3 class="font-bold text-lg text-blue-600 dark:text-blue-400">${reportTitle}</h3>
+                                    <p class="text-sm text-slate-600 dark:text-slate-300">Filed by: ${reportingOfficer}</p>
+                                    <p class="text-xs text-slate-400 dark:text-slate-500">Date: ${reportDate}</p>
+                                `;
 
                     reportEl.addEventListener('click', () => openReportModal(reportData));
                     reportsContainer.appendChild(reportEl);
