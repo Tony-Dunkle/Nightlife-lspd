@@ -173,6 +173,13 @@
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
+        // --- FIXED: Define correct collection paths ---
+        const usersCollectionPath = `artifacts/${appId}/public/data/users`;
+        const trainingRecordsCollectionPath = `artifacts/${appId}/public/data/trainingRecords`;
+        const announcementsCollectionPath = `artifacts/${appId}/public/data/announcements`;
+        const loginLogsCollectionPath = `artifacts/${appId}/public/data/loginLogs`;
+
+
         // --- DOM Elements ---
         const loginOverlay = document.getElementById('login-overlay');
         const loginBtn = document.getElementById('login-btn');
@@ -207,11 +214,11 @@
                 return;
             }
             recentRecordsContainer.innerHTML = records.map(record => `
-                    <div class="bg-gray-700/50 rounded-md p-3 border border-gray-600">
-                        <p class="text-sm font-semibold text-white">${record.traineeName} trained by ${record.trainerNames.join(', ')}</p>
-                        <p class="text-xs text-gray-400">${record.timestamp?.toDate()?.toLocaleString() || 'N/A'}</p>
-                    </div>
-                `).join('');
+                        <div class="bg-gray-700/50 rounded-md p-3 border border-gray-600">
+                            <p class="text-sm font-semibold text-white">${record.traineeName} trained by ${record.trainerNames.join(', ')}</p>
+                            <p class="text-xs text-gray-400">${record.timestamp?.toDate()?.toLocaleString() || 'N/A'}</p>
+                        </div>
+                    `).join('');
         };
 
         const renderRecentAnnouncements = (announcements) => {
@@ -220,11 +227,11 @@
                 return;
             }
             recentAnnouncementsContainer.innerHTML = announcements.map(announcement => `
-                    <div class="bg-gray-700/50 rounded-md p-3 border border-gray-600">
-                        <p class="text-sm font-semibold text-white">${announcement.title}</p>
-                        <p class="text-xs text-gray-400">${announcement.timestamp?.toDate()?.toLocaleString() || 'N/A'} by ${announcement.createdByUsername}</p>
-                    </div>
-                `).join('');
+                        <div class="bg-gray-700/50 rounded-md p-3 border border-gray-600">
+                            <p class="text-sm font-semibold text-white">${announcement.title}</p>
+                            <p class="text-xs text-gray-400">${announcement.timestamp?.toDate()?.toLocaleString() || 'N/A'} by ${announcement.createdByUsername}</p>
+                        </div>
+                    `).join('');
         };
 
         const renderLoginLogs = (logs) => {
@@ -233,11 +240,11 @@
                 return;
             }
             loginLogsContainer.innerHTML = logs.map(log => `
-                    <div class="flex justify-between items-center bg-gray-700/50 rounded-md p-2">
-                        <p class="text-xs text-white">${log.user} logged in</p>
-                        <p class="text-xs text-gray-400">${log.timestamp?.toDate()?.toLocaleString() || 'N/A'}</p>
-                    </div>
-                `).join('');
+                        <div class="flex justify-between items-center bg-gray-700/50 rounded-md p-2">
+                            <p class="text-xs text-white">${log.user} logged in</p>
+                            <p class="text-xs text-gray-400">${log.timestamp?.toDate()?.toLocaleString() || 'N/A'}</p>
+                        </div>
+                    `).join('');
         };
 
         const renderRecentAccounts = (accounts) => {
@@ -246,19 +253,19 @@
                 return;
             }
             recentAccountsContainer.innerHTML = accounts.map(account => `
-                    <div class="bg-gray-700/50 rounded-md p-3 border border-gray-600">
-                        <p class="text-sm font-semibold text-white">${account.name}</p>
-                        <p class="text-xs text-gray-400">Role: ${account.role} | Access: ${account['access level']}</p>
-                        <p class="text-xs text-gray-400">Last updated: ${account.lastUpdated?.toDate()?.toLocaleString() || 'N/A'}</p>
-                    </div>
-                `).join('');
+                        <div class="bg-gray-700/50 rounded-md p-3 border border-gray-600">
+                            <p class="text-sm font-semibold text-white">${account.name}</p>
+                            <p class="text-xs text-gray-400">Role: ${account.role} | Access: ${account['access level']}</p>
+                            <p class="text-xs text-gray-400">Last updated: ${account.lastUpdated?.toDate()?.toLocaleString() || 'N/A'}</p>
+                        </div>
+                    `).join('');
         };
 
         // --- Firestore Functions (Mock/Example) ---
         const logUserLogin = async (userDisplayName) => {
             try {
-                // Assuming a loginLogs collection exists
-                await addDoc(collection(db, 'logs/loginLogs/logs'), {
+                // --- FIXED: Use correct path for logging ---
+                await addDoc(collection(db, loginLogsCollectionPath), {
                     user: userDisplayName,
                     timestamp: serverTimestamp()
                 });
@@ -269,7 +276,8 @@
 
         const subscribeToAllData = () => {
             // Recently Added Training Records
-            const qRecords = collection(db, `artifacts/${appId}/public/data/trainingRecords`);
+            // --- FIXED: Use correct path for training records ---
+            const qRecords = collection(db, trainingRecordsCollectionPath);
             onSnapshot(qRecords, (snapshot) => {
                 const records = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 records.sort((a, b) => b.timestamp?.seconds - a.timestamp?.seconds);
@@ -277,7 +285,8 @@
             });
 
             // Recent Announcements
-            const qAnnouncements = collection(db, `artifacts/${appId}/public/data/announcements`);
+            // --- FIXED: Use correct path for announcements ---
+            const qAnnouncements = collection(db, announcementsCollectionPath);
             onSnapshot(qAnnouncements, (snapshot) => {
                 const announcements = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 announcements.sort((a, b) => b.timestamp?.seconds - a.timestamp?.seconds);
@@ -285,7 +294,8 @@
             });
 
             // Recent User Account Updates
-            const qAccounts = collection(db, 'users');
+            // --- FIXED: Use correct path for user accounts ---
+            const qAccounts = collection(db, usersCollectionPath);
             onSnapshot(qAccounts, (snapshot) => {
                 const accounts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 accounts.sort((a, b) => b.lastUpdated?.seconds - a.lastUpdated?.seconds);
@@ -293,7 +303,8 @@
             });
 
             // Login Logs
-            const qLoginLogs = collection(db, `logs/loginLogs/logs`);
+            // --- FIXED: Use correct path for login logs ---
+            const qLoginLogs = collection(db, loginLogsCollectionPath);
             onSnapshot(qLoginLogs, (snapshot) => {
                 const logs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
                 logs.sort((a, b) => b.timestamp?.seconds - a.timestamp?.seconds);
@@ -304,7 +315,8 @@
         // --- Main Initialization ---
         onAuthStateChanged(auth, async (user) => {
             if (user) {
-                const userDocRef = doc(db, 'users', user.uid);
+                // --- FIXED: Use correct path to get user document ---
+                const userDocRef = doc(db, usersCollectionPath, user.uid);
                 const userDocSnap = await getDoc(userDocRef);
 
                 if (userDocSnap.exists()) {
@@ -315,6 +327,7 @@
                         mainContent.classList.remove('hidden');
                         userInfoElement.textContent = `${userProfile.name} | Role: ${userProfile.role}`;
                         subscribeToAllData();
+                        logUserLogin(userProfile.name); // Log the login event
                     } else {
                         // User is logged in but has incorrect access level
                         loginOverlay.classList.remove('hidden');
