@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unified PD - Field Training</title>
+    <!-- Favicon mimicking the EchoSphere design but with a police theme -->
+    <link rel="icon" href='data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="%233B82F6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-8.67"></path><path d="M22 4L12 14.01l-3-3"></path></svg>' type="image/svg+xml">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a202c; /* bg-gray-900 */
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a202c;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #4a5568;
+            border-radius: 4px;
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #718096;
+            }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
+            border-radius: 9999px;
+            background-color: #2d3748;
+            color: white;
+            border: 1px solid #4a5568;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            z-index: 100;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        }
+
+            .toast.show {
+                opacity: 1;
+            }
+    </style>
+</head>
+<body class="text-gray-300">
+
+    <!-- Header -->
+    <header class="bg-gray-800 border-b border-gray-700 sticky top-0 z-40 px-4 py-2">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <svg class="w-8 h-8 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a10 10 0 1 0 10 10A10 10 0 0 0 12 2z"></path><path d="M12 12a5 5 0 1 0 5 5 5 5 0 0 0-5-5z"></path><path d="M12 12a1 1 0 1 0 1 1 1 1 0 0 0-1-1z"></path></svg>
+                <span class="text-xl font-bold text-white hidden sm:block">Unified PD Training</span>
+            </div>
+            <div class="flex-1 px-4 lg:px-16 flex justify-end">
+                <div id="user-info" class="text-sm text-gray-400">Loading user info...</div>
+            </div>
+            <div id="auth-buttons" class="hidden">
+                <button id="addRecordBtn" class="px-4 py-2 text-sm font-semibold rounded-full border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white transition-colors duration-200">Add New Record</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto mt-4 px-4">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+            <!-- Training Records Column -->
+            <div id="records-container" class="lg:col-span-2 space-y-4">
+                <div class="bg-gray-800 rounded-lg border border-gray-700 p-4 text-center">
+                    <p id="loading-message" class="text-gray-400 text-lg">Loading training records...</p>
+                    <p id="no-access-message" class="text-red-400 text-lg hidden">You do not have the required access level to view this page. Please contact a Website Account Manager.</p>
+                </div>
+            </div>
+
+            <!-- Sidebar Column -->
+            <aside class="lg:col-span-1 space-y-4">
+                <div class="bg-gray-800 rounded-lg border border-gray-700 p-4">
+                    <h3 class="font-bold text-lg text-white mb-3">Training Status</h3>
+                    <div id="training-status" class="space-y-2">
+                        <p class="text-sm text-gray-400">Select a record to see its details.</p>
+                    </div>
+                </div>
+            </aside>
+        </div>
+    </main>
+
+    <!-- Modal for adding/editing records -->
+    <div id="recordModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
+        <div class="bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-2xl mx-4 border border-gray-700">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-white">Add New Training Record</h3>
+                <button id="closeModalBtn" class="text-gray-400 hover:text-white">&times;</button>
+            </div>
+
+            <form id="trainingForm" class="space-y-4">
+                <div>
+                    <label for="traineeInput" class="block text-sm font-medium text-gray-300 mb-1">Officer being trained</label>
+                    <input type="text" id="traineeInput" required placeholder="Name" class="w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+                <div>
+                    <label for="trainerInput" class="block text-sm font-medium text-gray-300 mb-1">Trainer(s) (comma-separated)</label>
+                    <input type="text" id="trainerInput" required placeholder="Name, Name 2" class="w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                </div>
+                <div>
+                    <h4 class="text-sm font-medium text-gray-300 mb-2">5-Day Training Checklist</h4>
+                    <div id="checklist-container" class="grid grid-cols-1 md:grid-cols-2 gap-2 bg-gray-900/50 p-3 rounded-md max-h-60 overflow-y-auto">
+                        <!-- Checklist items will be generated here -->
+                    </div>
+                </div>
+                <div class="flex justify-end space-x-4 mt-6">
+                    <button type="button" id="cancelBtn" class="px-4 py-2 text-sm font-semibold rounded-full border border-gray-600 text-gray-300 hover:bg-gray-700 transition-colors duration-200">Cancel</button>
+                    <button type="submit" id="saveRecordBtn" class="px-4 py-2 text-sm font-semibold rounded-full bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-200">Save Record</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, query, onSnapshot, addDoc, updateDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- Firebase Configuration & Initialization ---
+        // Provided by the user
+        const firebaseConfig = {
+            apiKey: "AIzaSyDU7DRAxCzqu81DTa7k0DXaBRcMpk0sElc",
+            authDomain: "upd-system.firebaseapp.com",
+            projectId: "upd-system",
+            storageBucket: "upd-system.firebasestorage.app",
+            messagingSenderId: "28223003678",
+            appId: "1:28223003678:web:a19a9a8eb33fe74202220f",
+            measurementId: "G-83NX0KXZ1Y"
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+
+        // These variables are provided by the Canvas environment
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+
+        // --- DOM Elements ---
+        const addRecordBtn = document.getElementById('addRecordBtn');
+        const recordsContainer = document.getElementById('records-container');
+        const recordModal = document.getElementById('recordModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const cancelBtn = document.getElementById('cancelBtn');
+        const trainingForm = document.getElementById('trainingForm');
+        const traineeInput = document.getElementById('traineeInput');
+        const trainerInput = document.getElementById('trainerInput');
+        const checklistContainer = document.getElementById('checklist-container');
+        const loadingMessage = document.getElementById('loading-message');
+        const noAccessMessage = document.getElementById('no-access-message');
+        const userInfoElement = document.getElementById('user-info');
+        const authButtons = document.getElementById('auth-buttons');
+
+        // --- State and Constants ---
+        const allowedRoles = ["Field Training Officer", "Command", "High Command", "Commisioner", "Website Account Manager"];
+        let userProfile = { name: 'Guest', role: 'None', accessLevel: 'None' };
+        let userId = null;
+
+        // A mock checklist for a FiveM cadet's first 5 days of training
+        const trainingChecklist = [
+            "Basic Radio Procedure & Ten-Codes",
+            "Proper Traffic Stop Procedure (pulling over, approaching, and conclusion)",
+            "Vehicle Pursuit and Termination Procedures",
+            "Basic Report Writing and Documentation",
+            "Foot Pursuit & Suspect Apprehension",
+            "Use of Force Policy Review",
+            "Primary and Secondary Unit Roles",
+            "Responding to Priority Calls (10-80s, 10-66s)",
+            "Patrol Vehicle Familiarization & Care",
+            "Weapon and Equipment Safety Check"
+        ];
+
+        // --- Toast Notification ---
+        const showToast = (message) => {
+            const toast = document.createElement('div');
+            toast.textContent = message;
+            toast.className = 'toast';
+            document.body.appendChild(toast);
+            setTimeout(() => { toast.classList.add('show'); }, 100);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                toast.addEventListener('transitionend', () => toast.remove());
+            }, 3000);
+        };
+
+        // --- UI Functions ---
+        const openModal = () => {
+            renderChecklistForForm();
+            recordModal.classList.remove('hidden');
+        };
+
+        const closeModal = () => {
+            trainingForm.reset();
+            recordModal.classList.add('hidden');
+        };
+
+        const renderChecklistForForm = () => {
+            checklistContainer.innerHTML = '';
+            trainingChecklist.forEach((item, index) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'flex items-center space-x-2';
+                itemDiv.innerHTML = `
+                    <input type="checkbox" id="checklist-${index}" name="checklist-item" value="${item}" class="rounded text-blue-500 bg-gray-700 border-gray-600 focus:ring-blue-500">
+                    <label for="checklist-${index}" class="text-sm text-gray-300 cursor-pointer">${item}</label>
+                `;
+                checklistContainer.appendChild(itemDiv);
+            });
+        };
+
+        const renderTrainingRecords = (records) => {
+            recordsContainer.innerHTML = '';
+            if (records.length === 0) {
+                recordsContainer.innerHTML = `<div class="bg-gray-800 rounded-lg border border-gray-700 p-4 text-center"><p class="text-gray-400">No training records found.</p></div>`;
+                return;
+            }
+
+            records.forEach(record => {
+                const recordElement = document.createElement('div');
+                recordElement.className = 'bg-gray-800 rounded-lg border border-gray-700 overflow-hidden';
+                recordElement.innerHTML = `
+                    <div class="p-4">
+                        <div class="text-xs text-gray-400 mb-2">
+                            <span class="font-bold text-white">${record.traineeName}</span> •
+                            <span>Trainer(s): ${record.trainerNames.join(', ')}</span> •
+                            <span>Created: ${record.timestamp?.toDate()?.toLocaleString() || 'N/A'}</span>
+                        </div>
+                        <h2 class="text-xl font-bold text-white mb-2">Training Record</h2>
+                        <ul id="checklist-${record.id}" class="space-y-1 mt-4">
+                            ${record.checklist.map(item => `
+                                <li class="flex items-center space-x-2">
+                                    <input type="checkbox" data-record-id="${record.id}" data-item-name="${item.item}" ${item.completed ? 'checked' : ''} class="rounded text-blue-500 bg-gray-700 border-gray-600 focus:ring-blue-500 cursor-pointer">
+                                    <label class="text-sm text-gray-300 ${item.completed ? 'line-through text-gray-500' : ''}">${item.item}</label>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                `;
+                recordsContainer.appendChild(recordElement);
+            });
+        };
+
+        // --- Firestore Functions ---
+        const addTrainingRecord = async (traineeName, trainerNames) => {
+            const checklist = trainingChecklist.map(item => ({ item: item, completed: false }));
+            try {
+                const docRef = await addDoc(collection(db, `artifacts/${appId}/public/data/trainingRecords`), {
+                    traineeName: traineeName,
+                    trainerNames: trainerNames,
+                    checklist: checklist,
+                    createdBy: userId,
+                    timestamp: serverTimestamp()
+                });
+                showToast(`Training record for ${traineeName} added!`);
+                console.log("Document written with ID: ", docRef.id);
+                closeModal();
+            } catch (e) {
+                console.error("Error adding document: ", e);
+                showToast('Failed to add record.', true);
+            }
+        };
+
+        const updateChecklistItem = async (recordId, itemName, isCompleted) => {
+            const recordRef = doc(db, `artifacts/${appId}/public/data/trainingRecords`, recordId);
+            try {
+                // Fetch the current checklist
+                const docSnap = await getDoc(recordRef);
+                if (docSnap.exists()) {
+                    const recordData = docSnap.data();
+                    const updatedChecklist = recordData.checklist.map(item => {
+                        if (item.item === itemName) {
+                            return { ...item, completed: isCompleted };
+                        }
+                        return item;
+                    });
+
+                    // Update the document with the new checklist
+                    await updateDoc(recordRef, {
+                        checklist: updatedChecklist
+                    });
+                } else {
+                    console.error("No such document!");
+                }
+            } catch (e) {
+                console.error("Error updating document: ", e);
+                showToast('Failed to update checklist item.', true);
+            }
+        };
+
+        // --- Main Initialization ---
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                userId = user.uid;
+
+                // Fetch user profile from the new path: `users/{userId}`
+                const userDocRef = doc(db, 'users', userId);
+                const userDocSnap = await getDoc(userDocRef);
+
+                if (userDocSnap.exists()) {
+                    userProfile = userDocSnap.data();
+                    userInfoElement.textContent = `${userProfile.name} | Role: ${userProfile.role} | Access: ${userProfile['access level']}`;
+                } else {
+                    userInfoElement.textContent = `User ID: ${userId} (Profile not found)`;
+                }
+
+                if (allowedRoles.includes(userProfile['access level'])) {
+                    authButtons.classList.remove('hidden');
+                    // Start listening to Firestore for real-time updates
+                    const q = collection(db, `artifacts/${appId}/public/data/trainingRecords`);
+                    onSnapshot(q, (querySnapshot) => {
+                        const records = [];
+                        querySnapshot.forEach((doc) => {
+                            records.push({ id: doc.id, ...doc.data() });
+                        });
+                        renderTrainingRecords(records);
+                    });
+                } else {
+                    loadingMessage.classList.add('hidden');
+                    noAccessMessage.classList.remove('hidden');
+                    authButtons.classList.add('hidden');
+                }
+            } else {
+                // If no user is signed in, sign in anonymously or with the custom token
+                if (initialAuthToken) {
+                    try {
+                        await signInWithCustomToken(auth, initialAuthToken);
+                    } catch (error) {
+                        console.error("Error signing in with custom token:", error);
+                    }
+                } else {
+                    await signInAnonymously(auth);
+                }
+            }
+        });
+
+        // --- Event Listeners ---
+        addRecordBtn.addEventListener('click', openModal);
+        closeModalBtn.addEventListener('click', closeModal);
+        cancelBtn.addEventListener('click', closeModal);
+        recordModal.addEventListener('click', (e) => { if (e.target === recordModal) closeModal(); });
+
+        trainingForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const traineeName = traineeInput.value.trim();
+            const trainerNames = trainerInput.value.split(',').map(name => name.trim()).filter(Boolean);
+            if (traineeName && trainerNames.length > 0) {
+                addTrainingRecord(traineeName, trainerNames);
+            } else {
+                showToast('Please fill out all fields.', true);
+            }
+        });
+
+        recordsContainer.addEventListener('change', (e) => {
+            const checkbox = e.target;
+            if (checkbox.type === 'checkbox') {
+                const recordId = checkbox.dataset.recordId;
+                const itemName = checkbox.dataset.itemName;
+                const isCompleted = checkbox.checked;
+                updateChecklistItem(recordId, itemName, isCompleted);
+            }
+        });
+
+        // Initialize user login on page load
+        if (initialAuthToken) {
+            signInWithCustomToken(auth, initialAuthToken).catch(console.error);
+        } else {
+            signInAnonymously(auth).catch(console.error);
+        }
+    </script>
+</body>
+</html>

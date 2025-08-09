@@ -375,28 +375,28 @@
                     userInfoDiv.classList.remove('hidden');
                     userInfoDiv.classList.add('flex');
 
-                    // Fetch user data from Firestore to get their name and role
-                    // Corrected Firestore path to match the database structure
+                    // Fetch user data from Firestore to get their name and access level
+                    // Corrected Firestore path and field name to match your database structure
                     const userDocRef = window.doc(window.db, "users", user.uid);
                     const userDocSnap = await window.getDoc(userDocRef);
 
                     let userName = user.email; // Default to email
-                    let userRole = 'Officer'; // Default role
+                    let userAccessLevel = ''; // Default access level
 
                     if (userDocSnap.exists()) {
                         const userData = userDocSnap.data();
                         userName = userData.name || user.email; // Use name from DB, fallback to email
-                        userRole = userData.role || 'Officer';
+                        userAccessLevel = userData['access level'] || '';
 
-                        // Check for High Command role
-                        if (userRole === 'High Command' || userRole === 'Website Account Manager') {
+                        // Check for High Command access level
+                        if (userAccessLevel === 'High Command') {
                             highCommandLink.classList.remove('hidden');
                         } else {
                             highCommandLink.classList.add('hidden');
                         }
                     } else {
                         // If no user profile exists, hide the High Command link
-                        console.log("No user profile found in Firestore. Defaulting to Officer role.");
+                        console.log("No user profile found in Firestore. Defaulting to Officer access level.");
                         highCommandLink.classList.add('hidden');
                     }
 
