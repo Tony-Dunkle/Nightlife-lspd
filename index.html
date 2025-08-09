@@ -361,7 +361,6 @@
             const passwordInput = document.getElementById('passwordInput');
             const loginError = document.getElementById('loginError');
             const highCommandLink = document.getElementById('highCommandLink');
-            // Get the new website manager container
             const websiteManagerContainer = document.getElementById('websiteManagerContainer');
 
             // NEW DOM ELEMENTS for password reset modal
@@ -385,12 +384,12 @@
                     { title: "Shift Roster & Schedules", desc: "Check your upcoming shifts and team assignments.", href: "roster.html", linkText: "View Roster" }
                 ];
                 container.innerHTML = quickLinks.map(link => `
-                                            <div class="bg-[var(--bg-secondary)] p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
-                                                <h3 class="text-xl font-semibold text-[var(--accent-color)] mb-3">${link.title}</h3>
-                                                <p class="text-[var(--text-secondary)] mb-4">${link.desc}</p>
-                                                <a href="${link.href}" class="text-blue-500 dark:text-blue-400 hover:underline font-medium">${link.linkText} &rarr;</a>
-                                            </div>
-                                        `).join('');
+                                                <div class="bg-[var(--bg-secondary)] p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                                                    <h3 class="text-xl font-semibold text-[var(--accent-color)] mb-3">${link.title}</h3>
+                                                    <p class="text-[var(--text-secondary)] mb-4">${link.desc}</p>
+                                                    <a href="${link.href}" class="text-blue-500 dark:text-blue-400 hover:underline font-medium">${link.linkText} &rarr;</a>
+                                                </div>
+                                            `).join('');
             }
 
             const applyTheme = (theme) => {
@@ -404,37 +403,32 @@
             };
 
             const updateLoginUI = async (user) => {
-                const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-
                 if (user) {
                     // User is logged in
                     loginButton.classList.add('hidden');
                     userInfoDiv.classList.remove('hidden');
                     userInfoDiv.classList.add('flex');
 
-                    // Fetch user data from Firestore to get their name and access level
+                    // Fetch user data from Firestore
                     const userDocRef = window.doc(window.db, "users", user.uid);
                     const userDocSnap = await window.getDoc(userDocRef);
 
                     let userName = user.email; // Default to email
-                    let userAccessLevel = ''; // Default access level
-                    let userRole = '';
 
                     if (userDocSnap.exists()) {
                         const userData = userDocSnap.data();
                         userName = userData.name || user.email; // Use name from DB, fallback to email
-                        userAccessLevel = userData['access level'] || '';
-                        userRole = userData['role'] || '';
+                        const userAccessLevel = userData['access level'] || '';
 
-                        // Check for High Command access level
-                        if (userAccessLevel === 'High Command') {
+                        // Show High Command link for "High Command" or "Website Manager"
+                        if (userAccessLevel === 'High Command' || userAccessLevel === 'Website Manager') {
                             highCommandLink.classList.remove('hidden');
                         } else {
                             highCommandLink.classList.add('hidden');
                         }
 
-                        // Check for Website Manager role and show the new sidebar link
-                        if (userRole === 'Website Manager') {
+                        // Show Website Manager link only for "Website Manager"
+                        if (userAccessLevel === 'Website Manager') {
                             websiteManagerContainer.classList.remove('hidden');
                         } else {
                             websiteManagerContainer.classList.add('hidden');
@@ -448,8 +442,8 @@
                         }
 
                     } else {
-                        // If no user profile exists, hide the special links
-                        console.log("No user profile found in Firestore. Defaulting to Officer access level.");
+                        // If no user profile exists, hide all special links
+                        console.log("No user profile found in Firestore. Hiding special access links.");
                         highCommandLink.classList.add('hidden');
                         websiteManagerContainer.classList.add('hidden');
                     }
@@ -458,13 +452,13 @@
                     userEmailP.textContent = userName;
 
                 } else {
-                    // User is logged out
+                    // User is logged out, hide everything
                     loginButton.classList.remove('hidden');
                     userInfoDiv.classList.add('hidden');
                     userInfoDiv.classList.remove('flex');
                     userEmailP.textContent = '';
-                    highCommandLink.classList.add('hidden'); // Ensure link is hidden on logout
-                    websiteManagerContainer.classList.add('hidden'); // Ensure link is hidden on logout
+                    highCommandLink.classList.add('hidden');
+                    websiteManagerContainer.classList.add('hidden');
                 }
             };
 
@@ -502,11 +496,11 @@
 
                     if (recentUpdates.length > 0) {
                         updatesContent.innerHTML = recentUpdates.map(update => `
-                                                    <div class="bg-[var(--bg-tertiary)] p-4 rounded-md">
-                                                        <p class="font-semibold">${update.date.toLocaleDateString()}: ${update.title}</p>
-                                                        <p class="text-sm text-[var(--text-secondary)]">${update.description}</p>
-                                                    </div>
-                                                `).join('');
+                                                        <div class="bg-[var(--bg-tertiary)] p-4 rounded-md">
+                                                            <p class="font-semibold">${update.date.toLocaleDateString()}: ${update.title}</p>
+                                                            <p class="text-sm text-[var(--text-secondary)]">${update.description}</p>
+                                                        </div>
+                                                    `).join('');
                         updatesSection.classList.remove('hidden');
                     }
                 } catch (error) {
