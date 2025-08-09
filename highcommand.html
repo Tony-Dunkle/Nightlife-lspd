@@ -398,13 +398,13 @@
                             loadPersonnel();
 
                             // Set permissions for the "add officer" button and dynamic role dropdown
-                            setPermissions(userRole);
+                            setPermissions(userRole, userAccessLevel);
 
                         } else {
                             loadingOverlay.classList.add('hidden');
                             pageContent.classList.add('hidden');
                             loginOverlay.classList.remove('hidden');
-                            loginOverlay.querySelector('p').textContent = `You are logged in, but do not have permission to view this page.`;
+                            loginOverlay.querySelector('p').textContent = 'You are logged in, but do not have permission to view this page.';
                         }
 
                     } else {
@@ -430,7 +430,7 @@
         initializeFirebase();
 
         // --- Personnel Management ---
-        const personnelCollectionRef = () => window.firebase.collection(db, `artifacts/${appId}/public/data/personnel`);
+        const personnelCollectionRef = () => window.firebase.collection(db, "users");
         const personnelListContainer = document.getElementById('personnel-list-container');
         const personnelLoading = document.getElementById('personnel-loading');
         const addOfficerModal = document.getElementById('add-officer-modal');
@@ -448,16 +448,18 @@
         let officerToRemoveId = null;
 
         const rolesByManager = {
-            "Website Account Manager": ["Account Manager", "Officer", "FTO", "Subdivision Lead", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"],
-            "Personnel Manager": ["Officer", "FTO", "Subdivision Lead", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"]
+            "Website Account Manager": ["Personnel Manager", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"],
+            "Personnel Manager": ["Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"]
         };
         const accessLevelsForWebsiteManager = ["High Command", "Personnel Manager"];
 
         let currentUserRole = null;
         let currentUserAccessLevel = null;
 
-        const setPermissions = (role) => {
+        // This function sets permissions based on role and access level
+        const setPermissions = (role, accessLevel) => {
             currentUserRole = role;
+            currentUserAccessLevel = accessLevel;
             if (rolesByManager[currentUserRole] || currentUserAccessLevel === "High Command") {
                 addOfficerBtn.classList.remove('hidden');
             } else {
@@ -476,7 +478,8 @@
 
         const loadPersonnel = () => {
             if (!db) return;
-            const q = window.firebase.query(personnelCollectionRef());
+            // Corrected collection path to 'users'
+            const q = window.firebase.query(window.firebase.collection(db, "users"));
             window.firebase.onSnapshot(q, (snapshot) => {
                 personnelLoading.style.display = 'none';
                 personnelListContainer.innerHTML = '';
@@ -495,11 +498,11 @@
                     personEl.innerHTML = `
                                 <div class="flex items-center justify-between">
                                     <div>
-                                        <p class="font-semibold">${person.name}</p>
+                                        <p class="font-semibold">${person.name || 'No Name'}</p>
                                         <p class="text-sm text-slate-500 dark:text-slate-400">${person.email || ''}</p>
-                                        <p class="text-sm text-slate-500 dark:text-slate-400">${person.rank} - ${person.role}</p>
+                                        <p class="text-sm text-slate-500 dark:text-slate-400">${person.rank || 'N/A'} - ${person.role || 'N/A'}</p>
                                     </div>
-                                    <p class="text-sm font-bold ${statusColor}">${person.status.charAt(0).toUpperCase() + person.status.slice(1)}</p>
+                                    <p class="text-sm font-bold ${statusColor}">${person.status ? person.status.charAt(0).toUpperCase() + person.status.slice(1) : 'N/A'}</p>
                                 </div>
                                 <div class="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-slate-200 dark:border-slate-600">
                                     <button data-id="${person.id}" class="reset-pass-btn text-xs bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-2 rounded-md transition">Reset Pass</button>
@@ -533,7 +536,7 @@
 
         const resetPassword = async (personId) => {
             const newPassword = generatePassword();
-            const personDocRef = window.firebase.doc(db, `artifacts/${appId}/public/data/personnel`, personId);
+            const personDocRef = window.firebase.doc(db, "users", personId);
             try {
                 // This only updates the password in the database, not in Firebase Auth.
                 // A full implementation would require a Cloud Function to update the auth user.
@@ -549,7 +552,7 @@
 
         const toggleStatus = async (personId, currentStatus) => {
             const newStatus = currentStatus === 'active' ? 'disabled' : 'active';
-            const personDocRef = window.firebase.doc(db, `artifacts/${appId}/public/data/personnel`, personId);
+            const personDocRef = window.firebase.doc(db, "users", personId);
             try {
                 await window.firebase.updateDoc(personDocRef, { status: newStatus });
             } catch (error) {
