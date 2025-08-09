@@ -14,18 +14,6 @@
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Login Check -->
-    <script>
-        // This script checks for a login flag in sessionStorage.
-        // If the flag is not set, it immediately writes a style to the document
-        // that hides the main page content and shows the login prompt overlay.
-        // This prevents any flash of protected content for non-logged-in users.
-        if (sessionStorage.getItem('isLoggedIn') !== 'true') {
-            document.write('<style>#page-content { display: none; } #login-prompt-overlay { display: flex; }</style>');
-        }
-    </script>
-
-
     <!-- Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
@@ -145,17 +133,23 @@
 </head>
 <body class="antialiased bg-gray-100 dark:bg-slate-900">
 
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="fixed inset-0 bg-slate-900 z-[100] flex flex-col items-center justify-center text-white p-8 text-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
+        <p>Checking authentication...</p>
+    </div>
+
     <!-- Login Prompt Overlay -->
     <div id="login-prompt-overlay" class="fixed inset-0 bg-slate-900 z-[100] flex-col items-center justify-center text-white p-8 text-center hidden">
         <img src="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png" alt="UPD Logo" class="w-24 h-24 object-contain mb-6">
         <h1 class="text-3xl font-bold mb-2">Access Denied</h1>
-        <p class="text-slate-400 mb-8">You must be logged in to access the High Command Center.</p>
+        <p class="text-slate-400 mb-8">You must be a High Command member to access this page.</p>
         <a href="index.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition text-lg">
             Proceed to Login
         </a>
     </div>
 
-    <div id="page-content">
+    <div id="page-content" class="hidden">
         <!-- Header Section -->
         <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex items-center justify-between sticky top-0 z-50">
             <div class="flex items-center">
@@ -339,17 +333,20 @@
         // --- Firebase Setup ---
         let db, auth, userId;
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDU7DRAxCzqu81DTa7k0DXaBRcMpk0sElc",
-            authDomain: "upd-system.firebaseapp.com",
-            projectId: "upd-system",
-            storageBucket: "upd-system.appspot.com",
-            messagingSenderId: "28223003678",
-            appId: "1:28223003678:web:a19a9a8eb33fe74202220f",
-            measurementId: "G-83NX0KXZ1Y"
-        };
-
+        // Use the platform-provided config, if available
+        const firebaseConfig = typeof __firebase_config !== 'undefined'
+            ? JSON.parse(__firebase_config)
+            : {
+                apiKey: "AIzaSyDU7DRAxCzqu81DTa7k0DXaBRcMpk0sElc",
+                authDomain: "upd-system.firebaseapp.com",
+                projectId: "upd-system",
+                storageBucket: "upd-system.appspot.com",
+                messagingSenderId: "28223003678",
+                appId: "1:28223003678:web:a19a9a8eb33fe74202220f",
+                measurementId: "G-83NX0KXZ1Y"
+            };
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
         const initializeFirebase = async () => {
             try {
@@ -358,15 +355,56 @@
                 db = window.firebase.getFirestore(app);
                 console.log("Firebase Initialized for High Command");
 
-                window.firebase.onAuthStateChanged(auth, (user) => {
-                    if (user && !user.isAnonymous) {
+                // Sign in with the provided custom token, or anonymously as a fallback
+                if (initialAuthToken) {
+                    await window.firebase.signInWithCustomToken(auth, initialAuthToken);
+                } else {
+                    await window.firebase.signInAnonymously(auth);
+                }
+
+                // Listen for authentication state changes and handle UI accordingly
+                window.firebase.onAuthStateChanged(auth, async (user) => {
+                    const loadingOverlay = document.getElementById('loading-overlay');
+                    const pageContent = document.getElementById('page-content');
+                    const loginOverlay = document.getElementById('login-prompt-overlay');
+                    const addOfficerBtn = document.getElementById('add-officer-btn');
+
+                    if (user) {
                         userId = user.uid;
-                        console.log("User is signed in with UID:", userId);
-                        loadReportsFromFirestore();
-                        loadPersonnel();
-                        setPermissions();
+                        // Fetch the user's document from Firestore to check their role
+                        const userDocRef = window.firebase.doc(db, `artifacts/${appId}/users/${userId}/profile`, user.uid);
+                        const userDocSnap = await window.firebase.getDoc(userDocRef);
+
+                        let userRole = null;
+                        if (userDocSnap.exists()) {
+                            const userData = userDocSnap.data();
+                            userRole = userData.role;
+                        }
+
+                        // Check if the user has the required role to access the page
+                        if (userRole === 'High Command' || userRole === 'Website Account Manager') {
+                            loadingOverlay.classList.add('hidden');
+                            loginOverlay.classList.add('hidden');
+                            pageContent.classList.remove('hidden');
+
+                            // Allow adding officers based on role
+                            addOfficerBtn.classList.remove('hidden');
+                            // Load the page data now that the user is verified
+                            loadReportsFromFirestore();
+                            loadPersonnel();
+                        } else {
+                            loadingOverlay.classList.add('hidden');
+                            pageContent.classList.add('hidden');
+                            loginOverlay.classList.remove('hidden');
+                            loginOverlay.querySelector('p').textContent = `You are logged in as a "${userRole}", but do not have permission to view this page.`;
+                        }
+
                     } else {
-                        console.log("No authenticated user found or user is anonymous.");
+                        // User is not logged in, show access denied
+                        loadingOverlay.classList.add('hidden');
+                        pageContent.classList.add('hidden');
+                        loginOverlay.classList.remove('hidden');
+                        loginOverlay.querySelector('p').textContent = 'You must be logged in to access the High Command Center.';
                     }
                 });
 
@@ -394,27 +432,22 @@
         const officerRoleSelect = document.getElementById('officer-role');
         const confirmRemoveModal = document.getElementById('confirm-remove-modal');
         let officerToRemoveId = null;
-        let currentUserRole = null;
 
         const rolesByManager = {
             "Website Account Manager": ["Account Manager", "Officer", "FTO", "Subdivision Lead"],
-            "Account Manager": ["Officer", "FTO", "Subdivision Lead"]
+            "High Command": ["Account Manager", "Website Account Manager", "Officer", "FTO", "Subdivision Lead"]
         };
 
-        const setPermissions = () => {
-            const userProfile = JSON.parse(localStorage.getItem('userProfile'));
-            if (userProfile && userProfile.role) {
-                currentUserRole = userProfile.role;
-                if (rolesByManager[currentUserRole]) {
-                    addOfficerBtn.classList.remove('hidden');
-                } else {
-                    addOfficerBtn.classList.add('hidden');
-                }
+        let currentUserRole = null;
+
+        const setPermissions = (role) => {
+            currentUserRole = role;
+            if (rolesByManager[currentUserRole]) {
+                addOfficerBtn.classList.remove('hidden');
             } else {
                 addOfficerBtn.classList.add('hidden');
             }
         };
-
 
         const generatePassword = (length = 12) => {
             const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
@@ -444,20 +477,20 @@
                     const toggleButtonColor = person.status === 'active' ? 'bg-orange-500 hover:bg-orange-600' : 'bg-green-600 hover:bg-green-700';
 
                     personEl.innerHTML = `
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="font-semibold">${person.name}</p>
-                                    <p class="text-sm text-slate-500 dark:text-slate-400">${person.email || ''}</p>
-                                    <p class="text-sm text-slate-500 dark:text-slate-400">${person.rank} - ${person.role}</p>
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="font-semibold">${person.name}</p>
+                                        <p class="text-sm text-slate-500 dark:text-slate-400">${person.email || ''}</p>
+                                        <p class="text-sm text-slate-500 dark:text-slate-400">${person.rank} - ${person.role}</p>
+                                    </div>
+                                    <p class="text-sm font-bold ${statusColor}">${person.status.charAt(0).toUpperCase() + person.status.slice(1)}</p>
                                 </div>
-                                <p class="text-sm font-bold ${statusColor}">${person.status.charAt(0).toUpperCase() + person.status.slice(1)}</p>
-                            </div>
-                            <div class="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-slate-200 dark:border-slate-600">
-                                <button data-id="${person.id}" class="reset-pass-btn text-xs bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-2 rounded-md transition">Reset Pass</button>
-                                <button data-id="${person.id}" data-status="${person.status}" class="toggle-status-btn text-xs ${toggleButtonColor} text-white font-bold py-1 px-2 rounded-md transition">${toggleButtonText}</button>
-                                <button data-id="${person.id}" data-name="${person.name}" class="remove-btn text-xs bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-md transition">Remove</button>
-                            </div>
-                        `;
+                                <div class="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-slate-200 dark:border-slate-600">
+                                    <button data-id="${person.id}" class="reset-pass-btn text-xs bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-2 rounded-md transition">Reset Pass</button>
+                                    <button data-id="${person.id}" data-status="${person.status}" class="toggle-status-btn text-xs ${toggleButtonColor} text-white font-bold py-1 px-2 rounded-md transition">${toggleButtonText}</button>
+                                    <button data-id="${person.id}" data-name="${person.name}" class="remove-btn text-xs bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-md transition">Remove</button>
+                                </div>
+                            `;
                     personnelListContainer.appendChild(personEl);
                 });
             }, (error) => {
@@ -510,6 +543,8 @@
         };
 
         const populateRoleDropdown = () => {
+            const userProfile = JSON.parse(localStorage.getItem('userProfile'));
+            let currentUserRole = userProfile?.role;
             const roles = rolesByManager[currentUserRole] || [];
             officerRoleSelect.innerHTML = '';
             roles.forEach(role => {
@@ -654,10 +689,10 @@
                     const reportDate = new Date(reportData.createdAt).toLocaleString();
 
                     reportEl.innerHTML = `
-                            <h3 class="font-bold text-lg text-blue-600 dark:text-blue-400">${reportTitle}</h3>
-                            <p class="text-sm text-slate-600 dark:text-slate-300">Filed by: ${reportingOfficer}</p>
-                            <p class="text-xs text-slate-400 dark:text-slate-500">Date: ${reportDate}</p>
-                        `;
+                                <h3 class="font-bold text-lg text-blue-600 dark:text-blue-400">${reportTitle}</h3>
+                                <p class="text-sm text-slate-600 dark:text-slate-300">Filed by: ${reportingOfficer}</p>
+                                <p class="text-xs text-slate-400 dark:text-slate-500">Date: ${reportDate}</p>
+                            `;
 
                     reportEl.addEventListener('click', () => openReportModal(reportData));
                     reportsContainer.appendChild(reportEl);
@@ -729,7 +764,6 @@
                 }
             });
 
-            setPermissions();
         });
 
     </script>
