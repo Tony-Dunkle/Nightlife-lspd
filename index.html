@@ -376,9 +376,8 @@
                     userInfoDiv.classList.add('flex');
 
                     // Fetch user data from Firestore to get their name and role
-                    // Note: This path assumes a user profile document exists under the 'users' collection
-                    // with a document ID matching the user's UID.
-                    const userDocRef = window.doc(window.db, `artifacts/${appId}/users/${user.uid}/profile`, user.uid);
+                    // Corrected Firestore path to match the database structure
+                    const userDocRef = window.doc(window.db, "users", user.uid);
                     const userDocSnap = await window.getDoc(userDocRef);
 
                     let userName = user.email; // Default to email
