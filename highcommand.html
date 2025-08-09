@@ -149,7 +149,8 @@
         </a>
     </div>
 
-    <div id="page-content" class="hidden">
+    <!-- Page content wrapper -->
+    <div id="page-content" class="hidden flex flex-col min-h-screen">
         <!-- Header Section -->
         <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex items-center justify-between sticky top-0 z-50">
             <div class="flex items-center">
@@ -178,7 +179,7 @@
         </header>
 
         <!-- Main Content -->
-        <main class="container mx-auto p-4 md:p-8">
+        <main class="container mx-auto p-4 md:p-8 flex-grow">
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
                 <!-- Officer Login Management -->
@@ -212,7 +213,7 @@
         </main>
 
         <!-- Footer Section -->
-        <footer class="bg-slate-800 text-white py-10 px-6 md:px-12 mt-8">
+        <footer class="bg-slate-800 text-white py-10 px-6 md:px-12">
             <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div>
                     <h4 class="text-xl font-semibold mb-4 text-slate-300">Internal Contacts</h4>
@@ -399,8 +400,6 @@
                     const loadingOverlay = document.getElementById('loading-overlay');
                     const pageContent = document.getElementById('page-content');
                     const loginOverlay = document.getElementById('login-prompt-overlay');
-                    const addOfficerBtn = document.getElementById('add-officer-btn');
-
 
                     // A brief delay to allow the loading spinner to be seen
                     await new Promise(resolve => setTimeout(resolve, 500));
@@ -408,17 +407,16 @@
                     if (user) {
                         userId = user.uid;
                         // Fetch the user's document from Firestore to check their access level
-                        // This path is corrected to match the database structure you provided
                         const userDocRef = window.firebase.doc(db, "users", user.uid);
                         const userDocSnap = await window.firebase.getDoc(userDocRef);
 
                         let userAccessLevel = null;
-                        let userRole = null; // Correctly get the role from the database
+                        let userRole = null;
 
                         if (userDocSnap.exists()) {
                             const userData = userDocSnap.data();
                             userAccessLevel = userData['access level'];
-                            userRole = userData['role']; // Get the 'role' field
+                            userRole = userData['role'];
                         }
 
                         // Check if the user has the required access level to access the page
@@ -452,7 +450,6 @@
 
             } catch (e) {
                 console.error("Error initializing Firebase:", e);
-                // In case of any other error, redirect to login for security
                 const reportsLoading = document.getElementById('reports-loading');
                 const personnelLoading = document.getElementById('personnel-loading');
                 if (reportsLoading) reportsLoading.innerHTML = '<p class="text-red-500">Could not connect to the database. Redirecting...</p>';
@@ -464,7 +461,6 @@
         initializeFirebase();
 
         // --- Personnel Management ---
-        const personnelCollectionRef = () => window.firebase.collection(db, "users");
         const personnelListContainer = document.getElementById('personnel-list-container');
         const personnelLoading = document.getElementById('personnel-loading');
         const addOfficerModal = document.getElementById('add-officer-modal');
@@ -534,7 +530,6 @@
 
         const loadPersonnel = () => {
             if (!db) return;
-            // Corrected collection path to 'users'
             const q = window.firebase.query(window.firebase.collection(db, "users"));
             window.firebase.onSnapshot(q, (snapshot) => {
                 personnelLoading.style.display = 'none';
@@ -552,21 +547,21 @@
                     const toggleButtonColor = person.status === 'active' ? 'bg-orange-500 hover:bg-orange-600' : 'bg-green-600 hover:bg-green-700';
 
                     personEl.innerHTML = `
-                                    <div class="flex items-center justify-between">
-                                        <div>
-                                            <p class="font-semibold">${person.name || 'No Name'}</p>
-                                            <p class="text-sm text-slate-500 dark:text-slate-400">${person.email || ''}</p>
-                                            <p class="text-sm text-slate-500 dark:text-slate-400">${person.rank || 'N/A'} - ${person.role || 'N/A'}</p>
-                                        </div>
-                                        <p class="text-sm font-bold ${statusColor}">${person.status ? person.status.charAt(0).toUpperCase() + person.status.slice(1) : 'N/A'}</p>
-                                    </div>
-                                    <div class="grid grid-cols-4 gap-2 mt-3 pt-3 border-t border-slate-200 dark:border-slate-600">
-                                        <button data-id="${person.id}" class="edit-btn text-xs bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded-md transition">Edit</button>
-                                        <button data-id="${person.id}" class="reset-pass-btn text-xs bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-2 rounded-md transition">Reset Pass</button>
-                                        <button data-id="${person.id}" data-status="${person.status}" class="toggle-status-btn text-xs ${toggleButtonColor} text-white font-bold py-1 px-2 rounded-md transition">${toggleButtonText}</button>
-                                        <button data-id="${person.id}" data-name="${person.name}" class="remove-btn text-xs bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-md transition">Remove</button>
-                                    </div>
-                                `;
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="font-semibold">${person.name || 'No Name'}</p>
+                                    <p class="text-sm text-slate-500 dark:text-slate-400">${person.email || ''}</p>
+                                    <p class="text-sm text-slate-500 dark:text-slate-400">${person.rank || 'N/A'} - ${person.role || 'N/A'}</p>
+                                </div>
+                                <p class="text-sm font-bold ${statusColor}">${person.status ? person.status.charAt(0).toUpperCase() + person.status.slice(1) : 'N/A'}</p>
+                            </div>
+                            <div class="grid grid-cols-4 gap-2 mt-3 pt-3 border-t border-slate-200 dark:border-slate-600">
+                                <button data-id="${person.id}" class="edit-btn text-xs bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded-md transition">Edit</button>
+                                <button data-id="${person.id}" class="reset-pass-btn text-xs bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-2 rounded-md transition">Reset Pass</button>
+                                <button data-id="${person.id}" data-status="${person.status}" class="toggle-status-btn text-xs ${toggleButtonColor} text-white font-bold py-1 px-2 rounded-md transition">${toggleButtonText}</button>
+                                <button data-id="${person.id}" data-name="${person.name}" class="remove-btn text-xs bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-md transition">Remove</button>
+                            </div>
+                        `;
                     personnelListContainer.appendChild(personEl);
                 });
             }, (error) => {
@@ -716,10 +711,8 @@
             officerRoleSelect.innerHTML = '';
             officerAccessLevelSelect.innerHTML = '';
 
-            // Rename the Access Level field in the Add Officer modal
             document.querySelector('#access-level-field label').textContent = "Access Level";
 
-            // Determine which roles can be assigned based on the logged-in user's role
             let roles = [];
             let accessLevels = [];
 
@@ -731,16 +724,14 @@
                 roles = ["Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
                 accessLevelField.classList.add('hidden');
             } else if (currentUserRole === 'Website Manager') {
-                // Website Manager can add all roles and access levels
                 roles = ["Account Manager", "Personnel Manager", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
                 accessLevels = ["High Command", "Command", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
                 accessLevelField.classList.remove('hidden');
             } else {
-                roles = []; // For other roles, don't allow adding new officers
+                roles = [];
                 accessLevelField.classList.add('hidden');
             }
 
-            // Populate the roles dropdown
             roles.forEach(role => {
                 const option = document.createElement('option');
                 option.value = role;
@@ -748,7 +739,6 @@
                 officerRoleSelect.appendChild(option);
             });
 
-            // Populate the access levels dropdown for Account Managers and Website Managers
             if (currentUserRole === 'Account Manager' || currentUserRole === 'Website Manager') {
                 accessLevels.forEach(accessLevel => {
                     const option = document.createElement('option');
@@ -758,51 +748,6 @@
                 });
             }
         };
-
-        const populateEditOfficerDropdowns = (currentRole, currentAccessLevel) => {
-            editOfficerRoleSelect.innerHTML = '';
-            editOfficerAccessLevelSelect.innerHTML = '';
-
-            let roles = [];
-            let accessLevels = [];
-
-            if (currentUserRole === 'Account Manager') {
-                roles = ["Personnel Manager", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
-                accessLevels = ["High Command", "Command", "Field Training Officer"];
-                editAccessLevelField.classList.remove('hidden');
-            } else if (currentUserRole === 'Personnel Manager') {
-                roles = ["Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
-                editAccessLevelField.classList.add('hidden');
-            } else if (currentUserRole === 'Website Manager') {
-                // Website Manager can edit all roles and access levels
-                roles = ["Account Manager", "Personnel Manager", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
-                accessLevels = ["High Command", "Command", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
-                editAccessLevelField.classList.remove('hidden');
-            }
-            else {
-                roles = [];
-                editAccessLevelField.classList.add('hidden');
-            }
-
-            roles.forEach(role => {
-                const option = document.createElement('option');
-                option.value = role;
-                option.textContent = role;
-                if (role === currentRole) option.selected = true;
-                editOfficerRoleSelect.appendChild(option);
-            });
-
-            if (currentUserRole === 'Account Manager' || currentUserRole === 'Website Manager') {
-                accessLevels.forEach(accessLevel => {
-                    const option = document.createElement('option');
-                    option.value = accessLevel;
-                    option.textContent = accessLevel;
-                    if (accessLevel === currentAccessLevel) option.selected = true;
-                    editOfficerAccessLevelSelect.appendChild(option);
-                });
-            }
-        };
-
 
         addOfficerBtn.addEventListener('click', () => {
             populateAddOfficerDropdowns();
@@ -817,7 +762,7 @@
             const email = document.getElementById('officer-email').value;
             const role = document.getElementById('officer-role').value;
             const rank = document.getElementById('officer-rank').value;
-            const accessLevel = document.getElementById('access-level').value || 'Officer'; // Default to Officer if not set
+            const accessLevel = document.getElementById('access-level').value || 'Officer';
             const password = generatePassword();
 
             try {
@@ -825,8 +770,7 @@
                 const userCredential = await window.firebase.createUserWithEmailAndPassword(auth, email, password);
                 const newUserId = userCredential.user.uid;
 
-                // Step 2: Create the user profile in Firestore, using the UID from Auth as the document ID
-                // The path is now corrected to match your database structure
+                // Step 2: Create the user profile in Firestore
                 const userDocRef = window.firebase.doc(db, "users", newUserId);
                 await window.firebase.setDoc(userDocRef, {
                     name,
@@ -836,7 +780,7 @@
                     'access level': accessLevel,
                     status: 'active',
                     createdAt: new Date().toISOString(),
-                    createdBy: userId // Save the UID of the admin who created the account
+                    createdBy: userId
                 });
 
                 addOfficerForm.reset();
@@ -847,7 +791,6 @@
 
             } catch (error) {
                 console.error("Error adding officer:", error);
-                // Provide more specific feedback to the user
                 if (error.code === 'auth/email-already-in-use') {
                     alert('This email address is already in use by another officer.');
                 } else if (error.code === 'auth/invalid-email') {
@@ -941,10 +884,10 @@
                     const reportDate = new Date(reportData.createdAt).toLocaleString();
 
                     reportEl.innerHTML = `
-                                    <h3 class="font-bold text-lg text-blue-600 dark:text-blue-400">${reportTitle}</h3>
-                                    <p class="text-sm text-slate-600 dark:text-slate-300">Filed by: ${reportingOfficer}</p>
-                                    <p class="text-xs text-slate-400 dark:text-slate-500">Date: ${reportDate}</p>
-                                `;
+                            <h3 class="font-bold text-lg text-blue-600 dark:text-blue-400">${reportTitle}</h3>
+                            <p class="text-sm text-slate-600 dark:text-slate-300">Filed by: ${reportingOfficer}</p>
+                            <p class="text-xs text-slate-400 dark:text-slate-500">Date: ${reportDate}</p>
+                        `;
 
                     reportEl.addEventListener('click', () => openReportModal(reportData));
                     reportsContainer.appendChild(reportEl);
