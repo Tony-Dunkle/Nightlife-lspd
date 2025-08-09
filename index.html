@@ -11,7 +11,7 @@
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, updatePassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, updateDoc, collection, addDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Prioritize the platform-provided config, but use the hardcoded one as a fallback.
         const firebaseConfig = typeof __firebase_config !== 'undefined'
@@ -40,6 +40,8 @@
         window.getDoc = getDoc;
         window.updateDoc = updateDoc; // Making updateDoc available
         window.updatePassword = updatePassword; // Making updatePassword available
+        window.collection = collection; // Making collection available
+        window.addDoc = addDoc; // Making addDoc available
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display.swap');
@@ -694,7 +696,33 @@
                     }
 
                     try {
-                        await window.signInWithEmailAndPassword(window.firebaseAuth, email, password);
+                        const userCredential = await window.signInWithEmailAndPassword(window.firebaseAuth, email, password);
+                        const user = userCredential.user;
+
+                        // Fetch user data from Firestore to get their name
+                        const userDocRef = window.doc(window.db, "users", user.uid);
+                        const userDocSnap = await window.getDoc(userDocRef);
+
+                        let userName = user.email;
+                        if (userDocSnap.exists()) {
+                            const userData = userDocSnap.data();
+                            userName = userData.name || user.email;
+                        }
+
+                        // Log the login activity
+                        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+                        const logCollectionPath = `/artifacts/${appId}/public/data/login_activity`;
+                        try {
+                            await window.addDoc(window.collection(window.db, logCollectionPath), {
+                                name: userName,
+                                timestamp: new Date(),
+                                page: window.location.pathname
+                            });
+                            console.log("Login activity logged successfully.");
+                        } catch (logError) {
+                            console.error("Failed to log login activity:", logError);
+                        }
+
                         loginModal.classList.remove('is-open');
                         emailInput.value = '';
                         passwordInput.value = '';
