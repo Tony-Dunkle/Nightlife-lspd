@@ -66,7 +66,8 @@
             <div class="flex-1 px-4 lg:px-16 flex justify-end">
                 <div id="user-info" class="text-sm text-gray-400">Loading user info...</div>
             </div>
-            <div id="auth-buttons" class="hidden">
+            <div id="auth-buttons" class="hidden space-x-2">
+                <button id="addAnnouncementBtn" class="hidden px-4 py-2 text-sm font-semibold rounded-full border border-green-500 text-green-500 hover:bg-green-500 hover:text-white transition-colors duration-200">Create Announcement</button>
                 <button id="addRecordBtn" class="px-4 py-2 text-sm font-semibold rounded-full border border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white transition-colors duration-200">Add New Record</button>
             </div>
         </div>
@@ -92,6 +93,14 @@
                         <p class="text-sm text-gray-400">Select a record to see its details.</p>
                     </div>
                 </div>
+
+                <!-- New Announcements Section -->
+                <div class="bg-gray-800 rounded-lg border border-gray-700 p-4">
+                    <h3 class="font-bold text-lg text-white mb-3">Announcements</h3>
+                    <div id="announcements-container" class="space-y-4">
+                        <p class="text-sm text-gray-400">No announcements yet.</p>
+                    </div>
+                </div>
             </aside>
         </div>
     </main>
@@ -101,7 +110,7 @@
         <div class="bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-2xl mx-4 border border-gray-700">
             <div class="flex justify-between items-center mb-4">
                 <h3 class="text-lg font-bold text-white">Add New Training Record</h3>
-                <button id="closeModalBtn" class="text-gray-400 hover:text-white">&times;</button>
+                <button id="closeRecordModalBtn" class="text-gray-400 hover:text-white">&times;</button>
             </div>
 
             <form id="trainingForm" class="space-y-4">
@@ -120,12 +129,42 @@
                     </div>
                 </div>
                 <div class="flex justify-end space-x-4 mt-6">
-                    <button type="button" id="cancelBtn" class="px-4 py-2 text-sm font-semibold rounded-full border border-gray-600 text-gray-300 hover:bg-gray-700 transition-colors duration-200">Cancel</button>
+                    <button type="button" id="cancelRecordBtn" class="px-4 py-2 text-sm font-semibold rounded-full border border-gray-600 text-gray-300 hover:bg-gray-700 transition-colors duration-200">Cancel</button>
                     <button type="submit" id="saveRecordBtn" class="px-4 py-2 text-sm font-semibold rounded-full bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-200">Save Record</button>
                 </div>
             </form>
         </div>
     </div>
+
+    <!-- Modal for adding announcements -->
+    <div id="announcementModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
+        <div class="bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-2xl mx-4 border border-gray-700">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-bold text-white">Create New Announcement</h3>
+                <button id="closeAnnouncementModalBtn" class="text-gray-400 hover:text-white">&times;</button>
+            </div>
+
+            <form id="announcementForm" class="space-y-4">
+                <div>
+                    <label for="announcementTitleInput" class="block text-sm font-medium text-gray-300 mb-1">Title</label>
+                    <input type="text" id="announcementTitleInput" required placeholder="Announcement Title" class="w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                </div>
+                <div>
+                    <label for="announcementContentInput" class="block text-sm font-medium text-gray-300 mb-1">Content (Supports simple Markdown)</label>
+                    <textarea id="announcementContentInput" required rows="6" placeholder="Write your announcement here..." class="w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"></textarea>
+                </div>
+                <div>
+                    <label for="announcementMediaInput" class="block text-sm font-medium text-gray-300 mb-1">Image or Video URL</label>
+                    <input type="url" id="announcementMediaInput" placeholder="https://example.com/media.jpg or https://youtube.com/watch?v=..." class="w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent">
+                </div>
+                <div class="flex justify-end space-x-4 mt-6">
+                    <button type="button" id="cancelAnnouncementBtn" class="px-4 py-2 text-sm font-semibold rounded-full border border-gray-600 text-gray-300 hover:bg-gray-700 transition-colors duration-200">Cancel</button>
+                    <button type="submit" id="saveAnnouncementBtn" class="px-4 py-2 text-sm font-semibold rounded-full bg-green-500 text-white hover:bg-green-600 transition-colors duration-200">Post Announcement</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
 
     <!-- Firebase SDKs -->
     <script type="module">
@@ -154,10 +193,11 @@
 
         // --- DOM Elements ---
         const addRecordBtn = document.getElementById('addRecordBtn');
+        const addAnnouncementBtn = document.getElementById('addAnnouncementBtn');
         const recordsContainer = document.getElementById('records-container');
         const recordModal = document.getElementById('recordModal');
-        const closeModalBtn = document.getElementById('closeModalBtn');
-        const cancelBtn = document.getElementById('cancelBtn');
+        const closeModalBtn = document.getElementById('closeRecordModalBtn');
+        const cancelBtn = document.getElementById('cancelRecordBtn');
         const trainingForm = document.getElementById('trainingForm');
         const traineeInput = document.getElementById('traineeInput');
         const trainerInput = document.getElementById('trainerInput');
@@ -166,6 +206,14 @@
         const noAccessMessage = document.getElementById('no-access-message');
         const userInfoElement = document.getElementById('user-info');
         const authButtons = document.getElementById('auth-buttons');
+        const announcementModal = document.getElementById('announcementModal');
+        const closeAnnouncementModalBtn = document.getElementById('closeAnnouncementModalBtn');
+        const cancelAnnouncementBtn = document.getElementById('cancelAnnouncementBtn');
+        const announcementForm = document.getElementById('announcementForm');
+        const announcementTitleInput = document.getElementById('announcementTitleInput');
+        const announcementContentInput = document.getElementById('announcementContentInput');
+        const announcementMediaInput = document.getElementById('announcementMediaInput');
+        const announcementsContainer = document.getElementById('announcements-container');
 
         // --- State and Constants ---
         const allowedRoles = ["Field Training Officer", "Command", "High Command", "Commisioner", "Website Account Manager"];
@@ -200,14 +248,23 @@
         };
 
         // --- UI Functions ---
-        const openModal = () => {
+        const openRecordModal = () => {
             renderChecklistForForm();
             recordModal.classList.remove('hidden');
         };
 
-        const closeModal = () => {
+        const closeRecordModal = () => {
             trainingForm.reset();
             recordModal.classList.add('hidden');
+        };
+
+        const openAnnouncementModal = () => {
+            announcementModal.classList.remove('hidden');
+        };
+
+        const closeAnnouncementModal = () => {
+            announcementForm.reset();
+            announcementModal.classList.add('hidden');
         };
 
         const renderChecklistForForm = () => {
@@ -216,9 +273,9 @@
                 const itemDiv = document.createElement('div');
                 itemDiv.className = 'flex items-center space-x-2';
                 itemDiv.innerHTML = `
-                    <input type="checkbox" id="checklist-${index}" name="checklist-item" value="${item}" class="rounded text-blue-500 bg-gray-700 border-gray-600 focus:ring-blue-500">
-                    <label for="checklist-${index}" class="text-sm text-gray-300 cursor-pointer">${item}</label>
-                `;
+                        <input type="checkbox" id="checklist-${index}" name="checklist-item" value="${item}" class="rounded text-blue-500 bg-gray-700 border-gray-600 focus:ring-blue-500">
+                        <label for="checklist-${index}" class="text-sm text-gray-300 cursor-pointer">${item}</label>
+                    `;
                 checklistContainer.appendChild(itemDiv);
             });
         };
@@ -234,24 +291,63 @@
                 const recordElement = document.createElement('div');
                 recordElement.className = 'bg-gray-800 rounded-lg border border-gray-700 overflow-hidden';
                 recordElement.innerHTML = `
-                    <div class="p-4">
-                        <div class="text-xs text-gray-400 mb-2">
-                            <span class="font-bold text-white">${record.traineeName}</span> •
-                            <span>Trainer(s): ${record.trainerNames.join(', ')}</span> •
-                            <span>Created: ${record.timestamp?.toDate()?.toLocaleString() || 'N/A'}</span>
+                        <div class="p-4">
+                            <div class="text-xs text-gray-400 mb-2">
+                                <span class="font-bold text-white">${record.traineeName}</span> •
+                                <span>Trainer(s): ${record.trainerNames.join(', ')}</span> •
+                                <span>Created: ${record.timestamp?.toDate()?.toLocaleString() || 'N/A'}</span>
+                            </div>
+                            <h2 class="text-xl font-bold text-white mb-2">Training Record</h2>
+                            <ul id="checklist-${record.id}" class="space-y-1 mt-4">
+                                ${record.checklist.map(item => `
+                                    <li class="flex items-center space-x-2">
+                                        <input type="checkbox" data-record-id="${record.id}" data-item-name="${item.item}" ${item.completed ? 'checked' : ''} class="rounded text-blue-500 bg-gray-700 border-gray-600 focus:ring-blue-500 cursor-pointer">
+                                        <label class="text-sm text-gray-300 ${item.completed ? 'line-through text-gray-500' : ''}">${item.item}</label>
+                                    </li>
+                                `).join('')}
+                            </ul>
                         </div>
-                        <h2 class="text-xl font-bold text-white mb-2">Training Record</h2>
-                        <ul id="checklist-${record.id}" class="space-y-1 mt-4">
-                            ${record.checklist.map(item => `
-                                <li class="flex items-center space-x-2">
-                                    <input type="checkbox" data-record-id="${record.id}" data-item-name="${item.item}" ${item.completed ? 'checked' : ''} class="rounded text-blue-500 bg-gray-700 border-gray-600 focus:ring-blue-500 cursor-pointer">
-                                    <label class="text-sm text-gray-300 ${item.completed ? 'line-through text-gray-500' : ''}">${item.item}</label>
-                                </li>
-                            `).join('')}
-                        </ul>
-                    </div>
-                `;
+                    `;
                 recordsContainer.appendChild(recordElement);
+            });
+        };
+
+        const renderAnnouncements = (announcements) => {
+            announcementsContainer.innerHTML = '';
+            if (announcements.length === 0) {
+                announcementsContainer.innerHTML = `<p class="text-sm text-gray-400">No announcements yet.</p>`;
+                return;
+            }
+
+            announcements.forEach(announcement => {
+                const isVideo = announcement.mediaUrl && (announcement.mediaUrl.includes('youtube.com') || announcement.mediaUrl.includes('youtu.be'));
+                const isImage = announcement.mediaUrl && /\.(jpeg|jpg|gif|png)$/.test(announcement.mediaUrl);
+                let mediaHtml = '';
+
+                if (isVideo) {
+                    const videoId = announcement.mediaUrl.match(/(?:youtu\.be\/|youtube\.com\/(?:watch\?v=|embed\/))([\w-]+)/)?.[1];
+                    if (videoId) {
+                        mediaHtml = `<iframe class="w-full h-auto aspect-video rounded-md mt-2" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>`;
+                    }
+                } else if (isImage) {
+                    mediaHtml = `<img src="${announcement.mediaUrl}" class="w-full h-auto rounded-md mt-2" alt="Announcement image">`;
+                }
+
+                // Simple markdown to HTML conversion
+                const contentHtml = announcement.content.replace(/\n/g, '<br/>');
+
+                const announcementElement = document.createElement('div');
+                announcementElement.className = 'bg-gray-700/50 rounded-lg p-3 border border-gray-600';
+                announcementElement.innerHTML = `
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="text-md font-semibold text-white">${announcement.title}</h4>
+                            <span class="text-xs text-gray-400">${announcement.timestamp?.toDate()?.toLocaleDateString() || 'N/A'}</span>
+                        </div>
+                        <div class="text-sm text-gray-300">${contentHtml}</div>
+                        ${mediaHtml}
+                        <div class="mt-2 text-xs text-gray-500">Posted by: ${announcement.createdByUsername || 'Unknown'}</div>
+                    `;
+                announcementsContainer.appendChild(announcementElement);
             });
         };
 
@@ -268,10 +364,28 @@
                 });
                 showToast(`Training record for ${traineeName} added!`);
                 console.log("Document written with ID: ", docRef.id);
-                closeModal();
+                closeRecordModal();
             } catch (e) {
                 console.error("Error adding document: ", e);
                 showToast('Failed to add record.', true);
+            }
+        };
+
+        const addAnnouncement = async (title, content, mediaUrl) => {
+            try {
+                await addDoc(collection(db, `artifacts/${appId}/public/data/announcements`), {
+                    title: title,
+                    content: content,
+                    mediaUrl: mediaUrl,
+                    createdBy: userId,
+                    createdByUsername: userProfile.name,
+                    timestamp: serverTimestamp()
+                });
+                showToast('Announcement posted successfully!');
+                closeAnnouncementModal();
+            } catch (e) {
+                console.error("Error adding announcement: ", e);
+                showToast('Failed to post announcement.', true);
             }
         };
 
@@ -320,20 +434,38 @@
 
                 if (allowedRoles.includes(userProfile['access level'])) {
                     authButtons.classList.remove('hidden');
-                    // Start listening to Firestore for real-time updates
-                    const q = collection(db, `artifacts/${appId}/public/data/trainingRecords`);
-                    onSnapshot(q, (querySnapshot) => {
+                    // Show announcement button only for High Command
+                    if (userProfile['access level'] === 'High Command') {
+                        addAnnouncementBtn.classList.remove('hidden');
+                    }
+
+                    // Start listening to Firestore for real-time updates for training records
+                    const qRecords = collection(db, `artifacts/${appId}/public/data/trainingRecords`);
+                    onSnapshot(qRecords, (querySnapshot) => {
                         const records = [];
                         querySnapshot.forEach((doc) => {
                             records.push({ id: doc.id, ...doc.data() });
                         });
                         renderTrainingRecords(records);
                     });
+
                 } else {
                     loadingMessage.classList.add('hidden');
                     noAccessMessage.classList.remove('hidden');
                     authButtons.classList.add('hidden');
                 }
+
+                // Always listen for announcements, as they are public for all authenticated users
+                const qAnnouncements = collection(db, `artifacts/${appId}/public/data/announcements`);
+                onSnapshot(qAnnouncements, (querySnapshot) => {
+                    const announcements = [];
+                    querySnapshot.forEach((doc) => {
+                        announcements.push({ id: doc.id, ...doc.data() });
+                    });
+                    announcements.sort((a, b) => b.timestamp.seconds - a.timestamp.seconds);
+                    renderAnnouncements(announcements);
+                });
+
             } else {
                 // If no user is signed in, sign in anonymously or with the custom token
                 if (initialAuthToken) {
@@ -349,10 +481,15 @@
         });
 
         // --- Event Listeners ---
-        addRecordBtn.addEventListener('click', openModal);
-        closeModalBtn.addEventListener('click', closeModal);
-        cancelBtn.addEventListener('click', closeModal);
-        recordModal.addEventListener('click', (e) => { if (e.target === recordModal) closeModal(); });
+        addRecordBtn.addEventListener('click', openRecordModal);
+        closeModalBtn.addEventListener('click', closeRecordModal);
+        cancelBtn.addEventListener('click', closeRecordModal);
+        recordModal.addEventListener('click', (e) => { if (e.target === recordModal) closeRecordModal(); });
+
+        addAnnouncementBtn.addEventListener('click', openAnnouncementModal);
+        closeAnnouncementModalBtn.addEventListener('click', closeAnnouncementModal);
+        cancelAnnouncementBtn.addEventListener('click', closeAnnouncementModal);
+        announcementModal.addEventListener('click', (e) => { if (e.target === announcementModal) closeAnnouncementModal(); });
 
         trainingForm.addEventListener('submit', (e) => {
             e.preventDefault();
@@ -362,6 +499,19 @@
                 addTrainingRecord(traineeName, trainerNames);
             } else {
                 showToast('Please fill out all fields.', true);
+            }
+        });
+
+        announcementForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            const title = announcementTitleInput.value.trim();
+            const content = announcementContentInput.value.trim();
+            const mediaUrl = announcementMediaInput.value.trim();
+
+            if (title && content) {
+                addAnnouncement(title, content, mediaUrl);
+            } else {
+                showToast('Title and content are required.', true);
             }
         });
 

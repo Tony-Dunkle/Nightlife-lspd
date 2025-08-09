@@ -274,6 +274,40 @@
         </div>
     </div>
 
+    <!-- Edit Officer Modal -->
+    <div id="edit-officer-modal" class="modal-overlay">
+        <div class="modal-content !w-auto !max-w-md">
+            <h2 class="text-2xl font-bold mb-6">Edit Officer</h2>
+            <form id="edit-officer-form" class="space-y-4">
+                <input type="hidden" id="edit-officer-id">
+                <div>
+                    <label for="edit-officer-name" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Officer Name</label>
+                    <input type="text" id="edit-officer-name" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="edit-officer-rank" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Rank</label>
+                    <input type="text" id="edit-officer-rank" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="edit-officer-role" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Role</label>
+                    <select id="edit-officer-role" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <!-- Options will be populated by JS -->
+                    </select>
+                </div>
+                <div id="edit-access-level-field" class="hidden">
+                    <label for="edit-access-level" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Access Level</label>
+                    <select id="edit-access-level" class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <!-- Options will be populated by JS -->
+                    </select>
+                </div>
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" id="cancel-edit-officer-btn" class="bg-slate-200 dark:bg-slate-600 hover:bg-slate-300 dark:hover:bg-slate-500 text-slate-800 dark:text-slate-200 font-bold py-2 px-4 rounded-lg transition">Cancel</button>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <!-- Show Temporary Password Modal -->
     <div id="show-password-modal" class="modal-overlay">
         <div class="modal-content !w-auto !max-w-md text-center">
@@ -447,6 +481,16 @@
         const confirmRemoveModal = document.getElementById('confirm-remove-modal');
         let officerToRemoveId = null;
 
+        const editOfficerModal = document.getElementById('edit-officer-modal');
+        const editOfficerForm = document.getElementById('edit-officer-form');
+        const cancelEditOfficerBtn = document.getElementById('cancel-edit-officer-btn');
+        const editOfficerIdInput = document.getElementById('edit-officer-id');
+        const editOfficerNameInput = document.getElementById('edit-officer-name');
+        const editOfficerRankInput = document.getElementById('edit-officer-rank');
+        const editOfficerRoleSelect = document.getElementById('edit-officer-role');
+        const editOfficerAccessLevelSelect = document.getElementById('edit-access-level');
+        const editAccessLevelField = document.getElementById('edit-access-level-field');
+
         const rolesByManager = {
             "Website Account Manager": ["Personnel Manager", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"],
             "Personnel Manager": ["Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"]
@@ -504,7 +548,8 @@
                                     </div>
                                     <p class="text-sm font-bold ${statusColor}">${person.status ? person.status.charAt(0).toUpperCase() + person.status.slice(1) : 'N/A'}</p>
                                 </div>
-                                <div class="grid grid-cols-3 gap-2 mt-3 pt-3 border-t border-slate-200 dark:border-slate-600">
+                                <div class="grid grid-cols-4 gap-2 mt-3 pt-3 border-t border-slate-200 dark:border-slate-600">
+                                    <button data-id="${person.id}" class="edit-btn text-xs bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded-md transition">Edit</button>
                                     <button data-id="${person.id}" class="reset-pass-btn text-xs bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-2 rounded-md transition">Reset Pass</button>
                                     <button data-id="${person.id}" data-status="${person.status}" class="toggle-status-btn text-xs ${toggleButtonColor} text-white font-bold py-1 px-2 rounded-md transition">${toggleButtonText}</button>
                                     <button data-id="${person.id}" data-name="${person.name}" class="remove-btn text-xs bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-md transition">Remove</button>
@@ -523,6 +568,10 @@
             const target = e.target.closest('button');
             if (!target) return;
 
+            if (target.classList.contains('edit-btn')) {
+                const personId = target.dataset.id;
+                openEditOfficerModal(personId);
+            }
             if (target.classList.contains('reset-pass-btn')) {
                 resetPassword(target.dataset.id);
             }
@@ -533,6 +582,79 @@
                 openConfirmRemoveModal(target.dataset.id, target.dataset.name);
             }
         });
+
+        // Edit Officer Logic
+        const openEditOfficerModal = async (personId) => {
+            const personDocRef = window.firebase.doc(db, "users", personId);
+            const docSnap = await window.firebase.getDoc(personDocRef);
+
+            if (docSnap.exists()) {
+                const personData = docSnap.data();
+                editOfficerIdInput.value = personId;
+                editOfficerNameInput.value = personData.name || '';
+                editOfficerRankInput.value = personData.rank || '';
+
+                // Populate the role and access level dropdowns for editing
+                populateEditDropdowns(personData.role, personData['access level']);
+
+                editOfficerModal.classList.add('is-open');
+            } else {
+                alert('Officer not found!');
+            }
+        };
+
+        const populateEditDropdowns = (currentRole, currentAccessLevel) => {
+            editOfficerRoleSelect.innerHTML = '';
+            editOfficerAccessLevelSelect.innerHTML = '';
+
+            const roles = rolesByManager[currentUserRole] || [];
+            roles.forEach(role => {
+                const option = document.createElement('option');
+                option.value = role;
+                option.textContent = role;
+                if (role === currentRole) option.selected = true;
+                editOfficerRoleSelect.appendChild(option);
+            });
+
+            if (currentUserRole === 'Website Account Manager') {
+                editAccessLevelField.classList.remove('hidden');
+                accessLevelsForWebsiteManager.forEach(accessLevel => {
+                    const option = document.createElement('option');
+                    option.value = accessLevel;
+                    option.textContent = accessLevel;
+                    if (accessLevel === currentAccessLevel) option.selected = true;
+                    editOfficerAccessLevelSelect.appendChild(option);
+                });
+            } else {
+                editAccessLevelField.classList.add('hidden');
+            }
+        };
+
+        editOfficerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const officerId = editOfficerIdInput.value;
+            const newName = editOfficerNameInput.value;
+            const newRank = editOfficerRankInput.value;
+            const newRole = editOfficerRoleSelect.value;
+            const newAccessLevel = editOfficerAccessLevelSelect.value || 'Officer';
+
+            const personDocRef = window.firebase.doc(db, "users", officerId);
+            try {
+                await window.firebase.updateDoc(personDocRef, {
+                    name: newName,
+                    rank: newRank,
+                    role: newRole,
+                    'access level': newAccessLevel
+                });
+                editOfficerModal.classList.remove('is-open');
+            } catch (error) {
+                console.error("Error updating officer:", error);
+                alert("Failed to update officer. See console for details.");
+            }
+        });
+
+        cancelEditOfficerBtn.addEventListener('click', () => editOfficerModal.classList.remove('is-open'));
+        editOfficerModal.addEventListener('click', e => e.target === editOfficerModal && editOfficerModal.classList.remove('is-open'));
 
         const resetPassword = async (personId) => {
             const newPassword = generatePassword();
@@ -678,7 +800,7 @@
             try {
                 // Note: This only removes the database record. A full implementation
                 // would require a Cloud Function to delete the user from Firebase Auth as well.
-                const personDocRef = window.firebase.doc(db, `artifacts/${appId}/public/data/personnel`, officerToRemoveId);
+                const personDocRef = window.firebase.doc(db, "users", officerToRemoveId);
                 await window.firebase.deleteDoc(personDocRef);
                 closeConfirmRemoveModal();
             } catch (error) {
