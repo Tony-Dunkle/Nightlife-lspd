@@ -1,344 +1,639 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unified PD - Website Account Manager</title>
-    <!-- Favicon updated to LSPD.png -->
-    <link rel="icon" href='LSPD.png' type="image/png">
+    <title>UPD Internal Portal - Official Member Access</title>
+    <link rel="icon" href="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png" type="image/png">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Firebase SDKs -->
+    <script type="module">
+        // Import the functions you need from the SDKs you need
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Prioritize the platform-provided config, but use the hardcoded one as a fallback.
+        const firebaseConfig = typeof __firebase_config !== 'undefined'
+            ? JSON.parse(__firebase_config)
+            : {
+                apiKey: "AIzaSyDU7DRAxCzqu81DTa7k0DXaBRcMpk0sElc",
+                authDomain: "upd-system.firebaseapp.com",
+                projectId: "upd-system",
+                storageBucket: "upd-system.appspot.com",
+                messagingSenderId: "28223003678",
+                appId: "1:28223003678:web:d1f8a6b0c2e3a4b5c6d7e8"
+            };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        window.firebaseApp = app;
+        window.firebaseAuth = auth;
+        window.db = db;
+        window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+        window.onAuthStateChanged = onAuthStateChanged;
+        window.signOut = signOut;
+        window.doc = doc;
+        window.getDoc = getDoc;
+    </script>
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #1a202c; /* bg-gray-900 */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display.swap');
+
+        /* Define CSS variables for theming */
+        :root {
+            --bg-primary: #f8fafc; /* slate-50 */
+            --bg-secondary: #ffffff; /* white */
+            --bg-tertiary: #f1f5f9; /* slate-100 */
+            --text-primary: #0f172a; /* slate-900 */
+            --text-secondary: #475569; /* slate-600 */
+            --border-color: #e2e8f0; /* slate-200 */
+            --accent-color: #3b82f6; /* blue-500 */
+            --modal-bg: rgba(0,0,0,0.7);
+            --modal-content-bg: #ffffff;
         }
 
+        html.dark {
+            --bg-primary: #0f172a; /* slate-900 */
+            --bg-secondary: #1e293b; /* slate-800 */
+            --bg-tertiary: #334155; /* slate-700 */
+            --text-primary: #f1f5f9; /* slate-100 */
+            --text-secondary: #94a3b8; /* slate-400 */
+            --border-color: #334155; /* slate-700 */
+            --accent-color: #60a5fa; /* blue-400 */
+            --modal-content-bg: #1e293b; /* slate-800 */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+        }
+
+        /* Scrollbar styles */
         ::-webkit-scrollbar {
             width: 8px;
         }
 
         ::-webkit-scrollbar-track {
-            background: #1a202c;
+            background: var(--bg-tertiary);
         }
 
         ::-webkit-scrollbar-thumb {
-            background: #4a5568;
+            background: #888;
             border-radius: 4px;
         }
 
             ::-webkit-scrollbar-thumb:hover {
-                background: #718096;
+                background: #555;
             }
 
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 12px 24px;
-            border-radius: 9999px;
-            background-color: #2d3748;
-            color: white;
-            border: 1px solid #4a5568;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            z-index: 100;
-            opacity: 0;
-            transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+        html.dark ::-webkit-scrollbar-thumb {
+            background: #555;
         }
 
-            .toast.show {
-                opacity: 1;
+            html.dark ::-webkit-scrollbar-thumb:hover {
+                background: #777;
             }
 
-        .login-overlay {
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
             position: fixed;
+            inset: 0;
+            background-color: var(--modal-bg);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .modal-overlay.is-open {
+                display: flex;
+            }
+
+        .modal-box {
+            background-color: var(--modal-content-bg);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            width: 90%;
+            max-width: 500px;
+        }
+
+        .data-modal-box {
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        /* Sidebar specific styles */
+        #sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+
+            #sidebar.sidebar-hidden {
+                transform: translateX(-100%);
+            }
+
+        /* Hero Video Background */
+        .background-video-container {
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background-color: #121827; /* A darker shade of the body background */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            z-index: 50;
+            overflow: hidden;
+            z-index: 0;
         }
 
-        .login-prompt {
-            text-align: center;
-            padding: 2rem;
-            background-color: #1a202c;
-            border: 1px solid #2d3748;
-            border-radius: 0.5rem;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            .background-video-container video {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+                position: absolute;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+            }
+
+        .video-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1;
         }
     </style>
 </head>
-<body class="text-gray-300">
+<body class="antialiased">
 
-    <!-- Login Overlay -->
-    <div id="login-overlay" class="hidden login-overlay">
-        <div class="login-prompt">
-            <h1 class="text-3xl font-bold text-white mb-2">Access Denied</h1>
-            <p class="text-gray-400 mb-6">You must be logged in to access this page.</p>
-            <button id="login-btn" class="px-6 py-3 text-lg font-semibold rounded-full bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-200">Proceed to Login</button>
+    <div class="flex h-screen bg-gray-100 dark:bg-slate-900">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="absolute md:relative z-20 flex-col w-64 bg-white dark:bg-slate-800 shadow-lg transition-transform duration-300 -translate-x-full md:translate-x-0">
+            <div class="flex items-center justify-center h-20 border-b dark:border-slate-700 flex-shrink-0">
+                <img src="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png" alt="UPD Logo" class="w-12 h-12 object-contain">
+                <h1 class="text-xl font-bold ml-2 text-slate-800 dark:text-white">UPD Portal</h1>
+            </div>
+            <nav class="flex-1 px-2 py-4 space-y-2 overflow-y-auto">
+                <div>
+                    <h3 class="px-3 text-xs uppercase text-slate-500 font-semibold tracking-wider">Core</h3>
+                    <a href="index.html" class="mt-1 flex items-center px-3 py-2 text-slate-600 dark:text-slate-300 rounded-lg bg-slate-200 dark:bg-slate-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                        <span class="ml-3">Dashboard</span>
+                    </a>
+                </div>
+                <div class="pt-2">
+                    <h3 class="px-3 text-xs uppercase text-slate-500 font-semibold tracking-wider">Resources</h3>
+                    <a href="SOP.html" class="mt-1 flex items-center px-3 py-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        <span class="ml-3">SOPs</span>
+                    </a>
+                    <a href="training.html" class="mt-1 flex items-center px-3 py-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 14l9-5-9-5-9 5 9 5z"></path><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-9.998 12.078 12.078 0 01.665-6.479L12 14z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-9.998 12.078 12.078 0 01.665-6.479L12 14z"></path></svg>
+                        <span class="ml-3">Training</span>
+                    </a>
+                </div>
+                <div class="pt-2">
+                    <h3 class="px-3 text-xs uppercase text-slate-500 font-semibold tracking-wider">Tools</h3>
+                    <a href="forms.html" class="mt-1 flex items-center px-3 py-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                        <span class="ml-3">Forms</span>
+                    </a>
+                    <a href="report.html" class="mt-1 flex items-center px-3 py-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <span class="ml-3">Report Generator</span>
+                    </a>
+                    <a href="charges.html" class="mt-1 flex items-center px-3 py-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3.25a3.25 3.25 0 00-3.25-3.25H9.25A3.25 3.25 0 006 13.75V17m0 0h12M6 17H5a2 2 0 01-2-2V7a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-1m-6-14v2m-6-2v2"></path></svg>
+                        <span class="ml-3">Charge Calculator</span>
+                    </a>
+                </div>
+                <div class="pt-2">
+                    <h3 class="px-3 text-xs uppercase text-slate-500 font-semibold tracking-wider">Personnel</h3>
+                    <a href="roster.html" class="mt-1 flex items-center px-3 py-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.653-.124-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.653.124-1.283.356-1.857m0 0a3.001 3.001 0 015.644 0M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="ml-3">Roster</span>
+                    </a>
+                    <a href="hr.html" class="mt-1 flex items-center px-3 py-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M15 21a6 6 0 00-9-5.197M15 11a4 4 0 110-8 4 4 0 010 8z"></path></svg>
+                        <span class="ml-3">HR Info</span>
+                    </a>
+                    <a href="info.html" class="mt-1 flex items-center px-3 py-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="ml-3">Common Information</span>
+                    </a>
+                    <a id="highCommandLink" href="highcommand.html" class="hidden mt-1 flex items-center px-3 py-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.789-2.75 9.566-1.74 2.777-2.5 4.434-2.5 4.434H12M12 11c0 3.517 1.009 6.789 2.75 9.566 1.74 2.777 2.5 4.434 2.5 4.434H12M12 11v-1.143c0-1.061-.416-2.078-1.172-2.834l-1.656-1.657a4.006 4.006 0 00-5.656 0l-1.657 1.657A4.006 4.006 0 002 8.857V11m10-11v-1.143c0-1.061.416-2.078 1.172-2.834l1.656-1.657a4.006 4.006 0 015.656 0l1.657 1.657A4.006 4.006 0 0122 8.857V11"></path></svg>
+                        <span class="ml-3">High Command</span>
+                    </a>
+                </div>
+                <!-- WEBSITE MANAGER LINK IN SIDEBAR -->
+                <div id="websiteManagerContainer" class="pt-2 hidden">
+                    <h3 class="px-3 text-xs uppercase text-slate-500 font-semibold tracking-wider">Management</h3>
+                    <a id="websiteManagerLink" href="websitemanager.html" class="mt-1 flex items-center px-3 py-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        <span class="ml-3">Website Manager</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main content -->
+        <div class="flex flex-col flex-1 overflow-hidden">
+            <!-- Header -->
+            <header class="bg-white dark:bg-slate-800 shadow-md flex items-center justify-between p-4 border-b dark:border-slate-700">
+                <button id="hamburgerBtn" class="text-slate-500 focus:outline-none md:hidden">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+                <div class="flex-1"></div>
+                <div class="flex items-center">
+                    <button id="loginButton" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold shadow-md hover:bg-blue-700 transition">Login</button>
+                    <div id="userInfo" class="hidden items-center">
+                        <p id="userEmail" class="mr-4 text-sm text-slate-600 dark:text-slate-300"></p>
+                        <button id="logoutButton" class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg transition">Logout</button>
+                    </div>
+                    <button id="settings-btn" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-slate-500 transition-all ml-4">
+                        <svg class="w-6 h-6 text-slate-600 dark:text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Main Content Area -->
+            <main class="flex-1 overflow-y-auto p-4 md:p-8">
+                <!-- Hero Section -->
+                <section class="relative bg-gray-900 text-white py-20 px-6 md:px-12 rounded-lg overflow-hidden shadow-xl mb-8">
+                    <div class="background-video-container">
+                        <video autoplay loop muted playsinline src="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/c00b3c3ba71a061238ab2f7afd373dd0b597c0ad/index.mp4"></video>
+                        <div class="video-overlay"></div>
+                    </div>
+                    <div class="relative z-10 text-center max-w-4xl mx-auto">
+                        <h2 class="text-4xl md:text-6xl font-extrabold leading-tight mb-6">Empowering Our Officers</h2>
+                        <p class="text-lg md:text-xl mb-8">Your central hub for UPD resources, policies, and departmental communications. Thank you for your service.</p>
+                        <a href="SOP.html" class="inline-block bg-white text-blue-800 hover:bg-blue-100 font-bold py-3 px-8 rounded-full shadow-lg transition duration-300 ease-in-out transform hover:scale-105">Access SOPs</a>
+                    </div>
+                </section>
+
+                <!-- Quick Links -->
+                <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <!-- Quick links will be dynamically generated here -->
+                </section>
+
+                <!-- Commitment Section -->
+                <section class="bg-[var(--bg-secondary)] p-8 rounded-lg shadow-md mb-8">
+                    <h2 class="text-3xl font-bold text-[var(--text-primary)] mb-6 text-center">Our Commitment to Our Team</h2>
+                    <div class="flex flex-col md:flex-row items-center md:space-x-8">
+                        <div class="md:w-2/3">
+                            <p class="text-lg text-[var(--text-secondary)] leading-relaxed mb-4">The Unified Police Department is committed to providing our dedicated officers and staff with the resources, support, and training necessary to excel in their duties and maintain their well-being.</p>
+                            <p class="text-lg text-[var(--text-secondary)] leading-relaxed mb-4">We foster an environment of continuous learning, mutual respect, and operational excellence, ensuring our team is equipped to uphold the highest standards of law enforcement and community service.</p>
+                        </div>
+                        <div class="md:w-1/3 mt-6 md:mt-0"><img src="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png" alt="UPD Logo" class="rounded-lg shadow-md w-full h-auto object-contain"></div>
+                    </div>
+                </section>
+
+                <!-- Dynamic Updates Section -->
+                <section id="updatesSection" class="bg-[var(--bg-secondary)] p-8 rounded-lg shadow-md mb-8 hidden">
+                    <h2 class="text-3xl font-bold text-[var(--text-primary)] mb-6 text-center">Recent Website Updates</h2>
+                    <div id="updatesContent" class="space-y-4"></div>
+                </section>
+
+                <!-- Footer -->
+                <footer class="bg-gray-800 text-white -mx-4 -mb-8 md:-mx-8 md:-mb-8 mt-8 py-10 px-6 md:px-12 rounded-t-lg"><div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8"><div><h4 class="text-xl font-semibold mb-4 text-blue-300">Internal Contacts</h4><ul class="space-y-2 text-sm"><li><a href="https://discord.gg/7FwxdpfDTM" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition">Discord</a></li><li><a href="#" class="text-gray-400 hover:text-white hover:underline transition">UPD Support</a></li><li><a href="#" class="text-gray-400 hover:text-white hover:underline transition">UPD Chat</a></li></ul></div><div><h4 class="text-xl font-semibold mb-4 text-blue-300">Quick Access</h4><ul class="space-y-2 text-sm"><li><a href="SOP.html" class="text-gray-400 hover:text-white hover:underline transition">UPD SOP</a></li><li><a href="training.html" class="text-gray-400 hover:text-white hover:underline transition">Training</a></li><li><a href="privacypolicy.html" class="text-gray-400 hover:text-white hover:underline transition">Privacy Policy</a></li></ul></div><div><h4 class="text-xl font-semibold mb-4 text-blue-300">System Information</h4><p class="text-gray-500 text-sm">&copy; 2025 Unified Police Department Internal Systems.</p></div></div></footer>
+            </main>
         </div>
     </div>
 
-    <!-- Header -->
-    <header id="main-header" class="bg-gray-800 border-b border-gray-700 sticky top-0 z-40 px-4 py-2 hidden">
-        <div class="max-w-7xl mx-auto flex items-center justify-between">
-            <div class="flex items-center space-x-2">
-                <img src="LSPD.png" alt="LSPD Logo" class="w-10 h-10">
-                <span class="text-xl font-bold text-white hidden sm:block">Website Account Manager Dashboard</span>
-            </div>
-            <div class="flex-1 px-4 lg:px-16 flex justify-end">
-                <div id="user-info" class="text-sm text-gray-400">Loading user info...</div>
-            </div>
-            <div id="auth-buttons" class="hidden space-x-2">
-                <!-- No buttons needed for this dashboard view, but keeping the container for consistency -->
-            </div>
-        </div>
-    </header>
+    <!-- Modals -->
+    <div id="loginModal" class="modal-overlay"><div class="modal-box"><h3 class="text-xl font-bold mb-4">Login</h3><div class="mb-4"><label for="emailInput" class="block text-sm font-semibold mb-2">Email</label><input type="email" id="emailInput" placeholder="Enter your email..." class="w-full px-4 py-2 border border-[var(--border-color)] bg-[var(--bg-tertiary)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)]"></div><div class="mb-4"><label for="passwordInput" class="block text-sm font-semibold mb-2">Password</label><input type="password" id="passwordInput" placeholder="Enter your password..." class="w-full px-4 py-2 border border-[var(--border-color)] bg-[var(--bg-tertiary)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)]"><p id="loginError" class="text-red-500 text-sm mt-1 hidden"></p></div><div class="flex justify-end space-x-4"><button id="cancelLoginBtn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition">Cancel</button><button id="submitLoginBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition">Login</button></div></div></div>
+    <div id="settings-modal" class="modal-overlay"><div class="modal-box text-[var(--text-primary)]"><h2 class="text-2xl font-bold mb-6">Settings</h2><div class="mb-6"><h3 class="text-lg font-semibold mb-3">Website Theme</h3><div class="space-y-2"><label class="flex items-center"><input type="radio" name="theme" value="light" class="form-radio h-4 w-4 text-blue-600"><span class="ml-2">Light Mode</span></label><label class="flex items-center"><input type="radio" name="theme" value="dark" class="form-radio h-4 w-4 text-blue-600"><span class="ml-2">Dark Mode</span></label></div></div><div class="mb-6"><h3 class="text-lg font-semibold mb-3">Data Management</h3><div class="flex flex-col space-y-3"><button id="clear-data-btn" class="w-full bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition">Clear All Local Data</button><button id="view-data-btn" class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition">View Stored Data</button></div></div><div class="mt-8 text-right"><button id="close-settings-btn" class="bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-200 px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition">Close</button></div></div></div>
+    <div id="view-data-modal" class="modal-overlay"><div class="modal-box data-modal-box text-[var(--text-primary)]"><h2 class="text-2xl font-bold mb-4">Local Storage Data</h2><div id="data-container" class="space-y-4 text-sm"></div><div class="mt-6 text-right"><button id="close-view-data-btn" class="bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-200 px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition">Close</button></div></div></div>
+    <div id="confirm-modal" class="modal-overlay"><div class="modal-box text-[var(--text-primary)]"><h2 id="confirm-title" class="text-xl font-bold mb-4">Are you sure?</h2><p id="confirm-text" class="mb-6">This action cannot be undone.</p><div class="flex justify-end space-x-4"><button id="confirm-cancel-btn" class="bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-200 px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition">Cancel</button><button id="confirm-ok-btn" class="bg-red-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-700 transition">Confirm</button></div></div></div>
 
-    <!-- Main Content -->
-    <main id="main-content" class="max-w-7xl mx-auto mt-4 px-4 hidden">
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-
-            <!-- Primary Content Column -->
-            <div class="lg:col-span-2 space-y-4">
-                <!-- Recently Added Training Records -->
-                <div class="bg-gray-800 rounded-lg border border-gray-700 p-4">
-                    <h3 class="font-bold text-lg text-white mb-3">Recently Added Training Records</h3>
-                    <div id="recent-records" class="space-y-4">
-                        <p class="text-gray-400">Loading...</p>
-                    </div>
-                </div>
-
-                <!-- Recent User Account Activity -->
-                <div class="bg-gray-800 rounded-lg border border-gray-700 p-4">
-                    <h3 class="font-bold text-lg text-white mb-3">Recent Account Updates</h3>
-                    <div id="recent-accounts" class="space-y-4">
-                        <p class="text-gray-400">Loading...</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Sidebar Column -->
-            <aside class="lg:col-span-1 space-y-4">
-                <!-- Login Logs -->
-                <div class="bg-gray-800 rounded-lg border border-gray-700 p-4">
-                    <h3 class="font-bold text-lg text-white mb-3">Login Logs</h3>
-                    <div id="login-logs" class="space-y-2 max-h-96 overflow-y-auto">
-                        <p class="text-gray-400">Loading...</p>
-                    </div>
-                </div>
-
-                <!-- Recent Announcements -->
-                <div class="bg-gray-800 rounded-lg border border-gray-700 p-4">
-                    <h3 class="font-bold text-lg text-white mb-3">Recent Announcements</h3>
-                    <div id="recent-announcements" class="space-y-4">
-                        <p class="text-gray-400">Loading...</p>
-                    </div>
-                </div>
-            </aside>
-        </div>
-    </main>
-
-    <!-- Firebase SDKs -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInWithCustomToken, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, query, onSnapshot, addDoc, updateDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        (() => {
+            // --- DOM ELEMENTS ---
+            const sidebar = document.getElementById('sidebar');
+            const settingsModal = document.getElementById('settings-modal');
+            const themeRadios = document.querySelectorAll('input[name="theme"]');
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const loginButton = document.getElementById('loginButton');
+            const logoutButton = document.getElementById('logoutButton');
+            const userInfoDiv = document.getElementById('userInfo');
+            const userEmailP = document.getElementById('userEmail');
+            const settingsBtn = document.getElementById('settings-btn');
+            const closeSettingsBtn = document.getElementById('close-settings-btn');
+            const viewDataBtn = document.getElementById('view-data-btn');
+            const clearDataBtn = document.getElementById('clear-data-btn');
+            const viewDataModal = document.getElementById('view-data-modal');
+            const closeViewDataBtn = document.getElementById('close-view-data-btn');
+            const dataContainer = document.getElementById('data-container');
+            const confirmModal = document.getElementById('confirm-modal');
+            const confirmOkBtn = document.getElementById('confirm-ok-btn');
+            const confirmCancelBtn = document.getElementById('confirm-cancel-btn');
+            const loginModal = document.getElementById('loginModal');
+            const emailInput = document.getElementById('emailInput');
+            const passwordInput = document.getElementById('passwordInput');
+            const loginError = document.getElementById('loginError');
+            const highCommandLink = document.getElementById('highCommandLink');
+            // Get the new website manager container
+            const websiteManagerContainer = document.getElementById('websiteManagerContainer');
 
-        // --- Firebase Configuration & Initialization ---
-        // Provided by the user
-        const firebaseConfig = {
-            apiKey: "AIzaSyDU7DRAxCzqu81DTa7k0DXaBRcMpk0sElc",
-            authDomain: "upd-system.firebaseapp.com",
-            projectId: "upd-system",
-            storageBucket: "upd-system.firebasestorage.app",
-            messagingSenderId: "28223003678",
-            appId: "1:28223003678:web:a19a9a8eb33fe74202220f",
-            measurementId: "G-83NX0KXZ1Y"
-        };
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-        const auth = getAuth(app);
 
-        // These variables are provided by the Canvas environment
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
+            // --- STATE ---
+            let confirmCallback = null;
 
-        // --- DOM Elements ---
-        const loginOverlay = document.getElementById('login-overlay');
-        const loginBtn = document.getElementById('login-btn');
-        const mainHeader = document.getElementById('main-header');
-        const mainContent = document.getElementById('main-content');
-        const userInfoElement = document.getElementById('user-info');
-        const recentRecordsContainer = document.getElementById('recent-records');
-        const recentAnnouncementsContainer = document.getElementById('recent-announcements');
-        const loginLogsContainer = document.getElementById('login-logs');
-        const recentAccountsContainer = document.getElementById('recent-accounts');
-
-        // --- State and Constants ---
-        const requiredAccessLevel = "Website Account Manager";
-
-        // --- Toast Notification ---
-        const showToast = (message) => {
-            const toast = document.createElement('div');
-            toast.textContent = message;
-            toast.className = 'toast';
-            document.body.appendChild(toast);
-            setTimeout(() => { toast.classList.add('show'); }, 100);
-            setTimeout(() => {
-                toast.classList.remove('show');
-                toast.addEventListener('transitionend', () => toast.remove());
-            }, 3000);
-        };
-
-        // --- UI Functions ---
-        const renderRecentRecords = (records) => {
-            if (records.length === 0) {
-                recentRecordsContainer.innerHTML = `<p class="text-gray-400">No training records found.</p>`;
-                return;
+            // --- FUNCTIONS ---
+            function generateQuickLinks() {
+                const container = document.querySelector('.grid');
+                if (!container) return;
+                const quickLinks = [
+                    { title: "Standard Operating Procedures", desc: "Latest departmental protocols and guidelines.", href: "SOP.html", linkText: "Browse SOPs" },
+                    { title: "Training & Development", desc: "Upcoming courses, certifications, and resources.", href: "training.html", linkText: "View Schedule" },
+                    { title: "Internal Forms & Requests", desc: "Access leave requests, equipment forms, and more.", href: "forms.html", linkText: "Download Forms" },
+                    { title: "Shift Roster & Schedules", desc: "Check your upcoming shifts and team assignments.", href: "roster.html", linkText: "View Roster" }
+                ];
+                container.innerHTML = quickLinks.map(link => `
+                                            <div class="bg-[var(--bg-secondary)] p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300">
+                                                <h3 class="text-xl font-semibold text-[var(--accent-color)] mb-3">${link.title}</h3>
+                                                <p class="text-[var(--text-secondary)] mb-4">${link.desc}</p>
+                                                <a href="${link.href}" class="text-blue-500 dark:text-blue-400 hover:underline font-medium">${link.linkText} &rarr;</a>
+                                            </div>
+                                        `).join('');
             }
-            recentRecordsContainer.innerHTML = records.map(record => `
-                    <div class="bg-gray-700/50 rounded-md p-3 border border-gray-600">
-                        <p class="text-sm font-semibold text-white">${record.traineeName} trained by ${record.trainerNames.join(', ')}</p>
-                        <p class="text-xs text-gray-400">${record.timestamp?.toDate()?.toLocaleString() || 'N/A'}</p>
-                    </div>
-                `).join('');
-        };
 
-        const renderRecentAnnouncements = (announcements) => {
-            if (announcements.length === 0) {
-                recentAnnouncementsContainer.innerHTML = `<p class="text-gray-400">No recent announcements.</p>`;
-                return;
-            }
-            recentAnnouncementsContainer.innerHTML = announcements.map(announcement => `
-                    <div class="bg-gray-700/50 rounded-md p-3 border border-gray-600">
-                        <p class="text-sm font-semibold text-white">${announcement.title}</p>
-                        <p class="text-xs text-gray-400">${announcement.timestamp?.toDate()?.toLocaleString() || 'N/A'} by ${announcement.createdByUsername}</p>
-                    </div>
-                `).join('');
-        };
-
-        const renderLoginLogs = (logs) => {
-            if (logs.length === 0) {
-                loginLogsContainer.innerHTML = `<p class="text-gray-400">No login activity.</p>`;
-                return;
-            }
-            loginLogsContainer.innerHTML = logs.map(log => `
-                    <div class="flex justify-between items-center bg-gray-700/50 rounded-md p-2">
-                        <p class="text-xs text-white">${log.user} logged in</p>
-                        <p class="text-xs text-gray-400">${log.timestamp?.toDate()?.toLocaleString() || 'N/A'}</p>
-                    </div>
-                `).join('');
-        };
-
-        const renderRecentAccounts = (accounts) => {
-            if (accounts.length === 0) {
-                recentAccountsContainer.innerHTML = `<p class="text-gray-400">No recent account activity.</p>`;
-                return;
-            }
-            recentAccountsContainer.innerHTML = accounts.map(account => `
-                    <div class="bg-gray-700/50 rounded-md p-3 border border-gray-600">
-                        <p class="text-sm font-semibold text-white">${account.name}</p>
-                        <p class="text-xs text-gray-400">Role: ${account.role} | Access: ${account['access level']}</p>
-                        <p class="text-xs text-gray-400">Last updated: ${account.lastUpdated?.toDate()?.toLocaleString() || 'N/A'}</p>
-                    </div>
-                `).join('');
-        };
-
-        // --- Firestore Functions (Mock/Example) ---
-        const logUserLogin = async (userDisplayName) => {
-            try {
-                // Assuming a loginLogs collection exists
-                await addDoc(collection(db, 'logs/loginLogs/logs'), {
-                    user: userDisplayName,
-                    timestamp: serverTimestamp()
-                });
-            } catch (e) {
-                console.error("Error logging in:", e);
-            }
-        };
-
-        const subscribeToAllData = () => {
-            // Recently Added Training Records
-            const qRecords = collection(db, `artifacts/${appId}/public/data/trainingRecords`);
-            onSnapshot(qRecords, (snapshot) => {
-                const records = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                records.sort((a, b) => b.timestamp?.seconds - a.timestamp?.seconds);
-                renderRecentRecords(records.slice(0, 10)); // Display top 10
-            });
-
-            // Recent Announcements
-            const qAnnouncements = collection(db, `artifacts/${appId}/public/data/announcements`);
-            onSnapshot(qAnnouncements, (snapshot) => {
-                const announcements = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                announcements.sort((a, b) => b.timestamp?.seconds - a.timestamp?.seconds);
-                renderRecentAnnouncements(announcements.slice(0, 5)); // Display top 5
-            });
-
-            // Recent User Account Updates
-            const qAccounts = collection(db, 'users');
-            onSnapshot(qAccounts, (snapshot) => {
-                const accounts = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                accounts.sort((a, b) => b.lastUpdated?.seconds - a.lastUpdated?.seconds);
-                renderRecentAccounts(accounts.slice(0, 5)); // Display top 5
-            });
-
-            // Login Logs
-            const qLoginLogs = collection(db, `logs/loginLogs/logs`);
-            onSnapshot(qLoginLogs, (snapshot) => {
-                const logs = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-                logs.sort((a, b) => b.timestamp?.seconds - a.timestamp?.seconds);
-                renderLoginLogs(logs.slice(0, 20)); // Display top 20
-            });
-        };
-
-        // --- Main Initialization ---
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                const userDocRef = doc(db, 'users', user.uid);
-                const userDocSnap = await getDoc(userDocRef);
-
-                if (userDocSnap.exists()) {
-                    const userProfile = userDocSnap.data();
-                    if (userProfile['access level'] === requiredAccessLevel) {
-                        loginOverlay.classList.add('hidden');
-                        mainHeader.classList.remove('hidden');
-                        mainContent.classList.remove('hidden');
-                        userInfoElement.textContent = `${userProfile.name} | Role: ${userProfile.role}`;
-                        subscribeToAllData();
-                    } else {
-                        // User is logged in but has incorrect access level
-                        loginOverlay.classList.remove('hidden');
-                        loginBtn.textContent = 'Go Back';
-                        loginBtn.onclick = () => window.location.href = 'index.html';
-                    }
+            const applyTheme = (theme) => {
+                if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                    themeRadios.forEach(radio => radio.value === 'dark' ? radio.checked = true : false);
                 } else {
-                    // User profile not found, likely a new user.
-                    loginOverlay.classList.remove('hidden');
-                    loginBtn.textContent = 'Go Back';
-                    loginBtn.onclick = () => window.location.href = 'index.html';
+                    document.documentElement.classList.remove('dark');
+                    themeRadios.forEach(radio => radio.value === 'light' ? radio.checked = true : false);
                 }
-            } else {
-                // If no user is signed in, display the login overlay
-                loginOverlay.classList.remove('hidden');
-                mainHeader.classList.add('hidden');
-                mainContent.classList.add('hidden');
-            }
-        });
+            };
 
-        // --- Event Listeners ---
-        loginBtn.addEventListener('click', () => {
-            window.location.href = 'index.html';
-        });
+            const updateLoginUI = async (user) => {
+                const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+                if (user) {
+                    // User is logged in
+                    loginButton.classList.add('hidden');
+                    userInfoDiv.classList.remove('hidden');
+                    userInfoDiv.classList.add('flex');
+
+                    // Fetch user data from Firestore to get their name and access level
+                    const userDocRef = window.doc(window.db, "users", user.uid);
+                    const userDocSnap = await window.getDoc(userDocRef);
+
+                    let userName = user.email; // Default to email
+                    let userAccessLevel = ''; // Default access level
+                    let userRole = '';
+
+                    if (userDocSnap.exists()) {
+                        const userData = userDocSnap.data();
+                        userName = userData.name || user.email; // Use name from DB, fallback to email
+                        userAccessLevel = userData['access level'] || '';
+                        userRole = userData['role'] || '';
+
+                        // Check for High Command access level
+                        if (userAccessLevel === 'High Command') {
+                            highCommandLink.classList.remove('hidden');
+                        } else {
+                            highCommandLink.classList.add('hidden');
+                        }
+
+                        // Check for Website Manager role and show the new sidebar link
+                        if (userRole === 'Website Manager') {
+                            websiteManagerContainer.classList.remove('hidden');
+                        } else {
+                            websiteManagerContainer.classList.add('hidden');
+                        }
+
+                    } else {
+                        // If no user profile exists, hide the special links
+                        console.log("No user profile found in Firestore. Defaulting to Officer access level.");
+                        highCommandLink.classList.add('hidden');
+                        websiteManagerContainer.classList.add('hidden');
+                    }
+
+                    // Display the user's name
+                    userEmailP.textContent = userName;
+
+                } else {
+                    // User is logged out
+                    loginButton.classList.remove('hidden');
+                    userInfoDiv.classList.add('hidden');
+                    userInfoDiv.classList.remove('flex');
+                    userEmailP.textContent = '';
+                    highCommandLink.classList.add('hidden'); // Ensure link is hidden on logout
+                    websiteManagerContainer.classList.add('hidden'); // Ensure link is hidden on logout
+                }
+            };
+
+            window.onAuthStateChanged(window.firebaseAuth, updateLoginUI);
+
+            const loadUpdates = async () => {
+                const updatesSection = document.getElementById('updatesSection');
+                const updatesContent = document.getElementById('updatesContent');
+                if (!updatesSection || !updatesContent) return;
+                const csvUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQxN1ZQBPqwqLxvr_T1tQ2TVwHuy0d2jainTySsbsSxMBl6ukf5R3Di6SGO3sHA3CD-1uSBgp_qPtJA/pub?output=csv';
+                const fourteenDaysAgo = new Date();
+                fourteenDaysAgo.setDate(fourteenDaysAgo.getDate() - 14);
+
+                try {
+                    const response = await fetch(csvUrl);
+                    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+                    const csvText = await response.text();
+                    const lines = csvText.trim().split('\n');
+                    const updates = [];
+
+                    for (let i = 1; i < lines.length; i++) {
+                        const parts = lines[i].split(/,(?=(?:(?:[^"]*"){2})*[^"]*$)/);
+                        if (parts.length >= 3) {
+                            const dateStr = parts[0].trim().replace(/"/g, '');
+                            const title = parts[1].trim().replace(/"/g, '');
+                            const description = parts[2].trim().replace(/"/g, '');
+                            const updateDate = new Date(dateStr);
+                            if (!isNaN(updateDate) && updateDate >= fourteenDaysAgo) {
+                                updates.push({ date: updateDate, title, description });
+                            }
+                        }
+                    }
+                    updates.sort((a, b) => b.date - a.date);
+                    const recentUpdates = updates.slice(0, 10);
+
+                    if (recentUpdates.length > 0) {
+                        updatesContent.innerHTML = recentUpdates.map(update => `
+                                                    <div class="bg-[var(--bg-tertiary)] p-4 rounded-md">
+                                                        <p class="font-semibold">${update.date.toLocaleDateString()}: ${update.title}</p>
+                                                        <p class="text-sm text-[var(--text-secondary)]">${update.description}</p>
+                                                    </div>
+                                                `).join('');
+                        updatesSection.classList.remove('hidden');
+                    }
+                } catch (error) {
+                    console.error('Error fetching updates:', error);
+                }
+            };
+
+            const sendDiscordLoadNotification = async () => {
+                const webhookSheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQxN1ZQBPqwqLxvr_T1tQ2TVwHuy0d2jainTySsbsSxMBl6ukf5R3Di6SGO3sHA3CD-1uSBgp_qPtJA/pub?gid=1211481486&single=true&output=csv';
+
+                try {
+                    const response = await fetch(webhookSheetUrl);
+                    if (!response.ok) {
+                        throw new Error(`Failed to fetch webhook sheet: ${response.status}`);
+                    }
+                    const csvText = await response.text();
+                    const rows = csvText.trim().split('\n');
+                    if (rows.length < 3) {
+                        console.error("Webhook sheet does not have enough rows.");
+                        return;
+                    }
+                    const cells = rows[2].split(',');
+                    if (cells.length < 3) {
+                        console.error("Row 3 of webhook sheet does not have enough columns.");
+                        return;
+                    }
+                    const webhookUrl = cells[2].replace(/"/g, '').trim();
+
+                    if (!webhookUrl || !webhookUrl.startsWith('https://discord.com/api/webhooks/')) {
+                        console.error('Invalid or missing Discord webhook URL in cell C3.');
+                        return;
+                    }
+
+                    const payload = {
+                        username: "UPD Portal Bot",
+                        avatar_url: "https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png",
+                        embeds: [{
+                            title: "Website Accessed",
+                            description: "The UPD Internal Portal was just loaded by a user.",
+                            color: 3447003,
+                            timestamp: new Date().toISOString(),
+                            footer: {
+                                text: "UPD Internal Systems Notification"
+                            }
+                        }]
+                    };
+
+                    await fetch(webhookUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(payload),
+                    });
+
+                } catch (error) {
+                    console.error('Error sending Discord notification:', error);
+                }
+            };
+
+
+            // --- EVENT LISTENERS ---
+            document.addEventListener('DOMContentLoaded', () => {
+                generateQuickLinks();
+                loadUpdates();
+                sendDiscordLoadNotification();
+
+                const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                applyTheme(savedTheme);
+
+                themeRadios.forEach(radio => radio.addEventListener('change', (e) => {
+                    localStorage.setItem('theme', e.target.value);
+                    applyTheme(e.target.value);
+                }));
+
+                hamburgerBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    sidebar.classList.toggle('-translate-x-full');
+                });
+
+                loginButton.addEventListener('click', () => {
+                    loginModal.classList.add('is-open');
+                    emailInput.focus();
+                });
+
+                logoutButton.addEventListener('click', () => {
+                    if (window.firebaseAuth) {
+                        window.signOut(window.firebaseAuth).catch((error) => {
+                            console.error('Sign Out Error', error);
+                        });
+                    }
+                });
+
+                settingsBtn.addEventListener('click', () => settingsModal.classList.add('is-open'));
+                closeSettingsBtn.addEventListener('click', () => settingsModal.classList.remove('is-open'));
+
+                viewDataBtn.addEventListener('click', () => {
+                    dataContainer.innerHTML = '';
+                    for (let i = 0; i < localStorage.length; i++) {
+                        const key = localStorage.key(i);
+                        const value = localStorage.getItem(key);
+                        const itemEl = document.createElement('div');
+                        itemEl.className = 'p-3 bg-[var(--bg-tertiary)] rounded-md';
+                        itemEl.innerHTML = `<strong class="text-[var(--accent-color)]">${key}:</strong><pre class="whitespace-pre-wrap break-all">${value}</pre>`;
+                        dataContainer.appendChild(itemEl);
+                    }
+                    if (localStorage.length === 0) dataContainer.innerHTML = '<p>No local data found.</p>';
+                    viewDataModal.classList.add('is-open');
+                });
+                closeViewDataBtn.addEventListener('click', () => viewDataModal.classList.remove('is-open'));
+
+                clearDataBtn.addEventListener('click', () => {
+                    openConfirmModal(() => {
+                        Object.keys(localStorage).forEach(key => { if (key !== 'theme') localStorage.removeItem(key); });
+                        location.reload();
+                    });
+                });
+
+                const openConfirmModal = (callback) => { confirmCallback = callback; confirmModal.classList.add('is-open'); };
+                const closeConfirmModal = () => { confirmModal.classList.remove('is-open'); confirmCallback = null; }
+                confirmOkBtn.addEventListener('click', () => { if (confirmCallback) confirmCallback(); closeConfirmModal(); });
+                confirmCancelBtn.addEventListener('click', closeConfirmModal);
+
+                cancelLoginBtn.addEventListener('click', () => {
+                    loginModal.classList.remove('is-open');
+                    emailInput.value = '';
+                    passwordInput.value = '';
+                    loginError.classList.add('hidden');
+                });
+
+                submitLoginBtn.addEventListener('click', async () => {
+                    const email = emailInput.value;
+                    const password = passwordInput.value;
+                    loginError.classList.add('hidden');
+                    if (!email || !password) {
+                        loginError.textContent = "Email and password are required.";
+                        loginError.classList.remove('hidden');
+                        return;
+                    }
+
+                    if (!window.firebaseAuth) {
+                        loginError.textContent = "Firebase is not initialized. Please try again in a moment.";
+                        loginError.classList.remove('hidden');
+                        return;
+                    }
+
+                    try {
+                        await window.signInWithEmailAndPassword(window.firebaseAuth, email, password);
+                        loginModal.classList.remove('is-open');
+                        emailInput.value = '';
+                        passwordInput.value = '';
+                    } catch (error) {
+                        console.error("Firebase Authentication Error:", error);
+                        if (error.code === 'auth/operation-not-allowed') {
+                            loginError.textContent = "Email/Password sign-in is not enabled. Please enable it in the Firebase console.";
+                        } else {
+                            loginError.textContent = "Invalid email or password. Please try again.";
+                        }
+                        loginError.classList.remove('hidden');
+                    }
+                });
+
+            });
+        })();
     </script>
 </body>
 </html>
