@@ -10,8 +10,8 @@
     <script type="module">
         // Import the functions you need from the SDKs you need
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut, updatePassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // Prioritize the platform-provided config, but use the hardcoded one as a fallback.
         const firebaseConfig = typeof __firebase_config !== 'undefined'
@@ -38,6 +38,8 @@
         window.signOut = signOut;
         window.doc = doc;
         window.getDoc = getDoc;
+        window.updateDoc = updateDoc; // Making updateDoc available
+        window.updatePassword = updatePassword; // Making updatePassword available
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display.swap');
@@ -311,6 +313,26 @@
     <div id="view-data-modal" class="modal-overlay"><div class="modal-box data-modal-box text-[var(--text-primary)]"><h2 class="text-2xl font-bold mb-4">Local Storage Data</h2><div id="data-container" class="space-y-4 text-sm"></div><div class="mt-6 text-right"><button id="close-view-data-btn" class="bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-200 px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition">Close</button></div></div></div>
     <div id="confirm-modal" class="modal-overlay"><div class="modal-box text-[var(--text-primary)]"><h2 id="confirm-title" class="text-xl font-bold mb-4">Are you sure?</h2><p id="confirm-text" class="mb-6">This action cannot be undone.</p><div class="flex justify-end space-x-4"><button id="confirm-cancel-btn" class="bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-200 px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition">Cancel</button><button id="confirm-ok-btn" class="bg-red-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-700 transition">Confirm</button></div></div></div>
 
+    <!-- NEW MODAL FOR PASSWORD RESET -->
+    <div id="passwordResetModal" class="modal-overlay">
+        <div class="modal-box">
+            <h3 class="text-xl font-bold mb-4">Set a New Password</h3>
+            <p class="text-sm text-[var(--text-secondary)] mb-4">This is your first time logging in. Please set a secure password to continue.</p>
+            <div class="mb-4">
+                <label for="newPasswordInput" class="block text-sm font-semibold mb-2">New Password</label>
+                <input type="password" id="newPasswordInput" placeholder="Enter new password..." class="w-full px-4 py-2 border border-[var(--border-color)] bg-[var(--bg-tertiary)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)]">
+            </div>
+            <div class="mb-4">
+                <label for="confirmNewPasswordInput" class="block text-sm font-semibold mb-2">Confirm New Password</label>
+                <input type="password" id="confirmNewPasswordInput" placeholder="Confirm new password..." class="w-full px-4 py-2 border border-[var(--border-color)] bg-[var(--bg-tertiary)] rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--accent-color)]">
+                <p id="passwordResetError" class="text-red-500 text-sm mt-1 hidden"></p>
+            </div>
+            <div class="flex justify-end space-x-4">
+                <button id="submitNewPasswordBtn" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg transition">Set Password</button>
+            </div>
+        </div>
+    </div>
+
     <script type="module">
         (() => {
             // --- DOM ELEMENTS ---
@@ -340,6 +362,12 @@
             // Get the new website manager container
             const websiteManagerContainer = document.getElementById('websiteManagerContainer');
 
+            // NEW DOM ELEMENTS for password reset modal
+            const passwordResetModal = document.getElementById('passwordResetModal');
+            const newPasswordInput = document.getElementById('newPasswordInput');
+            const confirmNewPasswordInput = document.getElementById('confirmNewPasswordInput');
+            const passwordResetError = document.getElementById('passwordResetError');
+            const submitNewPasswordBtn = document.getElementById('submitNewPasswordBtn');
 
             // --- STATE ---
             let confirmCallback = null;
@@ -408,6 +436,13 @@
                             websiteManagerContainer.classList.remove('hidden');
                         } else {
                             websiteManagerContainer.classList.add('hidden');
+                        }
+
+                        // Check if a password reset is needed
+                        if (userData.needsPasswordReset === true) {
+                            passwordResetModal.classList.add('is-open');
+                        } else {
+                            passwordResetModal.classList.remove('is-open');
                         }
 
                     } else {
@@ -530,6 +565,48 @@
                 }
             };
 
+            // NEW FUNCTION TO HANDLE PASSWORD RESET
+            const changePasswordAndCloseModal = async () => {
+                const newPassword = newPasswordInput.value;
+                const confirmPassword = confirmNewPasswordInput.value;
+                const user = window.firebaseAuth.currentUser;
+
+                passwordResetError.classList.add('hidden');
+
+                if (newPassword.length < 6) {
+                    passwordResetError.textContent = "Password must be at least 6 characters long.";
+                    passwordResetError.classList.remove('hidden');
+                    return;
+                }
+
+                if (newPassword !== confirmPassword) {
+                    passwordResetError.textContent = "Passwords do not match.";
+                    passwordResetError.classList.remove('hidden');
+                    return;
+                }
+
+                if (user) {
+                    try {
+                        await window.updatePassword(user, newPassword);
+                        const userDocRef = window.doc(window.db, "users", user.uid);
+                        await window.updateDoc(userDocRef, {
+                            needsPasswordReset: false
+                        });
+                        console.log("Password updated successfully and Firestore document updated.");
+                        passwordResetModal.classList.remove('is-open');
+                        newPasswordInput.value = '';
+                        confirmNewPasswordInput.value = '';
+                    } catch (error) {
+                        console.error("Error updating password:", error);
+                        passwordResetError.textContent = "Failed to update password. Please try again. " + error.message;
+                        passwordResetError.classList.remove('hidden');
+                    }
+                } else {
+                    passwordResetError.textContent = "No user is signed in.";
+                    passwordResetError.classList.remove('hidden');
+                }
+            };
+
 
             // --- EVENT LISTENERS ---
             document.addEventListener('DOMContentLoaded', () => {
@@ -631,6 +708,9 @@
                         loginError.classList.remove('hidden');
                     }
                 });
+
+                // NEW EVENT LISTENER for password reset modal
+                submitNewPasswordBtn.addEventListener('click', changePasswordAndCloseModal);
 
             });
         })();
