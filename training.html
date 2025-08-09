@@ -472,32 +472,44 @@
                         title: "Academy Plan",
                         description: "A comprehensive plan for the police academy, outlining curriculum, schedules, and evaluation criteria.",
                         url: "https://docs.google.com/document/d/e/2PACX-1vRQJZJOUDLNDlSkGiTaZ_M5Gq8iYXZ9UObvM0IUm97qQ1ZiS5hWsNIC1gEk4pb3R2vN_js-QhbyUaYd/pub"
+                    },
+                    {
+                        title: "FTO Program",
+                        description: "Access the Field Training Officer program materials and resources.",
+                        url: "FTO.html",
+                        type: "link"
                     }
                 ];
 
                 function generateDocCards() {
                     const container = document.querySelector('.grid');
-                    container.innerHTML = trainingDocuments.map(doc => `
-                            <div class="doc-card rounded-lg overflow-hidden shadow-md flex flex-col">
-                                <div class="p-6 flex-grow">
-                                    <h3 class="text-xl font-bold mb-2 text-[var(--text-primary)]">${doc.title}</h3>
-                                    <p class="text-[var(--text-secondary)] mb-4">${doc.description}</p>
-                                </div>
-                                <div class="p-6 pt-0">
-                                    <button class="doc-button w-full bg-[var(--accent-color)] text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:opacity-90 transition"
+                    container.innerHTML = trainingDocuments.map(doc => {
+                        const buttonHtml = doc.type === 'link'
+                            ? `<a href="${doc.url}" class="w-full bg-[var(--accent-color)] text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:opacity-90 transition text-center block">Open Page</a>`
+                            : `<button class="doc-button w-full bg-[var(--accent-color)] text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:opacity-90 transition"
                                             data-doc-url="${doc.url}"
                                             data-doc-title="${doc.title}">
                                         Open Document
-                                    </button>
+                                    </button>`;
+
+                        return `
+                                <div class="doc-card rounded-lg overflow-hidden shadow-md flex flex-col">
+                                    <div class="p-6 flex-grow">
+                                        <h3 class="text-xl font-bold mb-2 text-[var(--text-primary)]">${doc.title}</h3>
+                                        <p class="text-[var(--text-secondary)] mb-4">${doc.description}</p>
+                                    </div>
+                                    <div class="p-6 pt-0">
+                                        ${buttonHtml}
+                                    </div>
                                 </div>
-                            </div>
-                        `).join('');
+                            `;
+                    }).join('');
                     container.innerHTML += `
-                            <div class="doc-card rounded-lg overflow-hidden shadow-md flex flex-col items-center justify-center border-dashed border-2 border-[var(--border-color)]">
-                                 <div class="text-center p-6">
-                                    <p class="text-[var(--text-secondary)]">More training documents will be available here soon.</p>
-                                 </div>
-                            </div>`;
+                                <div class="doc-card rounded-lg overflow-hidden shadow-md flex flex-col items-center justify-center border-dashed border-2 border-[var(--border-color)]">
+                                     <div class="text-center p-6">
+                                        <p class="text-[var(--text-secondary)]">More training documents will be available here soon.</p>
+                                     </div>
+                                </div>`;
                 }
 
 
@@ -614,6 +626,7 @@
                     fetchGoogleDocContent(url, title);
                     modalSearchInput.value = '';
                 };
+
 
                 const closeSopModal = () => {
                     sopModal.classList.remove('is-open');
