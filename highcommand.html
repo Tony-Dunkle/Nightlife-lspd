@@ -422,7 +422,7 @@
                         }
 
                         // Check if the user has the required access level to access the page
-                        if (userAccessLevel === 'High Command' || userRole === 'Website Account Manager' || userRole === 'Personnel Manager') {
+                        if (userAccessLevel === 'High Command' || userRole === 'Account Manager' || userRole === 'Personnel Manager') {
                             loadingOverlay.classList.add('hidden');
                             loginOverlay.classList.add('hidden');
                             pageContent.classList.remove('hidden');
@@ -493,8 +493,10 @@
 
         const rolesByManager = {
             "Account Manager": ["Personnel Manager", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"],
-            "Personnel Manager": ["Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"]
+            "Personnel Manager": ["Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"],
+            "Website Manager": ["Account Manager", "Personnel Manager", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"],
         };
+
         const accessLevelsByRole = {
             "Account Manager": ["High Command", "Command", "Field Training Officer"],
             "Personnel Manager": ["Command", "Field Training Officer"],
@@ -617,7 +619,26 @@
             editOfficerRoleSelect.innerHTML = '';
             editOfficerAccessLevelSelect.innerHTML = '';
 
-            const roles = rolesByManager[currentUserRole] || [];
+            let roles = [];
+            let accessLevels = [];
+
+            if (currentUserRole === 'Account Manager') {
+                roles = ["Personnel Manager", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
+                accessLevels = ["High Command", "Command", "Field Training Officer"];
+                editAccessLevelField.classList.remove('hidden');
+            } else if (currentUserRole === 'Personnel Manager') {
+                roles = ["Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
+                editAccessLevelField.classList.add('hidden');
+            } else if (currentUserRole === 'Website Manager') {
+                // Website Manager can add all roles and access levels
+                roles = ["Account Manager", "Personnel Manager", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
+                accessLevels = ["High Command", "Command", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
+                editAccessLevelField.classList.remove('hidden');
+            } else {
+                roles = [];
+                editAccessLevelField.classList.add('hidden');
+            }
+
             roles.forEach(role => {
                 const option = document.createElement('option');
                 option.value = role;
@@ -626,17 +647,14 @@
                 editOfficerRoleSelect.appendChild(option);
             });
 
-            if (currentUserRole === 'Website Account Manager') {
-                editAccessLevelField.classList.remove('hidden');
-                accessLevelsForWebsiteManager.forEach(accessLevel => {
+            if (currentUserRole === 'Account Manager' || currentUserRole === 'Website Manager') {
+                accessLevels.forEach(accessLevel => {
                     const option = document.createElement('option');
                     option.value = accessLevel;
                     option.textContent = accessLevel;
                     if (accessLevel === currentAccessLevel) option.selected = true;
                     editOfficerAccessLevelSelect.appendChild(option);
                 });
-            } else {
-                editAccessLevelField.classList.add('hidden');
             }
         };
 
@@ -776,7 +794,7 @@
 
 
         addOfficerBtn.addEventListener('click', () => {
-            populateAddOfficerDropdowns(currentUserRole, currentUserAccessLevel);
+            populateAddOfficerDropdowns();
             addOfficerModal.classList.add('is-open')
         });
         cancelAddOfficerBtn.addEventListener('click', () => addOfficerModal.classList.remove('is-open'));
