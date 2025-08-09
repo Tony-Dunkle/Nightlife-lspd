@@ -422,7 +422,7 @@
                         }
 
                         // Check if the user has the required access level to access the page
-                        if (userAccessLevel === 'High Command' || userRole === 'Website Account Manager' || userRole === 'Personnel Manager') {
+                        if (userAccessLevel === 'High Command' || userAccessLevel === 'Website Account Manager' || userRole === 'Personnel Manager') {
                             loadingOverlay.classList.add('hidden');
                             loginOverlay.classList.add('hidden');
                             pageContent.classList.remove('hidden');
@@ -495,7 +495,7 @@
             "Website Account Manager": ["Personnel Manager", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"],
             "Personnel Manager": ["Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"]
         };
-        const accessLevelsForWebsiteManager = ["High Command", "Personnel Manager", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
+        const accessLevelsForWebsiteManager = ["High Command", "Command", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
 
         let currentUserRole = null;
         let currentUserAccessLevel = null;
@@ -504,7 +504,7 @@
         const setPermissions = (role, accessLevel) => {
             currentUserRole = role;
             currentUserAccessLevel = accessLevel;
-            if (rolesByManager[currentUserRole] || currentUserAccessLevel === "High Command") {
+            if (rolesByManager[currentUserRole] || currentUserAccessLevel === "High Command" || currentUserAccessLevel === "Command") {
                 addOfficerBtn.classList.remove('hidden');
             } else {
                 addOfficerBtn.classList.add('hidden');
@@ -683,13 +683,28 @@
             }
         };
 
-        const populateRoleAndAccessLevelDropdowns = (userRole) => {
+        const populateRoleAndAccessLevelDropdowns = (userRole, userAccessLevel) => {
             // Clear existing options
             officerRoleSelect.innerHTML = '';
             officerAccessLevelSelect.innerHTML = '';
 
-            // Populate role dropdown based on the logged-in user's role
-            const roles = rolesByManager[userRole] || [];
+            // Determine which roles can be assigned based on the logged-in user's role
+            let roles = [];
+            let accessLevels = [];
+
+            if (userRole === 'Website Account Manager') {
+                roles = ["Personnel Manager", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
+                accessLevels = ["High Command", "Command", "Field Training Officer"];
+                accessLevelField.classList.remove('hidden');
+            } else if (userRole === 'Personnel Manager') {
+                roles = ["Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
+                accessLevelField.classList.add('hidden');
+            } else {
+                roles = []; // For other roles, don't allow adding new officers
+                accessLevelField.classList.add('hidden');
+            }
+
+            // Populate the roles dropdown
             roles.forEach(role => {
                 const option = document.createElement('option');
                 option.value = role;
@@ -697,23 +712,20 @@
                 officerRoleSelect.appendChild(option);
             });
 
-            // Show or hide the access level dropdown based on the user's role
+            // Populate the access levels dropdown for Website Account Managers
             if (userRole === 'Website Account Manager') {
-                accessLevelField.classList.remove('hidden');
-                accessLevelsForWebsiteManager.forEach(accessLevel => {
+                accessLevels.forEach(accessLevel => {
                     const option = document.createElement('option');
                     option.value = accessLevel;
                     option.textContent = accessLevel;
                     officerAccessLevelSelect.appendChild(option);
                 });
-            } else {
-                accessLevelField.classList.add('hidden');
             }
         };
 
 
         addOfficerBtn.addEventListener('click', () => {
-            populateRoleAndAccessLevelDropdowns(currentUserRole);
+            populateRoleAndAccessLevelDropdowns(currentUserRole, currentUserAccessLevel);
             addOfficerModal.classList.add('is-open')
         });
         cancelAddOfficerBtn.addEventListener('click', () => addOfficerModal.classList.remove('is-open'));
