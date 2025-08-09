@@ -159,6 +159,14 @@
 
                     <!-- Sidebar Column -->
                     <aside class="lg:col-span-1 space-y-6">
+                        <!-- Active Users -->
+                        <div class="bg-gray-800 rounded-lg border border-gray-700 p-4">
+                            <h3 class="font-bold text-lg text-white mb-3">Active Users</h3>
+                            <div id="active-users-list" class="space-y-2 max-h-96 overflow-y-auto">
+                                <p class="text-gray-400">Loading...</p>
+                            </div>
+                        </div>
+
                         <!-- Login Logs -->
                         <div class="bg-gray-800 rounded-lg border border-gray-700 p-4">
                             <h3 class="font-bold text-lg text-white mb-3">Login Logs</h3>
@@ -185,7 +193,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, query, onSnapshot, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, query, onSnapshot, addDoc, serverTimestamp, setDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- Firebase Configuration & Initialization ---
         const firebaseConfig = {
@@ -207,6 +215,7 @@
 
         // --- Collection Paths ---
         const usersCollectionPath = `users`; // Top-level collection
+        const presenceCollectionPath = `presence`; // Top-level collection for presence
         const trainingRecordsCollectionPath = `artifacts/${appId}/public/data/trainingRecords`;
         const announcementsCollectionPath = `artifacts/${appId}/public/data/announcements`;
         const loginLogsCollectionPath = `artifacts/${appId}/public/data/loginLogs`;
@@ -224,10 +233,12 @@
         const loginLogsContainer = document.getElementById('login-logs');
         const recentAccountsContainer = document.getElementById('recent-accounts');
         const loginChartCanvas = document.getElementById('login-activity-chart');
+        const activeUsersList = document.getElementById('active-users-list');
 
         // --- State and Constants ---
         const requiredAccessLevel = "Website Manager";
         let loginChart = null;
+        let presenceInterval = null;
 
         // --- UI Functions ---
         const renderRecentRecords = (records) => {
@@ -364,6 +375,23 @@
             });
         };
 
+        const renderActiveUsers = (users) => {
+            activeUsersList.innerHTML = '';
+            if (users.length === 0) {
+                activeUsersList.innerHTML = `<p class="text-gray-400">No users currently active.</p>`;
+                return;
+            }
+            users.forEach(user => {
+                const userEl = document.createElement('div');
+                userEl.className = 'bg-gray-700/50 rounded-md p-2 border border-gray-600';
+                userEl.innerHTML = `
+                        <p class="text-sm font-semibold text-white">${user.name}</p>
+                        <p class="text-xs text-gray-400">Viewing: ${user.page}</p>
+                    `;
+                activeUsersList.appendChild(userEl);
+            });
+        };
+
         const showAccessDenied = (message) => {
             loginOverlay.classList.remove('hidden');
             appContainer.classList.add('hidden');
@@ -372,6 +400,30 @@
                     <p class="text-gray-400 mb-6">${message}</p>
                     <button onclick="window.location.href='index.html'" class="px-6 py-3 text-lg font-semibold rounded-full bg-blue-500 text-white hover:bg-blue-600 transition-colors duration-200">Go Back</button>
                 `;
+        };
+
+        // --- Presence Management ---
+        const updateUserPresence = async (userProfile) => {
+            const presenceDocRef = doc(db, presenceCollectionPath, userProfile.uid);
+            try {
+                await setDoc(presenceDocRef, {
+                    name: userProfile.name,
+                    page: window.location.pathname,
+                    lastSeen: serverTimestamp()
+                });
+            } catch (e) {
+                console.error("Error updating presence:", e);
+            }
+        };
+
+        const removeUserPresence = async (uid) => {
+            if (!uid) return;
+            const presenceDocRef = doc(db, presenceCollectionPath, uid);
+            try {
+                await deleteDoc(presenceDocRef);
+            } catch (e) {
+                // It's okay if this fails, the stale check will clean it up.
+            }
         };
 
         // --- Firestore Functions ---
@@ -419,6 +471,21 @@
                 renderLoginLogs(logs.slice(0, 20));
                 renderLoginActivityChart(logs); // Update chart with new data
             }, err => console.error("Error fetching login logs:", err));
+
+            // Active Users
+            const qPresence = collection(db, presenceCollectionPath);
+            onSnapshot(qPresence, (snapshot) => {
+                const now = Date.now();
+                const thirtySecondsAgo = now - 30 * 1000;
+                const activeUsers = [];
+                snapshot.forEach(doc => {
+                    const user = doc.data();
+                    if (user.lastSeen && user.lastSeen.toMillis() > thirtySecondsAgo) {
+                        activeUsers.push(user);
+                    }
+                });
+                renderActiveUsers(activeUsers);
+            }, err => console.error("Error fetching presence:", err));
         };
 
         // --- Main Initialization & Auth Flow ---
@@ -430,11 +497,19 @@
                     const userDocSnap = await getDoc(userDocRef);
 
                     if (userDocSnap.exists()) {
-                        const userProfile = userDocSnap.data();
+                        const userProfile = { uid: user.uid, ...userDocSnap.data() };
                         if (userProfile['access level'] === requiredAccessLevel) {
                             loginOverlay.classList.add('hidden');
                             appContainer.classList.remove('hidden');
                             userInfoElement.textContent = `${userProfile.name} | Role: ${userProfile.role}`;
+
+                            // Start presence reporting
+                            updateUserPresence(userProfile);
+                            if (presenceInterval) clearInterval(presenceInterval);
+                            presenceInterval = setInterval(() => updateUserPresence(userProfile), 15000); // Update every 15 seconds
+
+                            window.addEventListener('beforeunload', () => removeUserPresence(user.uid));
+
                             subscribeToAllData();
                             logUserLogin(userProfile.name);
                         } else {
@@ -448,6 +523,7 @@
                     showAccessDenied("There was an error verifying your permissions.");
                 }
             } else {
+                if (presenceInterval) clearInterval(presenceInterval);
                 showAccessDenied("You must be logged in to access this page.");
             }
         });
