@@ -134,6 +134,15 @@
             border-bottom-color: #3b82f6;
             color: #ffffff;
         }
+
+        /* Sidebar specific styles */
+        #sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+
+            #sidebar.sidebar-hidden {
+                transform: translateX(-100%);
+            }
     </style>
 </head>
 <body class="text-gray-300">
@@ -148,60 +157,105 @@
     </div>
 
     <!-- Main Application Wrapper -->
-    <div id="app-wrapper" class="hidden">
-        <!-- Header -->
-        <header id="main-header" class="bg-gray-900/70 backdrop-blur-sm border-b border-gray-700 sticky top-0 z-40 px-4 sm:px-6 lg:px-8 py-3">
-            <div class="max-w-8xl mx-auto flex items-center justify-between">
-                <div class="flex items-center space-x-3">
-                    <img src="LSPD.png" alt="LSPD Logo" class="w-10 h-10">
-                    <span class="text-xl font-bold text-white hidden sm:block">FTO Dashboard</span>
-                </div>
-                <div id="user-info" class="text-sm text-gray-400 text-right"></div>
+    <div id="app-wrapper" class="hidden flex h-screen bg-gray-900">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="absolute md:relative z-20 flex-col w-64 bg-gray-800 shadow-lg transition-transform duration-300 -translate-x-full md:translate-x-0">
+            <div class="flex items-center justify-center h-20 border-b border-gray-700 flex-shrink-0">
+                <img src="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png" alt="UPD Logo" class="w-12 h-12 object-contain">
+                <h1 class="text-xl font-bold ml-2 text-white">UPD Portal</h1>
             </div>
-        </header>
-
-        <!-- Main Content -->
-        <main id="main-content" class="max-w-8xl mx-auto mt-6 px-4 sm:px-6 lg:px-8">
-            <!-- Top Control Bar -->
-            <div class="flex flex-col sm:flex-row items-center justify-between mb-6 gap-4">
-                <div class="flex items-center space-x-2">
-                    <h1 class="text-2xl font-extrabold text-white">Training Overview</h1>
+            <nav class="flex-1 px-2 py-4 space-y-2 overflow-y-auto">
+                <div>
+                    <h3 class="px-3 text-xs uppercase text-gray-500 font-semibold tracking-wider">Core</h3>
+                    <a href="index.html" class="mt-1 flex items-center px-3 py-2 text-gray-300 rounded-lg hover:bg-gray-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                        <span class="ml-3">Dashboard</span>
+                    </a>
                 </div>
-                <div id="auth-buttons" class="hidden flex items-center space-x-2">
-                    <!-- View Switcher -->
-                    <div class="bg-gray-800 p-1 rounded-full flex items-center text-sm">
-                        <button id="list-view-btn" class="px-3 py-1 rounded-full bg-blue-600 text-white">List</button>
-                        <button id="board-view-btn" class="px-3 py-1 rounded-full text-gray-400 hover:text-white">Board</button>
+                <div class="pt-2">
+                    <h3 class="px-3 text-xs uppercase text-gray-500 font-semibold tracking-wider">Resources</h3>
+                    <a href="SOP.html" class="mt-1 flex items-center px-3 py-2 text-gray-300 rounded-lg hover:bg-gray-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        <span class="ml-3">SOPs</span>
+                    </a>
+                    <a href="FTO.html" class="mt-1 flex items-center px-3 py-2 text-white rounded-lg bg-gray-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 14l9-5-9-5-9 5 9 5z"></path><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-9.998 12.078 12.078 0 01.665-6.479L12 14z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-9.998 12.078 12.078 0 01.665-6.479L12 14z"></path></svg>
+                        <span class="ml-3">Training</span>
+                    </a>
+                </div>
+                <div class="pt-2">
+                    <h3 class="px-3 text-xs uppercase text-gray-500 font-semibold tracking-wider">Personnel</h3>
+                    <a href="highcommand.html" id="highCommandLink" class="hidden mt-1 flex items-center px-3 py-2 text-gray-300 rounded-lg hover:bg-gray-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.789-2.75 9.566-1.74 2.777-2.5 4.434-2.5 4.434H12M12 11c0 3.517 1.009 6.789 2.75 9.566 1.74 2.777 2.5 4.434 2.5 4.434H12M12 11v-1.143c0-1.061-.416-2.078-1.172-2.834l-1.656-1.657a4.006 4.006 0 00-5.656 0l-1.657 1.657A4.006 4.006 0 002 8.857V11m10-11v-1.143c0-1.061.416-2.078 1.172-2.834l1.656-1.657a4.006 4.006 0 015.656 0l1.657 1.657A4.006 4.006 0 0122 8.857V11"></path></svg>
+                        <span class="ml-3">High Command</span>
+                    </a>
+                </div>
+                <div id="websiteManagerContainer" class="pt-2 hidden">
+                    <h3 class="px-3 text-xs uppercase text-gray-500 font-semibold tracking-wider">Management</h3>
+                    <a id="websiteManagerLink" href="websitemanager.html" class="mt-1 flex items-center px-3 py-2 text-gray-300 rounded-lg hover:bg-gray-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        <span class="ml-3">Website Manager</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main content area -->
+        <div class="flex flex-col flex-1 overflow-hidden">
+            <!-- Header -->
+            <header id="main-header" class="bg-gray-900/70 backdrop-blur-sm border-b border-gray-700 sticky top-0 z-30 px-4 sm:px-6 lg:px-8 py-3">
+                <div class="flex items-center justify-between">
+                    <button id="hamburgerBtn" class="text-gray-400 focus:outline-none md:hidden">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    </button>
+                    <div class="flex-1"></div>
+                    <div id="user-info" class="text-sm text-gray-400 text-right"></div>
+                </div>
+            </header>
+
+            <!-- Main Content -->
+            <main id="main-content" class="flex-1 overflow-y-auto p-4 md:p-8">
+                <!-- Top Control Bar -->
+                <div class="flex flex-col sm:flex-row items-center justify-between mb-6 gap-4">
+                    <div class="flex items-center space-x-2">
+                        <h1 class="text-2xl font-extrabold text-white">Training Overview</h1>
                     </div>
-                    <button id="addAnnouncementBtn" class="hidden px-4 py-2 text-sm font-semibold rounded-full border border-green-500 text-green-500 hover:bg-green-500 hover:text-white transition-colors duration-200">New Announcement</button>
-                    <button id="addRecordBtn" class="px-4 py-2 text-sm font-semibold rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors duration-200">Add Record</button>
-                </div>
-            </div>
-
-            <!-- Dashboard Stats -->
-            <div id="dashboard-stats" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                <!-- Stat Cards will be injected here -->
-                <div class="bg-gray-800 border border-gray-700 rounded-lg p-5">
-                    <h4 class="text-sm font-medium text-gray-400">Status Distribution</h4>
-                    <canvas id="status-chart"></canvas>
-                </div>
-            </div>
-
-            <!-- Content Area (List or Board) -->
-            <div id="content-views">
-                <!-- List View Container -->
-                <div id="list-view-container" class="space-y-4">
-                    <div class="bg-gray-800 rounded-lg border border-gray-700 p-4 text-center">
-                        <p id="loading-message" class="text-gray-400 text-lg">Loading training records...</p>
-                        <p id="no-access-message" class="text-red-400 text-lg hidden">You do not have permission to view this page.</p>
+                    <div id="auth-buttons" class="hidden flex items-center space-x-2">
+                        <!-- View Switcher -->
+                        <div class="bg-gray-800 p-1 rounded-full flex items-center text-sm">
+                            <button id="list-view-btn" class="px-3 py-1 rounded-full bg-blue-600 text-white">List</button>
+                            <button id="board-view-btn" class="px-3 py-1 rounded-full text-gray-400 hover:text-white">Board</button>
+                        </div>
+                        <button id="addAnnouncementBtn" class="hidden px-4 py-2 text-sm font-semibold rounded-full border border-green-500 text-green-500 hover:bg-green-500 hover:text-white transition-colors duration-200">New Announcement</button>
+                        <button id="addRecordBtn" class="px-4 py-2 text-sm font-semibold rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors duration-200">Add Record</button>
                     </div>
                 </div>
-                <!-- Board View Container -->
-                <div id="board-view-container" class="hidden">
-                    <!-- Kanban columns will be injected here -->
+
+                <!-- Dashboard Stats -->
+                <div id="dashboard-stats" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <!-- Stat Cards will be injected here -->
+                    <div class="bg-gray-800 border border-gray-700 rounded-lg p-5">
+                        <h4 class="text-sm font-medium text-gray-400">Status Distribution</h4>
+                        <canvas id="status-chart"></canvas>
+                    </div>
                 </div>
-            </div>
-        </main>
+
+                <!-- Content Area (List or Board) -->
+                <div id="content-views">
+                    <!-- List View Container -->
+                    <div id="list-view-container" class="space-y-4">
+                        <div class="bg-gray-800 rounded-lg border border-gray-700 p-4 text-center">
+                            <p id="loading-message" class="text-gray-400 text-lg">Loading training records...</p>
+                            <p id="no-access-message" class="text-red-400 text-lg hidden">You do not have permission to view this page.</p>
+                        </div>
+                    </div>
+                    <!-- Board View Container -->
+                    <div id="board-view-container" class="hidden">
+                        <!-- Kanban columns will be injected here -->
+                    </div>
+                </div>
+            </main>
+        </div>
     </div>
 
     <!-- Modals will be placed here -->
@@ -316,7 +370,11 @@
         const addRecordBtn = document.getElementById('addRecordBtn');
         const recordModal = document.getElementById('recordModal');
         const trainingForm = document.getElementById('trainingForm');
-        // ... (add all other new DOM elements here)
+        const sidebar = document.getElementById('sidebar');
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const highCommandLink = document.getElementById('highCommandLink');
+        const websiteManagerContainer = document.getElementById('websiteManagerContainer');
+
         const listViewBtn = document.getElementById('list-view-btn');
         const boardViewBtn = document.getElementById('board-view-btn');
         const listViewContainer = document.getElementById('list-view-container');
@@ -569,6 +627,22 @@
                 userProfile = userDocSnap.exists() ? userDocSnap.data() : { name: 'Unknown', role: 'None', 'access level': 'None' };
                 document.getElementById('user-info').textContent = `${userProfile.name} | ${userProfile.role}`;
 
+                const userAccessLevel = userProfile['access level'] || '';
+                // Show High Command link for "High Command" or "Website Manager"
+                if (userAccessLevel === 'High Command' || userAccessLevel === 'Website Manager') {
+                    highCommandLink.classList.remove('hidden');
+                } else {
+                    highCommandLink.classList.add('hidden');
+                }
+
+                // Show Website Manager link only for "Website Manager"
+                if (userAccessLevel === 'Website Manager') {
+                    websiteManagerContainer.classList.remove('hidden');
+                } else {
+                    websiteManagerContainer.classList.add('hidden');
+                }
+
+
                 const canAccess = allowedAccessLevels.includes(userProfile['access level']) || allowedAccessLevels.includes(userProfile['role']);
                 if (canAccess) {
                     document.getElementById('auth-buttons').classList.remove('hidden');
@@ -597,6 +671,10 @@
         addRecordBtn.addEventListener('click', () => openRecordModal());
         closeRecordModalBtn.addEventListener('click', closeRecordModal);
         cancelRecordBtn.addEventListener('click', closeRecordModal);
+        hamburgerBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            sidebar.classList.toggle('-translate-x-full');
+        });
 
         // Modal Tab Switching
         tabButtons.forEach(button => {
