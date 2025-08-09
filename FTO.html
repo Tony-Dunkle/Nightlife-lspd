@@ -75,6 +75,15 @@
             border-radius: 0.5rem;
             box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
         }
+
+        .record-card {
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out;
+        }
+
+            .record-card:hover {
+                transform: translateY(-2px);
+            }
     </style>
 </head>
 <body class="text-gray-300">
@@ -141,11 +150,12 @@
     <div id="recordModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
         <div class="bg-gray-800 rounded-lg shadow-xl p-6 w-full max-w-2xl mx-4 border border-gray-700">
             <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-bold text-white">Add New Training Record</h3>
+                <h3 id="recordModalTitle" class="text-lg font-bold text-white">Add New Training Record</h3>
                 <button id="closeRecordModalBtn" class="text-gray-400 hover:text-white">&times;</button>
             </div>
 
             <form id="trainingForm" class="space-y-4">
+                <input type="hidden" id="recordIdInput">
                 <div>
                     <label for="traineeInput" class="block text-sm font-medium text-gray-300 mb-1">Officer being trained</label>
                     <input type="text" id="traineeInput" required placeholder="Name" class="w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
@@ -159,6 +169,19 @@
                     <div id="checklist-container" class="grid grid-cols-1 md:grid-cols-2 gap-2 bg-gray-900/50 p-3 rounded-md max-h-60 overflow-y-auto">
                         <!-- Checklist items will be generated here -->
                     </div>
+                </div>
+                <div>
+                    <label for="notesInput" class="block text-sm font-medium text-gray-300 mb-1">Officer Notes</label>
+                    <textarea id="notesInput" rows="4" placeholder="Add custom notes on performance, incidents, etc." class="w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"></textarea>
+                </div>
+                <div>
+                    <label for="recommendationInput" class="block text-sm font-medium text-gray-300 mb-1">Final Recommendation</label>
+                    <select id="recommendationInput" class="w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                        <option value="None">Select...</option>
+                        <option value="Continuation">Continuation</option>
+                        <option value="Retraining">Retraining</option>
+                        <option value="Promotion">Promotion</option>
+                    </select>
                 </div>
                 <div class="flex justify-end space-x-4 mt-6">
                     <button type="button" id="cancelRecordBtn" class="px-4 py-2 text-sm font-semibold rounded-full border border-gray-600 text-gray-300 hover:bg-gray-700 transition-colors duration-200">Cancel</button>
@@ -235,9 +258,13 @@
         const closeRecordModalBtn = document.getElementById('closeRecordModalBtn');
         const cancelRecordBtn = document.getElementById('cancelRecordBtn');
         const trainingForm = document.getElementById('trainingForm');
+        const recordIdInput = document.getElementById('recordIdInput');
+        const recordModalTitle = document.getElementById('recordModalTitle');
         const traineeInput = document.getElementById('traineeInput');
         const trainerInput = document.getElementById('trainerInput');
         const checklistContainer = document.getElementById('checklist-container');
+        const notesInput = document.getElementById('notesInput');
+        const recommendationInput = document.getElementById('recommendationInput');
         const loadingMessage = document.getElementById('loading-message');
         const noAccessMessage = document.getElementById('no-access-message');
         const userInfoElement = document.getElementById('user-info');
@@ -284,8 +311,23 @@
         };
 
         // --- UI Functions ---
-        const openRecordModal = () => {
-            renderChecklistForForm();
+        const openRecordModal = async (recordData = null) => {
+            // Reset form for a new record
+            trainingForm.reset();
+            recordIdInput.value = '';
+            recordModalTitle.textContent = 'Add New Training Record';
+
+            // If data is provided, it's an edit action
+            if (recordData) {
+                recordIdInput.value = recordData.id;
+                recordModalTitle.textContent = 'Edit Training Record';
+                traineeInput.value = recordData.traineeName;
+                trainerInput.value = recordData.trainerNames.join(', ');
+                notesInput.value = recordData.notes || '';
+                recommendationInput.value = recordData.recommendation || 'None';
+            }
+
+            renderChecklistForForm(recordData);
             recordModal.classList.remove('hidden');
         };
 
@@ -303,13 +345,14 @@
             announcementModal.classList.add('hidden');
         };
 
-        const renderChecklistForForm = () => {
+        const renderChecklistForForm = (recordData = null) => {
             checklistContainer.innerHTML = '';
             trainingChecklist.forEach((item, index) => {
+                const isCompleted = recordData?.checklist.find(c => c.item === item)?.completed || false;
                 const itemDiv = document.createElement('div');
                 itemDiv.className = 'flex items-center space-x-2';
                 itemDiv.innerHTML = `
-                        <input type="checkbox" id="checklist-${index}" name="checklist-item" value="${item}" class="rounded text-blue-500 bg-gray-700 border-gray-600 focus:ring-blue-500">
+                        <input type="checkbox" id="checklist-${index}" name="checklist-item" value="${item}" ${isCompleted ? 'checked' : ''} class="rounded text-blue-500 bg-gray-700 border-gray-600 focus:ring-blue-500">
                         <label for="checklist-${index}" class="text-sm text-gray-300 cursor-pointer">${item}</label>
                     `;
                 checklistContainer.appendChild(itemDiv);
@@ -325,7 +368,8 @@
 
             records.forEach(record => {
                 const recordElement = document.createElement('div');
-                recordElement.className = 'bg-gray-800 rounded-lg border border-gray-700 overflow-hidden';
+                recordElement.className = 'bg-gray-800 rounded-lg border border-gray-700 overflow-hidden record-card';
+                recordElement.dataset.recordId = record.id;
                 recordElement.innerHTML = `
                         <div class="p-4">
                             <div class="text-xs text-gray-400 mb-2">
@@ -342,6 +386,8 @@
                                     </li>
                                 `).join('')}
                             </ul>
+                            ${record.notes ? `<div class="mt-4"><p class="font-semibold text-white">Notes:</p><p class="text-sm text-gray-400 whitespace-pre-wrap">${record.notes}</p></div>` : ''}
+                            ${record.recommendation && record.recommendation !== 'None' ? `<div class="mt-2"><p class="font-semibold text-white">Recommendation:</p><p class="text-sm text-blue-400">${record.recommendation}</p></div>` : ''}
                         </div>
                     `;
                 recordsContainer.appendChild(recordElement);
@@ -388,13 +434,27 @@
         };
 
         // --- Firestore Functions ---
-        const addTrainingRecord = async (traineeName, trainerNames) => {
-            const checklist = trainingChecklist.map(item => ({ item: item, completed: false }));
+        const getChecklistStatus = () => {
+            const checklistItems = trainingForm.querySelectorAll('input[type="checkbox"]');
+            const checklistStatus = [];
+            checklistItems.forEach(item => {
+                checklistStatus.push({
+                    item: item.value,
+                    completed: item.checked
+                });
+            });
+            return checklistStatus;
+        };
+
+        const addTrainingRecord = async (traineeName, trainerNames, notes, recommendation) => {
+            const checklist = getChecklistStatus();
             try {
                 const docRef = await addDoc(collection(db, `artifacts/${appId}/public/data/trainingRecords`), {
                     traineeName: traineeName,
                     trainerNames: trainerNames,
                     checklist: checklist,
+                    notes: notes,
+                    recommendation: recommendation,
                     createdBy: userId,
                     timestamp: serverTimestamp()
                 });
@@ -404,6 +464,26 @@
             } catch (e) {
                 console.error("Error adding document: ", e);
                 showToast('Failed to add record.', true);
+            }
+        };
+
+        const updateTrainingRecord = async (recordId, traineeName, trainerNames, notes, recommendation) => {
+            const recordRef = doc(db, `artifacts/${appId}/public/data/trainingRecords`, recordId);
+            const checklist = getChecklistStatus();
+            try {
+                await updateDoc(recordRef, {
+                    traineeName: traineeName,
+                    trainerNames: trainerNames,
+                    checklist: checklist,
+                    notes: notes,
+                    recommendation: recommendation
+                });
+                showToast(`Training record for ${traineeName} updated!`);
+                console.log("Document updated with ID: ", recordId);
+                closeRecordModal();
+            } catch (e) {
+                console.error("Error updating document: ", e);
+                showToast('Failed to update record.', true);
             }
         };
 
@@ -533,12 +613,11 @@
             window.location.href = 'index.html';
         });
 
-        addRecordBtn.addEventListener('click', openRecordModal);
+        addRecordBtn.addEventListener('click', () => openRecordModal());
         closeRecordModalBtn.addEventListener('click', closeRecordModal);
         cancelRecordBtn.addEventListener('click', closeRecordModal);
         recordModal.addEventListener('click', (e) => { if (e.target === recordModal) closeRecordModal(); });
 
-        // This event listener has been moved to be attached only after user profile is loaded
         addAnnouncementBtn.addEventListener('click', openAnnouncementModal);
         closeAnnouncementModalBtn.addEventListener('click', closeAnnouncementModal);
         cancelAnnouncementBtn.addEventListener('click', closeAnnouncementModal);
@@ -548,23 +627,30 @@
             e.preventDefault();
             const traineeName = traineeInput.value.trim();
             const trainerNames = trainerInput.value.split(',').map(name => name.trim()).filter(Boolean);
+            const notes = notesInput.value.trim();
+            const recommendation = recommendationInput.value;
+            const recordId = recordIdInput.value;
+
             if (traineeName && trainerNames.length > 0) {
-                addTrainingRecord(traineeName, trainerNames);
+                if (recordId) {
+                    updateTrainingRecord(recordId, traineeName, trainerNames, notes, recommendation);
+                } else {
+                    addTrainingRecord(traineeName, trainerNames, notes, recommendation);
+                }
             } else {
-                showToast('Please fill out all fields.', true);
+                showToast('Please fill out all required fields.', true);
             }
         });
 
-        announcementForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const title = announcementTitleInput.value.trim();
-            const content = announcementContentInput.value.trim();
-            const mediaUrl = announcementMediaInput.value.trim();
-
-            if (title && content) {
-                addAnnouncement(title, content, mediaUrl);
-            } else {
-                showToast('Title and content are required.', true);
+        recordsContainer.addEventListener('click', async (e) => {
+            const recordCard = e.target.closest('.record-card');
+            if (recordCard && allowedAccessLevels.includes(userProfile['access level'])) {
+                const recordId = recordCard.dataset.recordId;
+                const recordRef = doc(db, `artifacts/${appId}/public/data/trainingRecords`, recordId);
+                const docSnap = await getDoc(recordRef);
+                if (docSnap.exists()) {
+                    openRecordModal({ id: docSnap.id, ...docSnap.data() });
+                }
             }
         });
 
