@@ -11,20 +11,6 @@
     <meta name="author" content="Unified Police Department">
     <meta name="keywords" content="police, report generator, UPD, law enforcement, MDT">
 
-    <!-- Open Graph Meta Tags (for Discord, Facebook, etc.) -->
-    <meta property="og:title" content="UPD Report Generator">
-    <meta property="og:description" content="Create and manage official UPD police reports with our comprehensive report generator.">
-    <meta property="og:image" content="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png">
-    <meta property="og:url" content="URL_TO_YOUR_LIVE_PAGE">
-    <meta property="og:type" content="website">
-
-    <!-- Twitter Card Meta Tags -->
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="UPD Report Generator">
-    <meta name="twitter:description" content="A tool for UPD officers to create and manage official police reports.">
-    <meta name="twitter:image" content="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png">
-
-
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
 
@@ -55,31 +41,29 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
 
-        /* Define CSS variables for theming from index.html */
         :root {
-            --bg-primary: #f8fafc; /* slate-50 */
-            --bg-secondary: #ffffff; /* white */
-            --bg-tertiary: #f1f5f9; /* slate-100 */
-            --text-primary: #0f172a; /* slate-900 */
-            --text-secondary: #475569; /* slate-600 */
-            --border-color: #e2e8f0; /* slate-200 */
-            --accent-color: #3b82f6; /* blue-500 */
+            --bg-primary: #f8fafc;
+            --bg-secondary: #ffffff;
+            --bg-tertiary: #f1f5f9;
+            --text-primary: #0f172a;
+            --text-secondary: #475569;
+            --border-color: #e2e8f0;
+            --accent-color: #3b82f6;
             --modal-bg: rgba(0,0,0,0.7);
             --modal-content-bg: #ffffff;
         }
 
         html.dark {
-            --bg-primary: #0f172a; /* slate-900 */
-            --bg-secondary: #1e293b; /* slate-800 */
-            --bg-tertiary: #334155; /* slate-700 */
-            --text-primary: #f1f5f9; /* slate-100 */
-            --text-secondary: #94a3b8; /* slate-400 */
-            --border-color: #334155; /* slate-700 */
-            --accent-color: #60a5fa; /* blue-400 */
-            --modal-content-bg: #1e293b; /* slate-800 */
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-tertiary: #334155;
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+            --accent-color: #60a5fa;
+            --modal-content-bg: #1e293b;
         }
 
-        /* General body styles from index.html */
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-primary);
@@ -87,24 +71,6 @@
             transition: background-color 0.3s, color 0.3s;
         }
 
-        /* Mobile Nav Specific Styles from index.html */
-        #nav-links.nav-mobile-active {
-            display: flex !important;
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background-color: #1e40af; /* A solid dark blue for visibility */
-            flex-direction: column;
-            padding: 1rem;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
-        }
-
-        html.dark #nav-links.nav-mobile-active {
-            background-color: #111827; /* A very dark color for dark mode */
-        }
-
-        /* Modal Styles for Settings Modal */
         .settings-modal-overlay {
             display: none;
             position: fixed;
@@ -128,13 +94,6 @@
             max-width: 500px;
         }
 
-        .data-modal-box {
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-
-
-        /* Custom styles for report-specific modals */
         .report-modal-overlay {
             position: fixed;
             top: 0;
@@ -155,7 +114,7 @@
             }
 
         .report-modal-content {
-            background-color: #1f2937; /* Kept dark for report page theme */
+            background-color: #1f2937;
             color: #f1f5f9;
             border-radius: 12px;
             padding: 24px;
@@ -171,10 +130,8 @@
             max-width: 1200px;
         }
 
-
-        /* Style for selected officers and charges */
         .officer-item.selected, .charge-item.selected {
-            background-color: #dc2626; /* A solid red to indicate selection */
+            background-color: #dc2626;
             color: #ffffff;
             border: 2px solid #ef4444;
             font-weight: 600;
@@ -183,45 +140,29 @@
 </head>
 <body class="antialiased">
 
-    <!-- Header Section from index.html (Login button removed) -->
+    <!-- Header Section -->
     <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex items-center justify-between sticky top-0 z-50">
         <div class="flex items-center">
             <img src="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png" alt="UPD Logo" class="mr-4 w-16 h-16 object-contain">
             <h1 class="text-2xl md:text-3xl font-bold">Unified Police Department</h1>
         </div>
-
         <div class="flex items-center">
             <nav id="nav-links" class="hidden md:flex items-center">
-                <!-- Combined and updated navigation links -->
                 <ul class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 text-sm font-medium">
                     <li><a href="index.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Dashboard</a></li>
-                    <li><a href="SOP.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">SOPs</a></li>
-                    <li><a href="training.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Training</a></li>
-                    <li><a href="forms.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Forms</a></li>
-                    <li><a href="roster.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Roster</a></li>
-                    <li><a href="hr.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">HR Info</a></li>
                     <li><a href="report.html" class="text-white bg-blue-700 font-semibold py-1 px-2 rounded-md">Report Generator</a></li>
                     <li><a href="charges.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Charge Calculator</a></li>
-                    <li><a href="info.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Common Information</a></li>
                 </ul>
             </nav>
-
             <div class="flex items-center ml-4">
                 <button id="save-report-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out mr-2">Save Report</button>
                 <button id="view-saved-reports-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out mr-2">View Saved Reports</button>
-                <button id="settings-btn" class="p-2 rounded-full hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-                </button>
-                <button id="hamburgerBtn" class="hamburger-menu p-2 rounded-md hover:bg-white/10 focus:outline-none md:hidden ml-2">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
-                </button>
             </div>
         </div>
     </header>
 
     <!-- Main Content Section: MDT Report Interface -->
     <main class="bg-gray-900 text-white min-h-screen">
-        <!-- MDT-style Header for the report page -->
         <div class="flex items-center justify-between p-4 bg-gray-800 text-white rounded-b-lg shadow-md">
             <div class="flex-grow text-center">
                 <h1 id="caseTitle" class="text-lg md:text-2xl font-bold">New Case</h1>
@@ -241,8 +182,8 @@
                         <h3 class="font-semibold text-lg">Evidence</h3>
                         <button class="add-item-btn bg-gray-600 hover:bg-gray-700 text-white text-xs font-bold py-1 px-3 rounded-full transition-colors duration-200" data-list-id="evidence-list">+ Add</button>
                     </div>
-                    <ul id="evidence-list" class="space-y-1 text-sm text-gray-400">
-                        <li class="p-2 border border-gray-700 rounded-md">NO ATTACHED EVIDENCE</li>
+                    <ul id="evidence-list" class="space-y-1 text-sm text-gray-400" data-placeholder="NO ATTACHED EVIDENCE">
+                        <li class="placeholder-item p-2 border border-gray-700 rounded-md">NO ATTACHED EVIDENCE</li>
                     </ul>
                 </div>
                 <!-- Linked Reports Section -->
@@ -251,18 +192,8 @@
                         <h3 class="font-semibold text-lg">Linked Reports</h3>
                         <button class="add-item-btn bg-gray-600 hover:bg-gray-700 text-white text-xs font-bold py-1 px-3 rounded-full transition-colors duration-200" data-list-id="linked-reports-list">+ Add</button>
                     </div>
-                    <ul id="linked-reports-list" class="space-y-1 text-sm text-gray-400">
-                        <li class="p-2 border border-gray-700 rounded-md">NO LINKED REPORTS</li>
-                    </ul>
-                </div>
-                <!-- Evidence Locker Number Section -->
-                <div class="bg-gray-800 p-4 rounded-lg shadow-lg">
-                    <div class="flex justify-between items-center mb-2">
-                        <h3 class="font-semibold text-lg">Evidence Locker Number</h3>
-                        <button class="add-item-btn bg-gray-600 hover:bg-gray-700 text-white text-xs font-bold py-1 px-3 rounded-full transition-colors duration-200" data-list-id="evidence-locker-list">+ Add</button>
-                    </div>
-                    <ul id="evidence-locker-list" class="space-y-1 text-sm text-gray-400">
-                        <li class="p-2 border border-gray-700 rounded-md">NO EVIDENCE LOCKER NUMBERS</li>
+                    <ul id="linked-reports-list" class="space-y-1 text-sm text-gray-400" data-placeholder="NO LINKED REPORTS">
+                        <li class="placeholder-item p-2 border border-gray-700 rounded-md">NO LINKED REPORTS</li>
                     </ul>
                 </div>
                 <!-- Description Section -->
@@ -273,18 +204,10 @@
                             Generate with AI
                         </button>
                     </div>
-                    <!-- Text editor toolbar (mocked with icons) -->
-                    <div class="flex space-x-2 mb-2 p-2 rounded-t-lg bg-gray-700">
-                        <button id="bold-btn" class="text-white hover:text-gray-300 px-2 py-1 rounded" title="Bold"><b>B</b></button>
-                        <button id="italic-btn" class="text-white hover:text-gray-300 px-2 py-1 rounded" title="Italic"><i>I</i></button>
-                        <button id="link-btn" class="text-white hover:text-gray-300 px-2 py-1 rounded" title="Insert Link">🔗</button>
-                        <button id="image-btn" class="text-white hover:text-gray-300 px-2 py-1 rounded" title="Insert Image">🖼️</button>
-                    </div>
-                    <!-- Loading state container for the description -->
                     <div id="description-loading-container" class="hidden flex justify-center items-center flex-grow bg-gray-700 rounded-b-lg">
                         <div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div>
                     </div>
-                    <textarea id="report-description" placeholder="Enter the initial debrief or summary of the incident here..." class="w-full flex-grow p-2 bg-gray-700 text-white rounded-b-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-600"></textarea>
+                    <textarea id="report-description" placeholder="Enter the initial debrief or summary of the incident here..." class="w-full flex-grow p-2 bg-gray-700 text-white rounded-b-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-600" style="min-height: 200px;"></textarea>
                 </div>
             </div>
 
@@ -296,38 +219,8 @@
                         <h3 class="font-semibold text-lg">Tags</h3>
                         <button class="add-item-btn bg-gray-600 hover:bg-gray-700 text-white text-xs font-bold py-1 px-3 rounded-full transition-colors duration-200" data-list-id="tags-list">+ Add</button>
                     </div>
-                    <ul id="tags-list" class="space-y-1 text-sm text-gray-400">
-                        <li class="p-2 border border-gray-700 rounded-md">NO TAGS</li>
-                    </ul>
-                </div>
-                <!-- Weapons Involved Section -->
-                <div class="bg-gray-800 p-4 rounded-lg shadow-lg">
-                    <div class="flex justify-between items-center mb-2">
-                        <h3 class="font-semibold text-lg">Weapons Involved</h3>
-                        <button id="add-weapon-btn" class="bg-gray-600 hover:bg-gray-700 text-white text-xs font-bold py-1 px-3 rounded-full transition-colors duration-200">+ Add</button>
-                    </div>
-                    <ul id="weapons-list" class="space-y-2 text-sm text-gray-400">
-                        <li class="p-2 border border-gray-700 rounded-md">NO WEAPONS INVOLVED</li>
-                    </ul>
-                </div>
-                <!-- Vehicles Involved Section -->
-                <div class="bg-gray-800 p-4 rounded-lg shadow-lg">
-                    <div class="flex justify-between items-center mb-2">
-                        <h3 class="font-semibold text-lg">Vehicles Involved</h3>
-                        <button id="add-vehicle-btn" class="bg-gray-600 hover:bg-gray-700 text-white text-xs font-bold py-1 px-3 rounded-full transition-colors duration-200">+ Add</button>
-                    </div>
-                    <ul id="vehicles-list" class="space-y-1 text-sm text-gray-400">
-                        <li class="p-2 border border-gray-700 rounded-md">NO VEHICLES INVOLVED</li>
-                    </ul>
-                </div>
-                <!-- Civilians Involved Section -->
-                <div class="bg-gray-800 p-4 rounded-lg shadow-lg">
-                    <div class="flex justify-between items-center mb-2">
-                        <h3 class="font-semibold text-lg">Civilians Involved</h3>
-                        <button id="add-civilian-btn" class="bg-gray-600 hover:bg-gray-700 text-white text-xs font-bold py-1 px-3 rounded-full transition-colors duration-200">+ Add</button>
-                    </div>
-                    <ul id="civilians-list" class="space-y-1 text-sm text-gray-400">
-                        <li class="p-2 border border-gray-700 rounded-md">NO CIVILIANS INVOLVED</li>
+                    <ul id="tags-list" class="space-y-1 text-sm text-gray-400" data-placeholder="NO TAGS">
+                        <li class="placeholder-item p-2 border border-gray-700 rounded-md">NO TAGS</li>
                     </ul>
                 </div>
                 <!-- Officers Involved Section -->
@@ -336,18 +229,18 @@
                         <h3 class="font-semibold text-lg">Officers Involved</h3>
                         <button id="add-officer-btn" class="bg-gray-600 hover:bg-gray-700 text-white text-xs font-bold py-1 px-3 rounded-full transition-colors duration-200">+ Add</button>
                     </div>
-                    <ul id="officers-list" class="space-y-1 text-sm text-gray-400">
-                        <li class="p-2 border border-gray-700 rounded-md">NO OFFICERS INVOLVED</li>
+                    <ul id="officers-list" class="space-y-1 text-sm text-gray-400" data-placeholder="NO OFFICERS INVOLVED">
+                        <li class="placeholder-item p-2 border border-gray-700 rounded-md">NO OFFICERS INVOLVED</li>
                     </ul>
                 </div>
-                <!-- Criminals Involved Section (Updated structure) -->
+                <!-- Criminals Involved Section -->
                 <div class="bg-gray-800 p-4 rounded-lg shadow-lg">
                     <div class="flex justify-between items-center mb-2">
                         <h3 class="font-semibold text-lg">Criminals Involved</h3>
                         <button id="add-criminal-btn" class="bg-gray-600 hover:bg-gray-700 text-white text-xs font-bold py-1 px-3 rounded-full transition-colors duration-200">+ Add</button>
                     </div>
-                    <ul id="criminals-list" class="space-y-4 text-sm text-gray-400">
-                        <li class="p-2 border border-gray-700 rounded-md">NO CRIMINALS INVOLVED</li>
+                    <ul id="criminals-list" class="space-y-4 text-sm text-gray-400" data-placeholder="NO CRIMINALS INVOLVED">
+                        <li class="placeholder-item p-2 border border-gray-700 rounded-md">NO CRIMINALS INVOLVED</li>
                     </ul>
                 </div>
 
@@ -362,225 +255,67 @@
                         <div>
                             <label for="level-of-force" class="block text-sm font-medium text-gray-400">Level of Force</label>
                             <select id="level-of-force" class="w-full p-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600">
-                                <option value="None">None</option>
-                                <option value="Verbal Commands">Verbal Commands</option>
-                                <option value="Physical Restraint">Physical Restraint</option>
-                                <option value="Taser Deployment">Taser Deployment</option>
-                                <option value="Lethal Force">Lethal Force</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="medical-treatment" class="block text-sm font-medium text-gray-400">Medical Treatment</label>
-                            <select id="medical-treatment" class="w-full p-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600">
-                                <option value="No">No</option>
-                                <option value="Yes">Yes</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="gsr-test" class="block text-sm font-medium text-gray-400">GSR Test</label>
-                            <select id="gsr-test" class="w-full p-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600">
-                                <option value="Not Applicable">Not Applicable</option>
-                                <option value="Positive">Positive</option>
-                                <option value="Negative">Negative</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="legal-representation" class="block text-sm font-medium text-gray-400">Legal Representation</label>
-                            <select id="legal-representation" class="w-full p-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600">
-                                <option value="No">No</option>
-                                <option value="Yes">Yes</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="mirandized" class="block text-sm font-medium text-gray-400">Mirandized</label>
-                            <select id="mirandized" class="w-full p-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600">
-                                <option value="No">No</option>
-                                <option value="Yes">Yes</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="return-weapons" class="block text-sm font-medium text-gray-400">Can return weapons</label>
-                            <select id="return-weapons" class="w-full p-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600">
-                                <option value="No">No</option>
-                                <option value="Yes">Yes</option>
-                            </select>
-                        </div>
-                        <div>
-                            <label for="plea" class="block text-sm font-medium text-gray-400">Plea</label>
-                            <select id="plea" class="w-full p-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600">
-                                <option value="Not Applicable">Not Applicable</option>
-                                <option value="Guilty">Guilty</option>
-                                <option value="Not Guilty">Not Guilty</option>
-                                <option value="No Contest">No Contest</option>
+                                <option>None</option>
+                                <option>Verbal Commands</option>
+                                <option>Physical Restraint</option>
+                                <option>Taser Deployment</option>
+                                <option>Lethal Force</option>
                             </select>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
-
     </main>
 
-    <!-- Footer Section - Internal Contacts -->
-    <footer class="bg-gray-800 text-white py-10 px-6 md:px-12 rounded-t-lg mt-8">
-        <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
-            <div>
-                <h4 class="text-xl font-semibold mb-4 text-gray-300">Internal Contacts</h4>
-                <ul class="space-y-2 text-sm">
-                    <li><a href="https://discord.gg/7FwxdpfDTM" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Discord</a></li>
-                    <li><a href="https://discord.com/channels/1383775098464370768/1396398235660058685" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Support</a></li>
-                    <li><a href="https://discord.com/channels/1383775098464370768/1396398240840290374" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Chat</a></li>
-                    <li><a href="https://discord.com/channels/1383775098464370768/1396398235660058685" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Internal Affairs</a></li>
-                    <li><a href="https://discord.com/channels/1383775098464370768/1396398239678333030" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Announcements</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="text-xl font-semibold mb-4 text-gray-300">Quick Access</h4>
-                <ul class="space-y-2 text-sm">
-                    <li><a href="https://docs.google.com/document/d/1etjilZ1dAHGviw33MV5Zs-b5dXqcSHyoYIHvHiRIyy4/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD SOP</a></li>
-                    <li><a href="https://docs.google.com/document/d/1hKQ4fw9b1_yQELhPi1p1b4M6uiSaYb7bBp-9C6GVTdY/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Unified Police Department Interview Procedure & Questions</a></li>
-                    <li><a href="https://docs.google.com/document/d/1d004FfAhZBgESn88Mx21N3CGqXlcoNeP9_sadn_ePak/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Promotional Pathway & Subdivision Assignment Policy</a></li>
-                    <li><a href="https://docs.google.com/document/d/14QIEsYMWpTssti1xGbGWiMxQ2b0jbiYxuMmvV8XWUUo/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Highway Enforcement and Apprehension Team (HEAT) Activation Policy</a></li>
-                    <li><a href="https://docs.google.com/document/d/1Ggf7SS5voiIjr3iSLB3VtAc47JN3aDjm2J_gYnpoZ6s/edit?blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Disciplinary Guidelines</a></li>
-                    <li><a href="privacypolicy.html" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Privacy Policy</a></li>
-                </ul>
-            </div>
-            <div>
-                <h4 class="text-xl font-semibold mb-4 text-gray-300">System Information</h4>
-                <p class="text-gray-500 text-sm mb-2">Unauthorized Access Strictly Prohibited</p>
-                <p class="text-gray-500 text-sm mb-2">For UPD Personnel Use Only</p>
-                <p class="text-500 text-sm mb-2">Created and Maintained by FiveM "NightLife RP"</p>
-                <p class="text-gray-500 text-sm">&copy; 2025 Unified Police Department Internal Systems.</p>
-            </div>
-        </div>
-        <!-- Font Awesome for any potential internal icons (though less needed here) -->
-        <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
-    </footer>
-
-    <!-- Report Modals -->
+    <!-- Modals -->
     <div id="addItemModal" class="report-modal-overlay hidden">
         <div class="report-modal-content">
             <h3 class="text-xl font-bold mb-4">Add Item</h3>
-            <input type="text" id="addItemInput" placeholder="Enter item name..." class="w-full p-3 mb-4 bg-gray-700 text-white rounded-md border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-blue-600 transition-colors duration-200">
+            <input type="text" id="addItemInput" placeholder="Enter item name..." class="w-full p-3 mb-4 bg-gray-700 text-white rounded-md">
             <div class="flex justify-end space-x-2">
-                <button id="closeAddItemModalBtn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">Cancel</button>
-                <button id="saveAddItemBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">Add</button>
-            </div>
-        </div>
-    </div>
-    <div id="addCivilianModal" class="report-modal-overlay hidden">
-        <div class="report-modal-content">
-            <h3 class="text-xl font-bold mb-4">Add Civilian</h3>
-            <input type="text" id="civilianNameInput" placeholder="Enter civilian's name..." class="w-full p-3 mb-2 bg-gray-700 text-white rounded-md border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-blue-600 transition-colors duration-200">
-            <select id="civilianRoleSelect" class="w-full p-3 mb-4 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600">
-                <option value="Victim">Victim</option>
-                <option value="Witness">Witness</option>
-                <option value="Caller">Caller</option>
-                <option value="Informant">Informant</option>
-            </select>
-            <div class="flex justify-end space-x-2">
-                <button id="closeAddCivilianModalBtn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">Cancel</button>
-                <button id="saveAddCivilianBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">Add</button>
-            </div>
-        </div>
-    </div>
-    <div id="addVehicleModal" class="report-modal-overlay hidden">
-        <div class="report-modal-content">
-            <h3 class="text-xl font-bold mb-4">Add Vehicle</h3>
-            <input type="text" id="vehicleOwnerInput" placeholder="Enter owner's name..." class="w-full p-3 mb-2 bg-gray-700 text-white rounded-md border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-blue-600 transition-colors duration-200">
-            <input type="text" id="vehiclePlateInput" placeholder="Enter license plate..." class="w-full p-3 mb-2 bg-gray-700 text-white rounded-md border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-blue-600 transition-colors duration-200">
-            <input type="text" id="vehicleModelInput" placeholder="Enter make and model..." class="w-full p-3 mb-4 bg-gray-700 text-white rounded-md border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-blue-600 transition-colors duration-200">
-            <label class="flex items-center space-x-2 text-gray-300 cursor-pointer mb-4">
-                <input type="checkbox" id="vehicleImpoundedCheckbox" class="form-checkbox h-5 w-5 text-blue-600 bg-gray-800 border-gray-600 rounded focus:ring-blue-500">
-                <span>Was the vehicle impounded?</span>
-            </label>
-            <div class="flex justify-end space-x-2">
-                <button id="closeAddVehicleModalBtn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">Cancel</button>
-                <button id="saveAddVehicleBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">Add</button>
-            </div>
-        </div>
-    </div>
-    <div id="addWeaponModal" class="report-modal-overlay hidden">
-        <div class="report-modal-content">
-            <h3 class="text-xl font-bold mb-4">Add Weapon</h3>
-            <input type="text" id="weaponTypeInput" placeholder="Enter weapon type (e.g., Pistol, Rifle)" class="w-full p-3 mb-2 bg-gray-700 text-white rounded-md border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-blue-600 transition-colors duration-200">
-            <input type="text" id="weaponModelInput" placeholder="Enter weapon model (e.g., M1911, M4A1)" class="w-full p-3 mb-2 bg-gray-700 text-white rounded-md border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-blue-600 transition-colors duration-200">
-            <input type="text" id="weaponSerialInput" placeholder="Enter serial number" class="w-full p-3 mb-4 bg-gray-700 text-white rounded-md border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-blue-600 transition-colors duration-200">
-            <div class="flex items-center justify-start space-x-8 mb-4">
-                <label class="flex items-center space-x-2 text-gray-300 cursor-pointer">
-                    <input type="checkbox" id="weaponCustomCheckbox" class="form-checkbox h-5 w-5 text-blue-600 bg-gray-800 border-gray-600 rounded focus:ring-blue-500">
-                    <span>Custom</span>
-                </label>
-                <label class="flex items-center space-x-2 text-gray-300 cursor-pointer">
-                    <input type="checkbox" id="weaponF9Checkbox" class="form-checkbox h-5 w-5 text-blue-600 bg-gray-800 border-gray-600 rounded focus:ring-blue-500">
-                    <span>F9</span>
-                </label>
-            </div>
-            <div class="flex justify-end space-x-2">
-                <button id="closeAddWeaponModalBtn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">Cancel</button>
-                <button id="saveAddWeaponBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">Add</button>
+                <button id="closeAddItemModalBtn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg">Cancel</button>
+                <button id="saveAddItemBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Add</button>
             </div>
         </div>
     </div>
     <div id="addOfficerModal" class="report-modal-overlay hidden">
         <div class="report-modal-content">
             <h3 class="text-xl font-bold mb-4">Add Officer</h3>
-            <input type="text" id="officer-search-input" placeholder="Search for an officer..." class="w-full p-3 mb-4 bg-gray-700 text-white rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-colors duration-200">
+            <input type="text" id="officer-search-input" placeholder="Search for an officer..." class="w-full p-3 mb-4 bg-gray-700 text-white rounded-md">
             <div id="officer-list-loading" class="flex justify-center items-center h-24 hidden">
                 <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
             </div>
             <div id="officer-list-container" class="space-y-2 max-h-64 overflow-y-auto mb-4 p-2 bg-gray-700 rounded-md"></div>
             <p id="officer-list-error" class="text-red-400 text-sm hidden">Failed to load officer data.</p>
             <div class="flex justify-end space-x-2">
-                <button id="closeAddOfficerModalBtn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">Cancel</button>
-                <button id="saveAddOfficerBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md disabled:opacity-50 disabled:cursor-not-allowed" disabled>Add Selected Officer</button>
+                <button id="closeAddOfficerModalBtn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg">Cancel</button>
+                <button id="saveAddOfficerBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg disabled:opacity-50" disabled>Add Selected</button>
             </div>
         </div>
     </div>
     <div id="addCriminalModal" class="report-modal-overlay hidden">
         <div class="report-modal-content">
             <h3 class="text-xl font-bold mb-4">Add Criminal</h3>
-            <input type="text" id="criminalNameInput" placeholder="Enter criminal's name..." class="w-full p-3 mb-4 bg-gray-700 text-white rounded-md border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-blue-600 transition-colors duration-200">
-            <input type="text" id="criminalFingerprintInput" placeholder="Enter fingerprint data..." class="w-full p-3 mb-4 bg-gray-700 text-white rounded-md border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-blue-600 transition-colors duration-200">
+            <input type="text" id="criminalNameInput" placeholder="Enter criminal's name..." class="w-full p-3 mb-4 bg-gray-700 text-white rounded-md">
             <div class="flex justify-end space-x-2">
-                <button id="closeAddCriminalModalBtn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">Cancel</button>
-                <button id="saveAddCriminalBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">Add</button>
+                <button id="closeAddCriminalModalBtn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg">Cancel</button>
+                <button id="saveAddCriminalBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Add</button>
             </div>
         </div>
     </div>
     <div id="addChargeModal" class="report-modal-overlay hidden">
         <div class="report-modal-content">
             <h3 class="text-xl font-bold mb-4">Add Charge</h3>
-            <input type="text" id="charge-search-input" placeholder="Search for a charge..." class="w-full p-3 mb-4 bg-gray-700 text-white rounded-md border border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-600 transition-colors duration-200">
+            <input type="text" id="charge-search-input" placeholder="Search for a charge..." class="w-full p-3 mb-4 bg-gray-700 text-white rounded-md">
             <div id="charge-list-loading" class="flex justify-center items-center h-24 hidden">
                 <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
             </div>
             <div id="charge-list-container" class="space-y-4 max-h-[60vh] overflow-y-auto mb-4 p-2 bg-gray-800 rounded-md"></div>
             <p id="charge-list-error" class="text-red-400 text-sm hidden">Failed to load charge data.</p>
             <div class="flex justify-end space-x-2">
-                <button id="closeAddChargeModalBtn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">Cancel</button>
-                <button id="saveAddChargeBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md disabled:opacity-50 disabled:cursor-not-allowed" disabled>Add Selected Charge(s)</button>
-            </div>
-        </div>
-    </div>
-    <div id="deleteConfirmationModal" class="report-modal-overlay hidden">
-        <div class="report-modal-content">
-            <h3 class="text-xl font-bold mb-4">Confirm Deletion</h3>
-            <p class="text-gray-300 mb-6">Are you sure you want to delete this report? This action cannot be undone.</p>
-            <div class="flex justify-end space-x-2">
-                <button id="cancelDeleteBtn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">Cancel</button>
-                <button id="confirmDeleteBtn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">Yes, Delete</button>
-            </div>
-        </div>
-    </div>
-    <div id="promptModal" class="report-modal-overlay hidden">
-        <div class="report-modal-content">
-            <h3 id="promptModalTitle" class="text-xl font-bold mb-4">Enter Value</h3>
-            <input type="text" id="promptModalInput" placeholder="Enter value..." class="w-full p-3 mb-4 bg-gray-700 text-white rounded-md border-2 border-transparent focus:outline-none focus:ring-2 focus:ring-blue-600 transition-colors duration-200">
-            <div class="flex justify-end space-x-2">
-                <button id="closePromptModalBtn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">Cancel</button>
-                <button id="savePromptModalBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">OK</button>
+                <button id="closeAddChargeModalBtn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg">Cancel</button>
+                <button id="saveAddChargeBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg disabled:opacity-50" disabled>Add Selected</button>
             </div>
         </div>
     </div>
@@ -591,36 +326,50 @@
                 <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
             </div>
             <div id="saved-reports-list" class="space-y-2 max-h-[60vh] overflow-y-auto mb-4 p-2 bg-gray-800 rounded-md"></div>
+            <div class="flex justify-end">
+                <button id="closeViewReportsModalBtn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg">Close</button>
+            </div>
+        </div>
+    </div>
+    <div id="deleteConfirmationModal" class="report-modal-overlay hidden">
+        <div class="report-modal-content">
+            <h3 class="text-xl font-bold mb-4">Confirm Deletion</h3>
+            <p class="text-gray-300 mb-6">Are you sure you want to delete this report? This action cannot be undone.</p>
             <div class="flex justify-end space-x-2">
-                <button id="closeViewReportsModalBtn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">Close</button>
+                <button id="cancelDeleteBtn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg">Cancel</button>
+                <button id="confirmDeleteBtn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg">Yes, Delete</button>
             </div>
         </div>
     </div>
 
 
-    <!-- Settings Modals from index.html -->
-    <div id="settings-modal" class="settings-modal-overlay"><div class="modal-box text-[var(--text-primary)]"><h2 class="text-2xl font-bold mb-6">Settings</h2><div class="mb-6"><h3 class="text-lg font-semibold mb-3">Website Theme</h3><div class="space-y-2"><label class="flex items-center"><input type="radio" name="theme" value="light" class="form-radio h-4 w-4 text-blue-600"><span class="ml-2">Light Mode</span></label><label class="flex items-center"><input type="radio" name="theme" value="dark" class="form-radio h-4 w-4 text-blue-600"><span class="ml-2">Dark Mode</span></label></div></div><div class="mb-6"><h3 class="text-lg font-semibold mb-3">Data Management</h3><div class="flex flex-col space-y-3"><button id="clear-data-btn" class="w-full bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition">Clear All Local Data</button><button id="view-data-btn" class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition">View Stored Data</button></div></div><div class="mt-8 text-right"><button id="close-settings-btn" class="bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-200 px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition">Close</button></div></div></div>
-    <div id="view-data-modal" class="settings-modal-overlay"><div class="modal-box data-modal-box text-[var(--text-primary)]"><h2 class="text-2xl font-bold mb-4">Local Storage Data</h2><div id="data-container" class="space-y-4 text-sm"></div><div class="mt-6 text-right"><button id="close-view-data-btn" class="bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-200 px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition">Close</button></div></div></div>
-    <div id="confirm-modal" class="settings-modal-overlay"><div class="modal-box text-[var(--text-primary)]"><h2 id="confirm-title" class="text-xl font-bold mb-4">Are you sure?</h2><p id="confirm-text" class="mb-6">This action cannot be undone.</p><div class="flex justify-end space-x-4"><button id="confirm-cancel-btn" class="bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-200 px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition">Cancel</button><button id="confirm-ok-btn" class="bg-red-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-700 transition">Confirm</button></div></div></div>
-
-
-    <!-- Combined JavaScript -->
     <script type="module">
-        // --- Firebase Setup ---
         let db, auth, userId;
 
-        // UPDATED: This configuration uses the project details you provided.
+        // =================================================================================
+        // CONFIGURATION: Add your own Firebase and API keys here
+        // =================================================================================
+
+        //UPDATED: Firebase configuration with your project details.
         const firebaseConfig = {
             apiKey: "AIzaSyDU7DRAxCzqu81DTa7k0DXaBRcMpk0sElc",
             authDomain: "upd-system.firebaseapp.com",
             projectId: "upd-system",
             storageBucket: "upd-system.appspot.com",
             messagingSenderId: "28223003678",
-            appId: "1:28223003678:web:d8b2c8a22a3f7d1b3e4f5a", // Generic App ID
-            measurementId: "G-XXXXXXXXXX" // Optional: Add your measurement ID if you use Analytics
+            appId: "1:28223003678:web:d8b2c8a22a3f7d1b3e4f5a" // This App ID is from your original file.
         };
 
-        const appId = 'report-generator'; // A unique ID for this app
+        //UPDATED: Gemini API Key has been added.
+        const geminiApiKey = 'AIzaSyAbU7k_19bBgnGpFtX742tYGwLySd_U3fI';
+
+        //TODO: Add your own Discord Webhook URL here to receive report notifications.
+        const discordWebhookUrl = 'YOUR_DISCORD_WEBHOOK_URL';
+
+        // =================================================================================
+        // Firebase Initialization
+        // =================================================================================
+        const appId = 'report-generator';
 
         try {
             const app = window.firebase.initializeApp(firebaseConfig);
@@ -641,1441 +390,484 @@
                     }
                 }
             });
-
         } catch (e) {
             console.error("Error initializing Firebase:", e);
+            alert("Firebase could not be initialized. Please check your firebaseConfig in the script.");
         }
 
-        // --- Firestore Functions ---
-        const saveReportToFirestore = async () => {
-            if (!db || !userId) {
-                alert("Firebase is not ready. Please try again in a moment.");
-                return;
+        // =================================================================================
+        // Main Application Logic
+        // =================================================================================
+        document.addEventListener('DOMContentLoaded', () => {
+
+            // --- Modal Management ---
+            const addItemModal = document.getElementById('addItemModal');
+            const addOfficerModal = document.getElementById('addOfficerModal');
+            const addCriminalModal = document.getElementById('addCriminalModal');
+            const addChargeModal = document.getElementById('addChargeModal');
+            const viewReportsModal = document.getElementById('viewReportsModal');
+            const deleteConfirmationModal = document.getElementById('deleteConfirmationModal');
+
+            const openModal = (modal) => modal.classList.remove('hidden');
+            const closeModal = (modal) => modal.classList.add('hidden');
+
+            // Generic item adding
+            let currentListId = null;
+            document.querySelectorAll('.add-item-btn').forEach(button => {
+                button.addEventListener('click', () => {
+                    currentListId = button.dataset.listId;
+                    openModal(addItemModal);
+                });
+            });
+
+            document.getElementById('saveAddItemBtn').addEventListener('click', () => {
+                const input = document.getElementById('addItemInput');
+                const list = document.getElementById(currentListId);
+                if (input.value.trim() && list) {
+                    if (list.querySelector('.placeholder-item')) {
+                        list.innerHTML = '';
+                    }
+                    addListItem(list, input.value.trim());
+                    input.value = '';
+                    closeModal(addItemModal);
+                }
+            });
+
+            // Specific modals
+            document.getElementById('add-officer-btn').addEventListener('click', () => {
+                openModal(addOfficerModal);
+                if (allOfficers.length === 0) fetchAllOfficerData();
+            });
+            document.getElementById('add-criminal-btn').addEventListener('click', () => openModal(addCriminalModal));
+            document.getElementById('save-report-btn').addEventListener('click', saveReportToFirestore);
+            document.getElementById('view-saved-reports-btn').addEventListener('click', () => openModal(viewReportsModal));
+            document.getElementById('deleteBtn').addEventListener('click', () => openModal(deleteConfirmationModal));
+
+            // Close buttons
+            document.getElementById('closeAddItemModalBtn').addEventListener('click', () => closeModal(addItemModal));
+            document.getElementById('closeAddOfficerModalBtn').addEventListener('click', () => closeModal(addOfficerModal));
+            document.getElementById('closeAddCriminalModalBtn').addEventListener('click', () => closeModal(addCriminalModal));
+            document.getElementById('closeAddChargeModalBtn').addEventListener('click', () => closeModal(addChargeModal));
+            document.getElementById('closeViewReportsModalBtn').addEventListener('click', () => closeModal(viewReportsModal));
+            document.getElementById('cancelDeleteBtn').addEventListener('click', () => closeModal(deleteConfirmationModal));
+
+            // --- List Management ---
+            function addListItem(list, text) {
+                const li = document.createElement('li');
+                li.className = "flex items-center justify-between p-2 border border-gray-700 rounded-md bg-gray-700 text-white";
+                li.innerHTML = `<span>${text}</span><button class="remove-item-btn text-red-400 hover:text-red-500 text-2xl font-bold">&times;</button>`;
+                list.appendChild(li);
             }
 
-            const reportData = getReportDataAsObject();
-            reportData.authorId = userId; // Tag report with user's ID
-            reportData.createdAt = new Date().toISOString();
+            document.body.addEventListener('click', (e) => {
+                if (e.target.classList.contains('remove-item-btn')) {
+                    const listItem = e.target.closest('li');
+                    const list = listItem.parentElement;
+                    listItem.remove();
+                    if (list.children.length === 0) {
+                        const placeholderText = list.dataset.placeholder || 'NO ITEMS';
+                        list.innerHTML = `<li class="placeholder-item p-2 border border-gray-700 rounded-md">${placeholderText}</li>`;
+                    }
+                }
+            });
 
-            try {
-                const docRef = await window.firebase.addDoc(window.firebase.collection(db, `artifacts/${appId}/public/data/reports`), reportData);
-                console.log("Report saved with ID: ", docRef.id);
-                alert("Report saved successfully!");
-                clearReportData(); // Optionally clear the form after saving
-            } catch (error) {
-                console.error("Error saving report to Firestore: ", error);
-                alert("Failed to save report. See console for details.");
+            // --- Officer & Charge Data Fetching ---
+            let allOfficers = [];
+            let allCharges = [];
+
+            const officerSheets = {
+                'upd': { name: 'UPD', publishedKey: '2PACX-1vT8yueJjp9o-XVH1_RXPji6N_IAP1DDbNLZ8l4__IqGCvVEUWscsdsJ6uNHZ8u6kDhhXkSxcdkdeDJi', gid: '0' }
+                // Add other departments here if needed
+            };
+            const chargesSheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQa6HZQ9JM5Unzwe4zZDX8A21m6zV4oGvDuEbSEqA9f3m3CqplUUUlmCScNHf79a8Sr1nem0div9YT2/pub?output=csv';
+
+            async function fetchAllOfficerData() {
+                const container = document.getElementById('officer-list-container');
+                const loading = document.getElementById('officer-list-loading');
+                loading.classList.remove('hidden');
+
+                try {
+                    const responses = await Promise.all(
+                        Object.values(officerSheets).map(sheet =>
+                            fetch(`https://docs.google.com/spreadsheets/d/e/${sheet.publishedKey}/pub?gid=${sheet.gid}&single=true&output=csv`)
+                        )
+                    );
+                    const texts = await Promise.all(responses.map(res => res.text()));
+                    allOfficers = texts.flatMap(text => parseCSV(text, 'name')).filter(Boolean).sort();
+                    populateList(container, allOfficers, 'officer-item', (name) => name);
+                } catch (error) {
+                    console.error('Error fetching officer data:', error);
+                    document.getElementById('officer-list-error').classList.remove('hidden');
+                } finally {
+                    loading.classList.add('hidden');
+                }
             }
-        };
 
-        // UPDATED: This function now filters reports by the current user's ID.
-        const loadReportsFromFirestore = () => {
-            if (!db || !userId) {
-                console.log("Firestore or User ID not ready, deferring report load.");
-                return;
+            async function fetchChargeData() {
+                const container = document.getElementById('charge-list-container');
+                const loading = document.getElementById('charge-list-loading');
+                loading.classList.remove('hidden');
+                try {
+                    const response = await fetch(chargesSheetUrl);
+                    const csvText = await response.text();
+                    allCharges = parseChargeCSV(csvText);
+                    populateChargeList(allCharges);
+                } catch (error) {
+                    console.error('Error fetching charges:', error);
+                    document.getElementById('charge-list-error').classList.remove('hidden');
+                } finally {
+                    loading.classList.add('hidden');
+                }
             }
-            const reportsCollection = window.firebase.collection(db, `artifacts/${appId}/public/data/reports`);
 
-            // This query now filters for documents where 'authorId' matches the current user's ID.
-            const q = window.firebase.query(reportsCollection, window.firebase.where("authorId", "==", userId));
+            function parseCSV(csv, columnName) {
+                const lines = csv.split('\n');
+                const items = [];
+                if (lines.length < 1) return items;
+                const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, '').toLowerCase());
+                const colIndex = headers.indexOf(columnName.toLowerCase());
+                if (colIndex === -1) return items;
 
-            const loadingEl = document.getElementById('saved-reports-loading');
-            const listEl = document.getElementById('saved-reports-list');
+                for (let i = 1; i < lines.length; i++) {
+                    const columns = lines[i].split(',');
+                    if (columns[colIndex]) {
+                        const item = columns[colIndex].trim().replace(/^"|"$/g, '');
+                        if (item) items.push(item);
+                    }
+                }
+                return items;
+            }
 
-            window.firebase.onSnapshot(q, (querySnapshot) => {
-                loadingEl.classList.add('hidden');
-                listEl.innerHTML = '';
-                if (querySnapshot.empty) {
-                    listEl.innerHTML = '<p class="text-center text-gray-400">No saved reports found for your user ID.</p>';
+            function parseChargeCSV(csv) {
+                // Simplified parser for demo
+                const lines = csv.split('\n').slice(1); // Skip header
+                return lines.map(line => {
+                    const parts = line.split(',');
+                    return {
+                        penalCode: parts[0] || 'N/A',
+                        chargeName: parts[1] || 'N/A',
+                        description: parts[2] || 'N/A',
+                        jailTime: parts[3] || 'N/A',
+                        fineAmount: parts[4] || 'N/A',
+                    };
+                }).filter(c => c.chargeName !== 'N/A');
+            }
+
+            function populateList(container, data, itemClass, textFn) {
+                container.innerHTML = '';
+                data.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = `${itemClass} p-2 rounded-md cursor-pointer hover:bg-gray-600 border border-gray-700`;
+                    div.textContent = textFn(item);
+                    div.dataset.value = typeof item === 'string' ? item : JSON.stringify(item);
+                    container.appendChild(div);
+                });
+            }
+
+            function populateChargeList(charges) {
+                const container = document.getElementById('charge-list-container');
+                container.innerHTML = ''; // Clear previous list
+                charges.forEach(charge => {
+                    const div = document.createElement('div');
+                    div.className = 'charge-item p-3 rounded-md cursor-pointer bg-red-800 hover:bg-red-700 border border-gray-600';
+                    div.dataset.value = `${charge.penalCode}: ${charge.chargeName}`;
+                    div.innerHTML = `
+                            <p class="font-bold text-white">${charge.chargeName}</p>
+                            <p class="text-xs text-gray-400">${charge.penalCode}</p>
+                            <p class="text-sm text-gray-300 mt-1">${charge.description}</p>
+                            <div class="text-right text-xs mt-1"><span>${charge.jailTime} Months / ${charge.fineAmount}</span></div>
+                        `;
+                    container.appendChild(div);
+                });
+            }
+
+            // --- Selection & Saving from Modals ---
+            let selectedOfficers = [];
+            let selectedCharges = [];
+            let currentChargesList = null;
+
+            document.getElementById('officer-list-container').addEventListener('click', e => {
+                if (e.target.classList.contains('officer-item')) {
+                    e.target.classList.toggle('selected');
+                    selectedOfficers = Array.from(document.querySelectorAll('.officer-item.selected')).map(el => el.dataset.value);
+                    document.getElementById('saveAddOfficerBtn').disabled = selectedOfficers.length === 0;
+                }
+            });
+
+            document.getElementById('charge-list-container').addEventListener('click', e => {
+                const target = e.target.closest('.charge-item');
+                if (target) {
+                    target.classList.toggle('selected');
+                    selectedCharges = Array.from(document.querySelectorAll('.charge-item.selected')).map(el => el.dataset.value);
+                    document.getElementById('saveAddChargeBtn').disabled = selectedCharges.length === 0;
+                }
+            });
+
+            document.getElementById('saveAddOfficerBtn').addEventListener('click', () => {
+                const list = document.getElementById('officers-list');
+                if (list.querySelector('.placeholder-item')) list.innerHTML = '';
+                selectedOfficers.forEach(officer => addListItem(list, officer));
+                closeModal(addOfficerModal);
+            });
+
+            document.getElementById('saveAddCriminalBtn').addEventListener('click', () => {
+                const name = document.getElementById('criminalNameInput').value.trim();
+                if (!name) return;
+                const list = document.getElementById('criminals-list');
+                if (list.querySelector('.placeholder-item')) list.innerHTML = '';
+
+                const li = document.createElement('li');
+                li.className = 'p-4 border border-gray-700 rounded-md bg-gray-800';
+                li.innerHTML = `
+                        <div class="flex items-center justify-between mb-2">
+                            <h4 class="font-bold text-lg">${name}</h4>
+                            <button class="remove-item-btn text-red-400 hover:text-red-500 text-2xl">&times;</button>
+                        </div>
+                        <h5 class="text-md font-semibold">Charges:</h5>
+                        <ul class="charges-list list-disc list-inside space-y-1 text-gray-400" data-placeholder="No charges added yet.">
+                            <li class="placeholder-item">No charges added yet.</li>
+                        </ul>
+                        <button class="add-charge-btn bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded-full mt-2">+ Add Charge</button>
+                    `;
+                list.appendChild(li);
+                document.getElementById('criminalNameInput').value = '';
+                closeModal(addCriminalModal);
+            });
+
+            document.getElementById('criminals-list').addEventListener('click', e => {
+                if (e.target.classList.contains('add-charge-btn')) {
+                    currentChargesList = e.target.previousElementSibling;
+                    openModal(addChargeModal);
+                    if (allCharges.length === 0) fetchChargeData();
+                }
+            });
+
+            document.getElementById('saveAddChargeBtn').addEventListener('click', () => {
+                if (!currentChargesList) return;
+                if (currentChargesList.querySelector('.placeholder-item')) currentChargesList.innerHTML = '';
+                selectedCharges.forEach(charge => addListItem(currentChargesList, charge));
+
+                // Reset selection
+                document.querySelectorAll('.charge-item.selected').forEach(el => el.classList.remove('selected'));
+                selectedCharges = [];
+                document.getElementById('saveAddChargeBtn').disabled = true;
+
+                closeModal(addChargeModal);
+            });
+
+
+            // --- AI Report Generation ---
+            document.getElementById('generate-report-btn').addEventListener('click', async () => {
+                if (!geminiApiKey || geminiApiKey === 'YOUR_GEMINI_API_KEY') {
+                    alert("Please add your Gemini API Key to the script file.");
                     return;
                 }
 
-                const reports = [];
-                querySnapshot.forEach(doc => {
-                    reports.push({ id: doc.id, ...doc.data() });
-                });
+                const descriptionLoading = document.getElementById('description-loading-container');
+                const reportTextarea = document.getElementById('report-description');
+                descriptionLoading.classList.remove('hidden');
+                reportTextarea.classList.add('hidden');
 
-                // Sort in memory by creation date
-                reports.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                const officers = getListData('officers-list');
+                const criminals = getCriminalData();
 
-                reports.forEach(report => {
-                    const reportEl = document.createElement('div');
-                    reportEl.className = 'p-3 rounded-md cursor-pointer bg-gray-700 hover:bg-gray-600 transition-colors duration-200 border border-gray-600';
-                    reportEl.dataset.reportId = report.id;
+                const prompt = `
+                        You are a police officer writing a formal report. Use the following data to create a comprehensive, first-person narrative in Markdown format.
 
-                    const reportTitle = report.reportFields?.caseTitle || 'Untitled Report';
-                    const reportingOfficer = report.reportLists?.['officers-list']?.match(/value="([^"]+)"/)?.[1] || 'Unknown Officer';
-                    const reportDate = new Date(report.createdAt).toLocaleString();
+                        **Initial Debrief from User:**
+                        "${reportTextarea.value}"
 
-                    reportEl.innerHTML = `
-                                <h4 class="font-bold text-white">${reportTitle}</h4>
-                                <p class="text-sm text-gray-300">Filed by: ${reportingOfficer}</p>
-                                <p class="text-xs text-gray-400">Date: ${reportDate}</p>
-                            `;
-                    reportEl.addEventListener('click', () => loadSpecificReport(report.id));
-                    listEl.appendChild(reportEl);
-                });
-            }, (error) => {
-                console.error("Error getting reports: ", error);
-                loadingEl.classList.add('hidden');
-                // UPDATED: More informative error message.
-                listEl.innerHTML = '<p class="text-center text-red-400">Failed to load reports. A Firestore index might be required. Please check the browser console for a link to create it.</p>';
-            });
-        };
+                        **Involved Officers:**
+                        - ${officers.join('\n- ') || 'None'}
 
-        const loadSpecificReport = async (reportId) => {
-            if (!db) return;
-            try {
-                const docRef = window.firebase.doc(db, `artifacts/${appId}/public/data/reports`, reportId);
-                const docSnap = await window.firebase.getDoc(docRef);
+                        **Arrested Individuals & Charges:**
+                        ${criminals.map(c => `- **${c.name}**: ${c.charges.join(', ')}`).join('\n') || '- None'}
 
-                if (docSnap.exists()) {
-                    const reportData = docSnap.data();
-                    populateFormWithData(reportData);
-                    document.getElementById('viewReportsModal').classList.add('hidden');
-                } else {
-                    console.log("No such document!");
-                    alert("Could not find the selected report.");
+                        **Location:** ${document.getElementById('postal-location').value || 'N/A'}
+                        **Level of Force:** ${document.getElementById('level-of-force').value || 'N/A'}
+
+                        Structure the report with the following sections:
+                        1.  **I. Administrative Details:** (Date, Time, Location, Officers)
+                        2.  **II. Chronological Incident Debrief:** (Expand on the user's debrief in a formal narrative.)
+                        3.  **III. Persons Involved:** (List suspects and their charges.)
+                        4.  **IV. Justification for Actions:** (Explain the use of force and the reasons for the charges based on the debrief.)
+                        5.  **V. Evidence:** (Mention any evidence from the debrief.)
+                    `;
+
+                try {
+                    const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
+                    const payload = { contents: chatHistory };
+                    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${geminiApiKey}`;
+
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+
+                    if (!response.ok) throw new Error(`API error: ${response.status}`);
+
+                    const result = await response.json();
+                    reportTextarea.value = result.candidates[0].content.parts[0].text;
+
+                    // Also send a notification to Discord
+                    await sendDiscordReportNotification(criminals, officers);
+
+                } catch (error) {
+                    console.error('Error generating report:', error);
+                    reportTextarea.value = `Error: Could not generate report. ${error.message}`;
+                } finally {
+                    descriptionLoading.classList.add('hidden');
+                    reportTextarea.classList.remove('hidden');
                 }
-            } catch (error) {
-                console.error("Error loading specific report: ", error);
-                alert("Failed to load the report.");
-            }
-        };
+            });
 
-        const getReportDataAsObject = () => {
-            const data = {
-                reportFields: {},
-                reportLists: {}
+            // --- Data Persistence (Firestore & Local) ---
+            const getReportDataAsObject = () => ({
+                caseTitle: document.getElementById('caseTitle').textContent,
+                description: document.getElementById('report-description').value,
+                location: document.getElementById('postal-location').value,
+                forceLevel: document.getElementById('level-of-force').value,
+                evidence: document.getElementById('evidence-list').innerHTML,
+                linkedReports: document.getElementById('linked-reports-list').innerHTML,
+                tags: document.getElementById('tags-list').innerHTML,
+                officers: document.getElementById('officers-list').innerHTML,
+                criminals: document.getElementById('criminals-list').innerHTML,
+            });
+
+            const populateFormWithData = (data) => {
+                document.getElementById('caseTitle').textContent = data.caseTitle;
+                document.getElementById('report-description').value = data.description;
+                document.getElementById('postal-location').value = data.location;
+                document.getElementById('level-of-force').value = data.forceLevel;
+                document.getElementById('evidence-list').innerHTML = data.evidence;
+                document.getElementById('linked-reports-list').innerHTML = data.linkedReports;
+                document.getElementById('tags-list').innerHTML = data.tags;
+                document.getElementById('officers-list').innerHTML = data.officers;
+                document.getElementById('criminals-list').innerHTML = data.criminals;
             };
-            reportFieldsToSave.forEach(id => {
-                const element = document.getElementById(id);
-                data.reportFields[id] = element.tagName === 'H1' ? element.textContent : element.value;
-            });
-            reportListsToSave.forEach(id => {
-                data.reportLists[id] = document.getElementById(id).innerHTML;
-            });
-            return data;
-        };
 
-        const populateFormWithData = (data) => {
-            if (data.reportFields) {
-                Object.keys(data.reportFields).forEach(id => {
-                    const element = document.getElementById(id);
-                    if (element) {
-                        if (element.tagName === 'H1') element.textContent = data.reportFields[id];
-                        else element.value = data.reportFields[id];
-                    }
-                });
-            }
-            if (data.reportLists) {
-                Object.keys(data.reportLists).forEach(id => {
-                    const listElement = document.getElementById(id);
-                    if (listElement) {
-                        listElement.innerHTML = data.reportLists[id];
-                        reAttachListEventListeners(listElement);
-                    }
-                });
-            }
-            updateReturnWeaponStatus();
-        };
-
-
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- HEADER & SETTINGS LOGIC (from index.html) ---
-            (() => {
-                // --- DOM ELEMENTS ---
-                const settingsModal = document.getElementById('settings-modal');
-                const themeRadios = document.querySelectorAll('input[name="theme"]');
-                const hamburgerBtn = document.getElementById('hamburgerBtn');
-                const navLinks = document.getElementById('nav-links');
-                const settingsBtn = document.getElementById('settings-btn');
-                const closeSettingsBtn = document.getElementById('close-settings-btn');
-                const viewDataBtn = document.getElementById('view-data-btn');
-                const clearDataBtn = document.getElementById('clear-data-btn');
-                const viewDataModal = document.getElementById('view-data-modal');
-                const closeViewDataBtn = document.getElementById('close-view-data-btn');
-                const dataContainer = document.getElementById('data-container');
-                const confirmModal = document.getElementById('confirm-modal');
-                const confirmOkBtn = document.getElementById('confirm-ok-btn');
-                const confirmCancelBtn = document.getElementById('confirm-cancel-btn');
-                const saveReportBtn = document.getElementById('save-report-btn');
-                const viewSavedReportsBtn = document.getElementById('view-saved-reports-btn');
-                const viewReportsModal = document.getElementById('viewReportsModal');
-                const closeViewReportsModalBtn = document.getElementById('closeViewReportsModalBtn');
-
-
-                // --- STATE ---
-                let confirmCallback = null;
-
-                // --- FUNCTIONS ---
-                const applyTheme = (theme) => {
-                    if (theme === 'dark') {
-                        document.documentElement.classList.add('dark');
-                        themeRadios.forEach(radio => radio.value === 'dark' ? radio.checked = true : false);
-                    } else {
-                        document.documentElement.classList.remove('dark');
-                        themeRadios.forEach(radio => radio.value === 'light' ? radio.checked = true : false);
-                    }
-                };
-
-                const openConfirmModal = (callback) => {
-                    confirmCallback = callback;
-                    confirmModal.classList.add('is-open');
-                };
-
-                const closeConfirmModal = () => {
-                    confirmCallback = null;
+            window.saveReportToFirestore = async () => {
+                if (!db || !userId) {
+                    alert("Firebase is not ready. Cannot save report.");
+                    return;
                 }
+                const reportData = getReportDataAsObject();
+                reportData.authorId = userId;
+                reportData.createdAt = new Date().toISOString();
+                try {
+                    await window.firebase.addDoc(window.firebase.collection(db, `artifacts/${appId}/public/data/reports`), reportData);
+                    alert("Report saved successfully!");
+                } catch (error) {
+                    console.error("Error saving report:", error);
+                    alert("Failed to save report.");
+                }
+            };
 
-                // --- EVENT LISTENERS ---
-                const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-                applyTheme(savedTheme);
+            window.loadReportsFromFirestore = () => {
+                if (!db || !userId) return;
+                const reportsCollection = window.firebase.collection(db, `artifacts/${appId}/public/data/reports`);
+                const q = window.firebase.query(reportsCollection, window.firebase.where("authorId", "==", userId));
+                const listEl = document.getElementById('saved-reports-list');
+                const loadingEl = document.getElementById('saved-reports-loading');
 
-                themeRadios.forEach(radio => radio.addEventListener('change', (e) => {
-                    localStorage.setItem('theme', e.target.value);
-                    applyTheme(e.target.value);
-                }));
-
-                hamburgerBtn.addEventListener('click', (e) => { e.stopPropagation(); navLinks.classList.toggle('nav-mobile-active'); });
-
-                settingsBtn.addEventListener('click', () => settingsModal.classList.add('is-open'));
-                closeSettingsBtn.addEventListener('click', () => settingsModal.classList.remove('is-open'));
-
-                viewDataBtn.addEventListener('click', () => {
-                    dataContainer.innerHTML = '';
-                    for (let i = 0; i < localStorage.length; i++) {
-                        const key = localStorage.key(i);
-                        const value = localStorage.getItem(key);
-                        const itemEl = document.createElement('div');
-                        itemEl.className = 'p-3 bg-[var(--bg-tertiary)] rounded-md';
-                        itemEl.innerHTML = `<strong class="text-[var(--accent-color)]">${key}:</strong><pre class="whitespace-pre-wrap break-all">${value}</pre>`;
-                        dataContainer.appendChild(itemEl);
-                    }
-                    if (localStorage.length === 0) dataContainer.innerHTML = '<p>No local data found.</p>';
-                    viewDataModal.classList.add('is-open');
-                });
-                closeViewDataBtn.addEventListener('click', () => viewDataModal.classList.remove('is-open'));
-
-                clearDataBtn.addEventListener('click', () => {
-                    openConfirmModal(() => {
-                        Object.keys(localStorage).forEach(key => { if (key !== 'theme') localStorage.removeItem(key); });
-                        location.reload();
-                    });
-                });
-
-                saveReportBtn.addEventListener('click', saveReportToFirestore);
-                viewSavedReportsBtn.addEventListener('click', () => {
-                    viewReportsModal.classList.remove('hidden');
-                    // Data is loaded via onSnapshot, so it should be up to date
-                });
-                closeViewReportsModalBtn.addEventListener('click', () => {
-                    viewReportsModal.classList.add('hidden');
-                });
-
-                confirmOkBtn.addEventListener('click', () => { if (confirmCallback) confirmCallback(); closeConfirmModal(); });
-                confirmCancelBtn.addEventListener('click', closeConfirmModal);
-            })();
-
-
-            // --- REPORT GENERATOR LOGIC (Original from report.html) ---
-            // This is a global scope IIFE now, accessible by Firebase functions
-            (() => {
-                // Reusable modal for adding general items (Evidence, Tags, etc.)
-                const addItemModal = document.getElementById('addItemModal');
-                const addItemInput = document.getElementById('addItemInput');
-                const saveAddItemBtn = document.getElementById('saveAddItemBtn');
-                const closeAddItemModalBtn = document.getElementById('closeAddItemModalBtn');
-                let currentListId = null;
-
-                document.querySelectorAll('.add-item-btn').forEach(button => {
-                    button.addEventListener('click', () => {
-                        currentListId = button.dataset.listId;
-                        addItemInput.value = '';
-                        const h3Text = button.closest('div').querySelector('h3').textContent.trim();
-                        document.querySelector('#addItemModal h3').textContent = `Add ${h3Text}`;
-                        addItemInput.placeholder = `Enter new ${h3Text.toLowerCase()}...`;
-                        addItemModal.classList.remove('hidden');
-                        addItemInput.focus();
-                    });
-                });
-
-                closeAddItemModalBtn.addEventListener('click', () => {
-                    addItemModal.classList.add('hidden');
-                });
-
-                saveAddItemBtn.addEventListener('click', () => {
-                    const itemText = addItemInput.value.trim();
-                    if (itemText) {
-                        const list = document.getElementById(currentListId);
-                        if (list.firstElementChild && list.firstElementChild.textContent.includes('NO')) {
-                            list.innerHTML = '';
-                        }
-                        const newItem = document.createElement('li');
-                        newItem.className = "flex items-center space-x-2 p-2 border border-gray-700 rounded-md bg-gray-700 text-white";
-                        newItem.innerHTML = `
-                                                            <input type="text" value="${itemText}" class="w-full p-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600">
-                                                            <button class="remove-item-btn bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-xs transition-colors duration-200">
-                                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                                            </button>
-                                                        `;
-                        list.appendChild(newItem);
-                        newItem.querySelector('.remove-item-btn').addEventListener('click', (e) => {
-                            e.target.closest('li').remove();
-                            if (list.children.length === 0) {
-                                const placeholderText = list.closest('div').querySelector('h3').textContent.trim();
-                                list.innerHTML = `<li class="p-2 border border-gray-700 rounded-md">NO ${placeholderText.toUpperCase()}</li>`;
-                            }
-                        });
-                        addItemModal.classList.add('hidden');
-                    }
-                });
-
-                // Vehicle Modal Functionality
-                const addVehicleBtn = document.getElementById('add-vehicle-btn');
-                const addVehicleModal = document.getElementById('addVehicleModal');
-                const closeAddVehicleModalBtn = document.getElementById('closeAddVehicleModalBtn');
-                const saveAddVehicleBtn = document.getElementById('saveAddVehicleBtn');
-                const vehicleOwnerInput = document.getElementById('vehicleOwnerInput');
-                const vehiclePlateInput = document.getElementById('vehiclePlateInput');
-                const vehicleModelInput = document.getElementById('vehicleModelInput');
-                const vehicleImpoundedCheckbox = document.getElementById('vehicleImpoundedCheckbox');
-                const vehiclesList = document.getElementById('vehicles-list');
-
-                addVehicleBtn.addEventListener('click', () => {
-                    vehicleOwnerInput.value = '';
-                    vehiclePlateInput.value = '';
-                    vehicleModelInput.value = '';
-                    vehicleImpoundedCheckbox.checked = false;
-                    addVehicleModal.classList.remove('hidden');
-                    vehicleOwnerInput.focus();
-                });
-
-                closeAddVehicleModalBtn.addEventListener('click', () => {
-                    addVehicleModal.classList.add('hidden');
-                });
-
-                saveAddVehicleBtn.addEventListener('click', () => {
-                    const owner = vehicleOwnerInput.value.trim();
-                    const plate = vehiclePlateInput.value.trim();
-                    const model = vehicleModelInput.value.trim();
-                    const impounded = vehicleImpoundedCheckbox.checked;
-
-                    if (owner || plate || model) {
-                        if (vehiclesList.firstElementChild && vehiclesList.firstElementChild.textContent.includes('NO VEHICLES INVOLVED')) {
-                            vehiclesList.innerHTML = '';
-                        }
-                        const newVehicleItem = document.createElement('li');
-                        newVehicleItem.className = "flex flex-col space-y-1 p-2 border border-gray-700 rounded-md bg-gray-700 text-white";
-                        newVehicleItem.innerHTML = `
-                                                        <div class="flex justify-between items-center w-full">
-                                                            <span class="font-bold text-base">${model || 'N/A'}</span>
-                                                            <button class="remove-item-btn bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-xs transition-colors duration-200">
-                                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                                            </button>
-                                                        </div>
-                                                        <p class="text-xs text-gray-300">Owner: ${owner || 'N/A'}</p>
-                                                        <p class="text-xs text-gray-300">Plate: ${plate || 'N/A'}</p>
-                                                        <p class="text-xs ${impounded ? 'text-yellow-400' : 'text-gray-500'}">Impounded</p>
-                                                    `;
-                        vehiclesList.appendChild(newVehicleItem);
-                        newVehicleItem.querySelector('.remove-item-btn').addEventListener('click', (e) => {
-                            e.target.closest('li').remove();
-                            if (vehiclesList.children.length === 0) {
-                                vehiclesList.innerHTML = `<li class="p-2 border border-gray-700 rounded-md">NO VEHICLES INVOLVED</li>`;
-                            }
-                        });
-                        addVehicleModal.classList.add('hidden');
-                    }
-                });
-
-                // Civilian Modal Functionality
-                const addCivilianBtn = document.getElementById('add-civilian-btn');
-                const addCivilianModal = document.getElementById('addCivilianModal');
-                const closeAddCivilianModalBtn = document.getElementById('closeAddCivilianModalBtn');
-                const saveAddCivilianBtn = document.getElementById('saveAddCivilianBtn');
-                const civilianNameInput = document.getElementById('civilianNameInput');
-                const civilianRoleSelect = document.getElementById('civilianRoleSelect');
-                const civiliansList = document.getElementById('civilians-list');
-
-                addCivilianBtn.addEventListener('click', () => {
-                    civilianNameInput.value = '';
-                    civilianRoleSelect.value = 'Victim';
-                    addCivilianModal.classList.remove('hidden');
-                    civilianNameInput.focus();
-                });
-
-                closeAddCivilianModalBtn.addEventListener('click', () => {
-                    addCivilianModal.classList.add('hidden');
-                });
-
-                saveAddCivilianBtn.addEventListener('click', () => {
-                    const name = civilianNameInput.value.trim();
-                    const role = civilianRoleSelect.value;
-                    if (name) {
-                        if (civiliansList.firstElementChild && civiliansList.firstElementChild.textContent.includes('NO CIVILIANS INVOLVED')) {
-                            civiliansList.innerHTML = '';
-                        }
-                        const newCivilianItem = document.createElement('li');
-                        newCivilianItem.className = "flex justify-between items-center p-2 border border-gray-700 rounded-md bg-gray-700 text-white";
-                        newCivilianItem.innerHTML = `
-                                                        <span>${name} - <span class="text-gray-400">${role}</span></span>
-                                                        <button class="remove-item-btn bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-xs transition-colors duration-200">
-                                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                                        </button>
-                                                    `;
-                        civiliansList.appendChild(newCivilianItem);
-                        newCivilianItem.querySelector('.remove-item-btn').addEventListener('click', (e) => {
-                            e.target.closest('li').remove();
-                            if (civiliansList.children.length === 0) {
-                                civiliansList.innerHTML = `<li class="p-2 border border-gray-700 rounded-md">NO CIVILIANS INVOLVED</li>`;
-                            }
-                        });
-                        addCivilianModal.classList.add('hidden');
-                    }
-                });
-
-
-                // Weapon Modal Functionality
-                const addWeaponBtn = document.getElementById('add-weapon-btn');
-                const addWeaponModal = document.getElementById('addWeaponModal');
-                const closeAddWeaponModalBtn = document.getElementById('closeAddWeaponModalBtn');
-                const saveAddWeaponBtn = document.getElementById('saveAddWeaponBtn');
-                const weaponTypeInput = document.getElementById('weaponTypeInput');
-                const weaponModelInput = document.getElementById('weaponModelInput');
-                const weaponSerialInput = document.getElementById('weaponSerialInput');
-                const weaponCustomCheckbox = document.getElementById('weaponCustomCheckbox');
-                const weaponF9Checkbox = document.getElementById('weaponF9Checkbox');
-                const weaponsList = document.getElementById('weapons-list');
-                const returnWeaponsDropdown = document.getElementById('return-weapons');
-
-                window.updateReturnWeaponStatus = function () {
-                    const weaponItems = weaponsList.querySelectorAll('li');
-                    let hasSpecialWeapon = false;
-                    if (weaponsList.firstElementChild && weaponsList.firstElementChild.textContent.includes('NO WEAPONS INVOLVED')) {
-                        returnWeaponsDropdown.disabled = false;
+                window.firebase.onSnapshot(q, (snapshot) => {
+                    loadingEl.classList.add('hidden');
+                    listEl.innerHTML = '';
+                    if (snapshot.empty) {
+                        listEl.innerHTML = '<p class="text-center text-gray-400">No saved reports found.</p>';
                         return;
                     }
-                    weaponItems.forEach(item => {
-                        const customP = item.querySelector('p:nth-of-type(3)');
-                        const f9P = item.querySelector('p:nth-of-type(4)');
-                        if ((customP && customP.textContent === 'Custom' && customP.classList.contains('text-green-400')) ||
-                            (f9P && f9P.textContent === 'F9' && f9P.classList.contains('text-green-400'))) {
-                            hasSpecialWeapon = true;
-                        }
+                    snapshot.forEach(doc => {
+                        const report = { id: doc.id, ...doc.data() };
+                        const div = document.createElement('div');
+                        div.className = 'p-3 rounded-md cursor-pointer bg-gray-700 hover:bg-gray-600';
+                        div.dataset.reportId = report.id;
+                        div.innerHTML = `
+                                <h4 class="font-bold text-white">${report.caseTitle || 'Untitled Report'}</h4>
+                                <p class="text-xs text-gray-400">Saved: ${new Date(report.createdAt).toLocaleString()}</p>
+                            `;
+                        div.addEventListener('click', () => loadSpecificReport(report.id));
+                        listEl.appendChild(div);
                     });
-                    if (hasSpecialWeapon) {
-                        returnWeaponsDropdown.value = 'Yes';
-                        returnWeaponsDropdown.disabled = true;
+                }, (error) => {
+                    console.error("Error loading reports:", error);
+                    listEl.innerHTML = '<p class="text-center text-red-400">Failed to load reports.</p>';
+                });
+            };
+
+            async function loadSpecificReport(reportId) {
+                if (!db) return;
+                try {
+                    const docRef = window.firebase.doc(db, `artifacts/${appId}/public/data/reports`, reportId);
+                    const docSnap = await window.firebase.getDoc(docRef);
+                    if (docSnap.exists()) {
+                        populateFormWithData(docSnap.data());
+                        closeModal(viewReportsModal);
                     } else {
-                        returnWeaponsDropdown.disabled = false;
+                        alert("Could not find the selected report.");
                     }
+                } catch (error) {
+                    console.error("Error loading specific report:", error);
+                }
+            }
+
+            // Delete confirmation
+            document.getElementById('confirmDeleteBtn').addEventListener('click', () => {
+                // This would be where you delete from Firestore if a report is loaded
+                // For now, it just clears the form
+                document.querySelectorAll('ul').forEach(ul => {
+                    const placeholderText = ul.dataset.placeholder || 'NO ITEMS';
+                    ul.innerHTML = `<li class="placeholder-item p-2 border border-gray-700 rounded-md">${placeholderText}</li>`;
+                });
+                document.getElementById('caseTitle').textContent = 'New Case';
+                document.getElementById('report-description').value = '';
+                document.getElementById('postal-location').value = '';
+                document.getElementById('level-of-force').value = 'None';
+                closeModal(deleteConfirmationModal);
+            });
+
+            // --- Helper Functions ---
+            const getListData = (listId) => Array.from(document.querySelectorAll(`#${listId} li:not(.placeholder-item) span`)).map(span => span.textContent);
+
+            const getCriminalData = () => Array.from(document.querySelectorAll('#criminals-list > li:not(.placeholder-item)')).map(li => ({
+                name: li.querySelector('h4').textContent,
+                charges: Array.from(li.querySelectorAll('.charges-list li:not(.placeholder-item) span')).map(span => span.textContent)
+            }));
+
+            async function sendDiscordReportNotification(criminals, officers) {
+                if (!discordWebhookUrl || discordWebhookUrl === 'YOUR_DISCORD_WEBHOOK_URL') {
+                    console.log("Discord webhook URL not configured. Skipping notification.");
+                    return;
                 }
 
-                addWeaponBtn.addEventListener('click', () => {
-                    weaponTypeInput.value = '';
-                    weaponModelInput.value = '';
-                    weaponSerialInput.value = '';
-                    weaponCustomCheckbox.checked = false;
-                    weaponF9Checkbox.checked = false;
-                    addWeaponModal.classList.remove('hidden');
-                    weaponTypeInput.focus();
-                });
-
-                closeAddWeaponModalBtn.addEventListener('click', () => {
-                    addWeaponModal.classList.add('hidden');
-                });
-
-                saveAddWeaponBtn.addEventListener('click', () => {
-                    const type = weaponTypeInput.value.trim();
-                    const model = weaponModelInput.value.trim();
-                    const serial = weaponSerialInput.value.trim();
-                    const isCustom = weaponCustomCheckbox.checked;
-                    const isF9 = weaponF9Checkbox.checked;
-                    if (type || model || serial) {
-                        if (weaponsList.firstElementChild && weaponsList.firstElementChild.textContent.includes('NO WEAPONS INVOLVED')) {
-                            weaponsList.innerHTML = '';
-                        }
-                        const newWeaponItem = document.createElement('li');
-                        newWeaponItem.className = "flex flex-col space-y-1 p-2 border border-gray-700 rounded-md bg-gray-700 text-white";
-                        newWeaponItem.innerHTML = `
-                                                            <div class="flex justify-between items-center w-full">
-                                                                <span class="font-bold text-base">${type || 'N/A'}</span>
-                                                                <button class="remove-item-btn bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-xs transition-colors duration-200">
-                                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                                                </button>
-                                                            </div>
-                                                            <p class="text-xs text-gray-300">Model: ${model || 'N/A'}</p>
-                                                            <p class="text-xs text-gray-300">Serial: ${serial || 'N/A'}</p>
-                                                            <div class="flex space-x-4 mt-2">
-                                                                <p class="text-xs ${isCustom ? 'text-green-400' : 'text-gray-500'}">Custom</p>
-                                                                <p class="text-xs ${isF9 ? 'text-green-400' : 'text-gray-500'}">F9</p>
-                                                            </div>
-                                                        `;
-                        weaponsList.appendChild(newWeaponItem);
-                        newWeaponItem.querySelector('.remove-item-btn').addEventListener('click', (e) => {
-                            e.target.closest('li').remove();
-                            if (weaponsList.children.length === 0) {
-                                weaponsList.innerHTML = `<li class="p-2 border border-gray-700 rounded-md">NO WEAPONS INVOLVED</li>`;
-                            }
-                            updateReturnWeaponStatus();
-                        });
-                        addWeaponModal.classList.add('hidden');
-                        updateReturnWeaponStatus();
-                    }
-                });
-
-
-                // Officer List Functionality
-                const addOfficerBtn = document.getElementById('add-officer-btn');
-                const addOfficerModal = document.getElementById('addOfficerModal');
-                const officersList = document.getElementById('officers-list');
-                const officerListContainer = document.getElementById('officer-list-container');
-                const officerListLoading = document.getElementById('officer-list-loading');
-                const officerListError = document.getElementById('officer-list-error');
-                const saveAddOfficerBtn = document.getElementById('saveAddOfficerBtn');
-                const closeAddOfficerModalBtn = document.getElementById('closeAddOfficerModalBtn');
-                const officerSearchInput = document.getElementById('officer-search-input');
-
-                const departments = {
-                    'upd': { name: 'UPD', publishedKey: '2PACX-1vT8yueJjp9o-XVH1_RXPji6N_IAP1DDbNLZ8l4__IqGCvVEUWscsdsJ6uNHZ8u6kDhhXkSxcdkdeDJi', gid: '0' },
-                    'lscso': { name: 'LSCSO', publishedKey: '2PACX-1vT8yueJjp9o-XVH1_RXPji6N_IAP1DDbNLZ8l4__IqGCvVEUWscsdsJ6uNHZ8u6kDhhXkSxcdkdeDJi', gid: '1747285908' },
-                    'lspd': { name: 'LSPD', publishedKey: '2PACX-1vT8yueJjp9o-XVH1_RXPji6N_IAP1DDbNLZ8l4__IqGCvVEUWscsdsJ6uNHZ8u6kDhhXkSxcdkdeDJi', gid: '394994291' },
-                    'fbi': { name: 'FBI', publishedKey: '2PACX-1vT8yueJjp9o-XVH1_RXPji6N_IAP1DDbNLZ8l4__IqGCvVEUWscsdsJ6uNHZ8u6kDhhXkSxcdkdeDJi', gid: '248128167' }
+                const payload = {
+                    username: "UPD Report Bot",
+                    avatar_url: "https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png",
+                    embeds: [{
+                        title: "New Incident Report Filed",
+                        color: 15158332, // Red
+                        fields: [
+                            { name: "Suspect(s)", value: "```" + (criminals.map(c => c.name).join('\n') || 'N/A') + "```" },
+                            { name: "Involved Officer(s)", value: "```" + (officers.join('\n') || 'N/A') + "```" },
+                            { name: "Charges Filed", value: "```" + (criminals.flatMap(c => c.charges).join('\n') || 'None') + "```" }
+                        ],
+                        timestamp: new Date().toISOString()
+                    }]
                 };
 
-                let selectedOfficers = [];
-                let allOfficers = [];
-
-                async function fetchAllOfficerData() {
-                    officerListContainer.innerHTML = '';
-                    officerListLoading.classList.remove('hidden');
-                    officerListError.classList.add('hidden');
-                    saveAddOfficerBtn.disabled = true;
-
-                    try {
-                        const [updResponse, lscsoResponse, lspdResponse, fbiResponse] = await Promise.all([
-                            fetch(`https://docs.google.com/spreadsheets/d/e/${departments['upd'].publishedKey}/pub?gid=${departments['upd'].gid}&single=true&output=csv`),
-                            fetch(`https://docs.google.com/spreadsheets/d/e/${departments['lscso'].publishedKey}/pub?gid=${departments['lscso'].gid}&single=true&output=csv`),
-                            fetch(`https://docs.google.com/spreadsheets/d/e/${departments['lspd'].publishedKey}/pub?gid=${departments['lspd'].gid}&single=true&output=csv`),
-                            fetch(`https://docs.google.com/spreadsheets/d/e/${departments['fbi'].publishedKey}/pub?gid=${departments['fbi'].gid}&single=true&output=csv`)
-                        ]);
-
-                        if (!updResponse.ok || !lscsoResponse.ok || !lspdResponse.ok || !fbiResponse.ok) {
-                            throw new Error('Failed to fetch data from one or more departments.');
-                        }
-
-                        const updCsvText = await updResponse.text();
-                        const lscsoCsvText = await lscsoResponse.text();
-                        const lspdCsvText = await lspdResponse.text();
-                        const fbiCsvText = await fbiResponse.text();
-
-                        const updOfficers = parseCSV(updCsvText, 'name');
-                        const lscsoOfficers = parseCSV(lscsoCsvText, 'name');
-                        const lspdOfficers = parseCSV(lspdCsvText, 'name');
-                        const fbiOfficers = parseCSV(fbiCsvText, 'name');
-
-                        let combinedOfficers = [...updOfficers, ...lscsoOfficers, ...lspdOfficers, ...fbiOfficers];
-                        const uniqueOfficers = [...new Set(combinedOfficers)];
-                        allOfficers = uniqueOfficers.sort();
-
-                        if (allOfficers.length > 0) {
-                            populateOfficerList(allOfficers);
-                            officerListError.classList.add('hidden');
-                        } else {
-                            officerListContainer.innerHTML = '<p class="text-center text-gray-400 p-4">No officers found.</p>';
-                            officerListError.classList.remove('hidden');
-                        }
-
-                    } catch (error) {
-                        console.error('Error fetching officer data:', error);
-                        officerListError.classList.remove('hidden');
-                        officerListContainer.innerHTML = '<p class="text-center text-red-400 p-4">Failed to load data.</p>';
-                    } finally {
-                        officerListLoading.classList.add('hidden');
-                    }
-                }
-
-                function parseCSV(csv, columnName) {
-                    const lines = csv.split('\n');
-                    const items = [];
-                    let columnIndex = -1;
-                    let dataStartIndex = -1;
-
-                    for (let i = 0; i < lines.length && i < 15; i++) {
-                        const headerLine = lines[i];
-                        if (headerLine) {
-                            const headers = headerLine.split(',').map(header => header.trim().replace(/^"|"$/g, ''));
-                            const foundIndex = headers.findIndex(header => header.toLowerCase() === columnName);
-                            if (foundIndex !== -1) {
-                                columnIndex = foundIndex;
-                                dataStartIndex = i + 1;
-                                break;
-                            }
-                        }
-                    }
-
-                    if (columnIndex !== -1) {
-                        for (let i = dataStartIndex; i < lines.length; i++) {
-                            const line = lines[i].trim();
-                            if (line) {
-                                const columns = line.split(',').map(col => col.trim().replace(/^"|"$/g, ''));
-                                if (columns[columnIndex] && columns[columnIndex].length > 0) {
-                                    const item = columns[columnIndex];
-                                    if (item.toLowerCase() !== columnName && item.toLowerCase() !== "0" && item.length > 2) {
-                                        items.push(item);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    return items;
-                }
-
-                function populateOfficerList(officersToDisplay) {
-                    officerListContainer.innerHTML = '';
-                    officersToDisplay.forEach(officerName => {
-                        const officerElement = document.createElement('div');
-                        officerElement.className = 'officer-item p-2 rounded-md cursor-pointer hover:bg-gray-600 transition-colors duration-200 border border-gray-700';
-                        officerElement.textContent = officerName;
-
-                        if (selectedOfficers.includes(officerName)) {
-                            officerElement.classList.add('selected');
-                        }
-
-                        officerElement.addEventListener('click', () => {
-                            officerElement.classList.toggle('selected');
-                            if (officerElement.classList.contains('selected')) {
-                                selectedOfficers.push(officerName);
-                            } else {
-                                selectedOfficers = selectedOfficers.filter(name => name !== officerName);
-                            }
-                            saveAddOfficerBtn.disabled = selectedOfficers.length === 0;
-                        });
-                        officerListContainer.appendChild(officerElement);
+                try {
+                    await fetch(discordWebhookUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
                     });
+                } catch (error) {
+                    console.error('Error sending Discord notification:', error);
                 }
-
-                addOfficerBtn.addEventListener('click', () => {
-                    addOfficerModal.classList.remove('hidden');
-                    if (allOfficers.length === 0) {
-                        fetchAllOfficerData();
-                    } else {
-                        populateOfficerList(allOfficers);
-                    }
-                });
-
-                officerSearchInput.addEventListener('input', (e) => {
-                    const searchTerm = e.target.value.toLowerCase();
-                    const filteredOfficers = allOfficers.filter(officer =>
-                        officer.toLowerCase().includes(searchTerm)
-                    );
-                    populateOfficerList(filteredOfficers);
-                });
-
-                closeAddOfficerModalBtn.addEventListener('click', () => {
-                    addOfficerModal.classList.add('hidden');
-                    officerSearchInput.value = '';
-                    populateOfficerList(allOfficers);
-                    saveAddOfficerBtn.disabled = selectedOfficers.length === 0;
-                });
-
-                saveAddOfficerBtn.addEventListener('click', () => {
-                    if (selectedOfficers.length > 0) {
-                        if (officersList.querySelector('li').textContent.includes('NO')) {
-                            officersList.innerHTML = '';
-                        }
-
-                        selectedOfficers.forEach(officer => {
-                            const newItem = document.createElement('li');
-                            newItem.className = "flex items-center space-x-2 p-2 border border-gray-700 rounded-md bg-gray-700 text-white";
-                            newItem.innerHTML = `
-                                                                <input type="text" value="${officer}" class="w-full p-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600">
-                                                                <button class="remove-item-btn bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-xs transition-colors duration-200">
-                                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                                                </button>
-                                                            `;
-                            officersList.appendChild(newItem);
-
-                            newItem.querySelector('.remove-item-btn').addEventListener('click', (e) => {
-                                e.target.closest('li').remove();
-                                if (officersList.children.length === 0) {
-                                    officersList.innerHTML = `<li class="p-2 border border-gray-700 rounded-md">NO OFFICERS INVOLVED</li>`;
-                                }
-                            });
-                        });
-
-                        addOfficerModal.classList.add('hidden');
-                        selectedOfficers = [];
-                        saveAddOfficerBtn.disabled = true;
-                    }
-                });
-
-                // Criminals & Charges Functionality
-                const addCriminalBtn = document.getElementById('add-criminal-btn');
-                const addCriminalModal = document.getElementById('addCriminalModal');
-                const closeAddCriminalModalBtn = document.getElementById('closeAddCriminalModalBtn');
-                const saveAddCriminalBtn = document.getElementById('saveAddCriminalBtn');
-                const criminalNameInput = document.getElementById('criminalNameInput');
-                const criminalFingerprintInput = document.getElementById('criminalFingerprintInput');
-                const criminalsList = document.getElementById('criminals-list');
-                const addChargeModal = document.getElementById('addChargeModal');
-                const closeAddChargeModalBtn = document.getElementById('closeAddChargeModalBtn');
-                const saveAddChargeBtn = document.getElementById('saveAddChargeBtn');
-                const chargeSearchInput = document.getElementById('charge-search-input');
-                const chargeListContainer = document.getElementById('charge-list-container');
-                const chargeListLoading = document.getElementById('charge-list-loading');
-                const chargeListError = document.getElementById('charge-list-error');
-
-                let currentChargesList = null;
-                let allCharges = [];
-                let selectedCharges = [];
-
-                const chargesSheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQa6HZQ9JM5Unzwe4zZDX8A21m6zV4oGvDuEbSEqA9f3m3CqplUUUlmCScNHf79a8Sr1nem0div9YT2/pub?output=csv';
-
-                async function fetchChargeData() {
-                    chargeListContainer.innerHTML = '';
-                    chargeListLoading.classList.remove('hidden');
-                    chargeListError.classList.add('hidden');
-                    saveAddChargeBtn.disabled = true;
-
-                    try {
-                        const response = await fetch(chargesSheetUrl);
-                        if (!response.ok) throw new Error('Failed to fetch charge data.');
-
-                        const csvText = await response.text();
-                        allCharges = parseChargeCSV(csvText);
-
-                        if (allCharges.length > 0) {
-                            populateChargeList(allCharges);
-                            chargeListError.classList.add('hidden');
-                        } else {
-                            chargeListContainer.innerHTML = '<p class="text-center text-gray-400 p-4">No charges found.</p>';
-                            chargeListError.classList.remove('hidden');
-                        }
-
-                    } catch (error) {
-                        console.error('Error fetching charge data:', error);
-                        chargeListError.classList.remove('hidden');
-                        chargeListContainer.innerHTML = '<p class="text-center text-red-400 p-4">Failed to load charge data.</p>';
-                    } finally {
-                        chargeListLoading.classList.add('hidden');
-                    }
-                }
-
-                function parseCsvLine(line) {
-                    const result = [];
-                    let current = '';
-                    let inQuotes = false;
-                    for (let i = 0; i < line.length; i++) {
-                        const char = line[i];
-                        if (char === '"' && (i === 0 || line[i - 1] !== '\\')) {
-                            inQuotes = !inQuotes;
-                        } else if (char === ',' && !inQuotes) {
-                            result.push(current.trim());
-                            current = '';
-                        } else {
-                            current += char;
-                        }
-                    }
-                    result.push(current.trim());
-                    return result;
-                }
-
-                function parseChargeCSV(csv) {
-                    const lines = csv.split('\n');
-                    const charges = [];
-                    let headers = [];
-                    let headerFound = false;
-                    let dataStartIndex = 0;
-
-                    for (let i = 0; i < lines.length; i++) {
-                        const line = lines[i].trim();
-                        if (line.toLowerCase().includes('penal code') && line.toLowerCase().includes('charge name')) {
-                            headers = parseCsvLine(line).map(h => h.toLowerCase().replace(/^"|"$/g, '').trim());
-                            dataStartIndex = i + 1;
-                            headerFound = true;
-                            break;
-                        }
-                    }
-
-                    if (!headerFound) return [];
-
-                    const penalCodeIndex = headers.indexOf('penal code');
-                    const chargeNameIndex = headers.indexOf('charge name');
-                    const chargeDescriptionIndex = headers.indexOf('charge description');
-                    const jailTimeIndex = headers.indexOf('jail time (months)');
-                    const fineAmountIndex = headers.indexOf('fine amount');
-                    const felonyIndex = headers.indexOf('felony/infraction');
-                    let currentCategory = "Uncategorized";
-
-                    for (let i = dataStartIndex; i < lines.length; i++) {
-                        const line = lines[i].trim();
-                        if (!line) continue;
-                        if (line.startsWith('---') && line.endsWith('---')) {
-                            currentCategory = line.replace(/---/g, '').trim();
-                            continue;
-                        }
-                        const columns = parseCsvLine(line);
-                        let penalCode = columns[penalCodeIndex] ? columns[penalCodeIndex].replace(/^"|"$/g, '').trim() : '';
-                        let chargeName = columns[chargeNameIndex] ? columns[chargeNameIndex].replace(/^"|"$/g, '').trim() : '';
-                        let chargeDescription = columns[chargeDescriptionIndex] ? columns[chargeDescriptionIndex].replace(/^"|"$/g, '').trim() : '';
-                        let jailTime = columns[jailTimeIndex] ? columns[jailTimeIndex].replace(/^"|"$/g, '').trim() : 'N/A';
-                        let fineAmount = columns[fineAmountIndex] ? columns[fineAmountIndex].replace(/^"|"$/g, '').trim() : 'N/A';
-                        let felonyStatus = columns[felonyIndex] ? columns[felonyIndex].replace(/^"|"$/g, '').trim() : 'N/A';
-                        let category = currentCategory;
-
-                        if (penalCode.toLowerCase().includes('infraction') && !chargeName) {
-                            chargeName = columns[chargeDescriptionIndex] || '';
-                            chargeDescription = columns[fineAmountIndex] || '';
-                            fineAmount = columns[jailTimeIndex] || 'N/A';
-                            jailTime = '0';
-                            felonyStatus = 'Infraction';
-                            category = "Traffic Infractions";
-                        }
-
-                        if (penalCode && chargeName) {
-                            charges.push({ penalCode, chargeName, chargeDescription, jailTime, fineAmount, felonyStatus, category });
-                        }
-                    }
-                    return charges;
-                }
-
-                function populateChargeList(chargesToDisplay) {
-                    chargeListContainer.innerHTML = '';
-                    const groupedCharges = chargesToDisplay.reduce((acc, charge) => {
-                        (acc[charge.category] = acc[charge.category] || []).push(charge);
-                        return acc;
-                    }, {});
-
-                    for (const category in groupedCharges) {
-                        const categoryContainer = document.createElement('div');
-                        categoryContainer.className = 'mb-4';
-                        const categoryTitle = document.createElement('h4');
-                        categoryTitle.className = 'text-lg font-bold text-white mb-2 border-b border-gray-600 pb-1';
-                        categoryTitle.textContent = category;
-                        categoryContainer.appendChild(categoryTitle);
-                        const grid = document.createElement('div');
-                        grid.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2';
-
-                        groupedCharges[category].forEach(charge => {
-                            const chargeElement = document.createElement('div');
-                            let baseColorClass = 'bg-red-800 hover:bg-red-700';
-                            if (charge.felonyStatus && charge.felonyStatus.toLowerCase() === 'infraction') {
-                                baseColorClass = 'bg-gray-700 hover:bg-gray-600';
-                            }
-                            chargeElement.className = `charge-item p-3 rounded-md cursor-pointer ${baseColorClass} transition-colors duration-200 border border-gray-600 flex flex-col justify-between`;
-                            chargeElement.dataset.charge = `${charge.penalCode}: ${charge.chargeName}`;
-                            chargeElement.innerHTML = `
-                                                        <div>
-                                                            <p class="font-bold text-white">${charge.chargeName}</p>
-                                                            <p class="text-xs text-gray-400">${charge.penalCode}</p>
-                                                            <p class="text-sm text-gray-300 mt-2">${charge.chargeDescription}</p>
-                                                        </div>
-                                                        <div class="text-right mt-2">
-                                                            <p class="text-xs text-gray-300">${charge.jailTime} Months / ${charge.fineAmount}</p>
-                                                            <p class="text-xs font-semibold ${charge.felonyStatus && charge.felonyStatus.toLowerCase() === 'felony' ? 'text-red-400' : 'text-green-400'}">${charge.felonyStatus || ''}</p>
-                                                        </div>
-                                                    `;
-                            if (selectedCharges.includes(chargeElement.dataset.charge)) {
-                                chargeElement.classList.add('selected');
-                            }
-                            chargeElement.addEventListener('click', () => {
-                                chargeElement.classList.toggle('selected');
-                                const chargeText = chargeElement.dataset.charge;
-                                if (chargeElement.classList.contains('selected')) {
-                                    selectedCharges.push(chargeText);
-                                } else {
-                                    selectedCharges = selectedCharges.filter(name => name !== chargeText);
-                                }
-                                saveAddChargeBtn.disabled = selectedCharges.length === 0;
-                            });
-                            grid.appendChild(chargeElement);
-                        });
-                        categoryContainer.appendChild(grid);
-                        chargeListContainer.appendChild(categoryContainer);
-                    }
-                }
-
-                addCriminalBtn.addEventListener('click', () => {
-                    criminalNameInput.value = '';
-                    criminalFingerprintInput.value = '';
-                    addCriminalModal.classList.remove('hidden');
-                    criminalNameInput.focus();
-                });
-
-                closeAddCriminalModalBtn.addEventListener('click', () => {
-                    addCriminalModal.classList.add('hidden');
-                });
-
-                saveAddCriminalBtn.addEventListener('click', () => {
-                    const criminalName = criminalNameInput.value.trim();
-                    const fingerprintId = criminalFingerprintInput.value.trim();
-
-                    if (criminalName) {
-                        if (criminalsList.querySelector('li').textContent.includes('NO')) {
-                            criminalsList.innerHTML = '';
-                        }
-                        const newCriminalItem = document.createElement('li');
-                        newCriminalItem.className = 'p-4 border border-gray-700 rounded-md bg-gray-800';
-                        newCriminalItem.innerHTML = `
-                                                            <div class="flex items-center justify-between mb-2">
-                                                                <h4 class="font-bold text-lg">${criminalName}</h4>
-                                                                <button class="remove-item-btn bg-red-600 hover:bg-red-700 text-white p-1 rounded-full text-xs transition-colors duration-200">
-                                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                                                </button>
-                                                            </div>
-                                                            ${fingerprintId ? `<p class="text-sm text-gray-400 mb-2"><strong>Fingerprint:</strong> ${fingerprintId}</p>` : ''}
-                                                            <div class="mt-2 space-y-2">
-                                                                <h5 class="text-md font-semibold">Charges:</h5>
-                                                                <ul class="charges-list list-disc list-inside space-y-1 text-gray-400">
-                                                                    <li class="text-sm">No charges added yet.</li>
-                                                                </ul>
-                                                                <button class="add-charge-btn bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold py-1 px-2 rounded-full transition-colors duration-200 mt-2">+ Add Charge</button>
-                                                            </div>
-                                                        `;
-                        criminalsList.appendChild(newCriminalItem);
-                        newCriminalItem.querySelector('.remove-item-btn').addEventListener('click', (e) => {
-                            e.target.closest('li').remove();
-                            if (criminalsList.children.length === 0) {
-                                criminalsList.innerHTML = `<li class="p-2 border border-gray-700 rounded-md">NO CRIMINALS INVOLVED</li>`;
-                            }
-                        });
-                        newCriminalItem.querySelector('.add-charge-btn').addEventListener('click', () => {
-                            currentChargesList = newCriminalItem.querySelector('.charges-list');
-                            addChargeModal.classList.remove('hidden');
-                            if (allCharges.length === 0) {
-                                fetchChargeData();
-                            } else {
-                                populateChargeList(allCharges);
-                            }
-                        });
-                        addCriminalModal.classList.add('hidden');
-                    }
-                });
-
-                closeAddChargeModalBtn.addEventListener('click', () => {
-                    addChargeModal.classList.add('hidden');
-                    selectedCharges = [];
-                    chargeSearchInput.value = '';
-                    saveAddChargeBtn.disabled = true;
-                });
-
-                chargeSearchInput.addEventListener('input', (e) => {
-                    const searchTerm = e.target.value.toLowerCase();
-                    const filteredCharges = allCharges.filter(charge =>
-                        charge.chargeName.toLowerCase().includes(searchTerm) ||
-                        charge.penalCode.toLowerCase().includes(searchTerm) ||
-                        charge.chargeDescription.toLowerCase().includes(searchTerm)
-                    );
-                    populateChargeList(filteredCharges);
-                });
-
-                saveAddChargeBtn.addEventListener('click', () => {
-                    if (selectedCharges.length > 0 && currentChargesList) {
-                        if (currentChargesList.querySelector('li').textContent.includes('No charges added yet.')) {
-                            currentChargesList.innerHTML = '';
-                        }
-                        selectedCharges.forEach(chargeText => {
-                            const newChargeItem = document.createElement('li');
-                            newChargeItem.className = 'flex items-center justify-between text-sm';
-                            newChargeItem.innerHTML = `
-                                                                <span>${chargeText}</span>
-                                                                <button class="remove-charge-btn text-red-400 hover:text-red-500 transition-colors duration-200">
-                                                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
-                                                                </button>
-                                                            `;
-                            currentChargesList.appendChild(newChargeItem);
-                            newChargeItem.querySelector('.remove-charge-btn').addEventListener('click', (e) => {
-                                e.target.closest('li').remove();
-                                if (currentChargesList.children.length === 0) {
-                                    currentChargesList.innerHTML = `<li class="text-sm">No charges added yet.</li>`;
-                                }
-                            });
-                        });
-                        addChargeModal.classList.add('hidden');
-                        selectedCharges = [];
-                        saveAddChargeBtn.disabled = true;
-                    }
-                });
-
-                // Text Editor & AI Generation
-                const boldBtn = document.getElementById('bold-btn');
-                const italicBtn = document.getElementById('italic-btn');
-                const linkBtn = document.getElementById('link-btn');
-                const imageBtn = document.getElementById('image-btn');
-                const reportTextarea = document.getElementById('report-description');
-                const promptModal = document.getElementById('promptModal');
-                const promptModalTitle = document.getElementById('promptModalTitle');
-                const promptModalInput = document.getElementById('promptModalInput');
-                const savePromptModalBtn = document.getElementById('savePromptModalBtn');
-                const closePromptModalBtn = document.getElementById('closePromptModalBtn');
-                let promptCallback = null;
-
-                closePromptModalBtn.addEventListener('click', () => { promptModal.classList.add('hidden'); promptCallback = null; });
-                savePromptModalBtn.addEventListener('click', () => { if (promptCallback) promptCallback(promptModalInput.value); promptModal.classList.add('hidden'); promptCallback = null; });
-
-                function showPrompt(title, placeholder, callback) {
-                    promptModalTitle.textContent = title;
-                    promptModalInput.placeholder = placeholder;
-                    promptModalInput.value = '';
-                    promptCallback = callback;
-                    promptModal.classList.remove('hidden');
-                    promptModalInput.focus();
-                }
-
-                function applyMarkdown(startTag, endTag) {
-                    const start = reportTextarea.selectionStart;
-                    const end = reportTextarea.selectionEnd;
-                    const selectedText = reportTextarea.value.substring(start, end);
-                    const textBefore = reportTextarea.value.substring(0, start);
-                    const textAfter = reportTextarea.value.substring(end);
-                    if (start === end) {
-                        reportTextarea.value = textBefore + startTag + endTag + textAfter;
-                        reportTextarea.selectionStart = reportTextarea.selectionEnd = start + startTag.length;
-                    } else {
-                        reportTextarea.value = textBefore + startTag + selectedText + endTag + textAfter;
-                        reportTextarea.selectionStart = start + startTag.length;
-                        reportTextarea.selectionEnd = end + startTag.length;
-                    }
-                    reportTextarea.focus();
-                }
-
-                boldBtn.addEventListener('click', (e) => { e.preventDefault(); applyMarkdown('**', '**'); });
-                italicBtn.addEventListener('click', (e) => { e.preventDefault(); applyMarkdown('*', '*'); });
-                linkBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const selectedText = reportTextarea.value.substring(reportTextarea.selectionStart, reportTextarea.selectionEnd) || 'link text';
-                    showPrompt("Enter URL", "https://example.com", (url) => {
-                        if (url) {
-                            const markdown = `[${selectedText}](${url})`;
-                            const start = reportTextarea.selectionStart;
-                            const end = reportTextarea.selectionEnd;
-                            reportTextarea.value = reportTextarea.value.substring(0, start) + markdown + reportTextarea.value.substring(end);
-                            reportTextarea.focus();
-                        }
-                    });
-                });
-                imageBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    showPrompt("Enter Image URL", "https://example.com/image.png", (imageUrl) => {
-                        if (imageUrl) {
-                            const markdown = `![image](${imageUrl})`;
-                            const start = reportTextarea.selectionStart;
-                            reportTextarea.value = reportTextarea.value.substring(0, start) + markdown + reportTextarea.value.substring(start);
-                            reportTextarea.focus();
-                        }
-                    });
-                });
-
-                const generateReportBtn = document.getElementById('generate-report-btn');
-                const descriptionLoadingContainer = document.getElementById('description-loading-container');
-                const caseTitle = document.getElementById('caseTitle');
-                const postalLocation = document.getElementById('postal-location');
-                const levelOfForce = document.getElementById('level-of-force');
-                const medicalTreatment = document.getElementById('medical-treatment');
-                const gsrTest = document.getElementById('gsr-test');
-                const legalRepresentation = document.getElementById('legal-representation');
-                const mirandized = document.getElementById('mirandized');
-                const returnWeapons = document.getElementById('return-weapons');
-                const plea = document.getElementById('plea');
-
-                function getListItems(listId) {
-                    const list = document.getElementById(listId);
-                    if (list.firstElementChild && list.firstElementChild.textContent.includes('NO')) return [];
-                    return Array.from(list.querySelectorAll('li input')).map(input => input.value.trim()).filter(Boolean);
-                }
-
-                function getWeaponData() {
-                    const weaponList = document.getElementById('weapons-list');
-                    if (weaponList.firstElementChild && weaponList.firstElementChild.textContent.includes('NO')) return [];
-                    return Array.from(weaponList.querySelectorAll('li')).map(item => ({
-                        type: item.querySelector('span').textContent.trim(),
-                        model: item.querySelector('p:nth-of-type(1)').textContent.replace('Model: ', '').trim(),
-                        serial: item.querySelector('p:nth-of-type(2)').textContent.replace('Serial: ', '').trim(),
-                        isCustom: item.querySelector('div:last-child p:first-child').classList.contains('text-green-400'),
-                        isF9: item.querySelector('div:last-child p:last-child').classList.contains('text-green-400')
-                    }));
-                }
-
-                function getVehicleData() {
-                    const vehicleList = document.getElementById('vehicles-list');
-                    if (vehicleList.firstElementChild && vehicleList.firstElementChild.textContent.includes('NO')) return [];
-                    return Array.from(vehicleList.querySelectorAll('li')).map(item => ({
-                        model: item.querySelector('span').textContent.trim(),
-                        owner: item.querySelector('p:nth-of-type(1)').textContent.replace('Owner: ', '').trim(),
-                        plate: item.querySelector('p:nth-of-type(2)').textContent.replace('Plate: ', '').trim(),
-                        impounded: item.querySelector('p:nth-of-type(3)').classList.contains('text-yellow-400')
-                    }));
-                }
-
-                function getCivilianData() {
-                    const civilianList = document.getElementById('civilians-list');
-                    if (civilianList.firstElementChild && civilianList.firstElementChild.textContent.includes('NO')) return [];
-                    return Array.from(civilianList.querySelectorAll('li')).map(item => {
-                        const [name, role] = item.querySelector('span').textContent.split(' - ');
-                        return { name: name.trim(), role: role.trim() };
-                    });
-                }
-
-                function getCriminalData() {
-                    const criminalList = document.getElementById('criminals-list');
-                    if (criminalList.firstElementChild && criminalList.firstElementChild.textContent.includes('NO')) return [];
-                    return Array.from(criminalList.querySelectorAll('li')).map(item => {
-                        const name = item.querySelector('h4').textContent.trim();
-                        const fingerprintEl = item.querySelector('p strong');
-                        const fingerprint = fingerprintEl ? fingerprintEl.nextSibling.textContent.trim() : 'N/A';
-                        const chargesList = item.querySelector('.charges-list');
-                        const charges = chargesList.firstElementChild.textContent.includes('No charges') ? [] : Array.from(chargesList.querySelectorAll('li span')).map(span => span.textContent.trim());
-                        return { name, fingerprint, charges };
-                    });
-                }
-
-                const exponentialBackoff = async (fn, retries = 5, delay = 1000) => {
-                    try {
-                        return await fn();
-                    } catch (error) {
-                        if (retries > 0) {
-                            await new Promise(resolve => setTimeout(resolve, delay));
-                            return exponentialBackoff(fn, retries - 1, delay * 2);
-                        } else {
-                            throw error;
-                        }
-                    }
-                };
-
-                /**
-                 * Fetches a webhook URL from a Google Sheet and sends a Discord notification with report details.
-                 * @param {Array} criminals - Array of criminal objects {name, charges}.
-                 * @param {Array} officers - Array of officer name strings.
-                 */
-                const sendDiscordReportNotification = async (criminals, officers) => {
-                    const webhookSheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQxN1ZQBPqwqLxvr_T1tQ2TVwHuy0d2jainTySsbsSxMBl6ukf5R3Di6SGO3sHA3CD-1uSBgp_qPtJA/pub?gid=1211481486&single=true&output=csv';
-
-                    try {
-                        const response = await fetch(webhookSheetUrl);
-                        if (!response.ok) {
-                            throw new Error(`Failed to fetch webhook sheet: ${response.status}`);
-                        }
-                        const csvText = await response.text();
-                        const rows = csvText.trim().split('\n');
-                        if (rows.length < 3) {
-                            console.error("Webhook sheet does not have enough rows.");
-                            return;
-                        }
-                        const cells = rows[2].split(',');
-                        if (cells.length < 3) {
-                            console.error("Row 3 of webhook sheet does not have enough columns.");
-                            return;
-                        }
-                        const webhookUrl = cells[2].replace(/"/g, '').trim();
-
-                        if (!webhookUrl || !webhookUrl.startsWith('https://discord.com/api/webhooks/')) {
-                            console.error('Invalid or missing Discord webhook URL in cell C3.');
-                            return;
-                        }
-
-                        // Format the data for the embed
-                        const suspectNames = criminals.map(c => c.name).join('\n') || 'N/A';
-                        const officerNames = officers.join('\n') || 'N/A';
-                        const allCharges = criminals.flatMap(c => c.charges).join('\n') || 'None';
-
-                        // Construct the embed payload
-                        const payload = {
-                            username: "UPD Report Bot",
-                            avatar_url: "https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png",
-                            embeds: [{
-                                title: "New Incident Report Filed",
-                                color: 15158332, // Red
-                                fields: [
-                                    { name: "Suspect(s)", value: "```" + suspectNames + "```", inline: false },
-                                    { name: "Involved Officer(s)", value: "```" + officerNames + "```", inline: false },
-                                    { name: "Charges Filed", value: "```" + allCharges + "```", inline: false }
-                                ],
-                                timestamp: new Date().toISOString(),
-                                footer: {
-                                    text: "UPD Internal Systems Notification"
-                                }
-                            }]
-                        };
-
-                        // Send the request to Discord
-                        await fetch(webhookUrl, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(payload),
-                        });
-
-                    } catch (error) {
-                        console.error('Error sending Discord report notification:', error);
-                    }
-                };
-
-                // UPDATED: This function now automatically saves the report after generation.
-                generateReportBtn.addEventListener('click', async () => {
-                    const userDebrief = reportTextarea.value.trim();
-                    reportTextarea.classList.add('hidden');
-                    descriptionLoadingContainer.classList.remove('hidden');
-
-                    try {
-                        const evidence = getListItems('evidence-list');
-                        const linkedReports = getListItems('linked-reports-list');
-                        const evidenceLockerNumbers = getListItems('evidence-locker-list');
-                        const tags = getListItems('tags-list');
-                        const weapons = getWeaponData();
-                        const vehicles = getVehicleData();
-                        const civilians = getCivilianData();
-                        const officers = getListItems('officers-list');
-                        const criminals = getCriminalData();
-
-                        // Send Discord notification after gathering data
-                        await sendDiscordReportNotification(criminals, officers);
-
-                        if (criminals.length === 0) caseTitle.textContent = 'New Case';
-                        else if (criminals.length === 1) {
-                            const suspect = criminals[0];
-                            if (suspect.charges.length === 1) {
-                                const chargeText = (suspect.charges[0].split(': ')[1] || suspect.charges[0]).trim();
-                                caseTitle.textContent = `${suspect.name} - ${chargeText}`;
-                            } else if (suspect.charges.length > 1) {
-                                caseTitle.textContent = `${suspect.name} - Multiple`;
-                            } else {
-                                caseTitle.textContent = suspect.name;
-                            }
-                        } else {
-                            caseTitle.textContent = 'Multiple Suspects';
-                        }
-
-                        const postal = postalLocation.value.trim() || 'N/A';
-                        const forceLevel = levelOfForce.value;
-                        const medical = medicalTreatment.value;
-                        const gsr = gsrTest.value;
-                        const legal = legalRepresentation.value;
-                        const miranda = mirandized.value;
-                        const returnW = returnWeapons.value;
-                        const criminalPlea = plea.value;
-                        const now = new Date();
-                        const formattedDate = now.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
-                        const formattedTime = now.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
-                        let officerName = officers.length > 0 ? officers[0] : 'the reporting officer';
-                        let assistingOfficersText = officers.length > 1 ? officers.slice(1).join(', ') : 'None';
-
-                        const weaponsText = weapons.length > 0 ? weapons.map(w => `- **Type:** ${w.type} | **Model:** ${w.model} | **Serial:** ${w.serial} | **Custom:** ${w.isCustom ? 'Yes' : 'No'} | **F9:** ${w.isF9 ? 'Yes' : 'No'}`).join('\n') : '- None';
-                        const vehiclesText = vehicles.length > 0 ? vehicles.map(v => `- **Model:** ${v.model} | **Owner:** ${v.owner} | **Plate:** ${v.plate} | **Impounded:** ${v.impounded ? 'Yes' : 'No'}`).join('\n') : '- None';
-                        const civiliansText = civilians.length > 0 ? civilians.map(c => `- **Name:** ${c.name} | **Role:** ${c.role}`).join('\n') : '- None';
-                        const criminalsText = criminals.length > 0 ? criminals.map(c => `- **Name:** ${c.name}\n  - **Fingerprint:** ${c.fingerprint}\n  - **Charges:** ${c.charges.length > 0 ? c.charges.join('; ') : 'None'}`).join('\n\n') : '- None';
-                        const evidenceText = evidence.length > 0 ? evidence.map(e => `- ${e}`).join('\n') : '- None';
-
-                        const prompt = `
-You are Officer ${officerName}. Your task is to write a formal and comprehensive police report from your first-person perspective (e.g., "I arrived on the scene...", "My partners and I observed..."). The report must be written in **Markdown format**.
-You will reformat the user-provided 'Initial Debrief' into the 'Chronological Incident Debrief' section. You must strictly adhere to the facts provided in the user's debrief and **not invent any new details, times, or actions**. Use the other provided data points to fill out the structured sections of the report.
-**User's Initial Debrief for Reformatting:**
-"${userDebrief}"
----
-# OFFICIAL UNIFIED POLICE DEPARTMENT REPORT
-### I. Administrative Details
-- **Date of Report:** ${formattedDate}
-- **Time of Report:** ${formattedTime}
-- **Location of Incident:** ${postal}
-- **Reporting Officer:** ${officerName}
-- **Assisting Officers:** ${assistingOfficersText}
-- **Linked Report Numbers:** ${linkedReports.length > 0 ? linkedReports.join(', ') : 'None'}
-- **Report Tags:** ${tags.length > 0 ? tags.join(', ') : 'None'}
-### II. Chronological Incident Debrief
-(Rephrase the 'User's Initial Debrief' above into a professional, first-person narrative. **DO NOT ADD OR INVENT ANY INFORMATION** that is not present in the user's text. Format paragraphs appropriately.)
-### III. Persons Involved
-#### Civilians
-${civiliansText}
-#### Arrested Individuals (Suspects/Criminals)
-${criminalsText}
-### IV. Justification for Actions and Charges
-#### Justification for Level of Force
-(From my perspective, explain precisely why the selected level of force—'${forceLevel}'—was necessary and appropriate for the situation, based *only* on the information in the debrief.)
-#### Justification for Charges
-(For each criminal listed, provide a point-by-point justification for every charge applied. Connect each charge directly to specific actions or evidence mentioned in the debrief or data.)
-### V. Evidence and Property
-#### Vehicles Involved
-${vehiclesText}
-#### Weapons Involved
-${weaponsText}
-#### Evidence Seized
-${evidenceText}
-- **Evidence Locker Number(s):** ${evidenceLockerNumbers.length > 0 ? evidenceLockerNumbers.join(', ') : 'None'}
-- **Disposition of Weapons:** Can weapons be returned? ${returnW}
-### VI. Post-Arrest Procedures
-- **Medical Treatment:** Was medical treatment administered? ${medical}
-- **GSR Test:** Was a Gunshot Residue test performed? Result: ${gsr}
-- **Miranda Rights:** Were the suspect(s) read their Miranda Rights? ${miranda}
-- **Legal Representation:** Did the suspect(s) request legal representation? ${legal}
-- **Plea:** What was the plea entered by the suspect(s)? ${criminalPlea}
----
-**END OF REPORT**
-`;
-
-                        const callGeminiApi = async () => {
-                            const chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
-                            const payload = { contents: chatHistory };
-                            const apiKey = "";
-                            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
-                            const response = await fetch(apiUrl, {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify(payload)
-                            });
-                            if (!response.ok) throw new Error(`API error: ${response.status} ${response.statusText}`);
-                            const result = await response.json();
-                            if (result.candidates && result.candidates[0].content && result.candidates[0].content.parts) {
-                                return result.candidates[0].content.parts[0].text;
-                            } else {
-                                throw new Error('Unexpected API response structure.');
-                            }
-                        };
-
-                        const generatedReport = await exponentialBackoff(callGeminiApi);
-                        reportTextarea.value = generatedReport;
-
-                        // Automatically save the report after it has been generated and populated.
-                        if (!db || !userId) {
-                            console.error("Firebase not ready, could not auto-save report.");
-                        } else {
-                            const reportData = getReportDataAsObject();
-                            reportData.authorId = userId;
-                            reportData.createdAt = new Date().toISOString();
-                            try {
-                                const docRef = await window.firebase.addDoc(window.firebase.collection(db, `artifacts/${appId}/public/data/reports`), reportData);
-                                console.log("Report generated and auto-saved with ID: ", docRef.id);
-                            } catch (error) {
-                                console.error("Error auto-saving report to Firestore: ", error);
-                            }
-                        }
-
-                        reportTextarea.classList.remove('hidden');
-
-                    } catch (error) {
-                        console.error('Error generating report:', error);
-                        reportTextarea.value = `Error generating report: ${error.message}`;
-                        reportTextarea.classList.remove('hidden');
-                    } finally {
-                        descriptionLoadingContainer.classList.add('hidden');
-                    }
-                });
-
-                // Local Storage & Delete Functionality
-                window.reportFieldsToSave = ['caseTitle', 'report-description', 'postal-location', 'level-of-force', 'medical-treatment', 'gsr-test', 'legal-representation', 'mirandized', 'return-weapons', 'plea'];
-                window.reportListsToSave = ['evidence-list', 'linked-reports-list', 'evidence-locker-list', 'tags-list', 'weapons-list', 'vehicles-list', 'civilians-list', 'officers-list', 'criminals-list'];
-
-                function saveReportData() {
-                    const data = {};
-                    reportFieldsToSave.forEach(id => {
-                        const element = document.getElementById(id);
-                        data[id] = element.tagName === 'H1' ? element.textContent : element.value;
-                    });
-                    reportListsToSave.forEach(id => {
-                        data[id] = document.getElementById(id).innerHTML;
-                    });
-                    localStorage.setItem('policeReportData', JSON.stringify(data));
-                }
-
-                function loadReportData() {
-                    const savedData = localStorage.getItem('policeReportData');
-                    if (savedData) {
-                        const data = JSON.parse(savedData);
-                        reportFieldsToSave.forEach(id => {
-                            if (data[id]) {
-                                const element = document.getElementById(id);
-                                if (element.tagName === 'H1') element.textContent = data[id];
-                                else element.value = data[id];
-                            }
-                        });
-                        reportListsToSave.forEach(id => {
-                            if (data[id]) {
-                                const listElement = document.getElementById(id);
-                                listElement.innerHTML = data[id];
-                                reAttachListEventListeners(listElement);
-                            }
-                        });
-                        updateReturnWeaponStatus();
-                    }
-                }
-
-                window.reAttachListEventListeners = function (listElement) {
-                    listElement.querySelectorAll('.remove-item-btn').forEach(button => {
-                        button.addEventListener('click', (e) => {
-                            const listItem = e.target.closest('li');
-                            const list = listItem.parentElement;
-                            listItem.remove();
-                            if (list.children.length === 0) {
-                                const placeholderText = list.closest('div').querySelector('h3').textContent.trim();
-                                list.innerHTML = `<li class="p-2 border border-gray-700 rounded-md">NO ${placeholderText.toUpperCase()}</li>`;
-                            }
-                            if (list.id === 'weapons-list') updateReturnWeaponStatus();
-                        });
-                    });
-
-                    if (listElement.id === 'criminals-list') {
-                        listElement.querySelectorAll('.add-charge-btn').forEach(button => {
-                            button.addEventListener('click', () => {
-                                currentChargesList = button.closest('li').querySelector('.charges-list');
-                                addChargeModal.classList.remove('hidden');
-                                if (allCharges.length === 0) fetchChargeData();
-                                else populateChargeList(allCharges);
-                            });
-                        });
-                        listElement.querySelectorAll('.remove-charge-btn').forEach(button => {
-                            button.addEventListener('click', (e) => {
-                                const chargeItem = e.target.closest('li');
-                                const chargesList = chargeItem.parentElement;
-                                chargeItem.remove();
-                                if (chargesList.children.length === 0) {
-                                    chargesList.innerHTML = `<li class="text-sm">No charges added yet.</li>`;
-                                }
-                            });
-                        });
-                    }
-                }
-
-                window.clearReportData = function () {
-                    localStorage.removeItem('policeReportData');
-                    document.getElementById('caseTitle').textContent = 'New Case';
-                    document.getElementById('report-description').value = '';
-                    postalLocation.value = '';
-                    levelOfForce.value = 'None';
-                    medicalTreatment.value = 'No';
-                    gsrTest.value = 'Not Applicable';
-                    legalRepresentation.value = 'No';
-                    mirandized.value = 'No';
-                    returnWeapons.value = 'No';
-                    returnWeapons.disabled = false;
-                    plea.value = 'Not Applicable';
-                    document.getElementById('evidence-list').innerHTML = `<li class="p-2 border border-gray-700 rounded-md">NO ATTACHED EVIDENCE</li>`;
-                    document.getElementById('linked-reports-list').innerHTML = `<li class="p-2 border border-gray-700 rounded-md">NO LINKED REPORTS</li>`;
-                    document.getElementById('evidence-locker-list').innerHTML = `<li class="p-2 border border-gray-700 rounded-md">NO EVIDENCE LOCKER NUMBERS</li>`;
-                    document.getElementById('tags-list').innerHTML = `<li class="p-2 border border-gray-700 rounded-md">NO TAGS</li>`;
-                    document.getElementById('weapons-list').innerHTML = `<li class="p-2 border border-gray-700 rounded-md">NO WEAPONS INVOLVED</li>`;
-                    document.getElementById('vehicles-list').innerHTML = `<li class="p-2 border border-gray-700 rounded-md">NO VEHICLES INVOLVED</li>`;
-                    document.getElementById('civilians-list').innerHTML = `<li class="p-2 border border-gray-700 rounded-md">NO CIVILIANS INVOLVED</li>`;
-                    document.getElementById('officers-list').innerHTML = `<li class="p-2 border border-gray-700 rounded-md">NO OFFICERS INVOLVED</li>`;
-                    document.getElementById('criminals-list').innerHTML = `<li class="p-2 border border-gray-700 rounded-md">NO CRIMINALS INVOLVED</li>`;
-                }
-
-                loadReportData();
-                window.addEventListener('beforeunload', saveReportData);
-
-                const deleteBtn = document.getElementById('deleteBtn');
-                const deleteConfirmationModal = document.getElementById('deleteConfirmationModal');
-                const cancelDeleteBtn = document.getElementById('cancelDeleteBtn');
-                const confirmDeleteBtn = document.getElementById('confirmDeleteBtn');
-
-                deleteBtn.addEventListener('click', () => deleteConfirmationModal.classList.remove('hidden'));
-                cancelDeleteBtn.addEventListener('click', () => deleteConfirmationModal.classList.add('hidden'));
-                confirmDeleteBtn.addEventListener('click', () => {
-                    clearReportData();
-                    deleteConfirmationModal.classList.add('hidden');
-                });
-            })();
+            }
         });
+
     </script>
 </body>
 </html>
