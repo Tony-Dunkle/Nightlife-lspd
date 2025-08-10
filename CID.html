@@ -69,7 +69,7 @@
         }
 
         /* Status Colors */
-        .status-active {
+        .status-active, .status-pending {
             background-color: #3b82f6;
         }
         /* blue-500 */
@@ -77,10 +77,15 @@
             background-color: #6b7280;
         }
         /* gray-500 */
-        .status-closed {
+        .status-closed, .status-approved, .status-executed {
             background-color: #16a34a;
         }
         /* green-600 */
+        .status-denied {
+            background-color: #dc2626;
+        }
+        /* red-600 */
+
 
         /* Sidebar Transition */
         #sidebar {
@@ -211,6 +216,7 @@
             <nav id="sidebar-nav" class="flex-1 px-2 py-4 space-y-2">
                 <a href="javascript:void(0)" data-view="dashboard" class="sidebar-link flex items-center px-3 py-2 text-gray-300 rounded-lg"><i class="ph-house-light w-6 h-6"></i><span class="ml-3">Dashboard</span></a>
                 <a href="javascript:void(0)" data-view="documents" class="sidebar-link flex items-center px-3 py-2 text-gray-400 rounded-lg hover:bg-gray-700"><i class="ph-files-light w-6 h-6"></i><span class="ml-3">Documents</span></a>
+                <a href="javascript:void(0)" data-view="warrants" class="sidebar-link flex items-center px-3 py-2 text-gray-400 rounded-lg hover:bg-gray-700"><i class="ph-scales-light w-6 h-6"></i><span class="ml-3">Warrants</span></a>
                 <a href="javascript:void(0)" data-view="roster" class="sidebar-link flex items-center px-3 py-2 text-gray-400 rounded-lg hover:bg-gray-700"><i class="ph-user-list-light w-6 h-6"></i><span class="ml-3">CID Roster</span></a>
                 <a href="javascript:void(0)" data-view="archives" class="sidebar-link flex items-center px-3 py-2 text-gray-400 rounded-lg hover:bg-gray-700"><i class="ph-archive-light w-6 h-6"></i><span class="ml-3">Archives</span></a>
             </nav>
@@ -238,28 +244,16 @@
                         <div class="bg-gray-800 border border-gray-700 rounded-lg p-5 flex items-center gap-4"><i class="ph-archive-box-light text-4xl text-green-400"></i><div><h4 class="font-medium text-gray-400">Cases Closed</h4><p id="stat-closed-cases" class="text-3xl font-bold text-white">--</p></div></div>
                         <div class="bg-gray-800 border border-gray-700 rounded-lg p-5 flex items-center gap-4"><i class="ph-scales-light text-4xl text-yellow-400"></i><div><h4 class="font-medium text-gray-400">Warrants Issued</h4><p id="stat-warrants" class="text-3xl font-bold text-white">--</p></div></div>
                     </div>
-                    <!-- START: Added Search and Filter -->
                     <div class="flex items-center justify-between mb-4 bg-gray-800/50 p-3 rounded-lg border border-gray-700">
                         <div class="w-1/2 md:w-1/3">
                             <label for="case-search-input" class="sr-only">Search Cases</label>
-                            <div class="relative">
-                                <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <i class="ph-magnifying-glass-light text-gray-400"></i>
-                                </div>
-                                <input type="text" id="case-search-input" class="form-input w-full pl-10" placeholder="Search by title, detective, or ID...">
-                            </div>
+                            <div class="relative"><div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i class="ph-magnifying-glass-light text-gray-400"></i></div><input type="text" id="case-search-input" class="form-input w-full pl-10" placeholder="Search by title, detective, or ID..."></div>
                         </div>
                         <div class="w-auto">
                             <label for="case-status-filter" class="sr-only">Filter by Status</label>
-                            <select id="case-status-filter" class="form-select">
-                                <option value="all">All Statuses</option>
-                                <option value="Active">Active</option>
-                                <option value="Cold">Cold</option>
-                                <option value="Closed">Closed</option>
-                            </select>
+                            <select id="case-status-filter" class="form-select"><option value="all">All Statuses</option><option value="Active">Active</option><option value="Cold">Cold</option></select>
                         </div>
                     </div>
-                    <!-- END: Added Search and Filter -->
                     <div class="bg-gray-800 border border-gray-700 rounded-lg p-4"><div class="overflow-x-auto"><table class="w-full text-sm text-left"><thead class="text-xs text-gray-400 uppercase bg-gray-700/50"><tr><th scope="col" class="px-6 py-3">Case #</th><th scope="col" class="px-6 py-3">Title</th><th scope="col" class="px-6 py-3">Lead Detective</th><th scope="col" class="px-6 py-3">Status</th><th scope="col" class="px-6 py-3">Last Update</th></tr></thead><tbody id="cases-table-body"></tbody></table></div></div>
                 </main>
 
@@ -273,6 +267,28 @@
                         <button data-doc-type="plea-agreement" class="doc-gen-btn bg-gray-800 p-6 rounded-lg text-left hover:bg-gray-700 border border-gray-700 transition-colors"><h3 class="font-bold text-lg text-white">Plea Agreement</h3><p class="text-sm text-gray-400 mt-1">Formalize a plea deal with a defendant.</p></button>
                         <button data-doc-type="ci-nda" class="doc-gen-btn bg-gray-800 p-6 rounded-lg text-left hover:bg-gray-700 border border-gray-700 transition-colors"><h3 class="font-bold text-lg text-white">Confidential Informant NDA</h3><p class="text-sm text-gray-400 mt-1">Non-disclosure agreement for CIs.</p></button>
                         <button data-doc-type="ci-employment" class="doc-gen-btn bg-gray-800 p-6 rounded-lg text-left hover:bg-gray-700 border border-gray-700 transition-colors"><h3 class="font-bold text-lg text-white">CI Employment</h3><p class="text-sm text-gray-400 mt-1">Acknowledgment of CI employment.</p></button>
+                    </div>
+                </main>
+
+                <!-- Warrants View -->
+                <main id="warrants-view" class="view-content hidden">
+                    <div class="mb-6"><h1 class="text-3xl font-extrabold text-white">Warrant Submissions</h1><p class="text-gray-400 mt-1">Review and manage all submitted warrants.</p></div>
+                    <div class="bg-gray-800 border border-gray-700 rounded-lg p-4">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-left">
+                                <thead class="text-xs text-gray-400 uppercase bg-gray-700/50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3">Warrant ID</th>
+                                        <th scope="col" class="px-6 py-3">Type</th>
+                                        <th scope="col" class="px-6 py-3">Subject</th>
+                                        <th scope="col" class="px-6 py-3">Status</th>
+                                        <th scope="col" class="px-6 py-3">Submitted By</th>
+                                        <th scope="col" class="px-6 py-3">Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="warrants-table-body"></tbody>
+                            </table>
+                        </div>
                     </div>
                 </main>
 
@@ -322,9 +338,33 @@
         <div class="bg-gray-800 rounded-lg shadow-2xl w-full max-w-3xl border border-gray-700 max-h-[90vh] flex flex-col">
             <div class="flex justify-between items-center p-4 border-b border-gray-700"><h3 id="docGenModalTitle" class="text-xl font-bold text-white"></h3><button id="closeDocGenModalBtn" class="text-gray-400 hover:text-white text-2xl">&times;</button></div>
             <div id="docGenFormContainer" class="flex-grow overflow-y-auto p-6 space-y-4"></div>
-            <div class="flex justify-end p-4 bg-gray-900/50 border-t border-gray-700"><button type="button" id="generatePdfBtn" class="px-6 py-2 text-sm font-semibold rounded-md bg-blue-600 text-white hover:bg-blue-700">Generate PDF</button></div>
+            <div class="flex justify-end p-4 bg-gray-900/50 border-t border-gray-700"><button type="button" id="generatePdfBtn" class="px-6 py-2 text-sm font-semibold rounded-md bg-blue-600 text-white hover:bg-blue-700">Submit & Generate PDF</button></div>
         </div>
     </div>
+
+    <!-- Warrant Detail Modal -->
+    <div id="warrantDetailModal" class="hidden fixed inset-0 z-50 modal-overlay flex items-center justify-center p-4">
+        <div class="bg-gray-800 rounded-lg shadow-2xl w-full max-w-3xl border border-gray-700 max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-gray-700">
+                <h3 id="warrantDetailTitle" class="text-xl font-bold text-white">Warrant Details</h3>
+                <button id="closeWarrantDetailModalBtn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <div id="warrantDetailContent" class="flex-grow overflow-y-auto p-6 space-y-4"></div>
+            <div class="flex justify-between items-center p-4 bg-gray-900/50 border-t border-gray-700">
+                <div>
+                    <label for="warrantStatusUpdate" class="text-sm mr-2">Update Status:</label>
+                    <select id="warrantStatusUpdate" class="form-select text-sm">
+                        <option>Pending</option>
+                        <option>Approved</option>
+                        <option>Denied</option>
+                        <option>Executed</option>
+                    </select>
+                </div>
+                <button type="button" id="saveWarrantStatusBtn" class="px-6 py-2 text-sm font-semibold rounded-md bg-green-600 text-white hover:bg-green-700">Save Status</button>
+            </div>
+        </div>
+    </div>
+
 
     <!-- Hidden container for PDF rendering -->
     <div id="pdf-render-container" class="absolute -left-full"></div>
@@ -366,6 +406,7 @@
         const statActiveCases = document.getElementById('stat-active-cases'), statColdCases = document.getElementById('stat-cold-cases'), statClosedCases = document.getElementById('stat-closed-cases'), statWarrants = document.getElementById('stat-warrants');
         const casesTableBody = document.getElementById('cases-table-body'), caseSearchInput = document.getElementById('case-search-input'), caseStatusFilter = document.getElementById('case-status-filter');
         const rosterGrid = document.getElementById('roster-grid'), archivesTableBody = document.getElementById('archives-table-body');
+        const warrantsTableBody = document.getElementById('warrants-table-body');
 
         // Modals
         const caseFileModal = document.getElementById('caseFileModal'), caseFileModalTitle = document.getElementById('caseFileModalTitle'), closeCaseFileModalBtn = document.getElementById('closeCaseFileModalBtn'), printCaseBtn = document.getElementById('printCaseBtn'), caseFileForm = document.getElementById('caseFileForm'), caseIdInput = document.getElementById('caseIdInput');
@@ -377,8 +418,11 @@
 
         const docGenModal = document.getElementById('docGenModal'), docGenModalTitle = document.getElementById('docGenModalTitle'), closeDocGenModalBtn = document.getElementById('closeDocGenModalBtn'), docGenFormContainer = document.getElementById('docGenFormContainer'), generatePdfBtn = document.getElementById('generatePdfBtn');
 
+        const warrantDetailModal = document.getElementById('warrantDetailModal'), warrantDetailTitle = document.getElementById('warrantDetailTitle'), warrantDetailContent = document.getElementById('warrantDetailContent'), closeWarrantDetailModalBtn = document.getElementById('closeWarrantDetailModalBtn'), warrantStatusUpdate = document.getElementById('warrantStatusUpdate'), saveWarrantStatusBtn = document.getElementById('saveWarrantStatusBtn');
+
+
         // --- State ---
-        let userProfile = null, allCases = [], allUsers = [], unsubscribeCases = null, unsubscribeUsers = null, currentModalStep = 1, currentDocType = null;
+        let userProfile = null, allCases = [], allUsers = [], allWarrants = [], unsubscribeCases = null, unsubscribeUsers = null, unsubscribeWarrants = null, currentModalStep = 1, currentDocType = null, currentWarrantId = null;
         let markdownConverter = new showdown.Converter({ simplifiedAutoLink: true, strikethrough: true, tables: true });
 
         const accessConfig = {
@@ -386,8 +430,9 @@
             canEdit: ["Detective", "CID Lead", "CID Case Manager", "Command", "High Command", "Website Manager"],
             canManageAssignments: ["CID Lead", "CID Case Manager"],
             canDelete: ["CID Lead", "High Command", "Website Manager"],
-            isManager: ["CID Lead", "CID Case Manager", "High Command", "Website Manager"],
-            isCid: ["Detective", "CID Lead", "CID Case Manager"]
+            isManager: ["CID Lead", "CID Case Manager", "Command", "High Command", "Website Manager"],
+            isCid: ["Detective", "CID Lead", "CID Case Manager"],
+            canManageWarrants: ["CID Lead", "CID Case Manager", "Command", "High Command", "Website Manager"]
         };
 
         // --- Auth & Init ---
@@ -411,6 +456,7 @@
                 loginOverlay.classList.remove('hidden');
                 if (unsubscribeCases) unsubscribeCases();
                 if (unsubscribeUsers) unsubscribeUsers();
+                if (unsubscribeWarrants) unsubscribeWarrants();
             }
         });
 
@@ -434,10 +480,17 @@
                 allUsers = s.docs.map(d => ({ id: d.id, ...d.data() }));
                 renderRoster();
             });
+            unsubscribeWarrants = onSnapshot(query(collection(db, `artifacts/${appId}/public/data/warrants`)), s => {
+                allWarrants = s.docs.map(d => ({ id: d.id, ...d.data() }));
+                renderWarrantsTable();
+                renderDashboardStats(); // Update stats for warrants
+            });
+
             addCaseFileBtn.addEventListener('click', () => openCaseFileModal());
             closeCaseFileModalBtn.addEventListener('click', closeCaseFileModal);
             sidebarNav.addEventListener('click', handleViewSwitch);
             [casesTableBody, archivesTableBody].forEach(el => el.addEventListener('click', handleTableEditClick));
+            warrantsTableBody.addEventListener('click', handleWarrantTableClick);
             nextStepBtn.addEventListener('click', () => changeStep(1));
             prevStepBtn.addEventListener('click', () => changeStep(-1));
             saveCaseBtn.addEventListener('click', handleSaveCaseFile);
@@ -448,12 +501,13 @@
             reportEditor.addEventListener('input', () => reportPreview.innerHTML = markdownConverter.makeHtml(reportEditor.value));
             document.querySelector('#documents-view').addEventListener('click', e => e.target.closest('.doc-gen-btn') && openDocGenModal(e.target.closest('.doc-gen-btn').dataset.docType));
             closeDocGenModalBtn.addEventListener('click', () => docGenModal.classList.add('hidden'));
-            generatePdfBtn.addEventListener('click', () => generateDocumentPdf(currentDocType));
+            generatePdfBtn.addEventListener('click', () => handleGenerateWarrant(currentDocType));
 
-            // START: Added Event Listeners
+            closeWarrantDetailModalBtn.addEventListener('click', () => warrantDetailModal.classList.add('hidden'));
+            saveWarrantStatusBtn.addEventListener('click', handleSaveWarrantStatus);
+
             caseSearchInput.addEventListener('keyup', renderCasesTable);
             caseStatusFilter.addEventListener('change', renderCasesTable);
-            // END: Added Event Listeners
 
             switchView('dashboard');
         }
@@ -472,13 +526,13 @@
             statActiveCases.textContent = allCases.filter(c => c.status === 'Active').length;
             statColdCases.textContent = allCases.filter(c => c.status === 'Cold').length;
             statClosedCases.textContent = allCases.filter(c => c.status === 'Closed').length;
-            statWarrants.textContent = allCases.filter(c => c.warrantIssued).length || '0';
+            statWarrants.textContent = allWarrants.filter(w => w.status === 'Approved' || w.status === 'Executed').length || '0';
         }
         function renderCasesTable() {
             const term = caseSearchInput.value.toLowerCase();
             const status = caseStatusFilter.value;
             const filtered = allCases.filter(c =>
-                (c.status !== 'Closed') && // Exclude closed cases from this table
+                (c.status !== 'Closed') &&
                 (status === 'all' || c.status === status) &&
                 (term === '' || c.title.toLowerCase().includes(term) || (c.leadDetective && c.leadDetective.toLowerCase().includes(term)) || c.id.toLowerCase().includes(term))
             );
@@ -489,6 +543,21 @@
                             <td class="px-6 py-4"><span class="px-2 py-1 text-xs font-medium rounded-full text-white status-${c.status.toLowerCase()}">${c.status}</span></td>
                             <td class="px-6 py-4">${c.lastUpdated ? new Date(c.lastUpdated.seconds * 1000).toLocaleDateString() : 'N/A'}</td>
                         </tr>`).join('') : `<tr><td colspan="5" class="text-center p-8 text-gray-500">No active or cold cases found.</td></tr>`;
+        }
+
+        function renderWarrantsTable() {
+            warrantsTableBody.innerHTML = allWarrants.length ? allWarrants.map(w => {
+                const subject = w.data.suspectName || w.data.location || w.data.ownerName || 'N/A';
+                return `
+                        <tr class="bg-gray-800 border-b border-gray-700 hover:bg-gray-700/50 cursor-pointer" data-id="${w.id}">
+                            <td class="px-6 py-4 font-mono text-xs">${w.id.substring(0, 8).toUpperCase()}</td>
+                            <td class="px-6 py-4 font-semibold text-white">${w.type}</td>
+                            <td class="px-6 py-4">${subject}</td>
+                            <td class="px-6 py-4"><span class="px-2 py-1 text-xs font-medium rounded-full text-white status-${w.status.toLowerCase()}">${w.status}</span></td>
+                            <td class="px-6 py-4">${w.createdBy}</td>
+                            <td class="px-6 py-4">${w.createdAt ? new Date(w.createdAt.seconds * 1000).toLocaleDateString() : 'N/A'}</td>
+                        </tr>
+                    `}).join('') : `<tr><td colspan="6" class="text-center p-8 text-gray-500">No warrants found.</td></tr>`;
         }
 
         function renderRoster() {
@@ -560,7 +629,7 @@
                 caseFileModalTitle.textContent = 'New Case File';
                 leadDetectiveInput.value = userProfile.uid;
                 addPersonEntry();
-                populateAssignmentCheckboxes([]);
+                populateAssignmentCheckboxes([userProfile.uid]);
             }
             changeStep(0, 1);
             caseFileModal.classList.remove('hidden');
@@ -613,7 +682,6 @@
                     assignedPersonnel.push(checkbox.value);
                 }
             });
-            // Ensure the manager assigning the case can also see it
             if (!assignedPersonnel.includes(userProfile.uid)) {
                 assignedPersonnel.push(userProfile.uid);
             }
@@ -641,7 +709,15 @@
             }
         }
 
-        // --- Document Generation ---
+        function handleWarrantTableClick(e) {
+            const row = e.target.closest('tr[data-id]');
+            if (row) {
+                const warrantData = allWarrants.find(w => w.id === row.dataset.id);
+                if (warrantData) openWarrantDetailModal(warrantData);
+            }
+        }
+
+        // --- Document & Warrant Generation ---
         const docTemplates = {
             'arrest-warrant': { title: 'Arrest Warrant', fields: [{ id: 'suspectName', label: 'Suspect Name' }, { id: 'suspectAddress', label: 'Suspect Last Known Address' }, { id: 'charges', label: 'Charges (comma separated)' }, { id: 'probableCause', label: 'Probable Cause Statement', type: 'textarea' }] },
             'search-warrant': { title: 'Search Warrant', fields: [{ id: 'location', label: 'Location to be Searched' }, { id: 'items', label: 'Items to be Seized', type: 'textarea' }, { id: 'probableCause', label: 'Probable Cause Statement', type: 'textarea' }] },
@@ -659,15 +735,41 @@
             docGenModal.classList.remove('hidden');
         }
 
-        async function generateDocumentPdf(docType) {
+        async function handleGenerateWarrant(docType) {
             const template = docTemplates[docType];
             const data = {};
-            template.fields.forEach(f => data[f.id] = document.getElementById(f.id).value);
+            template.fields.forEach(f => {
+                const element = document.getElementById(f.id);
+                if (element) data[f.id] = element.value;
+            });
 
+            // Save to Firestore first
+            try {
+                await addDoc(collection(db, `artifacts/${appId}/public/data/warrants`), {
+                    type: template.title,
+                    status: 'Pending',
+                    data: data,
+                    createdBy: userProfile.name,
+                    createdById: userProfile.uid,
+                    createdAt: serverTimestamp()
+                });
+            } catch (err) {
+                console.error("Error saving warrant:", err);
+                alert("Could not save warrant to database.");
+                return;
+            }
+
+            // Then generate PDF
+            await generateDocumentPdf(docType, template, data);
+            docGenModal.classList.add('hidden');
+        }
+
+        async function generateDocumentPdf(docType, template, data) {
             const renderContainer = document.getElementById('pdf-render-container');
             let contentHTML = `<div class="pdf-render-content"><div class="pdf-header">${template.title}</div>`;
             for (const key in data) {
-                contentHTML += `<div class="pdf-field"><span class="pdf-label">${key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}: </span><span class="pdf-value">${data[key].replace(/\n/g, '<br>')}</span></div>`;
+                const field = template.fields.find(f => f.id === key);
+                contentHTML += `<div class="pdf-field"><span class="pdf-label">${field.label}: </span><span class="pdf-value">${data[key].replace(/\n/g, '<br>')}</span></div>`;
             }
             contentHTML += `<div class="pdf-signature-block"><div class="pdf-signature-line">Authorizing Judge Signature</div></div><div class="pdf-signature-block"><div class="pdf-signature-line">Affiant Signature</div></div></div>`;
             renderContainer.innerHTML = contentHTML;
@@ -678,8 +780,43 @@
             pdf.addImage(imgData, 'PNG', 10, 10, pdf.internal.pageSize.getWidth() - 20, (pdf.internal.pageSize.getWidth() - 20) * (canvas.height / canvas.width));
             pdf.save(`${docType}.pdf`);
             renderContainer.innerHTML = '';
-            docGenModal.classList.add('hidden');
         }
+
+        function openWarrantDetailModal(warrantData) {
+            currentWarrantId = warrantData.id;
+            warrantDetailTitle.textContent = `Warrant: ${warrantData.id.substring(0, 8).toUpperCase()}`;
+
+            let contentHTML = `<div class="space-y-3">`;
+            for (const key in warrantData.data) {
+                const label = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+                contentHTML += `<div><h4 class="font-semibold text-gray-400 text-sm">${label}</h4><p class="text-white bg-gray-900/50 p-2 rounded-md">${warrantData.data[key] || 'N/A'}</p></div>`;
+            }
+            contentHTML += `</div>`;
+            warrantDetailContent.innerHTML = contentHTML;
+
+            warrantStatusUpdate.value = warrantData.status;
+
+            const canManage = accessConfig.canManageWarrants.includes(userProfile.role) || accessConfig.canManageWarrants.includes(userProfile['access level']);
+            warrantStatusUpdate.disabled = !canManage;
+            saveWarrantStatusBtn.style.display = canManage ? 'block' : 'none';
+
+            warrantDetailModal.classList.remove('hidden');
+        }
+
+        async function handleSaveWarrantStatus() {
+            if (!currentWarrantId) return;
+            const newStatus = warrantStatusUpdate.value;
+            try {
+                const warrantRef = doc(db, `artifacts/${appId}/public/data/warrants`, currentWarrantId);
+                await updateDoc(warrantRef, { status: newStatus });
+                warrantDetailModal.classList.add('hidden');
+                currentWarrantId = null;
+            } catch (err) {
+                console.error("Error updating warrant status:", err);
+                alert("Could not update warrant status.");
+            }
+        }
+
 
         async function generateCasePdf() {
             const caseId = caseIdInput.value; if (!caseId) return;

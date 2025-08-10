@@ -118,6 +118,20 @@
             #sidebar.sidebar-hidden {
                 transform: translateX(-100%);
             }
+
+        .disabled-section {
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        /* New styles for the improved toggle */
+        .report-toggle-btn.active {
+            background-color: #3b82f6; /* blue-500 */
+            color: white;
+        }
+
+        html.dark .report-toggle-btn.active {
+            background-color: #60a5fa; /* blue-400 */
+        }
     </style>
 </head>
 <body class="antialiased bg-gray-100 dark:bg-slate-900">
@@ -213,21 +227,34 @@
             <main class="flex-1 overflow-y-auto bg-gray-900 text-white">
                 <div class="flex items-center justify-between p-4 bg-gray-800 text-white shadow-md">
                     <div class="flex-grow text-center">
-                        <h1 id="caseTitle" class="text-lg md:text-2xl font-bold">New Case</h1>
+                        <h1 id="caseTitle" class="text-lg md:text-2xl font-bold">New Arrest Report</h1>
                     </div>
                     <div>
                         <button id="deleteBtn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out">Delete</button>
                     </div>
                 </div>
+
+                <!-- Report Type Toggle -->
+                <div class="p-4 flex justify-center items-center space-x-4 bg-gray-800">
+                    <div id="report-type-toggle" class="inline-flex rounded-md shadow-sm" role="group">
+                        <button type="button" data-type="arrest" class="report-toggle-btn active px-4 py-2 text-sm font-medium text-gray-900 bg-white border border-gray-200 rounded-l-lg hover:bg-gray-100 focus:z-10 focus:ring-2 focus:ring-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600">
+                            Arrest Report
+                        </button>
+                        <button type="button" data-type="traffic" class="report-toggle-btn px-4 py-2 text-sm font-medium text-gray-900 bg-white border-t border-b border-gray-200 hover:bg-gray-100 focus:z-10 focus:ring-2 focus:ring-blue-700 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-white dark:hover:bg-gray-600">
+                            Traffic Citation
+                        </button>
+                    </div>
+                </div>
+
                 <div class="p-4 md:p-8 grid grid-cols-1 md:grid-cols-2 gap-4">
                     <!-- Left Column -->
                     <div class="col-span-1 flex flex-col space-y-4">
                         <div class="bg-gray-800 p-4 rounded-lg shadow-lg">
                             <div class="flex justify-between items-center mb-2">
-                                <h3 class="font-semibold text-lg">Evidence</h3>
+                                <h3 class="font-semibold text-lg">Evidence / Seized Items</h3>
                                 <button class="add-item-btn bg-gray-600 hover:bg-gray-700 text-white text-xs font-bold py-1 px-3 rounded-full" data-list-id="evidence-list">+ Add</button>
                             </div>
-                            <ul id="evidence-list" class="space-y-1 text-sm text-gray-400" data-placeholder="NO ATTACHED EVIDENCE"><li class="placeholder-item p-2 border border-gray-700 rounded-md">NO ATTACHED EVIDENCE</li></ul>
+                            <ul id="evidence-list" class="space-y-1 text-sm text-gray-400" data-placeholder="NO ITEMS SEIZED"><li class="placeholder-item p-2 border border-gray-700 rounded-md">NO ITEMS SEIZED</li></ul>
                         </div>
                         <div class="bg-gray-800 p-4 rounded-lg shadow-lg">
                             <div class="flex justify-between items-center mb-2">
@@ -238,11 +265,11 @@
                         </div>
                         <div class="bg-gray-800 p-4 rounded-lg shadow-lg flex-grow flex flex-col">
                             <div class="flex justify-between items-center mb-2">
-                                <h3 class="font-semibold text-lg">Description</h3>
+                                <h3 class="font-semibold text-lg">Officer/Driver Statement</h3>
                                 <button id="generate-report-btn" class="bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold py-1 px-3 rounded-full">Generate with AI</button>
                             </div>
                             <div id="description-loading-container" class="hidden flex justify-center items-center flex-grow bg-gray-700 rounded-b-lg"><div class="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-blue-500"></div></div>
-                            <textarea id="report-description" placeholder="Enter the initial debrief or summary of the incident here..." class="w-full flex-grow p-2 bg-gray-700 text-white rounded-b-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-600" style="min-height: 200px;"></textarea>
+                            <textarea id="report-description" placeholder="Enter the initial debrief, summary, or driver's statement here..." class="w-full flex-grow p-2 bg-gray-700 text-white rounded-b-lg resize-none focus:outline-none focus:ring-2 focus:ring-blue-600" style="min-height: 200px;"></textarea>
                         </div>
                     </div>
                     <!-- Right Column -->
@@ -263,22 +290,43 @@
                         </div>
                         <div class="bg-gray-800 p-4 rounded-lg shadow-lg">
                             <div class="flex justify-between items-center mb-2">
-                                <h3 class="font-semibold text-lg">Criminals Involved</h3>
+                                <h3 class="font-semibold text-lg">Suspects / Drivers</h3>
                                 <button id="add-criminal-btn" class="bg-gray-600 hover:bg-gray-700 text-white text-xs font-bold py-1 px-3 rounded-full">+ Add</button>
                             </div>
-                            <ul id="criminals-list" class="space-y-4 text-sm text-gray-400" data-placeholder="NO CRIMINALS INVOLVED"><li class="placeholder-item p-2 border border-gray-700 rounded-md">NO CRIMINALS INVOLVED</li></ul>
+                            <ul id="criminals-list" class="space-y-4 text-sm text-gray-400" data-placeholder="NO SUSPECTS / DRIVERS"><li class="placeholder-item p-2 border border-gray-700 rounded-md">NO SUSPECTS / DRIVERS</li></ul>
                         </div>
-                        <div class="bg-gray-800 p-4 rounded-lg shadow-lg">
-                            <h3 class="font-semibold text-lg mb-4">Report Details</h3>
+
+                        <!-- Traffic Details Section -->
+                        <div id="traffic-details-section" class="bg-gray-800 p-4 rounded-lg shadow-lg hidden">
+                            <h3 class="font-semibold text-lg mb-4">Traffic Details</h3>
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div><label for="postal-location" class="block text-sm font-medium text-gray-400">Postal/Location</label><input type="text" id="postal-location" placeholder="Enter postal code or address" class="w-full p-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"></div>
-                                <div><label for="level-of-force" class="block text-sm font-medium text-gray-400">Level of Force</label><select id="level-of-force" class="w-full p-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"><option>None</option><option>Verbal Commands</option><option>Physical Restraint</option><option>Taser Deployment</option><option>Lethal Force</option></select></div>
-                                <div><label for="medical-treatment" class="block text-sm font-medium text-gray-400">Medical Treatment</label><select id="medical-treatment" class="w-full p-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"><option>No</option><option>Yes</option></select></div>
-                                <div><label for="gsr-test" class="block text-sm font-medium text-gray-400">GSR Test</label><select id="gsr-test" class="w-full p-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"><option>Not Applicable</option><option>Positive</option><option>Negative</option></select></div>
-                                <div><label for="legal-representation" class="block text-sm font-medium text-gray-400">Legal Representation</label><select id="legal-representation" class="w-full p-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"><option>No</option><option>Yes</option></select></div>
-                                <div><label for="mirandized" class="block text-sm font-medium text-gray-400">Mirandized</label><select id="mirandized" class="w-full p-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"><option>No</option><option>Yes</option></select></div>
-                                <div><label for="return-weapons" class="block text-sm font-medium text-gray-400">Can return weapons</label><select id="return-weapons" class="w-full p-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"><option>No</option><option>Yes</option></select></div>
-                                <div><label for="plea" class="block text-sm font-medium text-gray-400">Plea</label><select id="plea" class="w-full p-2 bg-gray-700 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-blue-600"><option>Not Applicable</option><option>Guilty</option><option>Not Guilty</option><option>No Contest</option></select></div>
+                                <div><label for="vehicle-make" class="block text-sm font-medium text-gray-400">Vehicle Make/Model</label><input type="text" id="vehicle-make" class="w-full p-2 bg-gray-700 text-white rounded-md"></div>
+                                <div><label for="vehicle-color" class="block text-sm font-medium text-gray-400">Color</label><input type="text" id="vehicle-color" class="w-full p-2 bg-gray-700 text-white rounded-md"></div>
+                                <div><label for="vehicle-plate" class="block text-sm font-medium text-gray-400">Plate</label><input type="text" id="vehicle-plate" class="w-full p-2 bg-gray-700 text-white rounded-md"></div>
+                                <div><label for="vehicle-owner" class="block text-sm font-medium text-gray-400">Registered Owner</label><input type="text" id="vehicle-owner" class="w-full p-2 bg-gray-700 text-white rounded-md"></div>
+                                <div><label for="driver-license" class="block text-sm font-medium text-gray-400">Driver’s License #</label><input type="text" id="driver-license" class="w-full p-2 bg-gray-700 text-white rounded-md"></div>
+                                <div><label for="stop-reason" class="block text-sm font-medium text-gray-400">Reason for Stop</label><input type="text" id="stop-reason" class="w-full p-2 bg-gray-700 text-white rounded-md"></div>
+                                <div><label for="observed-violations" class="block text-sm font-medium text-gray-400">Observed Violations</label><input type="text" id="observed-violations" class="w-full p-2 bg-gray-700 text-white rounded-md"></div>
+                                <div><label for="speed" class="block text-sm font-medium text-gray-400">Speed (if applicable)</label><input type="text" id="speed" class="w-full p-2 bg-gray-700 text-white rounded-md"></div>
+                                <div><label for="radar-used" class="block text-sm font-medium text-gray-400">Radar/Lidar Used</label><select id="radar-used" class="w-full p-2 bg-gray-700 text-white rounded-md"><option>No</option><option>Yes</option></select></div>
+                                <div><label for="traffic-conditions" class="block text-sm font-medium text-gray-400">Traffic Conditions</label><input type="text" id="traffic-conditions" class="w-full p-2 bg-gray-700 text-white rounded-md"></div>
+                                <div><label for="weather-conditions" class="block text-sm font-medium text-gray-400">Weather Conditions</label><input type="text" id="weather-conditions" class="w-full p-2 bg-gray-700 text-white rounded-md"></div>
+                                <div><label for="vehicle-search" class="block text-sm font-medium text-gray-400">Vehicle Search Conducted</label><select id="vehicle-search" class="w-full p-2 bg-gray-700 text-white rounded-md"><option>No</option><option>Yes</option></select></div>
+                            </div>
+                        </div>
+
+                        <!-- Report Details Section -->
+                        <div id="arrest-details-section" class="bg-gray-800 p-4 rounded-lg shadow-lg">
+                            <h3 class="font-semibold text-lg mb-4">Arrest Details</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div><label for="postal-location" class="block text-sm font-medium text-gray-400">Postal/Location</label><input type="text" id="postal-location" class="w-full p-2 bg-gray-700 text-white rounded-md"></div>
+                                <div><label for="level-of-force" class="block text-sm font-medium text-gray-400">Level of Force</label><select id="level-of-force" class="w-full p-2 bg-gray-700 text-white rounded-md"><option>None</option><option>Verbal Commands</option><option>Physical Restraint</option><option>Taser Deployment</option><option>Lethal Force</option></select></div>
+                                <div id="medical-treatment-wrapper"><label for="medical-treatment" class="block text-sm font-medium text-gray-400">Medical Treatment</label><select id="medical-treatment" class="w-full p-2 bg-gray-700 text-white rounded-md"><option>No</option><option>Yes</option></select></div>
+                                <div id="gsr-test-wrapper"><label for="gsr-test" class="block text-sm font-medium text-gray-400">GSR Test</label><select id="gsr-test" class="w-full p-2 bg-gray-700 text-white rounded-md"><option>Not Applicable</option><option>Positive</option><option>Negative</option></select></div>
+                                <div id="legal-rep-wrapper"><label for="legal-representation" class="block text-sm font-medium text-gray-400">Legal Representation</label><select id="legal-representation" class="w-full p-2 bg-gray-700 text-white rounded-md"><option>No</option><option>Yes</option></select></div>
+                                <div><label for="mirandized" class="block text-sm font-medium text-gray-400">Mirandized</label><select id="mirandized" class="w-full p-2 bg-gray-700 text-white rounded-md"><option>No</option><option>Yes</option></select></div>
+                                <div id="return-weapons-wrapper"><label for="return-weapons" class="block text-sm font-medium text-gray-400">Can return weapons</label><select id="return-weapons" class="w-full p-2 bg-gray-700 text-white rounded-md"><option>No</option><option>Yes</option></select></div>
+                                <div><label for="plea" class="block text-sm font-medium text-gray-400">Plea</label><select id="plea" class="w-full p-2 bg-gray-700 text-white rounded-md"><option>Not Applicable</option><option>Guilty</option><option>Not Guilty</option><option>No Contest</option></select></div>
                             </div>
                         </div>
                     </div>
@@ -290,8 +338,8 @@
     <!-- Modals -->
     <div id="addItemModal" class="report-modal-overlay hidden"><div class="report-modal-content"><h3 class="text-xl font-bold mb-4">Add Item</h3><input type="text" id="addItemInput" placeholder="Enter item name..." class="w-full p-3 mb-4 bg-gray-700 text-white rounded-md"><div class="flex justify-end space-x-2"><button class="modal-close-btn bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg">Cancel</button><button id="saveAddItemBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Add</button></div></div></div>
     <div id="addOfficerModal" class="report-modal-overlay hidden"><div class="report-modal-content"><h3 class="text-xl font-bold mb-4">Add Officer</h3><input type="text" id="officer-search-input" placeholder="Search for an officer..." class="w-full p-3 mb-4 bg-gray-700 text-white rounded-md"><div id="officer-list-loading" class="flex justify-center items-center h-24 hidden"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div></div><div id="officer-list-container" class="space-y-2 max-h-64 overflow-y-auto mb-4 p-2 bg-gray-700 rounded-md"></div><p id="officer-list-error" class="text-red-400 text-sm hidden">Failed to load officer data.</p><div class="flex justify-end space-x-2"><button class="modal-close-btn bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg">Cancel</button><button id="saveAddOfficerBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg disabled:opacity-50" disabled>Add Selected</button></div></div></div>
-    <div id="addCriminalModal" class="report-modal-overlay hidden"><div class="report-modal-content"><h3 class="text-xl font-bold mb-4">Add Criminal</h3><input type="text" id="criminalNameInput" placeholder="Enter criminal's name..." class="w-full p-3 mb-4 bg-gray-700 text-white rounded-md"><div class="flex justify-end space-x-2"><button class="modal-close-btn bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg">Cancel</button><button id="saveAddCriminalBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Add</button></div></div></div>
-    <div id="addChargeModal" class="report-modal-overlay hidden"><div class="report-modal-content"><h3 class="text-xl font-bold mb-4">Add Charge</h3><input type="text" id="charge-search-input" placeholder="Search for a charge..." class="w-full p-3 mb-4 bg-gray-700 text-white rounded-md"><div id="charge-list-loading" class="flex justify-center items-center h-24 hidden"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div></div><div id="charge-list-container" class="space-y-4 max-h-[60vh] overflow-y-auto mb-4 p-2 bg-gray-800 rounded-md"></div><p id="charge-list-error" class="text-red-400 text-sm hidden">Failed to load charge data.</p><div class="flex justify-end space-x-2"><button class="modal-close-btn bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg">Cancel</button><button id="saveAddChargeBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg disabled:opacity-50" disabled>Add Selected</button></div></div></div>
+    <div id="addCriminalModal" class="report-modal-overlay hidden"><div class="report-modal-content"><h3 class="text-xl font-bold mb-4">Add Suspect/Driver</h3><input type="text" id="criminalNameInput" placeholder="Enter name..." class="w-full p-3 mb-4 bg-gray-700 text-white rounded-md"><div class="flex justify-end space-x-2"><button class="modal-close-btn bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg">Cancel</button><button id="saveAddCriminalBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">Add</button></div></div></div>
+    <div id="addChargeModal" class="report-modal-overlay hidden"><div class="report-modal-content"><h3 class="text-xl font-bold mb-4">Add Charge/Citation</h3><input type="text" id="charge-search-input" placeholder="Search for a charge..." class="w-full p-3 mb-4 bg-gray-700 text-white rounded-md"><div id="charge-list-loading" class="flex justify-center items-center h-24 hidden"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div></div><div id="charge-list-container" class="space-y-4 max-h-[60vh] overflow-y-auto mb-4 p-2 bg-gray-800 rounded-md"></div><p id="charge-list-error" class="text-red-400 text-sm hidden">Failed to load charge data.</p><div class="flex justify-end space-x-2"><button class="modal-close-btn bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg">Cancel</button><button id="saveAddChargeBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg disabled:opacity-50" disabled>Add Selected</button></div></div></div>
     <div id="viewReportsModal" class="report-modal-overlay hidden"><div class="report-modal-content"><h3 class="text-xl font-bold mb-4">Saved Reports</h3><div id="saved-reports-loading" class="flex justify-center items-center h-24"><div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div></div><div id="saved-reports-list" class="space-y-2 max-h-[60vh] overflow-y-auto mb-4 p-2 bg-gray-800 rounded-md"></div><div class="flex justify-end"><button class="modal-close-btn bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg">Close</button></div></div></div>
     <div id="deleteConfirmationModal" class="report-modal-overlay hidden"><div class="report-modal-content"><h3 class="text-xl font-bold mb-4">Confirm Deletion</h3><p class="text-gray-300 mb-6">Are you sure you want to delete this report? This action cannot be undone.</p><div class="flex justify-end space-x-2"><button class="modal-close-btn bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded-lg">Cancel</button><button id="confirmDeleteBtn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg">Yes, Delete</button></div></div></div>
 
@@ -311,10 +359,16 @@
 
         const getReportDataAsObject = () => ({
             caseTitle: document.getElementById('caseTitle').textContent, description: document.getElementById('report-description').value, location: document.getElementById('postal-location').value, forceLevel: document.getElementById('level-of-force').value, medicalTreatment: document.getElementById('medical-treatment').value, gsrTest: document.getElementById('gsr-test').value, legalRepresentation: document.getElementById('legal-representation').value, mirandized: document.getElementById('mirandized').value, returnWeapons: document.getElementById('return-weapons').value, plea: document.getElementById('plea').value, evidence: document.getElementById('evidence-list').innerHTML, linkedReports: document.getElementById('linked-reports-list').innerHTML, tags: document.getElementById('tags-list').innerHTML, officers: document.getElementById('officers-list').innerHTML, criminals: document.getElementById('criminals-list').innerHTML, arrestWarrantText: document.getElementById('arrest-warrant-text').value, searchWarrantText: document.getElementById('search-warrant-text').value, seizureWarrantText: document.getElementById('seizure-warrant-text').value, holdWarrantText: document.getElementById('hold-warrant-text').value,
+            vehicleMake: document.getElementById('vehicle-make').value, vehicleColor: document.getElementById('vehicle-color').value, vehiclePlate: document.getElementById('vehicle-plate').value, vehicleOwner: document.getElementById('vehicle-owner').value, driverLicense: document.getElementById('driver-license').value, stopReason: document.getElementById('stop-reason').value, observedViolations: document.getElementById('observed-violations').value, speed: document.getElementById('speed').value, radarUsed: document.getElementById('radar-used').value, trafficConditions: document.getElementById('traffic-conditions').value, weatherConditions: document.getElementById('weather-conditions').value, vehicleSearch: document.getElementById('vehicle-search').value,
+            reportType: document.querySelector('.report-toggle-btn.active').dataset.type,
         });
 
         const populateFormWithData = (data) => {
             document.getElementById('caseTitle').textContent = data.caseTitle || 'New Case'; document.getElementById('report-description').value = data.description || ''; document.getElementById('postal-location').value = data.location || ''; document.getElementById('level-of-force').value = data.forceLevel || 'None'; document.getElementById('medical-treatment').value = data.medicalTreatment || 'No'; document.getElementById('gsr-test').value = data.gsrTest || 'Not Applicable'; document.getElementById('legal-representation').value = data.legalRepresentation || 'No'; document.getElementById('mirandized').value = data.mirandized || 'No'; document.getElementById('return-weapons').value = data.returnWeapons || 'No'; document.getElementById('plea').value = data.plea || 'Not Applicable'; document.getElementById('evidence-list').innerHTML = data.evidence || '<li class="placeholder-item p-2 border border-gray-700 rounded-md">NO ATTACHED EVIDENCE</li>'; document.getElementById('linked-reports-list').innerHTML = data.linkedReports || '<li class="placeholder-item p-2 border border-gray-700 rounded-md">NO LINKED REPORTS</li>'; document.getElementById('tags-list').innerHTML = data.tags || '<li class="placeholder-item p-2 border border-gray-700 rounded-md">NO TAGS</li>'; document.getElementById('officers-list').innerHTML = data.officers || '<li class="placeholder-item p-2 border border-gray-700 rounded-md">NO OFFICERS INVOLVED</li>'; document.getElementById('criminals-list').innerHTML = data.criminals || '<li class="placeholder-item p-2 border border-gray-700 rounded-md">NO CRIMINALS INVOLVED</li>'; document.getElementById('arrest-warrant-text').value = data.arrestWarrantText || ''; document.getElementById('search-warrant-text').value = data.searchWarrantText || ''; document.getElementById('seizure-warrant-text').value = data.seizureWarrantText || ''; document.getElementById('hold-warrant-text').value = data.holdWarrantText || '';
+            document.getElementById('vehicle-make').value = data.vehicleMake || ''; document.getElementById('vehicle-color').value = data.vehicleColor || ''; document.getElementById('vehicle-plate').value = data.vehiclePlate || ''; document.getElementById('vehicle-owner').value = data.vehicleOwner || ''; document.getElementById('driver-license').value = data.driverLicense || ''; document.getElementById('stop-reason').value = data.stopReason || ''; document.getElementById('observed-violations').value = data.observedViolations || ''; document.getElementById('speed').value = data.speed || ''; document.getElementById('radar-used').value = data.radarUsed || 'No'; document.getElementById('traffic-conditions').value = data.trafficConditions || ''; document.getElementById('weather-conditions').value = data.weatherConditions || ''; document.getElementById('vehicle-search').value = data.vehicleSearch || 'No';
+
+            const isTraffic = data.reportType === 'traffic';
+            toggleReportMode(isTraffic);
         };
 
         async function saveReportToFirestore() {
@@ -412,21 +466,35 @@
 
             async function generateAIContent(prompt, outputTextarea) {
                 if (!geminiApiKey || geminiApiKey === 'YOUR_GEMINI_API_KEY') { alert("Please add your Gemini API Key to the script file."); return; }
-                const loadingContainer = outputTextarea.parentElement.querySelector('.description-loading-container, .warrant-loading-container');
-                if (loadingContainer) loadingContainer.classList.remove('hidden'); outputTextarea.classList.add('hidden');
+                const loadingContainer = document.getElementById('description-loading-container');
+                loadingContainer.classList.remove('hidden'); outputTextarea.classList.add('hidden');
                 try {
                     const payload = { contents: [{ role: "user", parts: [{ text: prompt }] }] };
                     const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key=${geminiApiKey}`;
                     const response = await fetch(apiUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
                     if (!response.ok) throw new Error(`API error: ${response.status}`);
                     const result = await response.json(); outputTextarea.value = result.candidates[0].content.parts[0].text;
-                } catch (error) { console.error('Error generating content:', error); outputTextarea.value = `Error: Could not generate content. ${error.message}`; } finally { if (loadingContainer) loadingContainer.classList.add('hidden'); outputTextarea.classList.remove('hidden'); }
+                } catch (error) { console.error('Error generating content:', error); outputTextarea.value = `Error: Could not generate content. ${error.message}`; } finally { loadingContainer.classList.add('hidden'); outputTextarea.classList.remove('hidden'); }
             }
 
             document.getElementById('generate-report-btn').addEventListener('click', async () => {
-                const officers = getListData('officers-list'); const criminals = getCriminalData();
-                const prompt = `You are a police officer writing a formal report. Use the following data to create a comprehensive, first-person narrative in Markdown format. **Initial Debrief from User:** "${document.getElementById('report-description').value}" **Involved Officers:** ${officers.join(', ') || 'None'} **Arrested Individuals & Charges:** ${criminals.map(c => `${c.name}: ${c.charges.join(', ')}`).join('; ') || 'None'} **Location:** ${document.getElementById('postal-location').value || 'N/A'} **Level of Force:** ${document.getElementById('level-of-force').value || 'N/A'} **Medical Treatment:** ${document.getElementById('medical-treatment').value || 'N/A'} **GSR Test:** ${document.getElementById('gsr-test').value || 'N/A'} **Legal Representation:** ${document.getElementById('legal-representation').value || 'N/A'} **Mirandized:** ${document.getElementById('mirandized').value || 'N/A'} **Plea:** ${document.getElementById('plea').value || 'N/A'} Structure the report with standard police sections.`;
-                await generateAIContent(prompt, document.getElementById('report-description')); await sendDiscordReportNotification(criminals, officers);
+                const isTraffic = document.querySelector('.report-toggle-btn.active').dataset.type === 'traffic';
+                const officers = getListData('officers-list');
+                const criminals = getCriminalData();
+                const evidence = getListData('evidence-list');
+                const reportData = getReportDataAsObject();
+                let prompt;
+
+                if (isTraffic) {
+                    prompt = `Generate a formal police traffic citation using the following format and data. The "Officer's Statement" should be a detailed, first-person narrative based on the "Reason for Stop".
+                        Date: ${new Date().toLocaleDateString()}\n---\nTime: ${new Date().toLocaleTimeString()}\n---\nLocation (postal): ${reportData.location}\n---\nIssuing Officer: ${officers.join(', ') || 'N/A'}\n---\nVehicle Make/Model: ${reportData.vehicleMake}\n---\nColor: ${reportData.vehicleColor}\n---\nPlate: ${reportData.vehiclePlate}\n---\nRegistered Owner: ${reportData.vehicleOwner}\n---\nDriver Name: ${criminals.map(c => c.name).join(', ') || 'N/A'}\n---\nDriver’s License #: ${reportData.driverLicense}\n---\nReason for Stop: ${reportData.stopReason}\n---\nObserved Violations: ${reportData.observedViolations}\n---\nCharges/Citations Issued: ${criminals.flatMap(c => c.charges).join(', ') || 'None'}\n---\nSpeed (if applicable): ${reportData.speed}\n---\nRadar/Lidar Used: ${reportData.radarUsed}\n---\nTraffic Conditions: ${reportData.trafficConditions}\n---\nWeather Conditions: ${reportData.weatherConditions}\n---\nVehicle Search Conducted: ${reportData.vehicleSearch}\n---\nItems Seized (if any): ${evidence.join(', ') || 'None'}\n---\nDriver’s Statement: ${reportData.description}\n---\nOfficer’s Statement: [AI to generate a formal, first-person narrative based on the 'Reason for Stop' and 'Observed Violations' details provided above.]`;
+                } else {
+                    prompt = `Generate a formal police arrest report using the following format and data. The "Officer statement" should be a detailed, first-person narrative based on the "Initial call" information.
+                        Date: ${new Date().toLocaleDateString()}\n---\nTime: ${new Date().toLocaleTimeString()}\n---\nLocations (postal): ${reportData.location}\n---\nProcessing officers: ${officers.join(', ') || 'N/A'}\n---\nInitial call: ${reportData.description}\n---\nSuspects: ${criminals.map(c => c.name).join(', ') || 'N/A'}\n---\nDetained/Arrested: ${criminals.length > 0 ? 'Yes' : 'No'}\n---\nMiranda rights: ${reportData.mirandized}\n---\nSearched: [AI should infer 'Yes' or 'No' based on seized items]\n---\nSeized items: ${evidence.join(', ') || 'None'}\n---\nCash seized: [AI should state amount if mentioned in debrief, otherwise 'N/A']\n---\nGSR test: ${reportData.gsrTest}\n---\nFingerprints: [AI should state 'Taken as per standard procedure' if suspects are listed]\n---\nReductions: [AI should state 'None offered at this time' unless specified in debrief]\n---\nPlea: ${reportData.plea}\n---\nWeapons to be released: ${reportData.returnWeapons}\n---\nWeapon: N/A\n---\nTo whom: N/A\n---\nWeapons released by: N/A\n---\nWeapons released: N/A\n---\nDate: N/A\n---\nOfficer statement: [AI to generate a formal, first-person narrative based on the 'Initial call' details provided above.]`;
+                }
+
+                await generateAIContent(prompt, document.getElementById('report-description'));
+                await sendDiscordReportNotification(criminals, officers);
             });
 
             document.querySelectorAll('.generate-warrant-btn').forEach(btn => {
@@ -447,6 +515,43 @@
 
             const getListData = (listId) => Array.from(document.querySelectorAll(`#${listId} li:not(.placeholder-item) span`)).map(span => span.textContent);
             const getCriminalData = () => Array.from(document.querySelectorAll('#criminals-list > li:not(.placeholder-item)')).map(li => ({ name: li.querySelector('h4').textContent, charges: Array.from(li.querySelectorAll('.charges-list li:not(.placeholder-item) span')).map(span => span.textContent) }));
+
+            // Report Type Toggle Logic
+            const reportTypeToggleContainer = document.getElementById('report-type-toggle');
+            const trafficDetailsSection = document.getElementById('traffic-details-section');
+            const arrestDetailsSection = document.getElementById('arrest-details-section');
+            const caseTitle = document.getElementById('caseTitle');
+
+            const sectionsToToggle = [
+                'medical-treatment-wrapper', 'gsr-test-wrapper', 'legal-rep-wrapper', 'return-weapons-wrapper'
+            ];
+
+            function toggleReportMode(isTraffic) {
+                document.querySelectorAll('.report-toggle-btn').forEach(b => b.classList.remove('active'));
+                if (isTraffic) {
+                    document.querySelector('.report-toggle-btn[data-type="traffic"]').classList.add('active');
+                    caseTitle.textContent = "New Traffic Citation";
+                    trafficDetailsSection.classList.remove('hidden');
+                    arrestDetailsSection.classList.add('hidden');
+                    sectionsToToggle.forEach(id => document.getElementById(id)?.parentElement.classList.add('disabled-section'));
+                } else {
+                    document.querySelector('.report-toggle-btn[data-type="arrest"]').classList.add('active');
+                    caseTitle.textContent = "New Arrest Report";
+                    trafficDetailsSection.classList.add('hidden');
+                    arrestDetailsSection.classList.remove('hidden');
+                    sectionsToToggle.forEach(id => document.getElementById(id)?.parentElement.classList.remove('disabled-section'));
+                }
+            }
+
+            reportTypeToggleContainer.addEventListener('click', (e) => {
+                const button = e.target.closest('.report-toggle-btn');
+                if (button) {
+                    toggleReportMode(button.dataset.type === 'traffic');
+                }
+            });
+
+            // Initialize view
+            toggleReportMode(false); // Default to Arrest Report
         });
     </script>
 </body>
