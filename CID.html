@@ -12,10 +12,15 @@
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;700&family=Tinos:wght@400;700&display=swap" rel="stylesheet">
 
     <!-- Phosphor Icons -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- PDF & Markdown Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
 
     <!-- Custom Styles -->
     <style>
@@ -58,24 +63,12 @@
             color: #ffffff;
         }
 
-        /* Priority & Status Colors */
-        .priority-low {
-            border-left-color: #22c55e;
+        .sidebar-link.active {
+            background-color: #374151; /* Gray-700 */
+            color: #ffffff;
         }
-        /* green-500 */
-        .priority-medium {
-            border-left-color: #3b82f6;
-        }
-        /* blue-500 */
-        .priority-high {
-            border-left-color: #eab308;
-        }
-        /* yellow-500 */
-        .priority-critical {
-            border-left-color: #ef4444;
-        }
-        /* red-500 */
 
+        /* Status Colors */
         .status-active {
             background-color: #3b82f6;
         }
@@ -99,17 +92,102 @@
             }
 
         /* Custom input styling */
-        .form-input {
+        .form-input, .form-textarea, .form-select {
             background-color: #374151;
             border: 1px solid #4b5563;
             color: #d1d5db;
+            border-radius: 0.375rem;
+            padding: 0.5rem 0.75rem;
         }
 
-            .form-input:focus {
+            .form-input:focus, .form-textarea:focus, .form-select:focus {
                 outline: none;
                 border-color: #3b82f6;
                 box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4);
             }
+
+        /* Markdown Editor Styles */
+        #report-preview {
+            prose-p: text-gray-300;
+            prose-headings: text-white;
+            prose-strong: text-white;
+        }
+
+            #report-preview h1 {
+                font-size: 1.5em;
+                margin-bottom: 0.5em;
+            }
+
+            #report-preview h2 {
+                font-size: 1.25em;
+                margin-bottom: 0.5em;
+            }
+
+            #report-preview ul {
+                list-style-type: disc;
+                margin-left: 1.5rem;
+            }
+
+            #report-preview ol {
+                list-style-type: decimal;
+                margin-left: 1.5rem;
+            }
+
+        /* PDF Generation Styles */
+        .pdf-render-content {
+            font-family: 'Tinos', serif;
+            color: black;
+            width: 8.5in;
+            padding: 0.75in;
+            background: white;
+            font-size: 12pt;
+            line-height: 1.5;
+        }
+
+        .pdf-header {
+            text-align: center;
+            font-size: 16pt;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .pdf-subheader {
+            font-size: 14pt;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid black;
+            padding-bottom: 5px;
+        }
+
+        .pdf-field {
+            margin-bottom: 12px;
+        }
+
+        .pdf-label {
+            font-weight: bold;
+        }
+
+        .pdf-value {
+            border-bottom: 1px dotted #666;
+            padding: 0 5px;
+        }
+
+        .pdf-prose {
+            margin-top: 15px;
+            text-align: justify;
+        }
+
+        .pdf-signature-block {
+            margin-top: 50px;
+        }
+
+        .pdf-signature-line {
+            border-top: 1px solid black;
+            padding-top: 5px;
+            margin-top: 40px;
+        }
     </style>
 </head>
 <body class="text-gray-300">
@@ -125,27 +203,19 @@
 
     <!-- Main Application Wrapper -->
     <div id="app-wrapper" class="hidden flex h-screen bg-gray-900">
-        <!-- Sidebar -->
         <aside id="sidebar" class="absolute md:relative z-40 flex-col w-64 bg-gray-800 shadow-lg -translate-x-full md:translate-x-0">
             <div class="flex items-center justify-center h-20 border-b border-gray-700">
                 <img src="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png" alt="UPD Logo" class="w-12 h-12">
                 <h1 class="text-xl font-bold ml-2 text-white">CID Portal</h1>
             </div>
-            <nav class="flex-1 px-2 py-4 space-y-2">
-                <!-- Navigation Links would go here -->
-                <a href="#" class="flex items-center px-3 py-2 text-gray-300 rounded-lg bg-gray-700">
-                    <i class="ph-house-light w-6 h-6"></i><span class="ml-3">Dashboard</span>
-                </a>
-                <a href="#" class="flex items-center px-3 py-2 text-gray-400 rounded-lg hover:bg-gray-700">
-                    <i class="ph-user-list-light w-6 h-6"></i><span class="ml-3">CID Roster</span>
-                </a>
-                <a href="#" class="flex items-center px-3 py-2 text-gray-400 rounded-lg hover:bg-gray-700">
-                    <i class="ph-archive-light w-6 h-6"></i><span class="ml-3">Archives</span>
-                </a>
+            <nav id="sidebar-nav" class="flex-1 px-2 py-4 space-y-2">
+                <a href="javascript:void(0)" data-view="dashboard" class="sidebar-link flex items-center px-3 py-2 text-gray-300 rounded-lg"><i class="ph-house-light w-6 h-6"></i><span class="ml-3">Dashboard</span></a>
+                <a href="javascript:void(0)" data-view="documents" class="sidebar-link flex items-center px-3 py-2 text-gray-400 rounded-lg hover:bg-gray-700"><i class="ph-files-light w-6 h-6"></i><span class="ml-3">Documents</span></a>
+                <a href="javascript:void(0)" data-view="roster" class="sidebar-link flex items-center px-3 py-2 text-gray-400 rounded-lg hover:bg-gray-700"><i class="ph-user-list-light w-6 h-6"></i><span class="ml-3">CID Roster</span></a>
+                <a href="javascript:void(0)" data-view="archives" class="sidebar-link flex items-center px-3 py-2 text-gray-400 rounded-lg hover:bg-gray-700"><i class="ph-archive-light w-6 h-6"></i><span class="ml-3">Archives</span></a>
             </nav>
         </aside>
 
-        <!-- Main Content -->
         <div class="flex flex-col flex-1 overflow-hidden">
             <header class="bg-gray-900/70 backdrop-blur-sm border-b border-gray-700 sticky top-0 z-30 px-6 py-3">
                 <div class="flex items-center justify-between">
@@ -155,79 +225,47 @@
                 </div>
             </header>
 
-            <main class="flex-1 overflow-y-auto p-4 md:p-8">
-                <!-- Page Header -->
-                <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
-                    <div>
-                        <h1 class="text-3xl font-extrabold text-white">CID Dashboard</h1>
-                        <p class="text-gray-400 mt-1">Live overview of all criminal investigations.</p>
+            <div id="view-container" class="flex-1 overflow-y-auto p-4 md:p-8">
+                <!-- Dashboard View -->
+                <main id="dashboard-view" class="view-content">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+                        <div><h1 class="text-3xl font-extrabold text-white">CID Dashboard</h1><p class="text-gray-400 mt-1">Live overview of all criminal investigations.</p></div>
+                        <div id="auth-buttons" class="hidden"><button id="addCaseFileBtn" class="flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors"><i class="ph-plus-circle-light text-lg"></i> New Case File</button></div>
                     </div>
-                    <div id="auth-buttons" class="hidden">
-                        <button id="addCaseFileBtn" class="flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors">
-                            <i class="ph-plus-circle-light text-lg"></i> New Case File
-                        </button>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <div class="bg-gray-800 border border-gray-700 rounded-lg p-5 flex items-center gap-4"><i class="ph-folder-open-light text-4xl text-blue-400"></i><div><h4 class="font-medium text-gray-400">Active Cases</h4><p id="stat-active-cases" class="text-3xl font-bold text-white">--</p></div></div>
+                        <div class="bg-gray-800 border border-gray-700 rounded-lg p-5 flex items-center gap-4"><i class="ph-snowflake-light text-4xl text-gray-400"></i><div><h4 class="font-medium text-gray-400">Cold Cases</h4><p id="stat-cold-cases" class="text-3xl font-bold text-white">--</p></div></div>
+                        <div class="bg-gray-800 border border-gray-700 rounded-lg p-5 flex items-center gap-4"><i class="ph-archive-box-light text-4xl text-green-400"></i><div><h4 class="font-medium text-gray-400">Cases Closed</h4><p id="stat-closed-cases" class="text-3xl font-bold text-white">--</p></div></div>
+                        <div class="bg-gray-800 border border-gray-700 rounded-lg p-5 flex items-center gap-4"><i class="ph-scales-light text-4xl text-yellow-400"></i><div><h4 class="font-medium text-gray-400">Warrants Issued</h4><p id="stat-warrants" class="text-3xl font-bold text-white">--</p></div></div>
                     </div>
-                </div>
+                    <div class="bg-gray-800 border border-gray-700 rounded-lg p-4"><div class="overflow-x-auto"><table class="w-full text-sm text-left"><thead class="text-xs text-gray-400 uppercase bg-gray-700/50"><tr><th scope="col" class="px-6 py-3">Case #</th><th scope="col" class="px-6 py-3">Title</th><th scope="col" class="px-6 py-3">Lead Detective</th><th scope="col" class="px-6 py-3">Status</th><th scope="col" class="px-6 py-3">Last Update</th></tr></thead><tbody id="cases-table-body"></tbody></table></div></div>
+                </main>
 
-                <!-- Stats Grid -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                    <div class="bg-gray-800 border border-gray-700 rounded-lg p-5 flex items-center gap-4"><i class="ph-folder-open-light text-4xl text-blue-400"></i><div><h4 class="font-medium text-gray-400">Active Cases</h4><p id="stat-active-cases" class="text-3xl font-bold text-white">--</p></div></div>
-                    <div class="bg-gray-800 border border-gray-700 rounded-lg p-5 flex items-center gap-4"><i class="ph-snowflake-light text-4xl text-gray-400"></i><div><h4 class="font-medium text-gray-400">Cold Cases</h4><p id="stat-cold-cases" class="text-3xl font-bold text-white">--</p></div></div>
-                    <div class="bg-gray-800 border border-gray-700 rounded-lg p-5 flex items-center gap-4"><i class="ph-archive-box-light text-4xl text-green-400"></i><div><h4 class="font-medium text-gray-400">Cases Closed</h4><p id="stat-closed-cases" class="text-3xl font-bold text-white">--</p></div></div>
-                    <div class="bg-gray-800 border border-gray-700 rounded-lg p-5 flex items-center gap-4"><i class="ph-scales-light text-4xl text-yellow-400"></i><div><h4 class="font-medium text-gray-400">Warrants Issued</h4><p id="stat-warrants" class="text-3xl font-bold text-white">--</p></div></div>
-                </div>
+                <!-- Documents View -->
+                <main id="documents-view" class="view-content hidden">
+                    <div class="mb-6"><h1 class="text-3xl font-extrabold text-white">Document Generator</h1><p class="text-gray-400 mt-1">Create and print official warrants and legal paperwork.</p></div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <button data-doc-type="arrest-warrant" class="doc-gen-btn bg-gray-800 p-6 rounded-lg text-left hover:bg-gray-700 border border-gray-700 transition-colors"><h3 class="font-bold text-lg text-white">Arrest Warrant</h3><p class="text-sm text-gray-400 mt-1">Issue a warrant for the arrest of a suspect.</p></button>
+                        <button data-doc-type="search-warrant" class="doc-gen-btn bg-gray-800 p-6 rounded-lg text-left hover:bg-gray-700 border border-gray-700 transition-colors"><h3 class="font-bold text-lg text-white">Search Warrant</h3><p class="text-sm text-gray-400 mt-1">Authorize the search of a property or location.</p></button>
+                        <button data-doc-type="property-seizure" class="doc-gen-btn bg-gray-800 p-6 rounded-lg text-left hover:bg-gray-700 border border-gray-700 transition-colors"><h3 class="font-bold text-lg text-white">Property Seizure</h3><p class="text-sm text-gray-400 mt-1">Authorize the seizure of assets and property.</p></button>
+                        <button data-doc-type="plea-agreement" class="doc-gen-btn bg-gray-800 p-6 rounded-lg text-left hover:bg-gray-700 border border-gray-700 transition-colors"><h3 class="font-bold text-lg text-white">Plea Agreement</h3><p class="text-sm text-gray-400 mt-1">Formalize a plea deal with a defendant.</p></button>
+                        <button data-doc-type="ci-nda" class="doc-gen-btn bg-gray-800 p-6 rounded-lg text-left hover:bg-gray-700 border border-gray-700 transition-colors"><h3 class="font-bold text-lg text-white">Confidential Informant NDA</h3><p class="text-sm text-gray-400 mt-1">Non-disclosure agreement for CIs.</p></button>
+                        <button data-doc-type="ci-employment" class="doc-gen-btn bg-gray-800 p-6 rounded-lg text-left hover:bg-gray-700 border border-gray-700 transition-colors"><h3 class="font-bold text-lg text-white">CI Employment</h3><p class="text-sm text-gray-400 mt-1">Acknowledgment of CI employment.</p></button>
+                    </div>
+                </main>
 
-                <!-- Main Tabs -->
-                <div class="bg-gray-800 border border-gray-700 rounded-lg">
-                    <div class="border-b border-gray-700">
-                        <nav class="flex space-x-2 p-2" id="main-tabs-container">
-                            <button data-tab="cases" class="tab-button active flex-1 md:flex-none text-sm font-semibold px-4 py-2 rounded-md border-b-2 border-transparent">Case Files</button>
-                            <button data-tab="evidence" class="tab-button flex-1 md:flex-none text-sm font-semibold px-4 py-2 rounded-md border-b-2 border-transparent">Evidence Locker</button>
-                            <button data-tab="wanted" class="tab-button flex-1 md:flex-none text-sm font-semibold px-4 py-2 rounded-md border-b-2 border-transparent">Wanted Board</button>
-                        </nav>
-                    </div>
-                    <div id="tab-content-container" class="p-4">
-                        <!-- Case Files Tab -->
-                        <div id="cases-tab" class="main-tab-content">
-                            <!-- Filters -->
-                            <div class="mb-4 flex flex-col md:flex-row gap-4">
-                                <input type="text" id="case-search-input" placeholder="Search by title, detective, or case #" class="form-input flex-grow rounded-md p-2">
-                                <select id="case-status-filter" class="form-input rounded-md p-2">
-                                    <option value="all">All Statuses</option>
-                                    <option value="Active">Active</option>
-                                    <option value="Cold">Cold</option>
-                                    <option value="Closed">Closed</option>
-                                </select>
-                            </div>
-                            <!-- Cases Table -->
-                            <div class="overflow-x-auto">
-                                <table class="w-full text-sm text-left">
-                                    <thead class="text-xs text-gray-400 uppercase bg-gray-700/50">
-                                        <tr>
-                                            <th scope="col" class="px-6 py-3">Case #</th>
-                                            <th scope="col" class="px-6 py-3">Title</th>
-                                            <th scope="col" class="px-6 py-3">Lead Detective</th>
-                                            <th scope="col" class="px-6 py-3">Status</th>
-                                            <th scope="col" class="px-6 py-3">Last Update</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="cases-table-body">
-                                        <tr><td colspan="5" class="text-center p-8 text-gray-500">Loading case files...</td></tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        <!-- Evidence Locker Tab -->
-                        <div id="evidence-tab" class="main-tab-content hidden">
-                            <p class="text-center p-8 text-gray-500">Evidence Locker feature coming soon.</p>
-                        </div>
-                        <!-- Wanted Board Tab -->
-                        <div id="wanted-tab" class="main-tab-content hidden">
-                            <p class="text-center p-8 text-gray-500">Wanted Board feature coming soon.</p>
-                        </div>
-                    </div>
-                </div>
-            </main>
+                <!-- Roster View -->
+                <main id="roster-view" class="view-content hidden">
+                    <div class="mb-6"><h1 class="text-3xl font-extrabold text-white">CID Roster</h1><p class="text-gray-400 mt-1">List of all active detectives.</p></div>
+                    <div id="roster-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+                </main>
+
+                <!-- Archives View -->
+                <main id="archives-view" class="view-content hidden">
+                    <div class="mb-6"><h1 class="text-3xl font-extrabold text-white">Case Archives</h1><p class="text-gray-400 mt-1">A record of all closed investigations.</p></div>
+                    <div class="bg-gray-800 border border-gray-700 rounded-lg p-4"><div class="overflow-x-auto"><table class="w-full text-sm text-left"><thead class="text-xs text-gray-400 uppercase bg-gray-700/50"><tr><th scope="col" class="px-6 py-3">Case #</th><th scope="col" class="px-6 py-3">Title</th><th scope="col" class="px-6 py-3">Lead Detective</th><th scope="col" class="px-6 py-3">Date Closed</th></tr></thead><tbody id="archives-table-body"></tbody></table></div></div>
+                </main>
+            </div>
         </div>
     </div>
 
@@ -235,73 +273,49 @@
     <div id="caseFileModal" class="hidden fixed inset-0 z-50 modal-overlay flex items-center justify-center p-4">
         <div class="bg-gray-800 rounded-lg shadow-2xl w-full max-w-5xl border border-gray-700 max-h-[90vh] flex flex-col">
             <div class="flex justify-between items-center p-4 border-b border-gray-700">
-                <h3 id="caseFileModalTitle" class="text-xl font-bold text-white">New Case File</h3>
-                <button id="closeCaseFileModalBtn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+                <h3 id="caseFileModalTitle" class="text-xl font-bold text-white"></h3>
+                <div class="flex items-center gap-4">
+                    <button type="button" id="printCaseBtn" class="hidden flex items-center gap-2 px-3 py-1.5 text-sm font-semibold rounded-md bg-gray-600 hover:bg-gray-500"><i class="ph-printer-light text-lg"></i> Print Case</button>
+                    <button id="closeCaseFileModalBtn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+                </div>
             </div>
-            <div class="flex-grow overflow-y-auto">
-                <form id="caseFileForm" class="p-6 space-y-6">
+            <div class="flex-grow overflow-y-auto p-6">
+                <form id="caseFileForm" class="space-y-6">
                     <input type="hidden" id="caseIdInput">
-                    <!-- Top Section: Core Details -->
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div>
-                            <label for="caseTitleInput" class="block text-sm font-medium text-gray-300 mb-1">Case Title</label>
-                            <input type="text" id="caseTitleInput" required placeholder="e.g., Grand Senora Bank Heist" class="form-input w-full rounded-md p-2">
-                        </div>
-                        <div>
-                            <label for="leadDetectiveInput" class="block text-sm font-medium text-gray-300 mb-1">Lead Detective</label>
-                            <input type="text" id="leadDetectiveInput" required placeholder="Detective Name" class="form-input w-full rounded-md p-2">
-                        </div>
-                        <div>
-                            <label for="caseStatusInput" class="block text-sm font-medium text-gray-300 mb-1">Status</label>
-                            <select id="caseStatusInput" class="form-input w-full rounded-md p-2">
-                                <option value="Active">Active</option>
-                                <option value="Cold">Cold</option>
-                                <option value="Closed">Closed</option>
-                            </select>
-                        </div>
-                    </div>
-                    <!-- Modal Tabs -->
-                    <div class="border-b border-gray-700">
-                        <nav class="flex space-x-4" id="modal-tabs-container">
-                            <button type="button" data-tab="synopsis" class="modal-tab-button active py-2 px-1 border-b-2 font-medium text-sm">Synopsis</button>
-                            <button type="button" data-tab="personnel" class="modal-tab-button py-2 px-1 border-b-2 font-medium text-sm border-transparent text-gray-400">Personnel</button>
-                            <button type="button" data-tab="updates" class="modal-tab-button py-2 px-1 border-b-2 font-medium text-sm border-transparent text-gray-400">Updates</button>
-                        </nav>
-                    </div>
-                    <!-- Modal Tab Content -->
-                    <div id="modal-tab-content-container">
-                        <div id="synopsis-modal-tab" class="modal-tab-content">
-                            <label for="synopsisInput" class="block text-sm font-medium text-gray-300 mb-1">Case Synopsis</label>
-                            <textarea id="synopsisInput" rows="10" placeholder="Detailed summary of the case..." class="form-input w-full rounded-md p-2"></textarea>
-                        </div>
-                        <div id="personnel-modal-tab" class="modal-tab-content hidden">
-                            <p class="text-center p-8 text-gray-500">Personnel management coming soon.</p>
-                        </div>
-                        <div id="updates-modal-tab" class="modal-tab-content hidden">
-                            <p class="text-center p-8 text-gray-500">Case update log coming soon.</p>
-                        </div>
-                    </div>
+                    <div id="step-1" class="modal-step"><h4 class="text-lg font-semibold text-white mb-4 border-b border-gray-600 pb-2">Step 1: Incident Details</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-6"><div><label for="caseTitleInput" class="block text-sm font-medium text-gray-300 mb-1">Case Title / Incident</label><input type="text" id="caseTitleInput" required class="form-input w-full"></div><div><label for="leadDetectiveInput" class="block text-sm font-medium text-gray-300 mb-1">Lead Detective</label><select id="leadDetectiveInput" required class="form-select w-full"></select></div><div><label for="caseStatusInput" class="block text-sm font-medium text-gray-300 mb-1">Status</label><select id="caseStatusInput" class="form-select w-full"><option>Active</option><option>Cold</option><option>Closed</option></select></div><div><label for="incidentDateInput" class="block text-sm font-medium text-gray-300 mb-1">Date of Incident</label><input type="date" id="incidentDateInput" class="form-input w-full"></div><div class="md:col-span-2"><label for="locationInput" class="block text-sm font-medium text-gray-300 mb-1">Location of Incident</label><input type="text" id="locationInput" class="form-input w-full"></div></div></div>
+                    <div id="step-2" class="modal-step hidden"><h4 class="text-lg font-semibold text-white mb-4 border-b border-gray-600 pb-2">Step 2: Persons Involved</h4><div id="persons-involved-container" class="space-y-4"></div><button type="button" id="add-person-btn" class="mt-4 text-sm flex items-center gap-2 text-blue-400 hover:text-blue-300"><i class="ph-plus-circle-light text-lg"></i> Add Person</button></div>
+                    <div id="step-3" class="modal-step hidden"><h4 class="text-lg font-semibold text-white mb-4 border-b border-gray-600 pb-2">Step 3: Narrative Report</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-4 h-[400px]"><div class="flex flex-col"><label for="report-editor" class="text-sm font-medium text-gray-300 mb-1">Markdown Editor</label><textarea id="report-editor" class="form-textarea w-full flex-grow resize-none" placeholder="## Synopsis&#10;..."></textarea></div><div class="flex flex-col"><label class="text-sm font-medium text-gray-300 mb-1">Live Preview</label><div id="report-preview" class="bg-gray-900/50 p-3 rounded-md h-full overflow-y-auto prose"></div></div></div></div>
+                    <div id="step-4" class="modal-step hidden"><h4 class="text-lg font-semibold text-white mb-4 border-b border-gray-600 pb-2">Step 4: Assign Personnel</h4><p class="text-sm text-gray-400 mb-4">Select the detectives who will have access to this case file.</p><div id="assign-personnel-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div></div>
                 </form>
             </div>
             <div class="flex justify-between items-center p-4 bg-gray-900/50 border-t border-gray-700">
-                <button type="button" id="deleteCaseBtn" class="hidden px-4 py-2 text-sm font-semibold rounded-md bg-red-600 text-white hover:bg-red-700">Delete Case</button>
-                <div class="flex space-x-4">
-                    <button type="button" id="cancelCaseBtn" class="px-4 py-2 text-sm font-semibold rounded-md border border-gray-600 hover:bg-gray-700">Cancel</button>
-                    <button type="submit" form="caseFileForm" id="saveCaseBtn" class="px-6 py-2 text-sm font-semibold rounded-md bg-blue-600 text-white hover:bg-blue-700">Save</button>
-                </div>
+                <div><button type="button" id="deleteCaseBtn" class="hidden px-4 py-2 text-sm font-semibold rounded-md bg-red-600 text-white hover:bg-red-700">Delete Case</button></div>
+                <div class="flex space-x-4"><button type="button" id="prevStepBtn" class="hidden px-6 py-2 text-sm font-semibold rounded-md border border-gray-600 hover:bg-gray-700">Previous</button><button type="button" id="nextStepBtn" class="px-6 py-2 text-sm font-semibold rounded-md bg-blue-600 text-white hover:bg-blue-700">Next</button><button type="button" id="saveCaseBtn" class="hidden px-6 py-2 text-sm font-semibold rounded-md bg-green-600 text-white hover:bg-green-700">Save Case</button></div>
             </div>
         </div>
     </div>
 
+    <!-- Document Generator Modal -->
+    <div id="docGenModal" class="hidden fixed inset-0 z-50 modal-overlay flex items-center justify-center p-4">
+        <div class="bg-gray-800 rounded-lg shadow-2xl w-full max-w-3xl border border-gray-700 max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-gray-700"><h3 id="docGenModalTitle" class="text-xl font-bold text-white"></h3><button id="closeDocGenModalBtn" class="text-gray-400 hover:text-white text-2xl">&times;</button></div>
+            <div id="docGenFormContainer" class="flex-grow overflow-y-auto p-6 space-y-4"></div>
+            <div class="flex justify-end p-4 bg-gray-900/50 border-t border-gray-700"><button type="button" id="generatePdfBtn" class="px-6 py-2 text-sm font-semibold rounded-md bg-blue-600 text-white hover:bg-blue-700">Generate PDF</button></div>
+        </div>
+    </div>
+
+    <!-- Hidden container for PDF rendering -->
+    <div id="pdf-render-container" class="absolute -left-full"></div>
 
     <script type="module">
         // Firebase Imports
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, query, onSnapshot, addDoc, updateDoc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, query, onSnapshot, addDoc, updateDoc, deleteDoc, serverTimestamp, where, arrayUnion } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const { jsPDF } = window.jspdf;
 
         // --- Firebase Config ---
-        // IMPORTANT: Replace with your actual Firebase configuration
         const firebaseConfig = {
             apiKey: "AIzaSyDU7DRAxCzqu81DTa7k0DXaBRcMpk0sElc",
             authDomain: "upd-system.firebaseapp.com",
@@ -323,282 +337,306 @@
         const userInfo = document.getElementById('user-info');
         const hamburgerBtn = document.getElementById('hamburgerBtn');
         const sidebar = document.getElementById('sidebar');
+        const sidebarNav = document.getElementById('sidebar-nav');
         const authButtons = document.getElementById('auth-buttons');
         const addCaseFileBtn = document.getElementById('addCaseFileBtn');
 
-        // Stats
-        const statActiveCases = document.getElementById('stat-active-cases');
-        const statColdCases = document.getElementById('stat-cold-cases');
-        const statClosedCases = document.getElementById('stat-closed-cases');
-        const statWarrants = document.getElementById('stat-warrants');
+        const statActiveCases = document.getElementById('stat-active-cases'), statColdCases = document.getElementById('stat-cold-cases'), statClosedCases = document.getElementById('stat-closed-cases'), statWarrants = document.getElementById('stat-warrants');
+        const casesTableBody = document.getElementById('cases-table-body'), caseSearchInput = document.getElementById('case-search-input'), caseStatusFilter = document.getElementById('case-status-filter');
+        const rosterGrid = document.getElementById('roster-grid'), archivesTableBody = document.getElementById('archives-table-body');
 
-        // Main Tabs
-        const mainTabsContainer = document.getElementById('main-tabs-container');
-        const mainTabContents = document.querySelectorAll('.main-tab-content');
+        // Modals
+        const caseFileModal = document.getElementById('caseFileModal'), caseFileModalTitle = document.getElementById('caseFileModalTitle'), closeCaseFileModalBtn = document.getElementById('closeCaseFileModalBtn'), printCaseBtn = document.getElementById('printCaseBtn'), caseFileForm = document.getElementById('caseFileForm'), caseIdInput = document.getElementById('caseIdInput');
+        const modalSteps = document.querySelectorAll('.modal-step'), prevStepBtn = document.getElementById('prevStepBtn'), nextStepBtn = document.getElementById('nextStepBtn'), saveCaseBtn = document.getElementById('saveCaseBtn'), deleteCaseBtn = document.getElementById('deleteCaseBtn');
+        const caseTitleInput = document.getElementById('caseTitleInput'), leadDetectiveInput = document.getElementById('leadDetectiveInput'), caseStatusInput = document.getElementById('caseStatusInput'), incidentDateInput = document.getElementById('incidentDateInput'), locationInput = document.getElementById('locationInput');
+        const personsInvolvedContainer = document.getElementById('persons-involved-container'), addPersonBtn = document.getElementById('add-person-btn');
+        const reportEditor = document.getElementById('report-editor'), reportPreview = document.getElementById('report-preview');
+        const assignPersonnelContainer = document.getElementById('assign-personnel-container');
 
-        // Case Files Tab
-        const casesTableBody = document.getElementById('cases-table-body');
-        const caseSearchInput = document.getElementById('case-search-input');
-        const caseStatusFilter = document.getElementById('case-status-filter');
-
-        // Case File Modal
-        const caseFileModal = document.getElementById('caseFileModal');
-        const caseFileModalTitle = document.getElementById('caseFileModalTitle');
-        const closeCaseFileModalBtn = document.getElementById('closeCaseFileModalBtn');
-        const caseFileForm = document.getElementById('caseFileForm');
-        const caseIdInput = document.getElementById('caseIdInput');
-        const saveCaseBtn = document.getElementById('saveCaseBtn');
-        const cancelCaseBtn = document.getElementById('cancelCaseBtn');
-        const deleteCaseBtn = document.getElementById('deleteCaseBtn');
-        const caseTitleInput = document.getElementById('caseTitleInput');
-        const leadDetectiveInput = document.getElementById('leadDetectiveInput');
-        const caseStatusInput = document.getElementById('caseStatusInput');
-        const synopsisInput = document.getElementById('synopsisInput');
-        const modalTabsContainer = document.getElementById('modal-tabs-container');
-        const modalTabContents = document.querySelectorAll('.modal-tab-content');
-
+        const docGenModal = document.getElementById('docGenModal'), docGenModalTitle = document.getElementById('docGenModalTitle'), closeDocGenModalBtn = document.getElementById('closeDocGenModalBtn'), docGenFormContainer = document.getElementById('docGenFormContainer'), generatePdfBtn = document.getElementById('generatePdfBtn');
 
         // --- State ---
-        let userProfile = null;
-        let allCases = [];
-        let unsubscribeCases = null;
+        let userProfile = null, allCases = [], allUsers = [], unsubscribeCases = null, unsubscribeUsers = null, currentModalStep = 1, currentDocType = null;
+        let markdownConverter = new showdown.Converter({ simplifiedAutoLink: true, strikethrough: true, tables: true });
 
-        // Access levels configuration
         const accessConfig = {
-            canView: ["Detective", "Command", "High Command", "Website Manager"],
-            canEdit: ["Detective", "Command", "High Command", "Website Manager"],
-            canDelete: ["Command", "High Command", "Website Manager"],
+            canView: ["Detective", "CID Lead", "CID Case Manager", "Command", "High Command", "Website Manager"],
+            canEdit: ["Detective", "CID Lead", "CID Case Manager", "Command", "High Command", "Website Manager"],
+            canManageAssignments: ["CID Lead", "CID Case Manager"],
+            canDelete: ["CID Lead", "High Command", "Website Manager"],
+            isManager: ["CID Lead", "CID Case Manager", "High Command", "Website Manager"]
         };
 
-        // --- Authentication ---
+        // --- Auth & Init ---
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 appWrapper.classList.remove('hidden');
                 loginOverlay.classList.add('hidden');
-
-                // Fetch user profile
                 const userDocRef = doc(db, 'users', user.uid);
                 const userDocSnap = await getDoc(userDocRef);
-                if (userDocSnap.exists()) {
-                    userProfile = { uid: user.uid, ...userDocSnap.data() };
-                } else {
-                    // Fallback for demo if user doc doesn't exist
-                    userProfile = { name: 'Demo User', role: 'Detective', 'access level': '' };
-                }
-
+                userProfile = userDocSnap.exists() ? { uid: user.uid, ...userDocSnap.data() } : { name: 'Demo User', role: 'Detective', 'access level': '' };
                 userInfo.textContent = `${userProfile.name} | ${userProfile.role}`;
-
-                // Get user's role and access level for permission checks
-                const userRole = userProfile.role || '';
-                const userAccessLevel = userProfile['access level'] || '';
-
-                // Check view permissions against both role and access level fields
-                const canView = accessConfig.canView.includes(userRole) || accessConfig.canView.includes(userAccessLevel);
-
+                const canView = accessConfig.canView.includes(userProfile.role || '') || accessConfig.canView.includes(userProfile['access level'] || '');
                 if (canView) {
                     authButtons.classList.remove('hidden');
                     initializeCIDPortal();
                 } else {
-                    // Show access denied message
-                    appWrapper.innerHTML = `<div class="w-full h-full flex items-center justify-center text-red-400 text-xl">You do not have permission to view the CID Portal.</div>`;
+                    appWrapper.innerHTML = `<div class="w-full h-full flex items-center justify-center text-red-400 text-xl">Access Denied.</div>`;
                 }
-
             } else {
                 appWrapper.classList.add('hidden');
                 loginOverlay.classList.remove('hidden');
                 if (unsubscribeCases) unsubscribeCases();
+                if (unsubscribeUsers) unsubscribeUsers();
             }
         });
 
-        // --- Main Initializer ---
         function initializeCIDPortal() {
-            const casesCollectionRef = collection(db, `artifacts/${appId}/public/data/cid_cases`);
-            const q = query(casesCollectionRef);
+            const userRole = userProfile.role || '';
+            const userAccessLevel = userProfile['access level'] || '';
+            const isManager = accessConfig.isManager.includes(userRole) || accessConfig.isManager.includes(userAccessLevel);
 
-            unsubscribeCases = onSnapshot(q, (snapshot) => {
-                allCases = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
-                renderAll();
+            let casesQuery;
+            if (isManager) {
+                // Managers see all cases
+                casesQuery = query(collection(db, `artifacts/${appId}/public/data/cid_cases`));
+            } else {
+                // Detectives only see cases they are assigned to
+                casesQuery = query(collection(db, `artifacts/${appId}/public/data/cid_cases`), where('assignedPersonnel', 'array-contains', userProfile.uid));
+            }
+
+            unsubscribeCases = onSnapshot(casesQuery, s => {
+                allCases = s.docs.map(d => ({ id: d.id, ...d.data() }));
+                renderDashboardStats(); renderCasesTable(); renderArchivesTable();
             });
-
-            // Add event listeners
+            unsubscribeUsers = onSnapshot(query(collection(db, 'users')), s => {
+                allUsers = s.docs.map(d => ({ id: d.id, ...d.data() }));
+                renderRoster();
+            });
             addCaseFileBtn.addEventListener('click', () => openCaseFileModal());
             closeCaseFileModalBtn.addEventListener('click', closeCaseFileModal);
-            cancelCaseBtn.addEventListener('click', closeCaseFileModal);
-            caseFileForm.addEventListener('submit', handleSaveCaseFile);
-            caseSearchInput.addEventListener('input', renderAll);
-            caseStatusFilter.addEventListener('change', renderAll);
-            mainTabsContainer.addEventListener('click', handleMainTabSwitch);
-            modalTabsContainer.addEventListener('click', handleModalTabSwitch);
-            casesTableBody.addEventListener('click', handleTableEditClick);
+            sidebarNav.addEventListener('click', handleViewSwitch);
+            [casesTableBody, archivesTableBody].forEach(el => el.addEventListener('click', handleTableEditClick));
+            nextStepBtn.addEventListener('click', () => changeStep(1));
+            prevStepBtn.addEventListener('click', () => changeStep(-1));
+            saveCaseBtn.addEventListener('click', handleSaveCaseFile);
+            deleteCaseBtn.addEventListener('click', handleDeleteCaseFile);
+            printCaseBtn.addEventListener('click', generateCasePdf);
+            addPersonBtn.addEventListener('click', () => addPersonEntry());
+            personsInvolvedContainer.addEventListener('click', e => e.target.closest('.remove-person-btn') && e.target.closest('.person-entry').remove());
+            reportEditor.addEventListener('input', () => reportPreview.innerHTML = markdownConverter.makeHtml(reportEditor.value));
+            document.querySelector('#documents-view').addEventListener('click', e => e.target.closest('.doc-gen-btn') && openDocGenModal(e.target.closest('.doc-gen-btn').dataset.docType));
+            closeDocGenModalBtn.addEventListener('click', () => docGenModal.classList.add('hidden'));
+            generatePdfBtn.addEventListener('click', () => generateDocumentPdf(currentDocType));
+            switchView('dashboard');
         }
 
-        // --- Render Functions ---
-        function renderAll() {
-            renderDashboardStats();
-            renderCasesTable();
+        // --- View Switching & Rendering ---
+        function switchView(viewName) {
+            document.querySelectorAll('.view-content').forEach(v => v.classList.add('hidden'));
+            document.getElementById(`${viewName}-view`).classList.remove('hidden');
+            document.querySelectorAll('.sidebar-link').forEach(l => l.classList.toggle('active', l.dataset.view === viewName));
         }
-
+        function handleViewSwitch(e) {
+            const link = e.target.closest('.sidebar-link');
+            if (link) switchView(link.dataset.view);
+        }
         function renderDashboardStats() {
             statActiveCases.textContent = allCases.filter(c => c.status === 'Active').length;
             statColdCases.textContent = allCases.filter(c => c.status === 'Cold').length;
             statClosedCases.textContent = allCases.filter(c => c.status === 'Closed').length;
-            // Placeholder for warrants
             statWarrants.textContent = allCases.filter(c => c.warrantIssued).length || '0';
         }
-
         function renderCasesTable() {
-            const searchTerm = caseSearchInput.value.toLowerCase();
-            const statusFilter = caseStatusFilter.value;
-
-            const filteredCases = allCases.filter(c => {
-                const matchesSearch = searchTerm === '' ||
-                    c.title.toLowerCase().includes(searchTerm) ||
-                    c.leadDetective.toLowerCase().includes(searchTerm) ||
-                    c.id.toLowerCase().includes(searchTerm);
-
-                const matchesStatus = statusFilter === 'all' || c.status === statusFilter;
-
-                return matchesSearch && matchesStatus;
-            });
-
-            if (filteredCases.length === 0) {
-                casesTableBody.innerHTML = `<tr><td colspan="5" class="text-center p-8 text-gray-500">No matching case files found.</td></tr>`;
-                return;
-            }
-
-            casesTableBody.innerHTML = filteredCases.map(c => {
-                const statusClass = `status-${c.status.toLowerCase()}`;
-                const lastUpdated = c.lastUpdated ? new Date(c.lastUpdated.seconds * 1000).toLocaleDateString() : 'N/A';
-                return `
-                        <tr class="bg-gray-800 border-b border-gray-700 hover:bg-gray-700/50 cursor-pointer" data-id="${c.id}">
-                            <td class="px-6 py-4 font-mono text-xs">${c.id.substring(0, 8).toUpperCase()}</td>
-                            <td class="px-6 py-4 font-semibold text-white">${c.title}</td>
-                            <td class="px-6 py-4">${c.leadDetective}</td>
-                            <td class="px-6 py-4"><span class="px-2 py-1 text-xs font-medium rounded-full text-white ${statusClass}">${c.status}</span></td>
-                            <td class="px-6 py-4">${lastUpdated}</td>
-                        </tr>
-                    `;
-            }).join('');
+            const term = caseSearchInput.value.toLowerCase(), status = caseStatusFilter.value;
+            const filtered = allCases.filter(c => (status === 'all' || c.status === status) && (term === '' || c.title.toLowerCase().includes(term) || c.leadDetective.toLowerCase().includes(term) || c.id.toLowerCase().includes(term)));
+            casesTableBody.innerHTML = filtered.length ? filtered.map(c => `
+                    <tr class="bg-gray-800 border-b border-gray-700 hover:bg-gray-700/50 cursor-pointer" data-id="${c.id}">
+                        <td class="px-6 py-4 font-mono text-xs">${c.id.substring(0, 8).toUpperCase()}</td>
+                        <td class="px-6 py-4 font-semibold text-white">${c.title}</td><td class="px-6 py-4">${c.leadDetective}</td>
+                        <td class="px-6 py-4"><span class="px-2 py-1 text-xs font-medium rounded-full text-white status-${c.status.toLowerCase()}">${c.status}</span></td>
+                        <td class="px-6 py-4">${c.lastUpdated ? new Date(c.lastUpdated.seconds * 1000).toLocaleDateString() : 'N/A'}</td>
+                    </tr>`).join('') : `<tr><td colspan="5" class="text-center p-8 text-gray-500">No cases found.</td></tr>`;
+        }
+        function renderRoster() {
+            const detectives = allUsers.filter(u => u.role === 'Detective');
+            rosterGrid.innerHTML = detectives.length ? detectives.map(u => `<div class="bg-gray-800 border border-gray-700 rounded-lg p-4 flex items-center gap-4"><i class="ph-user-circle-light text-5xl text-gray-400"></i><div><h3 class="font-bold text-white text-lg">${u.name}</h3><p class="text-sm text-blue-400">${u.role}</p></div></div>`).join('') : `<p class="text-gray-500 col-span-full text-center">No detectives found.</p>`;
+        }
+        function renderArchivesTable() {
+            const closed = allCases.filter(c => c.status === 'Closed');
+            archivesTableBody.innerHTML = closed.length ? closed.map(c => `
+                    <tr class="bg-gray-800 border-b border-gray-700 hover:bg-gray-700/50 cursor-pointer" data-id="${c.id}">
+                        <td class="px-6 py-4 font-mono text-xs">${c.id.substring(0, 8).toUpperCase()}</td>
+                        <td class="px-6 py-4 font-semibold text-white">${c.title}</td><td class="px-6 py-4">${c.leadDetective}</td>
+                        <td class="px-6 py-4">${c.lastUpdated ? new Date(c.lastUpdated.seconds * 1000).toLocaleDateString() : 'N/A'}</td>
+                    </tr>`).join('') : `<tr><td colspan="4" class="text-center p-8 text-gray-500">No archived cases.</td></tr>`;
         }
 
-        // --- Modal Logic ---
+        // --- Case Modal Logic ---
         function openCaseFileModal(caseData = null) {
-            caseFileForm.reset();
-            caseIdInput.value = '';
-            deleteCaseBtn.classList.add('hidden');
+            caseFileForm.reset(); caseIdInput.value = '';
+            deleteCaseBtn.classList.add('hidden'); printCaseBtn.classList.add('hidden');
+            personsInvolvedContainer.innerHTML = '';
+
+            const userRole = userProfile.role || '';
+            const userAccessLevel = userProfile['access level'] || '';
+            const canManage = accessConfig.canManageAssignments.includes(userRole) || accessConfig.canManageAssignments.includes(userAccessLevel);
+            document.getElementById('step-4').style.display = canManage ? 'block' : 'none';
+
+            populateDetectiveDropdowns();
 
             if (caseData) {
-                // Editing existing case
                 caseFileModalTitle.textContent = `Edit Case: ${caseData.id.substring(0, 8).toUpperCase()}`;
-                caseIdInput.value = caseData.id;
-                caseTitleInput.value = caseData.title;
-                leadDetectiveInput.value = caseData.leadDetective;
-                caseStatusInput.value = caseData.status;
-                synopsisInput.value = caseData.synopsis || '';
+                caseIdInput.value = caseData.id; printCaseBtn.classList.remove('hidden');
+                caseTitleInput.value = caseData.title || '';
+                leadDetectiveInput.value = caseData.leadDetectiveId || '';
+                caseStatusInput.value = caseData.status || 'Active'; incidentDateInput.value = caseData.incidentDate || '';
+                locationInput.value = caseData.location || '';
+                (caseData.personsInvolved || []).forEach(p => addPersonEntry(p));
+                reportEditor.value = caseData.report || ''; reportPreview.innerHTML = markdownConverter.makeHtml(caseData.report || '');
+                populateAssignmentCheckboxes(caseData.assignedPersonnel || []);
 
-                // Check delete permissions against both role and access level fields
-                const canDelete = accessConfig.canDelete.includes(userProfile.role) || accessConfig.canDelete.includes(userProfile['access level']);
-                if (canDelete) {
-                    deleteCaseBtn.classList.remove('hidden');
-                }
-
+                const canDelete = accessConfig.canDelete.includes(userRole) || accessConfig.canDelete.includes(userAccessLevel);
+                if (canDelete) deleteCaseBtn.classList.remove('hidden');
             } else {
-                // Creating new case
                 caseFileModalTitle.textContent = 'New Case File';
-                leadDetectiveInput.value = userProfile.name; // Default to current user
+                leadDetectiveInput.value = userProfile.uid;
+                addPersonEntry();
+                populateAssignmentCheckboxes([]);
             }
-
-            // Reset to first tab
-            handleModalTabSwitch({ target: modalTabsContainer.querySelector('[data-tab="synopsis"]') });
+            changeStep(0, 1);
             caseFileModal.classList.remove('hidden');
         }
 
-        function closeCaseFileModal() {
-            caseFileModal.classList.add('hidden');
+        function populateDetectiveDropdowns() {
+            const detectives = allUsers.filter(u => accessConfig.canView.includes(u.role) || accessConfig.canView.includes(u['access level']));
+            leadDetectiveInput.innerHTML = detectives.map(d => `<option value="${d.id}">${d.name}</option>`).join('');
         }
 
-        async function handleSaveCaseFile(e) {
-            e.preventDefault();
-            const caseId = caseIdInput.value;
+        function populateAssignmentCheckboxes(assignedIds) {
+            const detectives = allUsers.filter(u => u.role === 'Detective');
+            assignPersonnelContainer.innerHTML = detectives.map(d => `
+                    <label class="flex items-center space-x-3 bg-gray-900/50 p-3 rounded-md">
+                        <input type="checkbox" value="${d.id}" class="form-checkbox h-5 w-5 rounded bg-gray-700 border-gray-600 text-blue-600 focus:ring-blue-500" ${assignedIds.includes(d.id) ? 'checked' : ''}>
+                        <span class="text-white">${d.name}</span>
+                    </label>
+                `).join('');
+        }
 
-            const data = {
-                title: caseTitleInput.value.trim(),
-                leadDetective: leadDetectiveInput.value.trim(),
-                status: caseStatusInput.value,
-                synopsis: synopsisInput.value.trim(),
-                lastUpdated: serverTimestamp(),
-                updatedBy: userProfile.name,
-            };
+        function closeCaseFileModal() { caseFileModal.classList.add('hidden'); }
+        function changeStep(dir, abs = null) {
+            currentModalStep = abs !== null ? abs : currentModalStep + dir;
+            const canManage = accessConfig.canManageAssignments.includes(userProfile.role || '') || accessConfig.canManageAssignments.includes(userProfile['access level'] || '');
+            const maxSteps = canManage ? 4 : 3;
 
-            try {
-                if (caseId) {
-                    // Update existing doc
-                    const docRef = doc(db, `artifacts/${appId}/public/data/cid_cases`, caseId);
-                    await updateDoc(docRef, data);
-                } else {
-                    // Create new doc
-                    data.createdBy = userProfile.name;
-                    data.createdAt = serverTimestamp();
-                    const collectionRef = collection(db, `artifacts/${appId}/public/data/cid_cases`);
-                    await addDoc(collectionRef, data);
+            if (currentModalStep < 1 || currentModalStep > maxSteps) {
+                currentModalStep = Math.max(1, Math.min(currentModalStep, maxSteps));
+                return;
+            }
+            modalSteps.forEach((s, i) => s.classList.toggle('hidden', (i + 1) !== currentModalStep));
+            prevStepBtn.classList.toggle('hidden', currentModalStep === 1);
+            nextStepBtn.classList.toggle('hidden', currentModalStep === maxSteps);
+            saveCaseBtn.classList.toggle('hidden', currentModalStep !== maxSteps);
+        }
+        function addPersonEntry(p = {}) {
+            const div = document.createElement('div');
+            div.className = 'person-entry grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-900/50 p-4 rounded-lg relative';
+            div.innerHTML = `<button type="button" class="remove-person-btn absolute top-2 right-2 text-gray-500 hover:text-red-400">&times;</button><div><label class="block text-xs font-medium text-gray-400 mb-1">Full Name</label><input type="text" value="${p.name || ''}" class="form-input w-full text-sm person-name"></div><div><label class="block text-xs font-medium text-gray-400 mb-1">Role</label><select class="form-select w-full text-sm person-role"><option>Witness</option><option>Victim</option><option>Suspect</option><option>Other</option></select></div><div><label class="block text-xs font-medium text-gray-400 mb-1">Phone Number</label><input type="text" value="${p.phone || ''}" class="form-input w-full text-sm person-phone"></div><div class="md:col-span-3"><label class="block text-xs font-medium text-gray-400 mb-1">Address</label><input type="text" value="${p.address || ''}" class="form-input w-full text-sm person-address"></div>`;
+            if (p.role) div.querySelector('.person-role').value = p.role;
+            personsInvolvedContainer.appendChild(div);
+        }
+        async function handleSaveCaseFile() {
+            const selectedLeadId = leadDetectiveInput.value;
+            const selectedLead = allUsers.find(u => u.id === selectedLeadId);
+
+            const assignedPersonnel = [selectedLeadId]; // Start with the lead detective
+            assignPersonnelContainer.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+                if (!assignedPersonnel.includes(checkbox.value)) {
+                    assignedPersonnel.push(checkbox.value);
                 }
+            });
+            // Ensure the manager assigning the case can also see it
+            if (!assignedPersonnel.includes(userProfile.uid)) {
+                assignedPersonnel.push(userProfile.uid);
+            }
+
+            const personsInvolved = [...personsInvolvedContainer.querySelectorAll('.person-entry')].map(e => ({ name: e.querySelector('.person-name').value, role: e.querySelector('.person-role').value, phone: e.querySelector('.person-phone').value, address: e.querySelector('.person-address').value }));
+            const data = { title: caseTitleInput.value.trim(), leadDetective: selectedLead ? selectedLead.name : 'N/A', leadDetectiveId: selectedLeadId, status: caseStatusInput.value, incidentDate: incidentDateInput.value, location: locationInput.value.trim(), personsInvolved: personsInvolved, report: reportEditor.value, lastUpdated: serverTimestamp(), updatedBy: userProfile.name, assignedPersonnel: assignedPersonnel };
+            const caseId = caseIdInput.value;
+            try {
+                if (caseId) await updateDoc(doc(db, `artifacts/${appId}/public/data/cid_cases`, caseId), data);
+                else { data.createdBy = userProfile.name; data.createdAt = serverTimestamp(); await addDoc(collection(db, `artifacts/${appId}/public/data/cid_cases`), data); }
                 closeCaseFileModal();
-            } catch (error) {
-                console.error("Error saving case file:", error);
-                alert("Could not save case file. See console for details.");
+            } catch (err) { console.error("Error saving case:", err); alert("Could not save case file."); }
+        }
+        async function handleDeleteCaseFile() {
+            if (caseIdInput.value && confirm('Permanently delete this case file?')) {
+                await deleteDoc(doc(db, `artifacts/${appId}/public/data/cid_cases`, caseIdInput.value));
+                closeCaseFileModal();
             }
         }
-
-        // --- Event Handlers ---
         function handleTableEditClick(e) {
-            const row = e.target.closest('tr');
-            if (!row || !row.dataset.id) return;
-
-            const caseId = row.dataset.id;
-            const caseData = allCases.find(c => c.id === caseId);
-            if (caseData) {
-                openCaseFileModal(caseData);
+            const row = e.target.closest('tr[data-id]');
+            if (row) {
+                const caseData = allCases.find(c => c.id === row.dataset.id);
+                if (caseData) openCaseFileModal(caseData);
             }
         }
 
-        function handleMainTabSwitch(e) {
-            const button = e.target.closest('.tab-button');
-            if (!button) return;
+        // --- Document Generation ---
+        const docTemplates = {
+            'arrest-warrant': { title: 'Arrest Warrant', fields: [{ id: 'suspectName', label: 'Suspect Name' }, { id: 'suspectAddress', label: 'Suspect Last Known Address' }, { id: 'charges', label: 'Charges (comma separated)' }, { id: 'probableCause', label: 'Probable Cause Statement', type: 'textarea' }] },
+            'search-warrant': { title: 'Search Warrant', fields: [{ id: 'location', label: 'Location to be Searched' }, { id: 'items', label: 'Items to be Seized', type: 'textarea' }, { id: 'probableCause', label: 'Probable Cause Statement', type: 'textarea' }] },
+            'property-seizure': { title: 'Property Seizure Warrant', fields: [{ id: 'ownerName', label: 'Property Owner Name' }, { id: 'propertyAddress', label: 'Property Address' }, { id: 'propertyDescription', label: 'Description of Property to be Seized', type: 'textarea' }, { id: 'legalBasis', label: 'Legal Basis for Seizure', type: 'textarea' }] },
+            'plea-agreement': { title: 'Plea Agreement', fields: [{ id: 'defendantName', label: 'Defendant Name' }, { id: 'caseNumber', label: 'Case Number' }, { id: 'pleaTerms', label: 'Terms of the Agreement', type: 'textarea' }] },
+            'ci-nda': { title: 'Confidential Informant NDA', fields: [{ id: 'ciName', label: 'Informant Name/Identifier' }, { id: 'detectiveName', label: 'Detective Name' }, { id: 'effectiveDate', label: 'Effective Date', type: 'date' }] },
+            'ci-employment': { title: 'CI Employment Acknowledgment', fields: [{ id: 'ciName', label: 'Informant Name/Identifier' }, { id: 'handlerName', label: 'Handling Detective' }, { id: 'agreementDate', label: 'Date of Agreement', type: 'date' }, { id: 'terms', label: 'Employment Terms', type: 'textarea' }] }
+        };
 
-            // Update button styles
-            mainTabsContainer.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-
-            // Show/hide content
-            const tabId = button.dataset.tab;
-            mainTabContents.forEach(content => {
-                content.id === `${tabId}-tab` ? content.classList.remove('hidden') : content.classList.add('hidden');
-            });
+        function openDocGenModal(docType) {
+            currentDocType = docType;
+            const template = docTemplates[docType];
+            docGenModalTitle.textContent = template.title;
+            docGenFormContainer.innerHTML = template.fields.map(f => `<div><label for="${f.id}" class="block text-sm font-medium text-gray-300 mb-1">${f.label}</label>${f.type === 'textarea' ? `<textarea id="${f.id}" class="form-textarea w-full" rows="5"></textarea>` : `<input type="text" id="${f.id}" class="form-input w-full">`}</div>`).join('');
+            docGenModal.classList.remove('hidden');
         }
 
-        function handleModalTabSwitch(e) {
-            const button = e.target.closest('.modal-tab-button');
-            if (!button) return;
+        async function generateDocumentPdf(docType) {
+            const template = docTemplates[docType];
+            const data = {};
+            template.fields.forEach(f => data[f.id] = document.getElementById(f.id).value);
 
-            // Update button styles
-            modalTabsContainer.querySelectorAll('.modal-tab-button').forEach(btn => {
-                btn.classList.remove('active', 'text-white');
-                btn.classList.add('border-transparent', 'text-gray-400');
-            });
-            button.classList.add('active', 'text-white');
-            button.classList.remove('border-transparent', 'text-gray-400');
+            const renderContainer = document.getElementById('pdf-render-container');
+            let contentHTML = `<div class="pdf-render-content"><div class="pdf-header">${template.title}</div>`;
+            for (const key in data) {
+                contentHTML += `<div class="pdf-field"><span class="pdf-label">${key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase())}: </span><span class="pdf-value">${data[key].replace(/\n/g, '<br>')}</span></div>`;
+            }
+            contentHTML += `<div class="pdf-signature-block"><div class="pdf-signature-line">Authorizing Judge Signature</div></div><div class="pdf-signature-block"><div class="pdf-signature-line">Affiant Signature</div></div></div>`;
+            renderContainer.innerHTML = contentHTML;
 
-            // Show/hide content
-            const tabId = button.dataset.tab;
-            modalTabContents.forEach(content => {
-                content.id === `${tabId}-modal-tab` ? content.classList.remove('hidden') : content.classList.add('hidden');
-            });
+            const canvas = await html2canvas(renderContainer.firstElementChild);
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            pdf.addImage(imgData, 'PNG', 10, 10, pdf.internal.pageSize.getWidth() - 20, (pdf.internal.pageSize.getWidth() - 20) * (canvas.height / canvas.width));
+            pdf.save(`${docType}.pdf`);
+            renderContainer.innerHTML = '';
+            docGenModal.classList.add('hidden');
         }
 
-        hamburgerBtn.addEventListener('click', (e) => {
-            e.stopPropagation();
-            sidebar.classList.toggle('sidebar-hidden');
-        });
+        async function generateCasePdf() {
+            const caseId = caseIdInput.value; if (!caseId) return;
+            const caseData = allCases.find(c => c.id === caseId); if (!caseData) return;
+            const renderContainer = document.getElementById('pdf-render-container');
+            const personsHTML = (caseData.personsInvolved || []).map(p => `<div class="section"><div class="section-title">PERSON INVOLVED</div><div class="field-group"><div class="field-label">Name:</div><div class="field-value">${p.name || ''}</div></div><div class="field-group"><div class="field-label">Role:</div><div class="field-value">${p.role || ''}</div></div><div class="field-group"><div class="field-label">Phone:</div><div class="field-value">${p.phone || ''}</div></div><div class="field-group"><div class="field-label">Address:</div><div class="field-value">${p.address || ''}</div></div></div>`).join('');
+            const reportHTML = markdownConverter.makeHtml(caseData.report || 'No narrative provided.');
+            renderContainer.innerHTML = `<div class="pdf-render-content" style="font-family: 'Times New Roman', serif; font-size: 12pt;"><h1 style="text-align:center; font-size: 16pt; font-weight: bold;">CRIMINAL INVESTIGATION REPORT</h1><div class="section"><div class="section-title">INCIDENT INFORMATION</div><div class="field-group"><div class="field-label">Case Title:</div><div class="field-value">${caseData.title || ''}</div></div><div class="field-group"><div class="field-label">Case Number:</div><div class="field-value">${caseId.substring(0, 12).toUpperCase()}</div></div><div class="field-group"><div class="field-label">Date of Incident:</div><div class="field-value">${caseData.incidentDate || ''}</div></div><div class="field-group"><div class="field-label">Location:</div><div class="field-value">${caseData.location || ''}</div></div></div>${personsHTML}<div class="section"><div class="section-title">NARRATIVE</div><div>${reportHTML}</div></div><div class="section"><div class="section-title">REPORTER INFORMATION</div><div class="field-group"><div class="field-label">Submitting Detective:</div><div class="field-value">${caseData.leadDetective || ''}</div></div><div class="field-group"><div class="field-label">Date Report Completed:</div><div class="field-value">${new Date().toLocaleDateString()}</div></div></div></div>`;
+            const canvas = await html2canvas(renderContainer.firstElementChild);
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            pdf.addImage(imgData, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getWidth() * (canvas.height / canvas.width));
+            pdf.save(`case-file-${caseId.substring(0, 8)}.pdf`);
+            renderContainer.innerHTML = '';
+        }
 
     </script>
 </body>
