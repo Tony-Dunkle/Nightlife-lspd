@@ -251,11 +251,11 @@
                     <label for="officer-email" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Email</label>
                     <input type="email" id="officer-email" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                 </div>
-                <div id="officer-role-field">
-                    <label for="officer-role" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Role</label>
-                    <select id="officer-role" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                        <!-- Options will be populated by JS -->
-                    </select>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-200">Roles</label>
+                    <div id="officer-roles-checkboxes" class="mt-2 space-y-2 max-h-40 overflow-y-auto border border-slate-300 dark:border-slate-600 rounded-md p-3 bg-white dark:bg-slate-700">
+                        <!-- Checkboxes will be populated by JS -->
+                    </div>
                 </div>
                 <div>
                     <label for="officer-rank" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Rank</label>
@@ -290,10 +290,10 @@
                     <input type="text" id="edit-officer-rank" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                 </div>
                 <div>
-                    <label for="edit-officer-role" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Role</label>
-                    <select id="edit-officer-role" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                        <!-- Options will be populated by JS -->
-                    </select>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-200">Roles</label>
+                    <div id="edit-officer-roles-checkboxes" class="mt-2 space-y-2 max-h-40 overflow-y-auto border border-slate-300 dark:border-slate-600 rounded-md p-3 bg-white dark:bg-slate-700">
+                        <!-- Checkboxes will be populated by JS -->
+                    </div>
                 </div>
                 <div id="edit-access-level-field" class="hidden">
                     <label for="edit-access-level" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Access Level</label>
@@ -401,36 +401,35 @@
                     const pageContent = document.getElementById('page-content');
                     const loginOverlay = document.getElementById('login-prompt-overlay');
 
-                    // A brief delay to allow the loading spinner to be seen
                     await new Promise(resolve => setTimeout(resolve, 500));
 
                     if (user) {
                         userId = user.uid;
-                        // Fetch the user's document from Firestore to check their access level
                         const userDocRef = window.firebase.doc(db, "users", user.uid);
                         const userDocSnap = await window.firebase.getDoc(userDocRef);
 
                         let userAccessLevel = null;
-                        let userRole = null;
+                        let userRoles = []; // Can be an array now
 
                         if (userDocSnap.exists()) {
                             const userData = userDocSnap.data();
                             userAccessLevel = userData['access level'];
-                            userRole = userData['role'];
+                            // Handle both string (old) and array (new) role formats
+                            userRoles = Array.isArray(userData.role) ? userData.role : [userData.role];
                         }
 
-                        // Check if the user has the required access level to access the page
-                        if (userAccessLevel === 'High Command' || userRole === 'Account Manager' || userRole === 'Personnel Manager' || userRole === 'Website Manager' || userAccessLevel === 'Website Manager') {
+                        // Helper function to check if user has a specific role
+                        const hasRole = (role) => userRoles.includes(role);
+
+                        // Check if the user has the required access level or role to access the page
+                        if (userAccessLevel === 'High Command' || hasRole('Account Manager') || hasRole('Personnel Manager') || hasRole('Website Manager') || userAccessLevel === 'Website Manager') {
                             loadingOverlay.classList.add('hidden');
                             loginOverlay.classList.add('hidden');
                             pageContent.classList.remove('hidden');
 
-                            // These data loading calls are now correctly placed *after* the permission check
                             loadReportsFromFirestore();
                             loadPersonnel();
-
-                            // Set permissions for the "add officer" button and dynamic role dropdown
-                            setPermissions(userRole, userAccessLevel);
+                            setPermissions(userRoles, userAccessLevel);
 
                         } else {
                             loadingOverlay.classList.add('hidden');
@@ -440,7 +439,6 @@
                         }
 
                     } else {
-                        // User is not logged in, redirect to login page.
                         loadingOverlay.classList.add('hidden');
                         pageContent.classList.add('hidden');
                         loginOverlay.classList.remove('hidden');
@@ -450,11 +448,7 @@
 
             } catch (e) {
                 console.error("Error initializing Firebase:", e);
-                const reportsLoading = document.getElementById('reports-loading');
-                const personnelLoading = document.getElementById('personnel-loading');
-                if (reportsLoading) reportsLoading.innerHTML = '<p class="text-red-500">Could not connect to the database. Redirecting...</p>';
-                if (personnelLoading) personnelLoading.innerHTML = '<p class="text-red-500">Could not connect to the database. Redirecting...</p>';
-                setTimeout(() => { window.location.href = "index.html"; }, 3000);
+                document.getElementById('loading-overlay').innerHTML = '<p class="text-red-500">Could not initialize application. Please refresh.</p>';
             }
         };
 
@@ -471,7 +465,6 @@
         const tempPasswordDisplay = document.getElementById('temp-password-display');
         const closePasswordModalBtn = document.getElementById('close-password-modal-btn');
         const copyPasswordBtn = document.getElementById('copy-password-btn');
-        const officerRoleSelect = document.getElementById('officer-role');
         const officerAccessLevelSelect = document.getElementById('access-level');
         const accessLevelField = document.getElementById('access-level-field');
         const confirmRemoveModal = document.getElementById('confirm-remove-modal');
@@ -483,40 +476,29 @@
         const editOfficerIdInput = document.getElementById('edit-officer-id');
         const editOfficerNameInput = document.getElementById('edit-officer-name');
         const editOfficerRankInput = document.getElementById('edit-officer-rank');
-        const editOfficerRoleSelect = document.getElementById('edit-officer-role');
         const editOfficerAccessLevelSelect = document.getElementById('edit-access-level');
         const editAccessLevelField = document.getElementById('edit-access-level-field');
 
-        const rolesByManager = {
-            "Account Manager": ["Personnel Manager", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"],
-            "Personnel Manager": ["Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"],
-            "Website Manager": ["Account Manager", "Personnel Manager", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"],
-        };
+        const allRoles = ["Account Manager", "Personnel Manager", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader", "Website Manager"];
+        const allAccessLevels = ["High Command", "Command", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader", "Website Manager"];
 
-        const accessLevelsByRole = {
-            "Account Manager": ["High Command", "Command", "Field Training Officer"],
-            "Personnel Manager": ["Command", "Field Training Officer"],
-            "Field Training Officer": [],
-            "Officer": [],
-            "Air-one": [],
-            "Moto Unit": [],
-            "K9 Unit": [],
-            "Swat Officer": [],
-            "Swat Teamleader": [],
-        }
 
-        let currentUserRole = null;
+        let currentUserRoles = [];
         let currentUserAccessLevel = null;
 
-        const setPermissions = (role, accessLevel) => {
-            currentUserRole = role;
+        const hasPermission = (role) => {
+            if (Array.isArray(currentUserRoles)) {
+                return currentUserRoles.includes(role);
+            }
+            return currentUserRoles === role;
+        }
+
+        const setPermissions = (roles, accessLevel) => {
+            currentUserRoles = roles;
             currentUserAccessLevel = accessLevel;
 
-            // Check if either the role or the access level qualifies as a manager
-            const isManager = rolesByManager[currentUserRole] || rolesByManager[currentUserAccessLevel];
-
-            // Check if either the role or the access level is a command level
-            const isCommand = currentUserAccessLevel === "High Command" || currentUserRole === "High Command" || currentUserAccessLevel === "Command" || currentUserRole === "Command";
+            const isManager = hasPermission('Account Manager') || hasPermission('Personnel Manager') || hasPermission('Website Manager') || accessLevel === 'Website Manager';
+            const isCommand = accessLevel === "High Command" || accessLevel === "Command";
 
             if (isManager || isCommand) {
                 addOfficerBtn.classList.remove('hidden');
@@ -552,22 +534,25 @@
                     const toggleButtonText = person.status === 'active' ? 'Disable' : 'Enable';
                     const toggleButtonColor = person.status === 'active' ? 'bg-orange-500 hover:bg-orange-600' : 'bg-green-600 hover:bg-green-700';
 
+                    // Handle role display (string or array)
+                    const rolesDisplay = Array.isArray(person.role) ? person.role.join(', ') : (person.role || 'N/A');
+
                     personEl.innerHTML = `
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <p class="font-semibold">${person.name || 'No Name'}</p>
-                                        <p class="text-sm text-slate-500 dark:text-slate-400">${person.email || ''}</p>
-                                        <p class="text-sm text-slate-500 dark:text-slate-400">${person.rank || 'N/A'} - ${person.role || 'N/A'}</p>
-                                    </div>
-                                    <p class="text-sm font-bold ${statusColor}">${person.status ? person.status.charAt(0).toUpperCase() + person.status.slice(1) : 'N/A'}</p>
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="font-semibold">${person.name || 'No Name'}</p>
+                                    <p class="text-sm text-slate-500 dark:text-slate-400">${person.email || ''}</p>
+                                    <p class="text-sm text-slate-500 dark:text-slate-400">${person.rank || 'N/A'} - ${rolesDisplay}</p>
                                 </div>
-                                <div class="grid grid-cols-4 gap-2 mt-3 pt-3 border-t border-slate-200 dark:border-slate-600">
-                                    <button data-id="${person.id}" class="edit-btn text-xs bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded-md transition">Edit</button>
-                                    <button data-id="${person.id}" class="reset-pass-btn text-xs bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-2 rounded-md transition">Reset Pass</button>
-                                    <button data-id="${person.id}" data-status="${person.status}" class="toggle-status-btn text-xs ${toggleButtonColor} text-white font-bold py-1 px-2 rounded-md transition">${toggleButtonText}</button>
-                                    <button data-id="${person.id}" data-name="${person.name}" class="remove-btn text-xs bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-md transition">Remove</button>
-                                </div>
-                            `;
+                                <p class="text-sm font-bold ${statusColor}">${person.status ? person.status.charAt(0).toUpperCase() + person.status.slice(1) : 'N/A'}</p>
+                            </div>
+                            <div class="grid grid-cols-4 gap-2 mt-3 pt-3 border-t border-slate-200 dark:border-slate-600">
+                                <button data-id="${person.id}" class="edit-btn text-xs bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded-md transition">Edit</button>
+                                <button data-id="${person.id}" class="reset-pass-btn text-xs bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-2 rounded-md transition">Reset Pass</button>
+                                <button data-id="${person.id}" data-status="${person.status}" class="toggle-status-btn text-xs ${toggleButtonColor} text-white font-bold py-1 px-2 rounded-md transition">${toggleButtonText}</button>
+                                <button data-id="${person.id}" data-name="${person.name}" class="remove-btn text-xs bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-md transition">Remove</button>
+                            </div>
+                        `;
                     personnelListContainer.appendChild(personEl);
                 });
             }, (error) => {
@@ -581,19 +566,10 @@
             const target = e.target.closest('button');
             if (!target) return;
 
-            if (target.classList.contains('edit-btn')) {
-                const personId = target.dataset.id;
-                openEditOfficerModal(personId);
-            }
-            if (target.classList.contains('reset-pass-btn')) {
-                resetPassword(target.dataset.id);
-            }
-            if (target.classList.contains('toggle-status-btn')) {
-                toggleStatus(target.dataset.id, target.dataset.status);
-            }
-            if (target.classList.contains('remove-btn')) {
-                openConfirmRemoveModal(target.dataset.id, target.dataset.name);
-            }
+            if (target.classList.contains('edit-btn')) openEditOfficerModal(target.dataset.id);
+            if (target.classList.contains('reset-pass-btn')) resetPassword(target.dataset.id);
+            if (target.classList.contains('toggle-status-btn')) toggleStatus(target.dataset.id, target.dataset.status);
+            if (target.classList.contains('remove-btn')) openConfirmRemoveModal(target.dataset.id, target.dataset.name);
         });
 
         // Edit Officer Logic
@@ -607,8 +583,8 @@
                 editOfficerNameInput.value = personData.name || '';
                 editOfficerRankInput.value = personData.rank || '';
 
-                // Populate the role and access level dropdowns for editing
-                populateEditDropdowns(personData.role, personData['access level']);
+                const currentRoles = Array.isArray(personData.role) ? personData.role : [personData.role];
+                populateEditCheckboxes(currentRoles, personData['access level']);
 
                 editOfficerModal.classList.add('is-open');
             } else {
@@ -616,62 +592,61 @@
             }
         };
 
-        // --- FIX: This function now correctly checks both role and access level ---
-        const populateEditDropdowns = (currentRole, currentAccessLevel) => {
-            editOfficerRoleSelect.innerHTML = '';
+        const populateCheckboxes = (container, rolesToPopulate, selectedRoles = []) => {
+            container.innerHTML = '';
+            rolesToPopulate.forEach(role => {
+                const isChecked = selectedRoles.includes(role);
+                const checkboxId = `${container.id}-${role.replace(/\s+/g, '-')}`;
+                const checkboxWrapper = document.createElement('div');
+                checkboxWrapper.className = 'flex items-center';
+                checkboxWrapper.innerHTML = `
+                        <input id="${checkboxId}" type="checkbox" value="${role}" ${isChecked ? 'checked' : ''} class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                        <label for="${checkboxId}" class="ml-3 block text-sm text-slate-700 dark:text-slate-200">${role}</label>
+                    `;
+                container.appendChild(checkboxWrapper);
+            });
+        };
+
+        const populateEditCheckboxes = (currentRoles, currentAccessLevel) => {
+            const rolesContainer = document.getElementById('edit-officer-roles-checkboxes');
             editOfficerAccessLevelSelect.innerHTML = '';
 
-            let roles = [];
-            let accessLevels = [];
+            let assignableRoles = [];
+            let assignableAccessLevels = [];
 
-            // Check for permissions, starting with the highest level (Website Manager)
-            if (currentUserRole === 'Website Manager' || currentUserAccessLevel === 'Website Manager') {
-                // Website Manager can edit all roles and access levels
-                roles = ["Account Manager", "Personnel Manager", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
-                accessLevels = ["High Command", "Command", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
+            if (hasPermission('Website Manager') || currentUserAccessLevel === 'Website Manager') {
+                assignableRoles = allRoles;
+                assignableAccessLevels = allAccessLevels;
                 editAccessLevelField.classList.remove('hidden');
-            } else if (currentUserRole === 'Account Manager' || currentUserAccessLevel === 'Account Manager') {
-                roles = ["Personnel Manager", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
-                accessLevels = ["High Command", "Command", "Field Training Officer"];
+            } else if (hasPermission('Account Manager') || currentUserAccessLevel === 'Account Manager') {
+                assignableRoles = allRoles.filter(r => r !== 'Website Manager');
+                assignableAccessLevels = allAccessLevels.filter(l => l !== 'Website Manager');
                 editAccessLevelField.classList.remove('hidden');
-            } else if (currentUserRole === 'Personnel Manager' || currentUserAccessLevel === 'Personnel Manager') {
-                roles = ["Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
-                accessLevels = []; // Personnel Manager cannot assign access levels
-                editAccessLevelField.classList.add('hidden');
-            } else {
-                // No permissions to edit roles
-                roles = [];
-                accessLevels = [];
+            } else if (hasPermission('Personnel Manager') || currentUserAccessLevel === 'Personnel Manager') {
+                assignableRoles = allRoles.filter(r => !['Website Manager', 'Account Manager'].includes(r));
+                assignableAccessLevels = [];
                 editAccessLevelField.classList.add('hidden');
             }
 
-            roles.forEach(role => {
-                const option = document.createElement('option');
-                option.value = role;
-                option.textContent = role;
-                if (role === currentRole) option.selected = true;
-                editOfficerRoleSelect.appendChild(option);
-            });
+            populateCheckboxes(rolesContainer, assignableRoles, currentRoles);
 
-            // Correctly populate access levels based on the check above
-            if (accessLevels.length > 0) {
-                accessLevels.forEach(accessLevel => {
+            if (assignableAccessLevels.length > 0) {
+                assignableAccessLevels.forEach(level => {
                     const option = document.createElement('option');
-                    option.value = accessLevel;
-                    option.textContent = accessLevel;
-                    if (accessLevel === currentAccessLevel) option.selected = true;
+                    option.value = level;
+                    option.textContent = level;
+                    if (level === currentAccessLevel) option.selected = true;
                     editOfficerAccessLevelSelect.appendChild(option);
                 });
             }
         };
-
 
         editOfficerForm.addEventListener('submit', async (e) => {
             e.preventDefault();
             const officerId = editOfficerIdInput.value;
             const newName = editOfficerNameInput.value;
             const newRank = editOfficerRankInput.value;
-            const newRole = editOfficerRoleSelect.value;
+            const selectedRoles = Array.from(document.querySelectorAll('#edit-officer-roles-checkboxes input:checked')).map(cb => cb.value);
             const newAccessLevel = editOfficerAccessLevelSelect.value || 'Officer';
 
             const personDocRef = window.firebase.doc(db, "users", officerId);
@@ -679,7 +654,7 @@
                 await window.firebase.updateDoc(personDocRef, {
                     name: newName,
                     rank: newRank,
-                    role: newRole,
+                    role: selectedRoles,
                     'access level': newAccessLevel
                 });
                 editOfficerModal.classList.remove('is-open');
@@ -719,51 +694,40 @@
             }
         };
 
-        const populateAddOfficerDropdowns = () => {
-            // Clear existing options
-            officerRoleSelect.innerHTML = '';
+        const populateAddOfficerCheckboxes = () => {
+            const rolesContainer = document.getElementById('officer-roles-checkboxes');
             officerAccessLevelSelect.innerHTML = '';
 
-            document.querySelector('#access-level-field label').textContent = "Access Level";
+            let assignableRoles = [];
+            let assignableAccessLevels = [];
 
-            let roles = [];
-            let accessLevels = [];
-
-            if (currentUserRole === 'Account Manager' || currentUserAccessLevel === 'Account Manager') {
-                roles = ["Personnel Manager", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
-                accessLevels = ["High Command", "Command", "Field Training Officer"];
+            if (hasPermission('Website Manager') || currentUserAccessLevel === 'Website Manager') {
+                assignableRoles = allRoles;
+                assignableAccessLevels = allAccessLevels;
                 accessLevelField.classList.remove('hidden');
-            } else if (currentUserRole === 'Personnel Manager' || currentUserAccessLevel === 'Personnel Manager') {
-                roles = ["Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
-                accessLevelField.classList.add('hidden');
-            } else if (currentUserRole === 'Website Manager' || currentUserAccessLevel === 'Website Manager') {
-                roles = ["Account Manager", "Personnel Manager", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
-                accessLevels = ["High Command", "Command", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader"];
+            } else if (hasPermission('Account Manager') || currentUserAccessLevel === 'Account Manager') {
+                assignableRoles = allRoles.filter(r => r !== 'Website Manager');
+                assignableAccessLevels = allAccessLevels.filter(l => l !== 'Website Manager');
                 accessLevelField.classList.remove('hidden');
-            } else {
-                roles = [];
+            } else if (hasPermission('Personnel Manager') || currentUserAccessLevel === 'Personnel Manager') {
+                assignableRoles = allRoles.filter(r => !['Website Manager', 'Account Manager'].includes(r));
                 accessLevelField.classList.add('hidden');
             }
 
-            roles.forEach(role => {
-                const option = document.createElement('option');
-                option.value = role;
-                option.textContent = role;
-                officerRoleSelect.appendChild(option);
-            });
+            populateCheckboxes(rolesContainer, assignableRoles);
 
-            if (currentUserRole === 'Account Manager' || currentUserAccessLevel === 'Account Manager' || currentUserRole === 'Website Manager' || currentUserAccessLevel === 'Website Manager') {
-                accessLevels.forEach(accessLevel => {
+            if (assignableAccessLevels.length > 0) {
+                assignableAccessLevels.forEach(level => {
                     const option = document.createElement('option');
-                    option.value = accessLevel;
-                    option.textContent = accessLevel;
+                    option.value = level;
+                    option.textContent = level;
                     officerAccessLevelSelect.appendChild(option);
                 });
             }
         };
 
         addOfficerBtn.addEventListener('click', () => {
-            populateAddOfficerDropdowns();
+            populateAddOfficerCheckboxes();
             addOfficerModal.classList.add('is-open')
         });
         cancelAddOfficerBtn.addEventListener('click', () => addOfficerModal.classList.remove('is-open'));
@@ -773,22 +737,24 @@
             e.preventDefault();
             const name = document.getElementById('officer-name').value;
             const email = document.getElementById('officer-email').value;
-            const role = document.getElementById('officer-role').value;
             const rank = document.getElementById('officer-rank').value;
+            const selectedRoles = Array.from(document.querySelectorAll('#officer-roles-checkboxes input:checked')).map(cb => cb.value);
             const accessLevel = document.getElementById('access-level').value || 'Officer';
             const password = generatePassword();
 
+            if (selectedRoles.length === 0) {
+                alert("Please select at least one role for the officer.");
+                return;
+            }
+
             try {
-                // Step 1: Create the user in Firebase Authentication
                 const userCredential = await window.firebase.createUserWithEmailAndPassword(auth, email, password);
                 const newUserId = userCredential.user.uid;
 
-                // Step 2: Create the user profile in Firestore
-                const userDocRef = window.firebase.doc(db, "users", newUserId);
-                await window.firebase.setDoc(userDocRef, {
+                await window.firebase.setDoc(window.firebase.doc(db, "users", newUserId), {
                     name,
                     email,
-                    role,
+                    role: selectedRoles,
                     rank,
                     'access level': accessLevel,
                     status: 'active',
@@ -826,8 +792,6 @@
                 setTimeout(() => document.getElementById('copy-feedback').textContent = '', 2000);
             } catch (err) {
                 console.error('Failed to copy password: ', err);
-                document.getElementById('copy-feedback').textContent = 'Failed to copy!';
-                setTimeout(() => document.getElementById('copy-feedback').textContent = '', 2000);
             }
         });
 
@@ -897,10 +861,10 @@
                     const reportDate = new Date(reportData.createdAt).toLocaleString();
 
                     reportEl.innerHTML = `
-                                <h3 class="font-bold text-lg text-blue-600 dark:text-blue-400">${reportTitle}</h3>
-                                <p class="text-sm text-slate-600 dark:text-slate-300">Filed by: ${reportingOfficer}</p>
-                                <p class="text-xs text-slate-400 dark:text-slate-500">Date: ${reportDate}</p>
-                            `;
+                            <h3 class="font-bold text-lg text-blue-600 dark:text-blue-400">${reportTitle}</h3>
+                            <p class="text-sm text-slate-600 dark:text-slate-300">Filed by: ${reportingOfficer}</p>
+                            <p class="text-xs text-slate-400 dark:text-slate-500">Date: ${reportDate}</p>
+                        `;
 
                     reportEl.addEventListener('click', () => openReportModal(reportData));
                     reportsContainer.appendChild(reportEl);
@@ -926,15 +890,8 @@
             reportDetailModal.classList.add('is-open');
         };
 
-        closeReportModalBtn.addEventListener('click', () => {
-            reportDetailModal.classList.remove('is-open');
-        });
-
-        reportDetailModal.addEventListener('click', (e) => {
-            if (e.target === reportDetailModal) {
-                reportDetailModal.classList.remove('is-open');
-            }
-        });
+        closeReportModalBtn.addEventListener('click', () => reportDetailModal.classList.remove('is-open'));
+        reportDetailModal.addEventListener('click', e => e.target === reportDetailModal && reportDetailModal.classList.remove('is-open'));
 
         // --- General UI Logic (Theme, Mobile Nav) ---
         document.addEventListener('DOMContentLoaded', () => {
@@ -966,14 +923,8 @@
             hamburgerBtn.addEventListener('click', (e) => { e.stopPropagation(); navLinks.classList.toggle('nav-mobile-active'); });
             settingsBtn.addEventListener('click', () => settingsModal.classList.add('is-open'));
             closeSettingsBtn.addEventListener('click', () => settingsModal.classList.remove('is-open'));
-            settingsModal.addEventListener('click', (e) => {
-                if (e.target === settingsModal) {
-                    settingsModal.classList.remove('is-open');
-                }
-            });
-
+            settingsModal.addEventListener('click', (e) => e.target === settingsModal && settingsModal.classList.remove('is-open'));
         });
-
     </script>
 </body>
 </html>
