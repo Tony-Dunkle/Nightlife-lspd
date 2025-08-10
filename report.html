@@ -486,11 +486,75 @@
                 let prompt;
 
                 if (isTraffic) {
-                    prompt = `Generate a formal police traffic citation using the following format and data. The "Officer's Statement" should be a detailed, first-person narrative based on the "Reason for Stop".
-                        Date: ${new Date().toLocaleDateString()}\n---\nTime: ${new Date().toLocaleTimeString()}\n---\nLocation (postal): ${reportData.location}\n---\nIssuing Officer: ${officers.join(', ') || 'N/A'}\n---\nVehicle Make/Model: ${reportData.vehicleMake}\n---\nColor: ${reportData.vehicleColor}\n---\nPlate: ${reportData.vehiclePlate}\n---\nRegistered Owner: ${reportData.vehicleOwner}\n---\nDriver Name: ${criminals.map(c => c.name).join(', ') || 'N/A'}\n---\nDriver’s License #: ${reportData.driverLicense}\n---\nReason for Stop: ${reportData.stopReason}\n---\nObserved Violations: ${reportData.observedViolations}\n---\nCharges/Citations Issued: ${criminals.flatMap(c => c.charges).join(', ') || 'None'}\n---\nSpeed (if applicable): ${reportData.speed}\n---\nRadar/Lidar Used: ${reportData.radarUsed}\n---\nTraffic Conditions: ${reportData.trafficConditions}\n---\nWeather Conditions: ${reportData.weatherConditions}\n---\nVehicle Search Conducted: ${reportData.vehicleSearch}\n---\nItems Seized (if any): ${evidence.join(', ') || 'None'}\n---\nDriver’s Statement: ${reportData.description}\n---\nOfficer’s Statement: [AI to generate a formal, first-person narrative based on the 'Reason for Stop' and 'Observed Violations' details provided above.]`;
+                    prompt = `Generate a formal police traffic citation based on the following details. Structure the report using the exact markdown headings provided below. Do not add numbers or bullet points to the headings. The "Officer's Statement" should be a detailed, first-person narrative based on the "Reason for Stop".
+
+# Unified Police Department - Traffic Citation
+
+## Case Details
+**Date:** ${new Date().toLocaleDateString()}
+**Time:** ${new Date().toLocaleTimeString()}
+**Location (postal):** ${reportData.location}
+**Issuing Officer(s):** ${officers.join(', ') || 'N/A'}
+
+## Vehicle Information
+**Vehicle Make/Model:** ${reportData.vehicleMake}
+**Color:** ${reportData.vehicleColor}
+**License Plate:** ${reportData.vehiclePlate}
+**Registered Owner:** ${reportData.vehicleOwner}
+
+## Driver Information
+**Driver Name:** ${criminals.map(c => c.name).join(', ') || 'N/A'}
+**Driver’s License #:** ${reportData.driverLicense}
+
+## Incident Details
+**Reason for Stop:** ${reportData.stopReason}
+**Observed Violations:** ${reportData.observedViolations}
+**Charges/Citations Issued:** ${criminals.flatMap(c => c.charges).join(', ') || 'None'}
+**Speed (if applicable):** ${reportData.speed}
+**Radar/Lidar Used:** ${reportData.radarUsed}
+**Traffic Conditions:** ${reportData.trafficConditions}
+**Weather Conditions:** ${reportData.weatherConditions}
+**Vehicle Search Conducted:** ${reportData.vehicleSearch}
+**Items Seized (if any):** ${evidence.join(', ') || 'None'}
+
+## Statements
+**Driver’s Statement:**
+${reportData.description}
+
+**Officer’s Statement:**
+[AI to generate a formal, first-person narrative based on the 'Reason for Stop' and 'Observed Violations' details provided above.]`;
                 } else {
-                    prompt = `Generate a formal police arrest report using the following format and data. The "Officer statement" should be a detailed, first-person narrative based on the "Initial call" information.
-                        Date: ${new Date().toLocaleDateString()}\n---\nTime: ${new Date().toLocaleTimeString()}\n---\nLocations (postal): ${reportData.location}\n---\nProcessing officers: ${officers.join(', ') || 'N/A'}\n---\nInitial call: ${reportData.description}\n---\nSuspects: ${criminals.map(c => c.name).join(', ') || 'N/A'}\n---\nDetained/Arrested: ${criminals.length > 0 ? 'Yes' : 'No'}\n---\nMiranda rights: ${reportData.mirandized}\n---\nSearched: [AI should infer 'Yes' or 'No' based on seized items]\n---\nSeized items: ${evidence.join(', ') || 'None'}\n---\nCash seized: [AI should state amount if mentioned in debrief, otherwise 'N/A']\n---\nGSR test: ${reportData.gsrTest}\n---\nFingerprints: [AI should state 'Taken as per standard procedure' if suspects are listed]\n---\nReductions: [AI should state 'None offered at this time' unless specified in debrief]\n---\nPlea: ${reportData.plea}\n---\nWeapons to be released: ${reportData.returnWeapons}\n---\nWeapon: N/A\n---\nTo whom: N/A\n---\nWeapons released by: N/A\n---\nWeapons released: N/A\n---\nDate: N/A\n---\nOfficer statement: [AI to generate a formal, first-person narrative based on the 'Initial call' details provided above.]`;
+                    prompt = `Generate a formal police arrest report based on the following details. Structure the report using the exact markdown headings provided below. Do not add numbers or bullet points to the headings. The "Officer's Narrative" should be a detailed, first-person account based on the "Initial Summary" information.
+
+# Unified Police Department - Arrest Report
+
+## Incident Information
+**Date:** ${new Date().toLocaleDateString()}
+**Time:** ${new Date().toLocaleTimeString()}
+**Location (postal):** ${reportData.location}
+**Reporting Officer(s):** ${officers.join(', ') || 'N/A'}
+
+## Suspect Information
+**Suspect(s):** ${criminals.map(c => c.name).join(', ') || 'N/A'}
+**Charges:** ${criminals.flatMap(c => c.charges).join(', ') || 'None'}
+**Plea:** ${reportData.plea}
+
+## Procedural Information
+**Detained/Arrested:** ${criminals.length > 0 ? 'Yes' : 'No'}
+**Miranda Rights Read:** ${reportData.mirandized}
+**Legal Representation Requested:** ${reportData.legalRepresentation}
+**Suspect(s) Searched:** [AI should infer 'Yes' or 'No' based on seized items]
+**Items Seized:** ${evidence.join(', ') || 'None'}
+**Cash Seized:** [AI should state amount if mentioned in summary, otherwise 'N/A']
+**GSR Test:** ${reportData.gsrTest}
+**Fingerprints Taken:** [AI should state 'Taken as per standard procedure' if suspects are listed]
+
+## Officer's Narrative
+**Initial Summary:**
+${reportData.description}
+
+**Full Narrative:**
+[AI to generate a formal, first-person narrative based on the 'Initial Summary' details provided above.]`;
                 }
 
                 await generateAIContent(prompt, document.getElementById('report-description'));
