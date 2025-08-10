@@ -383,17 +383,17 @@
                     userProfile = { uid: user.uid, ...userDocSnap.data() };
                 } else {
                     // Fallback for demo if user doc doesn't exist
-                    userProfile = { name: 'Demo User', role: 'Detective', access: '' };
+                    userProfile = { name: 'Demo User', role: 'Detective', 'access level': '' };
                 }
 
                 userInfo.textContent = `${userProfile.name} | ${userProfile.role}`;
 
                 // Get user's role and access level for permission checks
                 const userRole = userProfile.role || '';
-                const userAccess = userProfile.access || '';
+                const userAccessLevel = userProfile['access level'] || '';
 
-                // Check view permissions against both role and access fields
-                const canView = accessConfig.canView.includes(userRole) || accessConfig.canView.includes(userAccess);
+                // Check view permissions against both role and access level fields
+                const canView = accessConfig.canView.includes(userRole) || accessConfig.canView.includes(userAccessLevel);
 
                 if (canView) {
                     authButtons.classList.remove('hidden');
@@ -496,8 +496,8 @@
                 caseStatusInput.value = caseData.status;
                 synopsisInput.value = caseData.synopsis || '';
 
-                // Check delete permissions against both role and access fields
-                const canDelete = accessConfig.canDelete.includes(userProfile.role) || accessConfig.canDelete.includes(userProfile.access);
+                // Check delete permissions against both role and access level fields
+                const canDelete = accessConfig.canDelete.includes(userProfile.role) || accessConfig.canDelete.includes(userProfile['access level']);
                 if (canDelete) {
                     deleteCaseBtn.classList.remove('hidden');
                 }
