@@ -457,14 +457,36 @@
                         <td class="px-6 py-4">${c.lastUpdated ? new Date(c.lastUpdated.seconds * 1000).toLocaleDateString() : 'N/A'}</td>
                     </tr>`).join('') : `<tr><td colspan="5" class="text-center p-8 text-gray-500">No cases found.</td></tr>`;
         }
+
         function renderRoster() {
+            const cidRoles = accessConfig.isCid;
             const cidPersonnel = allUsers.filter(user => {
-                const userRole = user.role || '';
-                const userAccessLevel = user['access level'] || '';
-                return accessConfig.isCid.includes(userRole) || accessConfig.isCid.includes(userAccessLevel);
+                const userRoles = Array.isArray(user.role) ? user.role : [user.role];
+                const userAccessLevels = Array.isArray(user['access level']) ? user['access level'] : [user['access level']];
+                const allUserPerms = [...userRoles, ...userAccessLevels].filter(Boolean);
+                return allUserPerms.some(perm => cidRoles.includes(perm));
             });
-            rosterGrid.innerHTML = cidPersonnel.length ? cidPersonnel.map(u => `<div class="bg-gray-800 border border-gray-700 rounded-lg p-4 flex items-center gap-4"><i class="ph-user-circle-light text-5xl text-gray-400"></i><div><h3 class="font-bold text-white text-lg">${u.name}</h3><p class="text-sm text-blue-400">${u.role}</p></div></div>`).join('') : `<p class="text-gray-500 col-span-full text-center">No detectives found.</p>`;
+
+            rosterGrid.innerHTML = cidPersonnel.length
+                ? cidPersonnel.map(u => {
+                    const userRoles = Array.isArray(u.role) ? u.role : [u.role];
+                    const userAccessLevels = Array.isArray(u['access level']) ? u['access level'] : [u['access level']];
+                    const allUserPerms = [...userRoles, ...userAccessLevels].filter(Boolean);
+
+                    const displayRoles = allUserPerms.filter(perm => cidRoles.includes(perm));
+                    const displayRoleString = displayRoles.join(', ');
+
+                    return `<div class="bg-gray-800 border border-gray-700 rounded-lg p-4 flex items-center gap-4">
+                                    <i class="ph-user-circle-light text-5xl text-gray-400"></i>
+                                    <div>
+                                        <h3 class="font-bold text-white text-lg">${u.name}</h3>
+                                        <p class="text-sm text-blue-400">${displayRoleString}</p>
+                                    </div>
+                                </div>`
+                }).join('')
+                : `<p class="text-gray-500 col-span-full text-center">No detectives found.</p>`;
         }
+
         function renderArchivesTable() {
             const closed = allCases.filter(c => c.status === 'Closed');
             archivesTableBody.innerHTML = closed.length ? closed.map(c => `
