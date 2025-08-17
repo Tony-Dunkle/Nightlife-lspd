@@ -172,7 +172,7 @@
 
                 <div class="flex items-center ml-4">
                     <button id="settings-btn" class="p-2 rounded-full hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426-1.756-2.924-1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
                     </button>
                     <button id="hamburgerBtn" class="hamburger-menu p-2 rounded-md hover:bg-white/10 focus:outline-none md:hidden ml-2">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
@@ -238,14 +238,10 @@
                                     <input type="text" id="trans-made-by" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                                 </div>
                                 <div>
-                                    <label for="trans-cid" class="block text-sm font-medium text-slate-700 dark:text-slate-200">CID</label>
-                                    <input type="text" id="trans-cid" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
-                                </div>
-                                <div>
                                     <label for="trans-amount" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Amount</label>
                                     <input type="text" id="trans-amount" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="$100,000.00">
                                 </div>
-                                <div>
+                                <div class="md:col-span-2">
                                     <label for="trans-message" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Message</label>
                                     <input type="text" id="trans-message" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                                 </div>
@@ -255,7 +251,7 @@
                                 <input type="file" id="trans-image" accept="image/*" class="mt-1 block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 dark:file:bg-slate-600 dark:file:text-slate-200 file:text-blue-700 hover:file:bg-blue-100 dark:hover:file:bg-slate-500">
                                 <img id="image-preview" src="" alt="Image preview" class="mt-4 rounded-lg max-h-48 hidden" />
                             </div>
-                            <!-- NEW: Webhook Selector Dropdown -->
+                            <!-- Webhook Selector Dropdown -->
                             <div class="pt-2">
                                 <label for="webhook-selector" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Send to Discord Channel</label>
                                 <select id="webhook-selector" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
@@ -427,7 +423,7 @@
                 </div>
             </div>
 
-            <!-- NEW: Webhook Management Section -->
+            <!-- Webhook Management Section -->
             <div id="webhook-management-section" class="hidden">
                 <hr class="border-slate-200 dark:border-slate-700 my-6">
                 <h3 class="text-lg font-semibold mb-3">Webhook Management</h3>
@@ -601,10 +597,6 @@
         document.addEventListener('DOMContentLoaded', () => {
             AuthManager.init();
         });
-
-        // --- [The rest of your existing page logic remains unchanged] ---
-        // The code below this point for modals, personnel management, etc.,
-        // will now be correctly triggered by AuthManager.grantAccess().
 
         // --- DOM Element Refs ---
         const personnelListContainer = document.getElementById('personnel-list-container');
@@ -897,7 +889,7 @@
         const submitTransactionBtn = document.getElementById('submit-transaction-btn');
         const webhookSelector = document.getElementById('webhook-selector');
 
-        // --- NEW: Webhook Management ---
+        // --- Webhook Management ---
         const webhookFeedback = document.getElementById('webhook-feedback');
         const addWebhookForm = document.getElementById('add-webhook-form');
         const webhookList = document.getElementById('webhook-list');
@@ -1003,7 +995,6 @@
             if (typeMatch) document.getElementById('trans-type').value = typeMatch[1];
             if (madeByMatch) {
                 document.getElementById('trans-made-by').value = madeByMatch[1];
-                document.getElementById('trans-cid').value = madeByMatch[2];
             }
             if (amountMatch) document.getElementById('trans-amount').value = amountMatch[1];
             if (messageMatch) document.getElementById('trans-message').value = messageMatch[1];
@@ -1053,7 +1044,6 @@
                 account: document.getElementById('trans-account').value,
                 type: document.getElementById('trans-type').value,
                 madeBy: document.getElementById('trans-made-by').value,
-                cid: document.getElementById('trans-cid').value,
                 amount: document.getElementById('trans-amount').value,
                 message: document.getElementById('trans-message').value,
                 imageUrl: imageUrl,
@@ -1091,7 +1081,7 @@
                     "fields": [
                         { "name": "Transfer from account / To:", "value": `\`${transactionData.account}\``, "inline": false },
                         { "name": "Type:", "value": transactionData.type, "inline": false },
-                        { "name": "Made by:", "value": `${transactionData.madeBy} \`(${transactionData.cid})\``, "inline": false },
+                        { "name": "Made by:", "value": `${transactionData.madeBy}`, "inline": false },
                         { "name": "Time:", "value": `<t:${Math.floor(Date.now() / 1000)}:R>`, "inline": false },
                         { "name": "Amount:", "value": `\`${transactionData.amount}\``, "inline": false },
                         { "name": "Message:", "value": transactionData.message, "inline": false }
