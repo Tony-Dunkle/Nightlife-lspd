@@ -459,21 +459,19 @@
             };
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
-        // --- AUTHENTICATION MANAGER ---
+        // --- AUTHENTICATION MANAGER (REBUILT) ---
         const AuthManager = {
-            async init(authToken) {
+            init() {
                 try {
                     const app = window.firebase.initializeApp(firebaseConfig);
                     auth = window.firebase.getAuth(app);
                     db = window.firebase.getFirestore(app);
                     storage = window.firebase.getStorage(app);
                     console.log("Firebase Initialized for High Command");
-
-                    await window.firebase.signInWithCustomToken(auth, authToken);
                     this.setupAuthStateListener();
                 } catch (error) {
-                    console.error("Authentication failed:", error.message);
-                    this.showAccessDenied("Authentication failed. Please try logging in again.");
+                    console.error("Firebase Initialization Failed:", error);
+                    this.showAccessDenied("Could not initialize the application. Please refresh.");
                 }
             },
 
@@ -484,7 +482,8 @@
                         const userData = await this.fetchUserData(userId);
                         this.handleAuthenticatedUser(userData);
                     } else {
-                        this.showAccessDenied("Session ended. Please log in again.");
+                        // This case handles if the user signs out, or the token is invalid/expired
+                        this.showAccessDenied("No active login session found. Please log in.");
                     }
                 });
             },
@@ -524,7 +523,28 @@
             }
         };
 
-        window.startHighCommandApp = (token) => AuthManager.init(token);
+        // --- APPLICATION STARTUP ---
+        document.addEventListener('DOMContentLoaded', () => {
+            let attempts = 0;
+            const maxAttempts = 50; // 5 seconds timeout
+            const interval = setInterval(() => {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    clearInterval(interval);
+                    AuthManager.init(); // Initialize the app now that services are ready
+                    window.firebase.signInWithCustomToken(auth, __initial_auth_token).catch(err => {
+                        console.error("Failed to sign in with custom token:", err);
+                        AuthManager.showAccessDenied("Your login token is invalid. Please log in again.");
+                    });
+                } else {
+                    attempts++;
+                    if (attempts >= maxAttempts) {
+                        clearInterval(interval);
+                        console.error("Auth token not available after 5 seconds.");
+                        AuthManager.showAccessDenied('Authentication token could not be found. Please try logging in again.');
+                    }
+                }
+            }, 100);
+        });
 
         // --- DOM Element Refs ---
         const personnelListContainer = document.getElementById('personnel-list-container');
@@ -1093,30 +1113,6 @@
         });
     </script>
 
-    <!-- This small script will poll for the auth token and start the main app -->
-    <script>
-        (() => {
-            let attempts = 0;
-            const maxAttempts = 50; // 5 seconds timeout
-            const interval = setInterval(() => {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    clearInterval(interval);
-                    // Once the token is found, call the main app initializer
-                    window.startHighCommandApp(__initial_auth_token);
-                } else {
-                    attempts++;
-                    if (attempts >= maxAttempts) {
-                        clearInterval(interval);
-                        console.error("Auth token not available after 5 seconds.");
-                        // Show the login prompt if the token never appears
-                        document.getElementById('loading-overlay').classList.add('hidden');
-                        const loginOverlay = document.getElementById('login-prompt-overlay');
-                        loginOverlay.querySelector('#login-prompt-message').textContent = 'Authentication token could not be found. Please try logging in again.';
-                        loginOverlay.classList.remove('hidden');
-                    }
-                }
-            }, 100);
-        })();
-    </script>
+    <!-- REMOVED previous polling script -->
 </body>
 </html>
