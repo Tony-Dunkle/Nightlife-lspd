@@ -471,14 +471,12 @@
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                     await window.firebase.signInWithCustomToken(auth, __initial_auth_token);
                 } else {
-                    // If no token is provided, show the access denied message immediately.
                     loadingOverlay.classList.add('hidden');
                     loginOverlay.classList.remove('hidden');
                     console.log("No auth token provided. Access denied.");
-                    return; // Stop execution if no token
+                    return;
                 }
 
-                // Listen for authentication state changes to handle page access
                 window.firebase.onAuthStateChanged(auth, async (user) => {
                     const pageContent = document.getElementById('page-content');
 
@@ -498,9 +496,8 @@
                             userRoles = Array.isArray(userData.role) ? userData.role : [userData.role];
                         }
 
-                        const hasRole = (role) => userRoles.includes(role);
-
-                        const canAccessPage = userAccessLevel === 'High Command' || hasRole('Account Manager') || hasRole('Personnel Manager') || userAccessLevel === 'Website Manager';
+                        // CORRECTED: Simplified access check based on access level only
+                        const canAccessPage = userAccessLevel === 'High Command' || userAccessLevel === 'Website Manager';
 
                         if (canAccessPage) {
                             loadingOverlay.classList.add('hidden');
@@ -510,9 +507,6 @@
                             loadReportsFromFirestore();
                             loadPersonnel();
                             setPermissions(userRoles, userAccessLevel);
-                            if (userAccessLevel === 'Website Manager') {
-                                loadWebhookUrl();
-                            }
 
                         } else {
                             loadingOverlay.classList.add('hidden');
@@ -569,13 +563,11 @@
         let currentUserRoles = [];
         let currentUserAccessLevel = null;
 
-        const hasPermission = (role) => Array.isArray(currentUserRoles) ? currentUserRoles.includes(role) : currentUserRoles === role;
-
         const setPermissions = (roles, accessLevel) => {
             currentUserRoles = roles;
             currentUserAccessLevel = accessLevel;
 
-            const isManager = hasPermission('Account Manager') || hasPermission('Personnel Manager') || accessLevel === 'Website Manager';
+            const isManager = accessLevel === 'Website Manager' || hasPermission('Account Manager') || hasPermission('Personnel Manager');
             const isCommand = accessLevel === "High Command" || accessLevel === "Command";
 
             if (isManager || isCommand) {
@@ -590,6 +582,7 @@
 
             if (accessLevel === 'Website Manager') {
                 document.getElementById('webhook-settings-section').classList.remove('hidden');
+                loadWebhookUrl(); // Load webhook URL only for Website Manager
             }
         };
 
@@ -616,7 +609,6 @@
                 const personnel = [];
                 snapshot.forEach(doc => personnel.push({ id: doc.id, ...doc.data() }));
 
-                // Sort personnel alphabetically by name
                 personnel.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
 
                 personnel.forEach(person => {
@@ -662,7 +654,7 @@
             if (target.classList.contains('remove-btn')) openConfirmRemoveModal(target.dataset.id, target.dataset.name);
         });
 
-        // Add/Edit Officer Logic (abbreviated for brevity, no changes from original)
+        // Add/Edit Officer Logic (abbreviated for brevity)
         const openEditOfficerModal = async (personId) => {
             const personDocRef = window.firebase.doc(db, "users", personId);
             const docSnap = await window.firebase.getDoc(personDocRef);
@@ -692,16 +684,16 @@
             const rolesContainer = document.getElementById('edit-officer-roles-checkboxes');
             editOfficerAccessLevelSelect.innerHTML = '';
             let assignableRoles = [], assignableAccessLevels = [];
-            if (hasPermission('Website Manager') || currentUserAccessLevel === 'Website Manager' || hasPermission('Website Admin')) {
+            if (currentUserAccessLevel === 'Website Manager') {
                 assignableRoles = allRoles;
                 assignableAccessLevels = allAccessLevels;
                 editAccessLevelField.classList.remove('hidden');
             } else if (hasPermission('Account Manager')) {
-                assignableRoles = allRoles.filter(r => r !== 'Website Manager' && r !== 'Website Admin');
+                assignableRoles = allRoles.filter(r => r !== 'Website Manager');
                 assignableAccessLevels = allAccessLevels.filter(l => l !== 'Website Manager');
                 editAccessLevelField.classList.remove('hidden');
             } else if (hasPermission('Personnel Manager')) {
-                assignableRoles = allRoles.filter(r => !['Website Manager', 'Website Admin', 'Account Manager'].includes(r));
+                assignableRoles = allRoles.filter(r => !['Website Manager', 'Account Manager'].includes(r));
                 editAccessLevelField.classList.add('hidden');
             }
             populateCheckboxes(rolesContainer, assignableRoles, currentRoles);
@@ -749,16 +741,16 @@
             const rolesContainer = document.getElementById('officer-roles-checkboxes');
             officerAccessLevelSelect.innerHTML = '';
             let assignableRoles = [], assignableAccessLevels = [];
-            if (hasPermission('Website Manager') || currentUserAccessLevel === 'Website Manager' || hasPermission('Website Admin')) {
+            if (currentUserAccessLevel === 'Website Manager') {
                 assignableRoles = allRoles;
                 assignableAccessLevels = allAccessLevels;
                 accessLevelField.classList.remove('hidden');
             } else if (hasPermission('Account Manager')) {
-                assignableRoles = allRoles.filter(r => r !== 'Website Manager' && r !== 'Website Admin');
+                assignableRoles = allRoles.filter(r => r !== 'Website Manager');
                 assignableAccessLevels = allAccessLevels.filter(l => l !== 'Website Manager');
                 accessLevelField.classList.remove('hidden');
             } else if (hasPermission('Personnel Manager')) {
-                assignableRoles = allRoles.filter(r => !['Website Manager', 'Website Admin', 'Account Manager'].includes(r));
+                assignableRoles = allRoles.filter(r => !['Website Manager', 'Account Manager'].includes(r));
                 accessLevelField.classList.add('hidden');
             }
             populateCheckboxes(rolesContainer, assignableRoles);
