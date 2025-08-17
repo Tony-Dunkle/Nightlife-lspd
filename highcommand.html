@@ -448,12 +448,13 @@
         const firebaseConfig = typeof __firebase_config !== 'undefined'
             ? JSON.parse(__firebase_config)
             : {
-                apiKey: "YOUR_API_KEY",
-                authDomain: "YOUR_AUTH_DOMAIN",
-                projectId: "YOUR_PROJECT_ID",
-                storageBucket: "YOUR_STORAGE_BUCKET",
-                messagingSenderId: "YOUR_SENDER_ID",
-                appId: "YOUR_APP_ID"
+                apiKey: "AIzaSyDU7DRAxCzqu81DTa7k0DXaBRcMpk0sElc",
+                authDomain: "upd-system.firebaseapp.com",
+                projectId: "upd-system",
+                storageBucket: "upd-system.appspot.com",
+                messagingSenderId: "28223003678",
+                appId: "1:28223003678:web:a19a9a8eb33fe74202220f",
+                measurementId: "G-83NX0KXZ1Y"
             };
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
@@ -465,10 +466,10 @@
                 storage = window.firebase.getStorage(app);
                 console.log("Firebase Initialized for High Command");
 
-                // --- ADDED: Sign in user before setting up listener ---
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                     await window.firebase.signInWithCustomToken(auth, __initial_auth_token);
                 } else {
+                    // Fallback for local development or if token is not available
                     await window.firebase.signInAnonymously(auth);
                 }
 
