@@ -465,6 +465,13 @@
                 storage = window.firebase.getStorage(app);
                 console.log("Firebase Initialized for High Command");
 
+                // --- ADDED: Sign in user before setting up listener ---
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    await window.firebase.signInWithCustomToken(auth, __initial_auth_token);
+                } else {
+                    await window.firebase.signInAnonymously(auth);
+                }
+
                 // Listen for authentication state changes to handle page access
                 window.firebase.onAuthStateChanged(auth, async (user) => {
                     const loadingOverlay = document.getElementById('loading-overlay');
@@ -489,7 +496,7 @@
 
                         const hasRole = (role) => userRoles.includes(role);
 
-                        const canAccessPage = userAccessLevel === 'High Command' || hasRole('Account Manager') || hasRole('Personnel Manager') || hasRole('Website Manager') || userAccessLevel === 'Website Manager';
+                        const canAccessPage = userAccessLevel === 'High Command' || hasRole('Account Manager') || hasRole('Personnel Manager') || hasRole('Website Manager') || userAccessLevel === 'Website Manager' || hasRole('Website Admin');
 
                         if (canAccessPage) {
                             loadingOverlay.classList.add('hidden');
@@ -579,7 +586,7 @@
             }
 
             if (isAdmin) {
-                 document.getElementById('webhook-settings-section').classList.remove('hidden');
+                document.getElementById('webhook-settings-section').classList.remove('hidden');
             }
         };
 
@@ -618,21 +625,21 @@
                     const rolesDisplay = Array.isArray(person.role) ? person.role.join(', ') : (person.role || 'N/A');
 
                     personEl.innerHTML = `
-                            <div class="flex items-center justify-between">
-                                <div>
-                                    <p class="font-semibold">${person.name || 'No Name'}</p>
-                                    <p class="text-sm text-slate-500 dark:text-slate-400">${person.email || ''}</p>
-                                    <p class="text-sm text-slate-500 dark:text-slate-400">${person.rank || 'N/A'} - ${rolesDisplay}</p>
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <p class="font-semibold">${person.name || 'No Name'}</p>
+                                        <p class="text-sm text-slate-500 dark:text-slate-400">${person.email || ''}</p>
+                                        <p class="text-sm text-slate-500 dark:text-slate-400">${person.rank || 'N/A'} - ${rolesDisplay}</p>
+                                    </div>
+                                    <p class="text-sm font-bold ${statusColor}">${person.status ? person.status.charAt(0).toUpperCase() + person.status.slice(1) : 'N/A'}</p>
                                 </div>
-                                <p class="text-sm font-bold ${statusColor}">${person.status ? person.status.charAt(0).toUpperCase() + person.status.slice(1) : 'N/A'}</p>
-                            </div>
-                            <div class="grid grid-cols-4 gap-2 mt-3 pt-3 border-t border-slate-200 dark:border-slate-600">
-                                <button data-id="${person.id}" class="edit-btn text-xs bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded-md transition">Edit</button>
-                                <button data-id="${person.id}" class="reset-pass-btn text-xs bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-2 rounded-md transition">Reset Pass</button>
-                                <button data-id="${person.id}" data-status="${person.status}" class="toggle-status-btn text-xs ${toggleButtonColor} text-white font-bold py-1 px-2 rounded-md transition">${toggleButtonText}</button>
-                                <button data-id="${person.id}" data-name="${person.name}" class="remove-btn text-xs bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-md transition">Remove</button>
-                            </div>
-                        `;
+                                <div class="grid grid-cols-4 gap-2 mt-3 pt-3 border-t border-slate-200 dark:border-slate-600">
+                                    <button data-id="${person.id}" class="edit-btn text-xs bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded-md transition">Edit</button>
+                                    <button data-id="${person.id}" class="reset-pass-btn text-xs bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-2 rounded-md transition">Reset Pass</button>
+                                    <button data-id="${person.id}" data-status="${person.status}" class="toggle-status-btn text-xs ${toggleButtonColor} text-white font-bold py-1 px-2 rounded-md transition">${toggleButtonText}</button>
+                                    <button data-id="${person.id}" data-name="${person.name}" class="remove-btn text-xs bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-md transition">Remove</button>
+                                </div>
+                            `;
                     personnelListContainer.appendChild(personEl);
                 });
             }, (error) => {
@@ -672,10 +679,10 @@
                 const isChecked = selectedRoles.includes(role);
                 const checkboxId = `${container.id}-${role.replace(/\s+/g, '-')}`;
                 container.innerHTML += `
-                    <div class="flex items-center">
-                        <input id="${checkboxId}" type="checkbox" value="${role}" ${isChecked ? 'checked' : ''} class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                        <label for="${checkboxId}" class="ml-3 block text-sm text-slate-700 dark:text-slate-200">${role}</label>
-                    </div>`;
+                        <div class="flex items-center">
+                            <input id="${checkboxId}" type="checkbox" value="${role}" ${isChecked ? 'checked' : ''} class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                            <label for="${checkboxId}" class="ml-3 block text-sm text-slate-700 dark:text-slate-200">${role}</label>
+                        </div>`;
             });
         };
         const populateEditCheckboxes = (currentRoles, currentAccessLevel) => {
@@ -736,7 +743,7 @@
             } catch (error) { console.error("Error updating status:", error); }
         };
         const populateAddOfficerCheckboxes = () => {
-             const rolesContainer = document.getElementById('officer-roles-checkboxes');
+            const rolesContainer = document.getElementById('officer-roles-checkboxes');
             officerAccessLevelSelect.innerHTML = '';
             let assignableRoles = [], assignableAccessLevels = [];
             if (hasPermission('Website Manager') || currentUserAccessLevel === 'Website Manager' || hasPermission('Website Admin')) {
@@ -788,7 +795,7 @@
                 tempPasswordDisplay.value = password;
                 showPasswordModal.querySelector('h2').textContent = 'Officer Account Created!';
                 showPasswordModal.classList.add('is-open');
-            } catch (error) { console.error("Error adding officer:", error); alert("Failed to add officer. See console.");}
+            } catch (error) { console.error("Error adding officer:", error); alert("Failed to add officer. See console."); }
         });
         closePasswordModalBtn.addEventListener('click', () => showPasswordModal.classList.remove('is-open'));
         showPasswordModal.addEventListener('click', e => e.target === showPasswordModal && showPasswordModal.classList.remove('is-open'));
@@ -999,9 +1006,9 @@
                 transactionFeedback.textContent = "Saved, but failed to send to Discord.";
                 transactionFeedback.className = "text-sm h-5 mt-1 text-yellow-500";
             } finally {
-                 setTimeout(() => transactionFeedback.textContent = '', 4000);
-                 submitTransactionBtn.disabled = false;
-                 submitTransactionBtn.textContent = 'Save & Send to Discord';
+                setTimeout(() => transactionFeedback.textContent = '', 4000);
+                submitTransactionBtn.disabled = false;
+                submitTransactionBtn.textContent = 'Save & Send to Discord';
             }
         };
 
@@ -1036,10 +1043,10 @@
                     const reportingOfficer = officerMatch ? officerMatch[1] : 'Unknown Officer';
                     const reportDate = new Date(report.createdAt).toLocaleString();
                     reportEl.innerHTML = `
-                            <h3 class="font-bold text-lg text-blue-600 dark:text-blue-400">${reportTitle}</h3>
-                            <p class="text-sm text-slate-600 dark:text-slate-300">Filed by: ${reportingOfficer}</p>
-                            <p class="text-xs text-slate-400 dark:text-slate-500">Date: ${reportDate}</p>
-                        `;
+                                <h3 class="font-bold text-lg text-blue-600 dark:text-blue-400">${reportTitle}</h3>
+                                <p class="text-sm text-slate-600 dark:text-slate-300">Filed by: ${reportingOfficer}</p>
+                                <p class="text-xs text-slate-400 dark:text-slate-500">Date: ${reportDate}</p>
+                            `;
                     reportEl.addEventListener('click', () => openReportModal(report));
                     reportsContainer.appendChild(reportEl);
                 });
