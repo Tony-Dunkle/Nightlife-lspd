@@ -459,6 +459,8 @@
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
         const initializeFirebase = async () => {
+            const loadingOverlay = document.getElementById('loading-overlay');
+            const loginOverlay = document.getElementById('login-prompt-overlay');
             try {
                 const app = window.firebase.initializeApp(firebaseConfig);
                 auth = window.firebase.getAuth(app);
@@ -469,15 +471,16 @@
                 if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                     await window.firebase.signInWithCustomToken(auth, __initial_auth_token);
                 } else {
-                    // Fallback for local development or if token is not available
-                    await window.firebase.signInAnonymously(auth);
+                    // If no token is provided, show the access denied message immediately.
+                    loadingOverlay.classList.add('hidden');
+                    loginOverlay.classList.remove('hidden');
+                    console.log("No auth token provided. Access denied.");
+                    return; // Stop execution if no token
                 }
 
                 // Listen for authentication state changes to handle page access
                 window.firebase.onAuthStateChanged(auth, async (user) => {
-                    const loadingOverlay = document.getElementById('loading-overlay');
                     const pageContent = document.getElementById('page-content');
-                    const loginOverlay = document.getElementById('login-prompt-overlay');
 
                     await new Promise(resolve => setTimeout(resolve, 500));
 
@@ -528,7 +531,7 @@
 
             } catch (e) {
                 console.error("Error initializing Firebase:", e);
-                document.getElementById('loading-overlay').innerHTML = '<p class="text-red-500">Could not initialize application. Please refresh.</p>';
+                loadingOverlay.innerHTML = '<p class="text-red-500">Could not initialize application. Please refresh.</p>';
             }
         };
 
