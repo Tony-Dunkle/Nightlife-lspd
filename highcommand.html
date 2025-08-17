@@ -17,14 +17,13 @@
     <!-- Firebase SDKs -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signInWithCustomToken, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, collection, query, onSnapshot, addDoc, updateDoc, deleteDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
         window.firebase = {
             initializeApp,
             getAuth,
             onAuthStateChanged,
-            signInWithCustomToken,
             createUserWithEmailAndPassword,
             getFirestore,
             doc,
@@ -500,11 +499,11 @@
             },
 
             handleAuthenticatedUser(userData) {
-                // FIX: Accommodate both nested 'access.level' and flat 'access level' field structures from Firestore.
+                // Accommodate both nested 'access.level' and flat 'access level' field structures from Firestore.
                 currentUserAccessLevel = (userData.access && userData.access.level) ? userData.access.level : (userData['access level'] || null);
                 currentUserRoles = Array.isArray(userData.role) ? userData.role : [userData.role];
 
-                // FIX: Allow access for both 'Website Manager' (with space) and 'Website-Manager' (with hyphen) for robustness.
+                // Allow access for both 'Website Manager' (with space) and 'Website-Manager' (with hyphen) for robustness.
                 const canAccessPage = currentUserAccessLevel === 'High Command' || currentUserAccessLevel === 'Website Manager' || currentUserAccessLevel === 'Website-Manager';
 
                 if (canAccessPage) {
@@ -526,27 +525,11 @@
             }
         };
 
-        // --- APPLICATION STARTUP ---
+        // --- APPLICATION STARTUP (FIXED) ---
+        // This now correctly initializes Firebase and lets the onAuthStateChanged listener
+        // handle any existing login session from index.html, instead of waiting for a token.
         document.addEventListener('DOMContentLoaded', () => {
-            let attempts = 0;
-            const maxAttempts = 50; // 5 seconds timeout
-            const interval = setInterval(() => {
-                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                    clearInterval(interval);
-                    AuthManager.init(); // Initialize the app now that services are ready
-                    window.firebase.signInWithCustomToken(auth, __initial_auth_token).catch(err => {
-                        console.error("Failed to sign in with custom token:", err);
-                        AuthManager.showAccessDenied("Your login token is invalid. Please log in again.");
-                    });
-                } else {
-                    attempts++;
-                    if (attempts >= maxAttempts) {
-                        clearInterval(interval);
-                        console.error("Auth token not available after 5 seconds.");
-                        AuthManager.showAccessDenied('Authentication token could not be found. Please try logging in again.');
-                    }
-                }
-            }, 100);
+            AuthManager.init();
         });
 
         // --- DOM Element Refs ---
@@ -1115,7 +1098,5 @@
             settingsModal.addEventListener('click', (e) => e.target === settingsModal && settingsModal.classList.remove('is-open'));
         });
     </script>
-
-    <!-- REMOVED previous polling script -->
 </body>
 </html>
