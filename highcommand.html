@@ -459,28 +459,20 @@
             };
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
-        // --- NEW AUTHENTICATION MANAGER ---
+        // --- AUTHENTICATION MANAGER ---
         const AuthManager = {
             async init(authToken) {
-                const loadingOverlay = document.getElementById('loading-overlay');
-
                 try {
-                    // 1. Initialize Firebase services
                     const app = window.firebase.initializeApp(firebaseConfig);
                     auth = window.firebase.getAuth(app);
                     db = window.firebase.getFirestore(app);
                     storage = window.firebase.getStorage(app);
                     console.log("Firebase Initialized for High Command");
 
-                    // 2. Sign in with the provided token
                     await window.firebase.signInWithCustomToken(auth, authToken);
-
-                    // 3. Setup the listener that will handle the rest of the page logic
                     this.setupAuthStateListener();
-
                 } catch (error) {
                     console.error("Authentication failed:", error.message);
-                    loadingOverlay.classList.add('hidden');
                     this.showAccessDenied("Authentication failed. Please try logging in again.");
                 }
             },
@@ -492,7 +484,7 @@
                         const userData = await this.fetchUserData(userId);
                         this.handleAuthenticatedUser(userData);
                     } else {
-                        this.showAccessDenied("You must be logged in to access the High Command Center.");
+                        this.showAccessDenied("Session ended. Please log in again.");
                     }
                 });
             },
@@ -504,22 +496,18 @@
                     return userDocSnap.exists() ? userDocSnap.data() : {};
                 } catch (error) {
                     console.error("Error fetching user data:", error);
-                    return {}; // Return empty object on error
+                    return {};
                 }
             },
 
             handleAuthenticatedUser(userData) {
                 currentUserAccessLevel = userData['access level'] || null;
                 currentUserRoles = Array.isArray(userData.role) ? userData.role : [userData.role];
-
                 const canAccessPage = currentUserAccessLevel === 'High Command' || currentUserAccessLevel === 'Website Manager';
 
                 if (canAccessPage) {
                     document.getElementById('loading-overlay').classList.add('hidden');
-                    document.getElementById('login-prompt-overlay').classList.add('hidden');
                     document.getElementById('page-content').classList.remove('hidden');
-
-                    // Now that user is authenticated and authorized, load page content
                     loadReportsFromFirestore();
                     loadPersonnel();
                     setPermissions(currentUserRoles, currentUserAccessLevel);
@@ -536,7 +524,6 @@
             }
         };
 
-        // Expose the main initialization function to the global scope
         window.startHighCommandApp = (token) => AuthManager.init(token);
 
         // --- DOM Element Refs ---
@@ -586,7 +573,7 @@
 
             if (accessLevel === 'Website Manager') {
                 document.getElementById('webhook-settings-section').classList.remove('hidden');
-                loadWebhookUrl(); // Load webhook URL only for Website Manager
+                loadWebhookUrl();
             }
         };
 
