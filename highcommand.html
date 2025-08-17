@@ -147,7 +147,7 @@
     <div id="login-prompt-overlay" class="fixed inset-0 bg-slate-900 z-[100] flex-col items-center justify-center text-white p-8 text-center hidden">
         <img src="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png" alt="UPD Logo" class="w-24 h-24 object-contain mb-6">
         <h1 class="text-3xl font-bold mb-2">Access Denied</h1>
-        <p class="text-slate-400 mb-8">You must be a High Command member to access this page.</p>
+        <p id="login-prompt-message" class="text-slate-400 mb-8">You must be a High Command member to access this page.</p>
         <a href="index.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition text-lg">
             Proceed to Login
         </a>
@@ -440,9 +440,12 @@
 
 
     <script type="module">
-        // --- Firebase Setup ---
+        // --- Globals ---
         let db, auth, userId, storage;
+        let currentUserRoles = [];
+        let currentUserAccessLevel = null;
 
+        // --- Firebase Config ---
         const firebaseConfig = typeof __firebase_config !== 'undefined'
             ? JSON.parse(__firebase_config)
             : {
@@ -456,90 +459,109 @@
             };
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
-        const waitForAuthToken = () => {
-            return new Promise((resolve, reject) => {
-                let attempts = 0;
-                const maxAttempts = 30; // 30 * 100ms = 3 seconds
-                const interval = setInterval(() => {
-                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
-                        clearInterval(interval);
-                        resolve(__initial_auth_token);
-                    } else {
-                        attempts++;
-                        if (attempts >= maxAttempts) {
+        // --- NEW AUTHENTICATION MANAGER ---
+        const AuthManager = {
+            async init() {
+                const loadingOverlay = document.getElementById('loading-overlay');
+                const loginOverlay = document.getElementById('login-prompt-overlay');
+
+                try {
+                    // 1. Initialize Firebase services
+                    const app = window.firebase.initializeApp(firebaseConfig);
+                    auth = window.firebase.getAuth(app);
+                    db = window.firebase.getFirestore(app);
+                    storage = window.firebase.getStorage(app);
+                    console.log("Firebase Initialized for High Command");
+
+                    // 2. Wait for the auth token to be available
+                    const authToken = await this.waitForAuthToken();
+
+                    // 3. Sign in with the token
+                    await window.firebase.signInWithCustomToken(auth, authToken);
+
+                    // 4. Setup the listener that will handle the rest of the page logic
+                    this.setupAuthStateListener();
+
+                } catch (error) {
+                    console.error("Authentication failed:", error.message);
+                    loadingOverlay.classList.add('hidden');
+                    this.showAccessDenied("Authentication failed. Please try logging in again.");
+                }
+            },
+
+            waitForAuthToken() {
+                return new Promise((resolve, reject) => {
+                    let attempts = 0;
+                    const maxAttempts = 50; // 50 * 100ms = 5 seconds
+                    const interval = setInterval(() => {
+                        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
                             clearInterval(interval);
-                            reject(new Error("Auth token not found after 3 seconds."));
+                            resolve(__initial_auth_token);
+                        } else {
+                            attempts++;
+                            if (attempts >= maxAttempts) {
+                                clearInterval(interval);
+                                reject(new Error("Auth token not found after 5 seconds."));
+                            }
                         }
-                    }
-                }, 100);
-            });
-        };
+                    }, 100);
+                });
+            },
 
-        const initializeFirebase = async () => {
-            const loadingOverlay = document.getElementById('loading-overlay');
-            const loginOverlay = document.getElementById('login-prompt-overlay');
-            try {
-                const app = window.firebase.initializeApp(firebaseConfig);
-                auth = window.firebase.getAuth(app);
-                db = window.firebase.getFirestore(app);
-                storage = window.firebase.getStorage(app);
-                console.log("Firebase Initialized for High Command");
-
-                const authToken = await waitForAuthToken();
-                await window.firebase.signInWithCustomToken(auth, authToken);
-
+            setupAuthStateListener() {
                 window.firebase.onAuthStateChanged(auth, async (user) => {
-                    const pageContent = document.getElementById('page-content');
-
                     if (user) {
                         userId = user.uid;
-                        const userDocRef = window.firebase.doc(db, "users", user.uid);
-                        const userDocSnap = await window.firebase.getDoc(userDocRef);
-
-                        let userAccessLevel = null;
-                        let userRoles = [];
-
-                        if (userDocSnap.exists()) {
-                            const userData = userDocSnap.data();
-                            userAccessLevel = userData['access level'];
-                            userRoles = Array.isArray(userData.role) ? userData.role : [userData.role];
-                        }
-
-                        const canAccessPage = userAccessLevel === 'High Command' || userAccessLevel === 'Website Manager';
-
-                        if (canAccessPage) {
-                            loadingOverlay.classList.add('hidden');
-                            loginOverlay.classList.add('hidden');
-                            pageContent.classList.remove('hidden');
-
-                            loadReportsFromFirestore();
-                            loadPersonnel();
-                            setPermissions(userRoles, userAccessLevel);
-
-                        } else {
-                            loadingOverlay.classList.add('hidden');
-                            pageContent.classList.add('hidden');
-                            loginOverlay.classList.remove('hidden');
-                            loginOverlay.querySelector('p').textContent = 'You are logged in, but do not have permission to view this page.';
-                        }
-
+                        const userData = await this.fetchUserData(userId);
+                        this.handleAuthenticatedUser(userData);
                     } else {
-                        loadingOverlay.classList.add('hidden');
-                        pageContent.classList.add('hidden');
-                        loginOverlay.classList.remove('hidden');
-                        loginOverlay.querySelector('p').textContent = 'You must be logged in to access the High Command Center.';
+                        this.showAccessDenied("You must be logged in to access the High Command Center.");
                     }
                 });
+            },
 
-            } catch (e) {
-                console.error("Error during initialization:", e.message);
-                loadingOverlay.classList.add('hidden');
+            async fetchUserData(uid) {
+                try {
+                    const userDocRef = window.firebase.doc(db, "users", uid);
+                    const userDocSnap = await window.firebase.getDoc(userDocRef);
+                    return userDocSnap.exists() ? userDocSnap.data() : {};
+                } catch (error) {
+                    console.error("Error fetching user data:", error);
+                    return {}; // Return empty object on error
+                }
+            },
+
+            handleAuthenticatedUser(userData) {
+                currentUserAccessLevel = userData['access level'] || null;
+                currentUserRoles = Array.isArray(userData.role) ? userData.role : [userData.role];
+
+                const canAccessPage = currentUserAccessLevel === 'High Command' || currentUserAccessLevel === 'Website Manager';
+
+                if (canAccessPage) {
+                    document.getElementById('loading-overlay').classList.add('hidden');
+                    document.getElementById('login-prompt-overlay').classList.add('hidden');
+                    document.getElementById('page-content').classList.remove('hidden');
+
+                    // Now that user is authenticated and authorized, load page content
+                    loadReportsFromFirestore();
+                    loadPersonnel();
+                    setPermissions(currentUserRoles, currentUserAccessLevel);
+                } else {
+                    this.showAccessDenied("You are logged in, but do not have permission to view this page.");
+                }
+            },
+
+            showAccessDenied(message) {
+                document.getElementById('loading-overlay').classList.add('hidden');
+                const loginOverlay = document.getElementById('login-prompt-overlay');
+                loginOverlay.querySelector('#login-prompt-message').textContent = message;
                 loginOverlay.classList.remove('hidden');
-                loginOverlay.querySelector('p').textContent = 'Authentication failed. Please try logging in again.';
             }
         };
 
-        window.onload = initializeFirebase;
+        // --- Start the authentication process when the window loads ---
+        window.onload = () => AuthManager.init();
+
 
         // --- DOM Element Refs ---
         const personnelListContainer = document.getElementById('personnel-list-container');
@@ -570,15 +592,9 @@
         const allRoles = ["Account Manager", "Personnel Manager", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader", "Website Manager", "Website Admin", "Detective", "Command", "High Command"];
         const allAccessLevels = ["High Command", "Command", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader", "Website Manager", "Detective"];
 
-        let currentUserRoles = [];
-        let currentUserAccessLevel = null;
-
         const hasPermission = (role) => Array.isArray(currentUserRoles) ? currentUserRoles.includes(role) : currentUserRoles === role;
 
         const setPermissions = (roles, accessLevel) => {
-            currentUserRoles = roles;
-            currentUserAccessLevel = accessLevel;
-
             const isManager = accessLevel === 'Website Manager' || hasPermission('Account Manager') || hasPermission('Personnel Manager');
             const isCommand = accessLevel === "High Command" || accessLevel === "Command";
 
