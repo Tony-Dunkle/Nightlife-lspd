@@ -500,9 +500,12 @@
             },
 
             handleAuthenticatedUser(userData) {
-                currentUserAccessLevel = userData['access level'] || null;
+                // FIX: Accommodate both nested 'access.level' and flat 'access level' field structures from Firestore.
+                currentUserAccessLevel = (userData.access && userData.access.level) ? userData.access.level : (userData['access level'] || null);
                 currentUserRoles = Array.isArray(userData.role) ? userData.role : [userData.role];
-                const canAccessPage = currentUserAccessLevel === 'High Command' || currentUserAccessLevel === 'Website Manager';
+
+                // FIX: Allow access for both 'Website Manager' (with space) and 'Website-Manager' (with hyphen) for robustness.
+                const canAccessPage = currentUserAccessLevel === 'High Command' || currentUserAccessLevel === 'Website Manager' || currentUserAccessLevel === 'Website-Manager';
 
                 if (canAccessPage) {
                     document.getElementById('loading-overlay').classList.add('hidden');
@@ -587,11 +590,11 @@
                 addOfficerBtn.classList.add('hidden');
             }
 
-            if (isCommand || accessLevel === 'Website Manager') {
+            if (isCommand || accessLevel === 'Website Manager' || accessLevel === 'Website-Manager') {
                 document.getElementById('transaction-sender-section').classList.remove('hidden');
             }
 
-            if (accessLevel === 'Website Manager') {
+            if (accessLevel === 'Website Manager' || accessLevel === 'Website-Manager') {
                 document.getElementById('webhook-settings-section').classList.remove('hidden');
                 loadWebhookUrl();
             }
@@ -631,21 +634,21 @@
                     const rolesDisplay = Array.isArray(person.role) ? person.role.join(', ') : (person.role || 'N/A');
 
                     personEl.innerHTML = `
-                                <div class="flex items-center justify-between">
-                                    <div>
-                                        <p class="font-semibold">${person.name || 'No Name'}</p>
-                                        <p class="text-sm text-slate-500 dark:text-slate-400">${person.email || ''}</p>
-                                        <p class="text-sm text-slate-500 dark:text-slate-400">${person.rank || 'N/A'} - ${rolesDisplay}</p>
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <p class="font-semibold">${person.name || 'No Name'}</p>
+                                            <p class="text-sm text-slate-500 dark:text-slate-400">${person.email || ''}</p>
+                                            <p class="text-sm text-slate-500 dark:text-slate-400">${person.rank || 'N/A'} - ${rolesDisplay}</p>
+                                        </div>
+                                        <p class="text-sm font-bold ${statusColor}">${person.status ? person.status.charAt(0).toUpperCase() + person.status.slice(1) : 'N/A'}</p>
                                     </div>
-                                    <p class="text-sm font-bold ${statusColor}">${person.status ? person.status.charAt(0).toUpperCase() + person.status.slice(1) : 'N/A'}</p>
-                                </div>
-                                <div class="grid grid-cols-4 gap-2 mt-3 pt-3 border-t border-slate-200 dark:border-slate-600">
-                                    <button data-id="${person.id}" class="edit-btn text-xs bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded-md transition">Edit</button>
-                                    <button data-id="${person.id}" class="reset-pass-btn text-xs bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-2 rounded-md transition">Reset Pass</button>
-                                    <button data-id="${person.id}" data-status="${person.status}" class="toggle-status-btn text-xs ${toggleButtonColor} text-white font-bold py-1 px-2 rounded-md transition">${toggleButtonText}</button>
-                                    <button data-id="${person.id}" data-name="${person.name}" class="remove-btn text-xs bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-md transition">Remove</button>
-                                </div>
-                            `;
+                                    <div class="grid grid-cols-4 gap-2 mt-3 pt-3 border-t border-slate-200 dark:border-slate-600">
+                                        <button data-id="${person.id}" class="edit-btn text-xs bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded-md transition">Edit</button>
+                                        <button data-id="${person.id}" class="reset-pass-btn text-xs bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-2 rounded-md transition">Reset Pass</button>
+                                        <button data-id="${person.id}" data-status="${person.status}" class="toggle-status-btn text-xs ${toggleButtonColor} text-white font-bold py-1 px-2 rounded-md transition">${toggleButtonText}</button>
+                                        <button data-id="${person.id}" data-name="${person.name}" class="remove-btn text-xs bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-md transition">Remove</button>
+                                    </div>
+                                `;
                     personnelListContainer.appendChild(personEl);
                 });
             }, (error) => {
@@ -685,17 +688,17 @@
                 const isChecked = selectedRoles.includes(role);
                 const checkboxId = `${container.id}-${role.replace(/\s+/g, '-')}`;
                 container.innerHTML += `
-                        <div class="flex items-center">
-                            <input id="${checkboxId}" type="checkbox" value="${role}" ${isChecked ? 'checked' : ''} class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
-                            <label for="${checkboxId}" class="ml-3 block text-sm text-slate-700 dark:text-slate-200">${role}</label>
-                        </div>`;
+                            <div class="flex items-center">
+                                <input id="${checkboxId}" type="checkbox" value="${role}" ${isChecked ? 'checked' : ''} class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                <label for="${checkboxId}" class="ml-3 block text-sm text-slate-700 dark:text-slate-200">${role}</label>
+                            </div>`;
             });
         };
         const populateEditCheckboxes = (currentRoles, currentAccessLevel) => {
             const rolesContainer = document.getElementById('edit-officer-roles-checkboxes');
             editOfficerAccessLevelSelect.innerHTML = '';
             let assignableRoles = [], assignableAccessLevels = [];
-            if (currentUserAccessLevel === 'Website Manager') {
+            if (currentUserAccessLevel === 'Website Manager' || currentUserAccessLevel === 'Website-Manager') {
                 assignableRoles = allRoles;
                 assignableAccessLevels = allAccessLevels;
                 editAccessLevelField.classList.remove('hidden');
@@ -752,7 +755,7 @@
             const rolesContainer = document.getElementById('officer-roles-checkboxes');
             officerAccessLevelSelect.innerHTML = '';
             let assignableRoles = [], assignableAccessLevels = [];
-            if (currentUserAccessLevel === 'Website Manager') {
+            if (currentUserAccessLevel === 'Website Manager' || currentUserAccessLevel === 'Website-Manager') {
                 assignableRoles = allRoles;
                 assignableAccessLevels = allAccessLevels;
                 accessLevelField.classList.remove('hidden');
@@ -1049,10 +1052,10 @@
                     const reportingOfficer = officerMatch ? officerMatch[1] : 'Unknown Officer';
                     const reportDate = new Date(report.createdAt).toLocaleString();
                     reportEl.innerHTML = `
-                                <h3 class="font-bold text-lg text-blue-600 dark:text-blue-400">${reportTitle}</h3>
-                                <p class="text-sm text-slate-600 dark:text-slate-300">Filed by: ${reportingOfficer}</p>
-                                <p class="text-xs text-slate-400 dark:text-slate-500">Date: ${reportDate}</p>
-                            `;
+                                    <h3 class="font-bold text-lg text-blue-600 dark:text-blue-400">${reportTitle}</h3>
+                                    <p class="text-sm text-slate-600 dark:text-slate-300">Filed by: ${reportingOfficer}</p>
+                                    <p class="text-xs text-slate-400 dark:text-slate-500">Date: ${reportDate}</p>
+                                `;
                     reportEl.addEventListener('click', () => openReportModal(report));
                     reportsContainer.appendChild(reportEl);
                 });
