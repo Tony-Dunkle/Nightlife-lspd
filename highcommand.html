@@ -18,7 +18,7 @@
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, collection, query, onSnapshot, addDoc, updateDoc, deleteDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, getDoc, collection, query, onSnapshot, addDoc, updateDoc, deleteDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
         import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
         window.firebase = {
             initializeApp,
@@ -35,6 +35,7 @@
             updateDoc,
             deleteDoc,
             setDoc,
+            serverTimestamp, // <-- Added serverTimestamp
             getStorage,
             ref,
             uploadBytes,
@@ -1047,7 +1048,7 @@
                 amount: document.getElementById('trans-amount').value,
                 message: document.getElementById('trans-message').value,
                 imageUrl: imageUrl,
-                createdAt: new Date().toISOString(),
+                createdAt: window.firebase.serverTimestamp(), // <-- Use server timestamp
                 createdBy: currentUserId
             };
 
