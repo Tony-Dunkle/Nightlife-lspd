@@ -439,84 +439,131 @@
 
 
     <script type="module">
-        // --- Globals ---
-        let db, auth, userId, storage;
+        // --- REBUILT AUTHENTICATION AND INITIALIZATION ---
+
+        // 1. Firebase Configuration using provided details
+        const firebaseConfig = {
+            apiKey: "AIzaSyDU7DRAxCzqu81DTa7k0DXaBRcMpk0sElc",
+            authDomain: "upd-system.firebaseapp.com",
+            projectId: "upd-system",
+            storageBucket: "upd-system.appspot.com",
+            messagingSenderId: "28223003678",
+            appId: "1:28223003678:web:a19a9a8eb33fe74202220f" // Using a consistent App ID
+        };
+
+        // 2. Initialize Firebase and export services
+        const app = window.firebase.initializeApp(firebaseConfig);
+        const auth = window.firebase.getAuth(app);
+        const db = window.firebase.getFirestore(app);
+        const storage = window.firebase.getStorage(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        // 3. Global state variables
+        let currentUserId = null;
         let currentUserRoles = [];
         let currentUserAccessLevel = null;
 
-        // --- Firebase Config ---
-        const firebaseConfig = typeof __firebase_config !== 'undefined'
-            ? JSON.parse(__firebase_config)
-            : {
-                apiKey: "AIzaSyDU7DRAxCzqu81DTa7k0DXaBRcMpk0sElc",
-                authDomain: "upd-system.firebaseapp.com",
-                projectId: "upd-system",
-                storageBucket: "upd-system.appspot.com",
-                messagingSenderId: "28223003678",
-                appId: "1:28223003678:web:a19a9a8eb33fe74202220f",
-                measurementId: "G-83NX0KXZ1Y"
-            };
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-
-        // --- AUTHENTICATION MANAGER (REBUILT) ---
+        /**
+         * The main Authentication Manager object.
+         * Handles checking login status, fetching user data, and verifying permissions.
+         */
         const AuthManager = {
+            /**
+             * List of access levels permitted to view this page.
+             */
+            REQUIRED_ACCESS_LEVELS: ["Website Manager", "High Command"],
+
+            /**
+             * Initializes the authentication check.
+             */
             init() {
-                try {
-                    const app = window.firebase.initializeApp(firebaseConfig);
-                    auth = window.firebase.getAuth(app);
-                    db = window.firebase.getFirestore(app);
-                    storage = window.firebase.getStorage(app);
-                    console.log("Firebase Initialized for High Command");
-                    this.setupAuthStateListener();
-                } catch (error) {
-                    console.error("Firebase Initialization Failed:", error);
-                    this.showAccessDenied("Could not initialize the application. Please refresh.");
-                }
+                console.log("Auth Manager Initialized. Checking auth state...");
+                this.checkAuthState();
             },
 
-            setupAuthStateListener() {
+            /**
+             * Sets up a listener that triggers whenever the user's login state changes.
+             * This is the core of the authentication flow.
+             */
+            checkAuthState() {
                 window.firebase.onAuthStateChanged(auth, async (user) => {
                     if (user) {
-                        userId = user.uid;
-                        const userData = await this.fetchUserData(userId);
-                        this.handleAuthenticatedUser(userData);
+                        // If a user is logged in, fetch their profile from Firestore.
+                        console.log("User is logged in:", user.uid);
+                        currentUserId = user.uid;
+                        const userData = await this.fetchUserData(user.uid);
+                        this.verifyPermissions(userData);
                     } else {
-                        // This case handles if the user signs out, or the token is invalid/expired
-                        this.showAccessDenied("No active login session found. Please log in.");
+                        // If no user is logged in, deny access immediately.
+                        console.log("No user is logged in.");
+                        this.showAccessDenied("You must be logged in to access this page.");
                     }
                 });
             },
 
+            /**
+             * Fetches the user's document from the 'users' collection in Firestore.
+             * @param {string} uid - The user's unique ID.
+             * @returns {object|null} The user's data object or null if not found.
+             */
             async fetchUserData(uid) {
                 try {
                     const userDocRef = window.firebase.doc(db, "users", uid);
                     const userDocSnap = await window.firebase.getDoc(userDocRef);
-                    return userDocSnap.exists() ? userDocSnap.data() : {};
+                    if (userDocSnap.exists()) {
+                        console.log("User data found:", userDocSnap.data());
+                        return userDocSnap.data();
+                    } else {
+                        console.warn("No user document found in Firestore for UID:", uid);
+                        return null;
+                    }
                 } catch (error) {
                     console.error("Error fetching user data:", error);
-                    return {};
+                    return null;
                 }
             },
 
-            handleAuthenticatedUser(userData) {
-                // Accommodate both nested 'access.level' and flat 'access level' field structures from Firestore.
-                currentUserAccessLevel = (userData.access && userData.access.level) ? userData.access.level : (userData['access level'] || null);
+            /**
+             * Verifies if the logged-in user has the required access level.
+             * @param {object|null} userData - The user's data from Firestore.
+             */
+            verifyPermissions(userData) {
+                if (!userData) {
+                    this.showAccessDenied("Your user profile could not be found.");
+                    return;
+                }
+
+                // Store user details globally for other functions to use
+                currentUserAccessLevel = userData['access level'] || null;
                 currentUserRoles = Array.isArray(userData.role) ? userData.role : [userData.role];
 
-                // Allow access for both 'Website Manager' (with space) and 'Website-Manager' (with hyphen) for robustness.
-                const canAccessPage = currentUserAccessLevel === 'High Command' || currentUserAccessLevel === 'Website Manager' || currentUserAccessLevel === 'Website-Manager';
-
-                if (canAccessPage) {
-                    document.getElementById('loading-overlay').classList.add('hidden');
-                    document.getElementById('page-content').classList.remove('hidden');
-                    loadReportsFromFirestore();
-                    loadPersonnel();
-                    setPermissions(currentUserRoles, currentUserAccessLevel);
+                // Check if the user's access level is in the required list
+                if (currentUserAccessLevel && this.REQUIRED_ACCESS_LEVELS.includes(currentUserAccessLevel)) {
+                    console.log("Access granted. User level:", currentUserAccessLevel);
+                    this.grantAccess();
                 } else {
-                    this.showAccessDenied("You are logged in, but do not have permission to view this page.");
+                    console.log("Access denied. User level:", currentUserAccessLevel);
+                    this.showAccessDenied("You do not have the required permissions to view this page.");
                 }
             },
 
+            /**
+             * Grants access to the page, hiding loading screens and initializing content.
+             */
+            grantAccess() {
+                document.getElementById('loading-overlay').classList.add('hidden');
+                document.getElementById('page-content').classList.remove('hidden');
+
+                // Now that access is granted, load the page's dynamic content
+                loadReportsFromFirestore();
+                loadPersonnel();
+                setPermissions(currentUserRoles, currentUserAccessLevel);
+            },
+
+            /**
+             * Denies access and shows the login prompt overlay.
+             * @param {string} message - The reason for denial to show the user.
+             */
             showAccessDenied(message) {
                 document.getElementById('loading-overlay').classList.add('hidden');
                 const loginOverlay = document.getElementById('login-prompt-overlay');
@@ -525,12 +572,14 @@
             }
         };
 
-        // --- APPLICATION STARTUP (FIXED) ---
-        // This now correctly initializes Firebase and lets the onAuthStateChanged listener
-        // handle any existing login session from index.html, instead of waiting for a token.
+        // --- APPLICATION STARTUP ---
         document.addEventListener('DOMContentLoaded', () => {
             AuthManager.init();
         });
+
+        // --- [The rest of your existing page logic remains unchanged] ---
+        // The code below this point for modals, personnel management, etc.,
+        // will now be correctly triggered by AuthManager.grantAccess().
 
         // --- DOM Element Refs ---
         const personnelListContainer = document.getElementById('personnel-list-container');
@@ -780,7 +829,7 @@
                 const userCredential = await window.firebase.createUserWithEmailAndPassword(auth, email, password);
                 await window.firebase.setDoc(window.firebase.doc(db, "users", userCredential.user.uid), {
                     name, email, rank, role: selectedRoles, 'access level': accessLevel,
-                    status: 'active', createdAt: new Date().toISOString(), createdBy: userId
+                    status: 'active', createdAt: new Date().toISOString(), createdBy: currentUserId
                 });
                 addOfficerForm.reset();
                 addOfficerModal.classList.remove('is-open');
@@ -931,7 +980,7 @@
                 message: document.getElementById('trans-message').value,
                 imageUrl: imageUrl,
                 createdAt: new Date().toISOString(),
-                createdBy: userId
+                createdBy: currentUserId
             };
 
             try {
