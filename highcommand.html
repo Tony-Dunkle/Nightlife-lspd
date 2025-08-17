@@ -500,7 +500,7 @@
 
                         const hasRole = (role) => userRoles.includes(role);
 
-                        const canAccessPage = userAccessLevel === 'High Command' || hasRole('Account Manager') || hasRole('Personnel Manager') || hasRole('Website Manager') || userAccessLevel === 'Website Manager' || hasRole('Website Admin');
+                        const canAccessPage = userAccessLevel === 'High Command' || hasRole('Account Manager') || hasRole('Personnel Manager') || userAccessLevel === 'Website Manager';
 
                         if (canAccessPage) {
                             loadingOverlay.classList.add('hidden');
@@ -510,7 +510,7 @@
                             loadReportsFromFirestore();
                             loadPersonnel();
                             setPermissions(userRoles, userAccessLevel);
-                            if (hasRole('Website Admin') || hasRole('Website Manager')) {
+                            if (userAccessLevel === 'Website Manager') {
                                 loadWebhookUrl();
                             }
 
@@ -575,9 +575,8 @@
             currentUserRoles = roles;
             currentUserAccessLevel = accessLevel;
 
-            const isManager = hasPermission('Account Manager') || hasPermission('Personnel Manager') || hasPermission('Website Manager');
+            const isManager = hasPermission('Account Manager') || hasPermission('Personnel Manager') || accessLevel === 'Website Manager';
             const isCommand = accessLevel === "High Command" || accessLevel === "Command";
-            const isAdmin = hasPermission('Website Admin') || hasPermission('Website Manager');
 
             if (isManager || isCommand) {
                 addOfficerBtn.classList.remove('hidden');
@@ -585,11 +584,11 @@
                 addOfficerBtn.classList.add('hidden');
             }
 
-            if (isCommand || isAdmin) {
+            if (isCommand || accessLevel === 'Website Manager') {
                 document.getElementById('transaction-sender-section').classList.remove('hidden');
             }
 
-            if (isAdmin) {
+            if (accessLevel === 'Website Manager') {
                 document.getElementById('webhook-settings-section').classList.remove('hidden');
             }
         };
