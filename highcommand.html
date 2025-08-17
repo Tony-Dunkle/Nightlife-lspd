@@ -19,7 +19,6 @@
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, doc, getDoc, collection, query, onSnapshot, addDoc, updateDoc, deleteDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-        import { getStorage, ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
         window.firebase = {
             initializeApp,
             getAuth,
@@ -35,11 +34,7 @@
             updateDoc,
             deleteDoc,
             setDoc,
-            serverTimestamp, // <-- Added serverTimestamp
-            getStorage,
-            ref,
-            uploadBytes,
-            getDownloadURL
+            serverTimestamp
         };
     </script>
 
@@ -247,11 +242,14 @@
                                     <input type="text" id="trans-message" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
                                 </div>
                             </div>
+
+                            <!-- RE-ADDED: Image upload section -->
                             <div>
                                 <label for="trans-image" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Attach Image (Optional)</label>
                                 <input type="file" id="trans-image" accept="image/*" class="mt-1 block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 dark:file:bg-slate-600 dark:file:text-slate-200 file:text-blue-700 hover:file:bg-blue-100 dark:hover:file:bg-slate-500">
                                 <img id="image-preview" src="" alt="Image preview" class="mt-4 rounded-lg max-h-48 hidden" />
                             </div>
+
                             <!-- Webhook Selector Dropdown -->
                             <div class="pt-2">
                                 <label for="webhook-selector" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Send to Discord Channel</label>
@@ -477,7 +475,6 @@
         const app = window.firebase.initializeApp(firebaseConfig);
         const auth = window.firebase.getAuth(app);
         const db = window.firebase.getFirestore(app);
-        const storage = window.firebase.getStorage(app);
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
 
         // 3. Global state variables
@@ -1021,37 +1018,20 @@
             submitTransactionBtn.disabled = true;
             submitTransactionBtn.textContent = 'Processing...';
 
-            let imageUrl = null;
             const file = imageInput.files[0];
 
-            // 1. Upload image if it exists
-            if (file) {
-                try {
-                    const storageRef = window.firebase.ref(storage, `transactions/${Date.now()}-${file.name}`);
-                    const snapshot = await window.firebase.uploadBytes(storageRef, file);
-                    imageUrl = await window.firebase.getDownloadURL(snapshot.ref);
-                } catch (error) {
-                    console.error("Error uploading image:", error);
-                    transactionFeedback.textContent = "Image upload failed. See console.";
-                    transactionFeedback.className = "text-sm h-5 mt-1 text-red-500";
-                    submitTransactionBtn.disabled = false;
-                    submitTransactionBtn.textContent = 'Save & Send to Discord';
-                    return;
-                }
-            }
-
-            // 2. Prepare transaction data and save to Firestore
+            // 1. Prepare transaction data (without image URL)
             const transactionData = {
                 account: document.getElementById('trans-account').value,
                 type: document.getElementById('trans-type').value,
                 madeBy: document.getElementById('trans-made-by').value,
                 amount: document.getElementById('trans-amount').value,
                 message: document.getElementById('trans-message').value,
-                imageUrl: imageUrl,
-                createdAt: window.firebase.serverTimestamp(), // <-- Use server timestamp
+                createdAt: window.firebase.serverTimestamp(),
                 createdBy: currentUserId
             };
 
+            // 2. Save the text data to Firestore first
             try {
                 await window.firebase.addDoc(window.firebase.collection(db, `artifacts/${appId}/public/data/transactions`), transactionData);
             } catch (error) {
@@ -1063,7 +1043,7 @@
                 return;
             }
 
-            // 3. Send to Discord
+            // 3. Prepare the Discord payload
             const selectedWebhookUrl = webhookSelector.value;
             if (!selectedWebhookUrl) {
                 transactionFeedback.textContent = "Transaction saved. Select a webhook to send to Discord.";
@@ -1092,16 +1072,26 @@
                 avatar_url: "https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png"
             };
 
-            if (imageUrl) {
-                payload.embeds[0].image = { url: imageUrl };
-            }
-
+            // 4. Send to Discord, attaching the image if it exists
             try {
-                const response = await fetch(selectedWebhookUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
+                let response;
+                if (file) {
+                    // If there's a file, send as multipart/form-data
+                    const formData = new FormData();
+                    formData.append('payload_json', JSON.stringify(payload));
+                    formData.append('file1', file);
+                    response = await fetch(selectedWebhookUrl, {
+                        method: 'POST',
+                        body: formData
+                    });
+                } else {
+                    // If no file, send as standard JSON
+                    response = await fetch(selectedWebhookUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                }
 
                 if (response.ok) {
                     transactionFeedback.textContent = "Transaction saved and sent successfully!";
