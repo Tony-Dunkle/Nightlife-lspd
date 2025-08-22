@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UPD MDT - Report Generator</title>
-    <link rel="icon" href="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png" type="image/png">
+    <link rel="icon" href="[https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png](https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png)" type="image/png">
 
     <!-- General Meta Tags -->
     <meta name="description" content="A comprehensive tool for officers of the Unified Police Department to generate, manage, and file official incident reports.">
@@ -12,14 +12,14 @@
     <meta name="keywords" content="police, report generator, UPD, law enforcement, MDT">
 
     <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
 
     <!-- Firebase SDKs -->
     <script type="module">
         // Import the functions you need from the SDKs you need
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, addDoc, getDoc, getDocs, onSnapshot, collection, query, where } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { initializeApp } from "[https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js](https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js)";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "[https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js](https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js)";
+        import { getFirestore, doc, setDoc, addDoc, getDoc, getDocs, onSnapshot, collection, query, where } from "[https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js](https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js)";
         window.firebase = {
             initializeApp,
             getAuth,
@@ -39,7 +39,7 @@
     </script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        @import url('[https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap](https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap)');
 
         :root {
             --bg-primary: #f8fafc;
@@ -141,7 +141,7 @@
         <aside id="sidebar" class="absolute md:relative z-20 flex-col w-64 bg-white dark:bg-slate-800 shadow-lg transition-transform duration-300 -translate-x-full md:translate-x-0">
             <div class="flex items-center justify-center h-20 border-b dark:border-slate-700 flex-shrink-0 flex-col">
                 <div class="flex items-center">
-                    <img src="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png" alt="UPD Logo" class="w-12 h-12 object-contain">
+                    <img src="[https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png](https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png)" alt="UPD Logo" class="w-12 h-12 object-contain">
                     <h1 class="text-xl font-bold ml-2 text-slate-800 dark:text-white">UPD Portal</h1>
                 </div>
                 <p class="text-sm text-slate-500 dark:text-slate-400 mt-1">Report Generator</p>
@@ -150,48 +150,48 @@
                 <div>
                     <h3 class="px-3 text-xs uppercase text-slate-500 font-semibold tracking-wider">Core</h3>
                     <a href="index.html" class="mt-1 flex items-center px-3 py-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
                         <span class="ml-3">Dashboard</span>
                     </a>
                 </div>
                 <div class="pt-2">
                     <h3 class="px-3 text-xs uppercase text-slate-500 font-semibold tracking-wider">Resources</h3>
                     <a href="SOP.html" class="mt-1 flex items-center px-3 py-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
                         <span class="ml-3">SOPs</span>
                     </a>
                     <a href="training.html" class="mt-1 flex items-center px-3 py-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 14l9-5-9-5-9 5 9 5z"></path><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-9.998 12.078 12.078 0 01.665-6.479L12 14z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-9.998 12.078 12.078 0 01.665-6.479L12 14z"></path></svg>
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)"><path d="M12 14l9-5-9-5-9 5 9 5z"></path><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-9.998 12.078 12.078 0 01.665-6.479L12 14z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-9.998 12.078 12.078 0 01.665-6.479L12 14z"></path></svg>
                         <span class="ml-3">Training</span>
                     </a>
                 </div>
                 <div class="pt-2">
                     <h3 class="px-3 text-xs uppercase text-slate-500 font-semibold tracking-wider">Tools</h3>
                     <a href="forms.html" class="mt-1 flex items-center px-3 py-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
                         <span class="ml-3">Forms</span>
                     </a>
                     <a href="report.html" class="mt-1 flex items-center px-3 py-2 text-slate-600 dark:text-slate-300 rounded-lg bg-slate-200 dark:bg-slate-700">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
                         <span class="ml-3">Report Generator</span>
                     </a>
                     <a href="charges.html" class="mt-1 flex items-center px-3 py-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3.25a3.25 3.25 0 00-3.25-3.25H9.25A3.25 3.25 0 006 13.75V17m0 0h12M6 17H5a2 2 0 01-2-2V7a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-1m-6-14v2m-6-2v2"></path></svg>
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3.25a3.25 3.25 0 00-3.25-3.25H9.25A3.25 3.25 0 006 13.75V17m0 0h12M6 17H5a2 2 0 01-2-2V7a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-1m-6-14v2m-6-2v2"></path></svg>
                         <span class="ml-3">Charge Calculator</span>
                     </a>
                 </div>
                 <div class="pt-2">
                     <h3 class="px-3 text-xs uppercase text-slate-500 font-semibold tracking-wider">Personnel</h3>
                     <a href="roster.html" class="mt-1 flex items-center px-3 py-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.653-.124-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.653.124-1.283.356-1.857m0 0a3.001 3.001 0 015.644 0M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.653-.124-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.653.124-1.283.356-1.857m0 0a3.001 3.001 0 015.644 0M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         <span class="ml-3">Roster</span>
                     </a>
                     <a href="hr.html" class="mt-1 flex items-center px-3 py-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M15 21a6 6 0 00-9-5.197M15 11a4 4 0 110-8 4 4 0 010 8z"></path></svg>
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M15 21a6 6 0 00-9-5.197M15 11a4 4 0 110-8 4 4 0 010 8z"></path></svg>
                         <span class="ml-3">HR Info</span>
                     </a>
                     <a href="info.html" class="mt-1 flex items-center px-3 py-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                         <span class="ml-3">Common Information</span>
                     </a>
                 </div>
@@ -203,7 +203,7 @@
             <!-- Header -->
             <header class="bg-white dark:bg-slate-800 shadow-md flex items-center justify-between p-4 border-b dark:border-slate-700">
                 <button id="hamburgerBtn" class="text-slate-500 focus:outline-none md:hidden">
-                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="[http://www.w3.org/2000/svg](http://www.w3.org/2000/svg)"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
                 </button>
                 <div class="flex-1"></div>
                 <div class="flex items-center ml-4">
@@ -352,10 +352,40 @@
 
     <script type="module">
         let db, auth, userId;
+        let geminiApiKey = null; // Key will be fetched from Firestore
 
         const firebaseConfig = { apiKey: "AIzaSyDU7DRAxCzqu81DTa7k0DXaBRcMpk0sElc", authDomain: "upd-system.firebaseapp.com", projectId: "upd-system", storageBucket: "upd-system.appspot.com", messagingSenderId: "28223003678", appId: "1:28223003678:web:d8b2c8a22a3f7d1b3e4f5a" };
-        const geminiApiKey = 'AIzaSyAbU7k_19bBgnGpFtX742tYGwLySd_U3fI';
         const appId = 'report-generator';
+
+        async function fetchGeminiApiKey() {
+            if (geminiApiKey) return geminiApiKey; // Return cached key
+
+            if (!db) {
+                console.error("Firestore is not initialized. Cannot fetch API key.");
+                return null;
+            }
+
+            try {
+                // Fetch the API key from a protected document in Firestore
+                const docRef = window.firebase.doc(db, "apikeys", "Gemini");
+                const docSnap = await window.firebase.getDoc(docRef);
+
+                if (docSnap.exists() && docSnap.data().API) {
+                    geminiApiKey = docSnap.data().API;
+                    console.log("Gemini API Key loaded successfully from Firestore.");
+                    return geminiApiKey;
+                } else {
+                    console.error("Gemini API Key not found in Firestore document: /apikeys/Gemini");
+                    alert("Critical configuration error: Gemini API Key not found. AI features will be disabled.");
+                    return null;
+                }
+            } catch (error) {
+                console.error("Error fetching Gemini API Key from Firestore:", error);
+                alert("Failed to fetch API key. AI features may not work. Check Firestore permissions and data.");
+                return null;
+            }
+        }
+
 
         const getReportDataAsObject = () => ({
             caseTitle: document.getElementById('caseTitle').textContent, description: document.getElementById('report-description').value, location: document.getElementById('postal-location').value, forceLevel: document.getElementById('level-of-force').value, medicalTreatment: document.getElementById('medical-treatment').value, gsrTest: document.getElementById('gsr-test').value, legalRepresentation: document.getElementById('legal-representation').value, mirandized: document.getElementById('mirandized').value, returnWeapons: document.getElementById('return-weapons').value, plea: document.getElementById('plea').value, evidence: document.getElementById('evidence-list').innerHTML, linkedReports: document.getElementById('linked-reports-list').innerHTML, tags: document.getElementById('tags-list').innerHTML, officers: document.getElementById('officers-list').innerHTML, criminals: document.getElementById('criminals-list').innerHTML, arrestWarrantText: document.getElementById('arrest-warrant-text').value, searchWarrantText: document.getElementById('search-warrant-text').value, seizureWarrantText: document.getElementById('seizure-warrant-text').value, holdWarrantText: document.getElementById('hold-warrant-text').value,
@@ -407,8 +437,8 @@
                 if (webhookSnapshot.empty) { console.log("No Discord webhook documents found in Firestore."); return; }
                 webhookSnapshot.forEach(async (doc) => {
                     const webhookData = doc.data(); const discordWebhookUrl = webhookData.Webhook;
-                    if (!discordWebhookUrl || !discordWebhookUrl.startsWith('https://discord.com/api/webhooks/')) { console.error(`Invalid webhook URL in doc ${doc.id}:`, discordWebhookUrl); return; }
-                    const payload = { username: "UPD Report Bot", avatar_url: "https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png", embeds: [{ title: "New Incident Report Filed", color: 15158332, fields: [{ name: "Suspect(s)", value: "```" + (criminals.map(c => c.name).join('\n') || 'N/A') + "```" }, { name: "Involved Officer(s)", value: "```" + (officers.join('\n') || 'N/A') + "```" }, { name: "Charges Filed", value: "```" + (criminals.flatMap(c => c.charges).join('\n') || 'None') + "```" }], timestamp: new Date().toISOString() }] };
+                    if (!discordWebhookUrl || !discordWebhookUrl.startsWith('[https://discord.com/api/webhooks/](https://discord.com/api/webhooks/)')) { console.error(`Invalid webhook URL in doc ${doc.id}:`, discordWebhookUrl); return; }
+                    const payload = { username: "UPD Report Bot", avatar_url: "[https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png](https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png)", embeds: [{ title: "New Incident Report Filed", color: 15158332, fields: [{ name: "Suspect(s)", value: "```" + (criminals.map(c => c.name).join('\n') || 'N/A') + "```" }, { name: "Involved Officer(s)", value: "```" + (officers.join('\n') || 'N/A') + "```" }, { name: "Charges Filed", value: "```" + (criminals.flatMap(c => c.charges).join('\n') || 'None') + "```" }], timestamp: new Date().toISOString() }] };
                     try { await fetch(discordWebhookUrl, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); console.log(`Notification sent to: ${webhookData['Discord Server']}`); } catch (fetchError) { console.error(`Error sending notification to ${webhookData['Discord Server']}:`, fetchError); }
                 });
             } catch (error) { console.error('Error fetching Discord webhooks:', error); }
@@ -417,7 +447,17 @@
         try {
             const app = window.firebase.initializeApp(firebaseConfig); auth = window.firebase.getAuth(app); db = window.firebase.getFirestore(app); console.log("Firebase Initialized");
             window.firebase.onAuthStateChanged(auth, async (user) => {
-                if (user) { userId = user.uid; console.log("User is signed in with UID:", userId); loadReportsFromFirestore(); } else { try { await window.firebase.signInAnonymously(auth); } catch (error) { console.error("Error signing in anonymously:", error); } }
+                if (user) {
+                    userId = user.uid; console.log("User is signed in with UID:", userId);
+                    loadReportsFromFirestore();
+                    await fetchGeminiApiKey(); // Fetch the API key after authentication
+                } else {
+                    try {
+                        await window.firebase.signInAnonymously(auth);
+                    } catch (error) {
+                        console.error("Error signing in anonymously:", error);
+                    }
+                }
             });
         } catch (e) { console.error("Error initializing Firebase:", e); alert("Firebase could not be initialized."); }
 
@@ -448,7 +488,7 @@
 
             let allOfficers = []; let allCharges = [];
             const officerSheets = { 'upd': { name: 'UPD', publishedKey: '2PACX-1vT8yueJjp9o-XVH1_RXPji6N_IAP1DDbNLZ8l4__IqGCvVEUWscsdsJ6uNHZ8u6kDhhXkSxcdkdeDJi', gid: '0' } };
-            const chargesSheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQa6HZQ9JM5Unzwe4zZDX8A21m6zV4oGvDuEbSEqA9f3m3CqplUUUlmCScNHf79a8Sr1nem0div9YT2/pub?output=csv';
+            const chargesSheetUrl = '[https://docs.google.com/spreadsheets/d/e/2PACX-1vQa6HZQ9JM5Unzwe4zZDX8A21m6zV4oGvDuEbSEqA9f3m3CqplUUUlmCScNHf79a8Sr1nem0div9YT2/pub?output=csv](https://docs.google.com/spreadsheets/d/e/2PACX-1vQa6HZQ9JM5Unzwe4zZDX8A21m6zV4oGvDuEbSEqA9f3m3CqplUUUlmCScNHf79a8Sr1nem0div9YT2/pub?output=csv)';
             async function fetchAllOfficerData() { const container = document.getElementById('officer-list-container'); const loading = document.getElementById('officer-list-loading'); loading.classList.remove('hidden'); try { const responses = await Promise.all(Object.values(officerSheets).map(sheet => fetch(`https://docs.google.com/spreadsheets/d/e/${sheet.publishedKey}/pub?gid=${sheet.gid}&single=true&output=csv`))); const texts = await Promise.all(responses.map(res => res.text())); allOfficers = texts.flatMap(text => parseCSV(text, 'name')).filter(Boolean).sort(); populateList(container, allOfficers, 'officer-item', (name) => name); } catch (error) { console.error('Error fetching officer data:', error); document.getElementById('officer-list-error').classList.remove('hidden'); } finally { loading.classList.add('hidden'); } }
             async function fetchChargeData() { const container = document.getElementById('charge-list-container'); const loading = document.getElementById('charge-list-loading'); loading.classList.remove('hidden'); try { const response = await fetch(chargesSheetUrl); const csvText = await response.text(); allCharges = parseChargeCSV(csvText); populateChargeList(allCharges); } catch (error) { console.error('Error fetching charges:', error); document.getElementById('charge-list-error').classList.remove('hidden'); } finally { loading.classList.add('hidden'); } }
             function parseCSV(csv, columnName) { const lines = csv.split('\n'); const items = []; if (lines.length < 1) return items; const headers = lines[0].split(',').map(h => h.trim().replace(/^"|"$/g, '').toLowerCase()); const colIndex = headers.indexOf(columnName.toLowerCase()); if (colIndex === -1) return items; for (let i = 1; i < lines.length; i++) { const columns = lines[i].split(','); if (columns[colIndex]) { const item = columns[colIndex].trim().replace(/^"|"$/g, ''); if (item) items.push(item); } } return items; }
@@ -465,7 +505,10 @@
             document.getElementById('saveAddChargeBtn').addEventListener('click', () => { if (!currentChargesList) return; if (currentChargesList.querySelector('.placeholder-item')) currentChargesList.innerHTML = ''; selectedCharges.forEach(charge => addListItem(currentChargesList, charge)); document.querySelectorAll('.charge-item.selected').forEach(el => el.classList.remove('selected')); selectedCharges = []; document.getElementById('saveAddChargeBtn').disabled = true; closeModal(document.getElementById('addChargeModal')); });
 
             async function generateAIContent(prompt, outputTextarea) {
-                if (!geminiApiKey || geminiApiKey === 'YOUR_GEMINI_API_KEY') { alert("Please add your Gemini API Key to the script file."); return; }
+                if (!geminiApiKey) {
+                    alert("Gemini API Key is not available. AI generation is disabled. Please check the Firestore configuration.");
+                    return;
+                }
                 const loadingContainer = document.getElementById('description-loading-container');
                 loadingContainer.classList.remove('hidden'); outputTextarea.classList.add('hidden');
                 try {
