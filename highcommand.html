@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPD MDT - High Command</title>
+    <link rel="icon" href="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png" type="image/png">
+
+    <!-- General Meta Tags -->
+    <meta name="description" content="High Command dashboard for the Unified Police Department to manage personnel and review reports.">
+    <meta name="author" content="Unified Police Department">
+    <meta name="keywords" content="police, high command, UPD, law enforcement, MDT, admin">
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Firebase SDKs -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, query, onSnapshot, addDoc, updateDoc, deleteDoc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        window.firebase = {
+            initializeApp,
+            getAuth,
+            onAuthStateChanged,
+            createUserWithEmailAndPassword,
+            getFirestore,
+            doc,
+            getDoc,
+            collection,
+            query,
+            onSnapshot,
+            addDoc,
+            updateDoc,
+            deleteDoc,
+            setDoc,
+            serverTimestamp
+        };
+    </script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display.swap');
+
+        /* CSS variables for theming */
+        :root {
+            --bg-primary: #f8fafc; /* slate-50 */
+            --bg-secondary: #ffffff; /* white */
+            --bg-tertiary: #f1f5f9; /* slate-100 */
+            --text-primary: #0f172a; /* slate-900 */
+            --text-secondary: #475569; /* slate-600 */
+            --border-color: #e2e8f0; /* slate-200 */
+            --accent-color: #3b82f6; /* blue-500 */
+            --modal-bg: rgba(0,0,0,0.7);
+            --modal-content-bg: #ffffff;
+        }
+
+        html.dark {
+            --bg-primary: #0f172a; /* slate-900 */
+            --bg-secondary: #1e293b; /* slate-800 */
+            --bg-tertiary: #334155; /* slate-700 */
+            --text-primary: #f1f5f9; /* slate-100 */
+            --text-secondary: #94a3b8; /* slate-400 */
+            --border-color: #334155; /* slate-700 */
+            --accent-color: #60a5fa; /* blue-400 */
+            --modal-content-bg: #1e293b; /* slate-800 */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Mobile Nav Specific Styles */
+        #nav-links.nav-mobile-active {
+            display: flex !important;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: #1e40af;
+            flex-direction: column;
+            padding: 1rem;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+
+        html.dark #nav-links.nav-mobile-active {
+            background-color: #111827;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            transition: opacity 0.3s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+            .modal-overlay.is-open {
+                opacity: 1;
+                pointer-events: auto;
+            }
+
+        .modal-content {
+            background-color: var(--modal-content-bg);
+            color: var(--text-primary);
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 90%;
+            width: 80vw;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+            transform: translateY(-20px);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .modal-overlay.is-open .modal-content {
+            transform: translateY(0);
+        }
+    </style>
+</head>
+<body class="antialiased bg-gray-100 dark:bg-slate-900">
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="fixed inset-0 bg-slate-900 z-[100] flex flex-col items-center justify-center text-white p-8 text-center">
+        <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
+        <p>Checking authentication...</p>
+    </div>
+
+    <!-- Login Prompt Overlay -->
+    <div id="login-prompt-overlay" class="fixed inset-0 bg-slate-900 z-[100] flex-col items-center justify-center text-white p-8 text-center hidden">
+        <img src="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png" alt="UPD Logo" class="w-24 h-24 object-contain mb-6">
+        <h1 class="text-3xl font-bold mb-2">Access Denied</h1>
+        <p id="login-prompt-message" class="text-slate-400 mb-8">You must be a High Command member to access this page.</p>
+        <a href="index.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition text-lg">
+            Proceed to Login
+        </a>
+    </div>
+
+    <!-- Page content wrapper -->
+    <div id="page-content" class="hidden flex flex-col min-h-screen">
+        <!-- Header Section -->
+        <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex items-center justify-between sticky top-0 z-50">
+            <div class="flex items-center">
+                <img src="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png" alt="UPD Logo" class="mr-4 w-16 h-16 object-contain">
+                <h1 class="text-2xl md:text-3xl font-bold">UPD High Command</h1>
+            </div>
+
+            <div class="flex items-center">
+                <nav id="nav-links" class="hidden md:flex items-center">
+                    <ul class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-4 text-sm font-medium">
+                        <li><a href="index.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Dashboard</a></li>
+                        <li><a href="report.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Report Generator</a></li>
+                        <li><a href="high-command.html" class="text-white bg-blue-700 font-semibold py-1 px-2 rounded-md">High Command</a></li>
+                    </ul>
+                </nav>
+
+                <div class="flex items-center ml-4">
+                    <button id="settings-btn" class="p-2 rounded-full hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426-1.756-2.924-1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                    </button>
+                    <button id="hamburgerBtn" class="hamburger-menu p-2 rounded-md hover:bg-white/10 focus:outline-none md:hidden ml-2">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="container mx-auto p-4 md:p-8 flex-grow">
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+
+                <!-- Officer Login Management -->
+                <div class="lg:col-span-1 bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg">
+                    <div id="officer-management-header" class="flex justify-between items-center mb-4 border-b pb-2 border-slate-200 dark:border-slate-700">
+                        <h2 class="text-2xl font-bold">Officer Management</h2>
+                        <button id="add-officer-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition hidden">Add Officer</button>
+                    </div>
+
+                    <div id="personnel-list-container" class="space-y-3 max-h-[60vh] overflow-y-auto pr-2">
+                        <!-- Loading State -->
+                        <div id="personnel-loading" class="flex justify-center items-center h-48">
+                            <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+                        </div>
+                        <!-- Personnel will be dynamically loaded here -->
+                    </div>
+                </div>
+
+                <!-- View Reports & Transaction Sender -->
+                <div class="lg:col-span-2 space-y-8">
+                    <!-- View Reports -->
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg">
+                        <h2 class="text-2xl font-bold mb-4 border-b pb-2 border-slate-200 dark:border-slate-700">View All Reports</h2>
+                        <div id="reports-container" class="space-y-4 max-h-[70vh] overflow-y-auto pr-2">
+                            <!-- Loading State -->
+                            <div id="reports-loading" class="flex justify-center items-center h-48">
+                                <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+                            </div>
+                            <!-- Reports will be injected here by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Transaction Log Sender -->
+                    <div id="transaction-sender-section" class="bg-white dark:bg-slate-800 p-6 rounded-xl shadow-lg hidden">
+                        <h2 class="text-2xl font-bold mb-4 border-b pb-2 border-slate-200 dark:border-slate-700">Transaction Log Sender</h2>
+                        <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">You can manually enter details or paste a transaction log into the large text box to auto-fill the fields.</p>
+                        <form id="transaction-log-form" class="space-y-4">
+                            <textarea id="paste-area" class="w-full h-24 p-2 border rounded-md bg-slate-50 dark:bg-slate-700 border-slate-300 dark:border-slate-600 focus:ring-blue-500 focus:border-blue-500" placeholder="Paste transaction log here..."></textarea>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="trans-account" class="block text-sm font-medium text-slate-700 dark:text-slate-200">From Account / To</label>
+                                    <input type="text" id="trans-account" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                                <div>
+                                    <label for="trans-type" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Type</label>
+                                    <select id="trans-type" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                        <option>Transfer Out</option>
+                                        <option>Transfer In</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="trans-made-by" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Made By</label>
+                                    <input type="text" id="trans-made-by" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                                <div>
+                                    <label for="trans-amount" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Amount</label>
+                                    <input type="text" id="trans-amount" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" placeholder="$100,000.00">
+                                </div>
+                                <div class="md:col-span-2">
+                                    <label for="trans-message" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Message</label>
+                                    <input type="text" id="trans-message" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                </div>
+                            </div>
+
+                            <!-- RE-ADDED: Image upload section -->
+                            <div>
+                                <label for="trans-image" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Attach Image (Optional)</label>
+                                <input type="file" id="trans-image" accept="image/*" class="mt-1 block w-full text-sm text-slate-500 file:mr-4 file:py-2 file:px-4 file:rounded-full file:border-0 file:text-sm file:font-semibold file:bg-blue-50 dark:file:bg-slate-600 dark:file:text-slate-200 file:text-blue-700 hover:file:bg-blue-100 dark:hover:file:bg-slate-500">
+                                <img id="image-preview" src="" alt="Image preview" class="mt-4 rounded-lg max-h-48 hidden" />
+                            </div>
+
+                            <!-- Webhook Selector Dropdown -->
+                            <div class="pt-2">
+                                <label for="webhook-selector" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Send to Discord Channel</label>
+                                <select id="webhook-selector" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                                    <option value="">Select a webhook...</option>
+                                    <!-- Webhooks will be populated here by JS -->
+                                </select>
+                            </div>
+                            <div class="flex justify-end pt-2">
+                                <button type="submit" id="submit-transaction-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition">
+                                    Save & Send to Discord
+                                </button>
+                            </div>
+                            <p id="transaction-feedback" class="text-sm h-5 mt-1 text-center"></p>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer Section -->
+        <footer class="bg-slate-800 text-white py-10 px-6 md:px-12">
+            <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <h4 class="text-xl font-semibold mb-4 text-slate-300">Internal Contacts</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="text-slate-400 hover:text-white hover:underline transition">Discord</a></li>
+                        <li><a href="#" class="text-slate-400 hover:text-white hover:underline transition">UPD Support</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-xl font-semibold mb-4 text-slate-300">Quick Access</h4>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="text-slate-400 hover:text-white hover:underline transition">UPD SOP</a></li>
+                        <li><a href="#" class="text-slate-400 hover:text-white hover:underline transition">Disciplinary Guidelines</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-xl font-semibold mb-4 text-slate-300">System Information</h4>
+                    <p class="text-slate-500 text-sm">&copy; 2025 Unified Police Department Internal Systems.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- MODALS -->
+    <!-- Add/Edit Officer Modal -->
+    <div id="add-officer-modal" class="modal-overlay">
+        <div class="modal-content !w-auto !max-w-md">
+            <h2 class="text-2xl font-bold mb-6">Add New Officer</h2>
+            <form id="add-officer-form" class="space-y-4">
+                <div>
+                    <label for="officer-name" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Officer Name</label>
+                    <input type="text" id="officer-name" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="officer-email" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Email</label>
+                    <input type="email" id="officer-email" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-200">Roles</label>
+                    <div id="officer-roles-checkboxes" class="mt-2 space-y-2 max-h-40 overflow-y-auto border border-slate-300 dark:border-slate-600 rounded-md p-3 bg-white dark:bg-slate-700">
+                        <!-- Checkboxes will be populated by JS -->
+                    </div>
+                </div>
+                <div>
+                    <label for="officer-rank" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Rank</label>
+                    <input type="text" id="officer-rank" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div id="access-level-field" class="hidden">
+                    <label for="access-level" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Access Level</label>
+                    <select id="access-level" class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <!-- Options will be populated by JS -->
+                    </select>
+                </div>
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" id="cancel-add-officer-btn" class="bg-slate-200 dark:bg-slate-600 hover:bg-slate-300 dark:hover:bg-slate-500 text-slate-800 dark:text-slate-200 font-bold py-2 px-4 rounded-lg transition">Cancel</button>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition">Save Officer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Edit Officer Modal -->
+    <div id="edit-officer-modal" class="modal-overlay">
+        <div class="modal-content !w-auto !max-w-md">
+            <h2 class="text-2xl font-bold mb-6">Edit Officer</h2>
+            <form id="edit-officer-form" class="space-y-4">
+                <input type="hidden" id="edit-officer-id">
+                <div>
+                    <label for="edit-officer-name" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Officer Name</label>
+                    <input type="text" id="edit-officer-name" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label for="edit-officer-rank" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Rank</label>
+                    <input type="text" id="edit-officer-rank" required class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-200">Roles</label>
+                    <div id="edit-officer-roles-checkboxes" class="mt-2 space-y-2 max-h-40 overflow-y-auto border border-slate-300 dark:border-slate-600 rounded-md p-3 bg-white dark:bg-slate-700">
+                        <!-- Checkboxes will be populated by JS -->
+                    </div>
+                </div>
+                <div id="edit-access-level-field" class="hidden">
+                    <label for="edit-access-level" class="block text-sm font-medium text-slate-700 dark:text-slate-200">Access Level</label>
+                    <select id="edit-access-level" class="mt-1 block w-full px-3 py-2 bg-white dark:bg-slate-700 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                        <!-- Options will be populated by JS -->
+                    </select>
+                </div>
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" id="cancel-edit-officer-btn" class="bg-slate-200 dark:bg-slate-600 hover:bg-slate-300 dark:hover:bg-slate-500 text-slate-800 dark:text-slate-200 font-bold py-2 px-4 rounded-lg transition">Cancel</button>
+                    <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition">Save Changes</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Show Temporary Password Modal -->
+    <div id="show-password-modal" class="modal-overlay">
+        <div class="modal-content !w-auto !max-w-md text-center">
+            <h2 class="text-2xl font-bold mb-4">Officer Account Created!</h2>
+            <p class="mb-4 text-slate-600 dark:text-slate-400">Please provide the following temporary password to the officer. They will be required to change it upon first login.</p>
+            <div class="relative bg-slate-100 dark:bg-slate-700 p-3 rounded-lg">
+                <input id="temp-password-display" type="text" readonly class="w-full bg-transparent text-center font-mono text-lg font-bold">
+                <button id="copy-password-btn" class="absolute top-1/2 right-2 -translate-y-1/2 p-2 rounded-md hover:bg-slate-200 dark:hover:bg-slate-600">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>
+                </button>
+            </div>
+            <p id="copy-feedback" class="text-sm text-green-500 h-5 mt-1"></p>
+            <button id="close-password-modal-btn" class="mt-4 w-full bg-slate-600 hover:bg-slate-700 text-white font-bold py-2 px-4 rounded-lg transition">Close</button>
+        </div>
+    </div>
+
+    <!-- Remove Confirmation Modal -->
+    <div id="confirm-remove-modal" class="modal-overlay">
+        <div class="modal-content !w-auto !max-w-md">
+            <h2 class="text-xl font-bold mb-4">Confirm Removal</h2>
+            <p id="confirm-remove-text" class="mb-6 text-slate-600 dark:text-slate-400">Are you sure you want to remove this officer? This action cannot be undone.</p>
+            <div class="flex justify-end space-x-4">
+                <button id="confirm-cancel-btn" class="bg-slate-200 dark:bg-slate-600 hover:bg-slate-300 dark:hover:bg-slate-500 text-slate-800 dark:text-slate-200 font-bold py-2 px-4 rounded-lg transition">Cancel</button>
+                <button id="confirm-ok-btn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition">Remove</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Report Detail Modal -->
+    <div id="report-detail-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h2 id="modal-report-title" class="text-2xl font-bold">Report Details</h2>
+                <button id="close-report-modal-btn" class="p-2 rounded-full hover:bg-slate-200 dark:hover:bg-slate-700">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+                </button>
+            </div>
+            <div id="modal-report-body" class="prose dark:prose-invert max-w-none">
+                <!-- Report content will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal-overlay">
+        <div class="modal-content !w-auto !max-w-md">
+            <h2 class="text-2xl font-bold mb-6">Settings</h2>
+            <div class="mb-6">
+                <h3 class="text-lg font-semibold mb-3">Website Theme</h3>
+                <div class="space-y-2">
+                    <label class="flex items-center"><input type="radio" name="theme" value="light" class="form-radio h-4 w-4 text-blue-600"><span class="ml-2">Light Mode</span></label>
+                    <label class="flex items-center"><input type="radio" name="theme" value="dark" class="form-radio h-4 w-4 text-blue-600"><span class="ml-2">Dark Mode</span></label>
+                </div>
+            </div>
+
+            <!-- Webhook Management Section -->
+            <div id="webhook-management-section" class="hidden">
+                <hr class="border-slate-200 dark:border-slate-700 my-6">
+                <h3 class="text-lg font-semibold mb-3">Webhook Management</h3>
+
+                <!-- Form to add a new webhook -->
+                <form id="add-webhook-form" class="space-y-3 p-4 bg-slate-50 dark:bg-slate-700 rounded-lg mb-4">
+                    <h4 class="font-semibold">Add New Webhook</h4>
+                    <div>
+                        <label for="webhook-name-input" class="block text-sm font-medium">Webhook Name</label>
+                        <input type="text" id="webhook-name-input" placeholder="e.g., Transaction Logs" required class="mt-1 w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <div>
+                        <label for="webhook-url-input" class="block text-sm font-medium">Webhook URL</label>
+                        <input type="url" id="webhook-url-input" placeholder="Enter Discord webhook URL" required class="mt-1 w-full px-3 py-2 bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-600 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500">
+                    </div>
+                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition">Save Webhook</button>
+                    <p id="webhook-feedback" class="text-sm h-5 mt-1 text-center"></p>
+                </form>
+
+                <!-- List of existing webhooks -->
+                <div>
+                    <h4 class="font-semibold mb-2">Saved Webhooks</h4>
+                    <div id="webhook-list" class="space-y-2 max-h-40 overflow-y-auto p-2 border rounded-md bg-slate-50 dark:bg-slate-700">
+                        <p class="text-slate-500 text-sm text-center">No webhooks saved.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-8 text-right">
+                <button id="close-settings-btn" class="bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-200 px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition">Close</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script type="module">
+        // --- REBUILT AUTHENTICATION AND INITIALIZATION ---
+
+        // 1. Firebase Configuration using provided details
+        const firebaseConfig = {
+            apiKey: "AIzaSyDU7DRAxCzqu81DTa7k0DXaBRcMpk0sElc",
+            authDomain: "upd-system.firebaseapp.com",
+            projectId: "upd-system",
+            storageBucket: "upd-system.appspot.com",
+            messagingSenderId: "28223003678",
+            appId: "1:28223003678:web:a19a9a8eb33fe74202220f" // Using a consistent App ID
+        };
+
+        // 2. Initialize Firebase and export services
+        const app = window.firebase.initializeApp(firebaseConfig);
+        const auth = window.firebase.getAuth(app);
+        const db = window.firebase.getFirestore(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        // 3. Global state variables
+        let currentUserId = null;
+        let currentUserRoles = [];
+        let currentUserAccessLevel = null;
+
+        /**
+         * The main Authentication Manager object.
+         * Handles checking login status, fetching user data, and verifying permissions.
+         */
+        const AuthManager = {
+            /**
+             * List of access levels permitted to view this page.
+             */
+            REQUIRED_ACCESS_LEVELS: ["Website Manager", "High Command"],
+
+            /**
+             * Initializes the authentication check.
+             */
+            init() {
+                console.log("Auth Manager Initialized. Checking auth state...");
+                this.checkAuthState();
+            },
+
+            /**
+             * Sets up a listener that triggers whenever the user's login state changes.
+             * This is the core of the authentication flow.
+             */
+            checkAuthState() {
+                window.firebase.onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        // If a user is logged in, fetch their profile from Firestore.
+                        console.log("User is logged in:", user.uid);
+                        currentUserId = user.uid;
+                        const userData = await this.fetchUserData(user.uid);
+                        this.verifyPermissions(userData);
+                    } else {
+                        // If no user is logged in, deny access immediately.
+                        console.log("No user is logged in.");
+                        this.showAccessDenied("You must be logged in to access this page.");
+                    }
+                });
+            },
+
+            /**
+             * Fetches the user's document from the 'users' collection in Firestore.
+             * @param {string} uid - The user's unique ID.
+             * @returns {object|null} The user's data object or null if not found.
+             */
+            async fetchUserData(uid) {
+                try {
+                    const userDocRef = window.firebase.doc(db, "users", uid);
+                    const userDocSnap = await window.firebase.getDoc(userDocRef);
+                    if (userDocSnap.exists()) {
+                        console.log("User data found:", userDocSnap.data());
+                        return userDocSnap.data();
+                    } else {
+                        console.warn("No user document found in Firestore for UID:", uid);
+                        return null;
+                    }
+                } catch (error) {
+                    console.error("Error fetching user data:", error);
+                    return null;
+                }
+            },
+
+            /**
+             * Verifies if the logged-in user has the required access level.
+             * @param {object|null} userData - The user's data from Firestore.
+             */
+            verifyPermissions(userData) {
+                if (!userData) {
+                    this.showAccessDenied("Your user profile could not be found.");
+                    return;
+                }
+
+                // Store user details globally for other functions to use
+                currentUserAccessLevel = userData['access level'] || null;
+                currentUserRoles = Array.isArray(userData.role) ? userData.role : [userData.role];
+
+                // Check if the user's access level is in the required list
+                if (currentUserAccessLevel && this.REQUIRED_ACCESS_LEVELS.includes(currentUserAccessLevel)) {
+                    console.log("Access granted. User level:", currentUserAccessLevel);
+                    this.grantAccess();
+                } else {
+                    console.log("Access denied. User level:", currentUserAccessLevel);
+                    this.showAccessDenied("You do not have the required permissions to view this page.");
+                }
+            },
+
+            /**
+             * Grants access to the page, hiding loading screens and initializing content.
+             */
+            grantAccess() {
+                document.getElementById('loading-overlay').classList.add('hidden');
+                document.getElementById('page-content').classList.remove('hidden');
+
+                // Now that access is granted, load the page's dynamic content
+                loadReportsFromFirestore();
+                loadPersonnel();
+                setPermissions(currentUserRoles, currentUserAccessLevel);
+            },
+
+            /**
+             * Denies access and shows the login prompt overlay.
+             * @param {string} message - The reason for denial to show the user.
+             */
+            showAccessDenied(message) {
+                document.getElementById('loading-overlay').classList.add('hidden');
+                const loginOverlay = document.getElementById('login-prompt-overlay');
+                loginOverlay.querySelector('#login-prompt-message').textContent = message;
+                loginOverlay.classList.remove('hidden');
+            }
+        };
+
+        // --- APPLICATION STARTUP ---
+        document.addEventListener('DOMContentLoaded', () => {
+            AuthManager.init();
+        });
+
+        // --- DOM Element Refs ---
+        const personnelListContainer = document.getElementById('personnel-list-container');
+        const personnelLoading = document.getElementById('personnel-loading');
+        const addOfficerModal = document.getElementById('add-officer-modal');
+        const addOfficerForm = document.getElementById('add-officer-form');
+        const cancelAddOfficerBtn = document.getElementById('cancel-add-officer-btn');
+        const addOfficerBtn = document.getElementById('add-officer-btn');
+        const showPasswordModal = document.getElementById('show-password-modal');
+        const tempPasswordDisplay = document.getElementById('temp-password-display');
+        const closePasswordModalBtn = document.getElementById('close-password-modal-btn');
+        const copyPasswordBtn = document.getElementById('copy-password-btn');
+        const officerAccessLevelSelect = document.getElementById('access-level');
+        const accessLevelField = document.getElementById('access-level-field');
+        const confirmRemoveModal = document.getElementById('confirm-remove-modal');
+        let officerToRemoveId = null;
+
+        const editOfficerModal = document.getElementById('edit-officer-modal');
+        const editOfficerForm = document.getElementById('edit-officer-form');
+        const cancelEditOfficerBtn = document.getElementById('cancel-edit-officer-btn');
+        const editOfficerIdInput = document.getElementById('edit-officer-id');
+        const editOfficerNameInput = document.getElementById('edit-officer-name');
+        const editOfficerRankInput = document.getElementById('edit-officer-rank');
+        const editOfficerAccessLevelSelect = document.getElementById('edit-access-level');
+        const editAccessLevelField = document.getElementById('edit-access-level-field');
+
+        // --- Roles & Permissions ---
+        const allRoles = ["Account Manager", "Personnel Manager", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader", "Website Manager", "Website Admin", "Detective", "Command", "High Command"];
+        const allAccessLevels = ["High Command", "Command", "Field Training Officer", "Officer", "Air-one", "Moto Unit", "K9 Unit", "Swat Officer", "Swat Teamleader", "Website Manager", "Detective"];
+
+        const hasPermission = (role) => Array.isArray(currentUserRoles) ? currentUserRoles.includes(role) : currentUserRoles === role;
+
+        const setPermissions = (roles, accessLevel) => {
+            const isManager = accessLevel === 'Website Manager' || hasPermission('Account Manager') || hasPermission('Personnel Manager');
+            const isCommand = accessLevel === "High Command" || accessLevel === "Command";
+
+            if (isManager || isCommand) {
+                addOfficerBtn.classList.remove('hidden');
+            } else {
+                addOfficerBtn.classList.add('hidden');
+            }
+
+            if (isCommand || accessLevel === 'Website Manager') {
+                document.getElementById('transaction-sender-section').classList.remove('hidden');
+            }
+
+            if (accessLevel === 'Website Manager') {
+                document.getElementById('webhook-management-section').classList.remove('hidden');
+                loadWebhooks(); // Load webhooks for the manager
+            }
+        };
+
+        // --- Personnel Management ---
+        const generatePassword = (length = 12) => {
+            const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()";
+            let password = "";
+            for (let i = 0, n = charset.length; i < length; ++i) {
+                password += charset.charAt(Math.floor(Math.random() * n));
+            }
+            return password;
+        };
+
+        const loadPersonnel = () => {
+            if (!db) return;
+            const q = window.firebase.query(window.firebase.collection(db, "users"));
+            window.firebase.onSnapshot(q, (snapshot) => {
+                personnelLoading.style.display = 'none';
+                personnelListContainer.innerHTML = '';
+                if (snapshot.empty) {
+                    personnelListContainer.innerHTML = '<p class="text-center text-slate-500 dark:text-slate-400">No personnel found.</p>';
+                    return;
+                }
+                const personnel = [];
+                snapshot.forEach(doc => personnel.push({ id: doc.id, ...doc.data() }));
+
+                personnel.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+
+                personnel.forEach(person => {
+                    const personEl = document.createElement('div');
+                    personEl.className = 'p-3 bg-slate-50 dark:bg-slate-700 rounded-lg shadow-sm';
+                    const statusColor = person.status === 'active' ? 'text-green-500' : 'text-red-500';
+                    const toggleButtonText = person.status === 'active' ? 'Disable' : 'Enable';
+                    const toggleButtonColor = person.status === 'active' ? 'bg-orange-500 hover:bg-orange-600' : 'bg-green-600 hover:bg-green-700';
+                    const rolesDisplay = Array.isArray(person.role) ? person.role.join(', ') : (person.role || 'N/A');
+
+                    personEl.innerHTML = `
+                                    <div class="flex items-center justify-between">
+                                        <div>
+                                            <p class="font-semibold">${person.name || 'No Name'}</p>
+                                            <p class="text-sm text-slate-500 dark:text-slate-400">${person.email || ''}</p>
+                                            <p class="text-sm text-slate-500 dark:text-slate-400">${person.rank || 'N/A'} - ${rolesDisplay}</p>
+                                        </div>
+                                        <p class="text-sm font-bold ${statusColor}">${person.status ? person.status.charAt(0).toUpperCase() + person.status.slice(1) : 'N/A'}</p>
+                                    </div>
+                                    <div class="grid grid-cols-4 gap-2 mt-3 pt-3 border-t border-slate-200 dark:border-slate-600">
+                                        <button data-id="${person.id}" class="edit-btn text-xs bg-blue-500 hover:bg-blue-600 text-white font-bold py-1 px-2 rounded-md transition">Edit</button>
+                                        <button data-id="${person.id}" class="reset-pass-btn text-xs bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-1 px-2 rounded-md transition">Reset Pass</button>
+                                        <button data-id="${person.id}" data-status="${person.status}" class="toggle-status-btn text-xs ${toggleButtonColor} text-white font-bold py-1 px-2 rounded-md transition">${toggleButtonText}</button>
+                                        <button data-id="${person.id}" data-name="${person.name}" class="remove-btn text-xs bg-red-600 hover:bg-red-700 text-white font-bold py-1 px-2 rounded-md transition">Remove</button>
+                                    </div>
+                                `;
+                    personnelListContainer.appendChild(personEl);
+                });
+            }, (error) => {
+                console.error("Error loading personnel:", error);
+                personnelLoading.style.display = 'none';
+                personnelListContainer.innerHTML = '<p class="text-red-500">Failed to load personnel.</p>';
+            });
+        };
+
+        personnelListContainer.addEventListener('click', (e) => {
+            const target = e.target.closest('button');
+            if (!target) return;
+
+            if (target.classList.contains('edit-btn')) openEditOfficerModal(target.dataset.id);
+            if (target.classList.contains('reset-pass-btn')) resetPassword(target.dataset.id);
+            if (target.classList.contains('toggle-status-btn')) toggleStatus(target.dataset.id, target.dataset.status);
+            if (target.classList.contains('remove-btn')) openConfirmRemoveModal(target.dataset.id, target.dataset.name);
+        });
+
+        // Add/Edit Officer Logic (abbreviated for brevity)
+        const openEditOfficerModal = async (personId) => {
+            const personDocRef = window.firebase.doc(db, "users", personId);
+            const docSnap = await window.firebase.getDoc(personDocRef);
+            if (docSnap.exists()) {
+                const personData = docSnap.data();
+                editOfficerIdInput.value = personId;
+                editOfficerNameInput.value = personData.name || '';
+                editOfficerRankInput.value = personData.rank || '';
+                const currentRoles = Array.isArray(personData.role) ? personData.role : [personData.role];
+                populateEditCheckboxes(currentRoles, personData['access level']);
+                editOfficerModal.classList.add('is-open');
+            } else { console.error('Officer not found!'); }
+        };
+        const populateCheckboxes = (container, rolesToPopulate, selectedRoles = []) => {
+            container.innerHTML = '';
+            rolesToPopulate.forEach(role => {
+                const isChecked = selectedRoles.includes(role);
+                const checkboxId = `${container.id}-${role.replace(/\s+/g, '-')}`;
+                container.innerHTML += `
+                            <div class="flex items-center">
+                                <input id="${checkboxId}" type="checkbox" value="${role}" ${isChecked ? 'checked' : ''} class="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500">
+                                <label for="${checkboxId}" class="ml-3 block text-sm text-slate-700 dark:text-slate-200">${role}</label>
+                            </div>`;
+            });
+        };
+        const populateEditCheckboxes = (currentRoles, currentAccessLevel) => {
+            const rolesContainer = document.getElementById('edit-officer-roles-checkboxes');
+            editOfficerAccessLevelSelect.innerHTML = '';
+            let assignableRoles = [], assignableAccessLevels = [];
+            if (currentUserAccessLevel === 'Website Manager') {
+                assignableRoles = allRoles;
+                assignableAccessLevels = allAccessLevels;
+                editAccessLevelField.classList.remove('hidden');
+            } else if (hasPermission('Account Manager')) {
+                assignableRoles = allRoles.filter(r => r !== 'Website Manager');
+                assignableAccessLevels = allAccessLevels.filter(l => l !== 'Website Manager');
+                editAccessLevelField.classList.remove('hidden');
+            } else if (hasPermission('Personnel Manager')) {
+                assignableRoles = allRoles.filter(r => !['Website Manager', 'Account Manager'].includes(r));
+                editAccessLevelField.classList.add('hidden');
+            }
+            populateCheckboxes(rolesContainer, assignableRoles, currentRoles);
+            if (assignableAccessLevels.length > 0) {
+                assignableAccessLevels.forEach(level => {
+                    const option = document.createElement('option');
+                    option.value = level; option.textContent = level;
+                    if (level === currentAccessLevel) option.selected = true;
+                    editOfficerAccessLevelSelect.appendChild(option);
+                });
+            }
+        };
+        editOfficerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const officerId = editOfficerIdInput.value;
+            const updateData = {
+                name: editOfficerNameInput.value,
+                rank: editOfficerRankInput.value,
+                role: Array.from(document.querySelectorAll('#edit-officer-roles-checkboxes input:checked')).map(cb => cb.value),
+                'access level': editOfficerAccessLevelSelect.value || 'Officer'
+            };
+            try {
+                await window.firebase.updateDoc(window.firebase.doc(db, "users", officerId), updateData);
+                editOfficerModal.classList.remove('is-open');
+            } catch (error) { console.error("Error updating officer:", error); }
+        });
+        cancelEditOfficerBtn.addEventListener('click', () => editOfficerModal.classList.remove('is-open'));
+        editOfficerModal.addEventListener('click', e => e.target === editOfficerModal && editOfficerModal.classList.remove('is-open'));
+        const resetPassword = async (personId) => {
+            const newPassword = generatePassword();
+            try {
+                await window.firebase.updateDoc(window.firebase.doc(db, "users", personId), { tempPassword: newPassword });
+                tempPasswordDisplay.value = newPassword;
+                showPasswordModal.querySelector('h2').textContent = 'Password Reset!';
+                showPasswordModal.classList.add('is-open');
+            } catch (error) { console.error("Error resetting password:", error); }
+        };
+        const toggleStatus = async (personId, currentStatus) => {
+            const newStatus = currentStatus === 'active' ? 'disabled' : 'active';
+            try {
+                await window.firebase.updateDoc(window.firebase.doc(db, "users", personId), { status: newStatus });
+            } catch (error) { console.error("Error updating status:", error); }
+        };
+        const populateAddOfficerCheckboxes = () => {
+            const rolesContainer = document.getElementById('officer-roles-checkboxes');
+            officerAccessLevelSelect.innerHTML = '';
+            let assignableRoles = [], assignableAccessLevels = [];
+            if (currentUserAccessLevel === 'Website Manager') {
+                assignableRoles = allRoles;
+                assignableAccessLevels = allAccessLevels;
+                accessLevelField.classList.remove('hidden');
+            } else if (hasPermission('Account Manager')) {
+                assignableRoles = allRoles.filter(r => r !== 'Website Manager');
+                assignableAccessLevels = allAccessLevels.filter(l => l !== 'Website Manager');
+                accessLevelField.classList.remove('hidden');
+            } else if (hasPermission('Personnel Manager')) {
+                assignableRoles = allRoles.filter(r => !['Website Manager', 'Account Manager'].includes(r));
+                accessLevelField.classList.add('hidden');
+            }
+            populateCheckboxes(rolesContainer, assignableRoles);
+            if (assignableAccessLevels.length > 0) {
+                assignableAccessLevels.forEach(level => {
+                    const option = document.createElement('option');
+                    option.value = level; option.textContent = level;
+                    officerAccessLevelSelect.appendChild(option);
+                });
+            }
+        };
+        addOfficerBtn.addEventListener('click', () => {
+            populateAddOfficerCheckboxes();
+            addOfficerModal.classList.add('is-open')
+        });
+        cancelAddOfficerBtn.addEventListener('click', () => addOfficerModal.classList.remove('is-open'));
+        addOfficerModal.addEventListener('click', e => e.target === addOfficerModal && addOfficerModal.classList.remove('is-open'));
+        addOfficerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const name = document.getElementById('officer-name').value;
+            const email = document.getElementById('officer-email').value;
+            const rank = document.getElementById('officer-rank').value;
+            const selectedRoles = Array.from(document.querySelectorAll('#officer-roles-checkboxes input:checked')).map(cb => cb.value);
+            const accessLevel = document.getElementById('access-level').value || 'Officer';
+            const password = generatePassword();
+
+            if (selectedRoles.length === 0) { alert("Please select at least one role."); return; }
+
+            try {
+                const userCredential = await window.firebase.createUserWithEmailAndPassword(auth, email, password);
+                await window.firebase.setDoc(window.firebase.doc(db, "users", userCredential.user.uid), {
+                    name, email, rank, role: selectedRoles, 'access level': accessLevel,
+                    status: 'active', createdAt: new Date().toISOString(), createdBy: currentUserId
+                });
+                addOfficerForm.reset();
+                addOfficerModal.classList.remove('is-open');
+                tempPasswordDisplay.value = password;
+                showPasswordModal.querySelector('h2').textContent = 'Officer Account Created!';
+                showPasswordModal.classList.add('is-open');
+            } catch (error) { console.error("Error adding officer:", error); alert("Failed to add officer. See console."); }
+        });
+        closePasswordModalBtn.addEventListener('click', () => showPasswordModal.classList.remove('is-open'));
+        showPasswordModal.addEventListener('click', e => e.target === showPasswordModal && showPasswordModal.classList.remove('is-open'));
+        copyPasswordBtn.addEventListener('click', () => {
+            tempPasswordDisplay.select();
+            document.execCommand('copy');
+            document.getElementById('copy-feedback').textContent = 'Copied!';
+            setTimeout(() => document.getElementById('copy-feedback').textContent = '', 2000);
+        });
+        const openConfirmRemoveModal = (id, name) => {
+            officerToRemoveId = id;
+            document.getElementById('confirm-remove-text').textContent = `Are you sure you want to remove ${name}? This action cannot be undone.`;
+            confirmRemoveModal.classList.add('is-open');
+        };
+        const closeConfirmRemoveModal = () => { officerToRemoveId = null; confirmRemoveModal.classList.remove('is-open'); };
+        const removeOfficer = async () => {
+            if (!officerToRemoveId) return;
+            try {
+                await window.firebase.deleteDoc(window.firebase.doc(db, "users", officerToRemoveId));
+                closeConfirmRemoveModal();
+            } catch (error) { console.error("Error removing officer:", error); }
+        };
+        document.getElementById('confirm-cancel-btn').addEventListener('click', closeConfirmRemoveModal);
+        document.getElementById('confirm-ok-btn').addEventListener('click', removeOfficer);
+        confirmRemoveModal.addEventListener('click', e => e.target === confirmRemoveModal && closeConfirmRemoveModal());
+
+        // --- Transaction Log & Webhook ---
+        const transactionLogForm = document.getElementById('transaction-log-form');
+        const pasteArea = document.getElementById('paste-area');
+        const transactionFeedback = document.getElementById('transaction-feedback');
+        const imageInput = document.getElementById('trans-image');
+        const imagePreview = document.getElementById('image-preview');
+        const submitTransactionBtn = document.getElementById('submit-transaction-btn');
+        const webhookSelector = document.getElementById('webhook-selector');
+
+        // --- Webhook Management ---
+        const webhookFeedback = document.getElementById('webhook-feedback');
+        const addWebhookForm = document.getElementById('add-webhook-form');
+        const webhookList = document.getElementById('webhook-list');
+
+        const getWebhooksCollection = () => window.firebase.collection(db, `artifacts/${appId}/public/data/webhooks`);
+
+        const loadWebhooks = () => {
+            const q = window.firebase.query(getWebhooksCollection());
+            window.firebase.onSnapshot(q, (snapshot) => {
+                webhookList.innerHTML = '';
+                // Clear existing options but keep the first "Select" option
+                webhookSelector.innerHTML = '<option value="">Select a webhook...</option>';
+
+                if (snapshot.empty) {
+                    webhookList.innerHTML = '<p class="text-slate-500 text-sm text-center">No webhooks saved.</p>';
+                    return;
+                }
+
+                snapshot.forEach(doc => {
+                    const webhook = { id: doc.id, ...doc.data() };
+                    // Populate the list in the settings modal
+                    const listItem = document.createElement('div');
+                    listItem.className = 'flex items-center justify-between p-2 bg-white dark:bg-slate-800 rounded';
+                    listItem.innerHTML = `
+                            <div>
+                                <p class="font-semibold">${webhook.name}</p>
+                                <p class="text-xs text-slate-400 truncate max-w-xs">${webhook.url}</p>
+                            </div>
+                            <button data-id="${webhook.id}" class="delete-webhook-btn text-red-500 hover:text-red-700 p-1 rounded-full">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            </button>
+                        `;
+                    webhookList.appendChild(listItem);
+
+                    // Populate the dropdown in the transaction form
+                    const option = document.createElement('option');
+                    option.value = webhook.url;
+                    option.textContent = webhook.name;
+                    webhookSelector.appendChild(option);
+                });
+            }, (error) => {
+                console.error("Error loading webhooks:", error);
+                webhookList.innerHTML = '<p class="text-red-500">Failed to load webhooks.</p>';
+            });
+        };
+
+        const saveWebhook = async (event) => {
+            event.preventDefault();
+            const nameInput = document.getElementById('webhook-name-input');
+            const urlInput = document.getElementById('webhook-url-input');
+            const name = nameInput.value.trim();
+            const url = urlInput.value.trim();
+
+            if (!name || !url) {
+                webhookFeedback.textContent = "Name and URL are required.";
+                webhookFeedback.className = "text-sm h-5 mt-1 text-red-500";
+                return;
+            }
+            try {
+                await window.firebase.addDoc(getWebhooksCollection(), { name, url });
+                webhookFeedback.textContent = "Webhook saved!";
+                webhookFeedback.className = "text-sm h-5 mt-1 text-green-500";
+                addWebhookForm.reset();
+            } catch (error) {
+                console.error("Error saving webhook:", error);
+                webhookFeedback.textContent = "Failed to save webhook.";
+                webhookFeedback.className = "text-sm h-5 mt-1 text-red-500";
+            } finally {
+                setTimeout(() => webhookFeedback.textContent = '', 3000);
+            }
+        };
+
+        const deleteWebhook = async (id) => {
+            if (!confirm("Are you sure you want to delete this webhook?")) return;
+            try {
+                await window.firebase.deleteDoc(window.firebase.doc(db, `artifacts/${appId}/public/data/webhooks`, id));
+            } catch (error) {
+                console.error("Error deleting webhook:", error);
+            }
+        };
+
+        addWebhookForm.addEventListener('submit', saveWebhook);
+        webhookList.addEventListener('click', (e) => {
+            const deleteButton = e.target.closest('.delete-webhook-btn');
+            if (deleteButton) {
+                deleteWebhook(deleteButton.dataset.id);
+            }
+        });
+
+
+        const handlePaste = (event) => {
+            event.preventDefault();
+            const pastedText = (event.clipboardData || window.clipboardData).getData('text');
+            pasteArea.value = pastedText;
+
+            const accountMatch = pastedText.match(/Transfer from account \/ To: `(\d+)`/);
+            const typeMatch = pastedText.match(/Type: (.+?)\s\s/);
+            const madeByMatch = pastedText.match(/Made by: (.+?) `\((.+?)\)`/);
+            const amountMatch = pastedText.match(/Amount: `(\$[,0-9]+\.00)`/);
+            const messageMatch = pastedText.match(/Message: (.+)/);
+
+            if (accountMatch) document.getElementById('trans-account').value = accountMatch[1];
+            if (typeMatch) document.getElementById('trans-type').value = typeMatch[1];
+            if (madeByMatch) {
+                document.getElementById('trans-made-by').value = madeByMatch[1];
+            }
+            if (amountMatch) document.getElementById('trans-amount').value = amountMatch[1];
+            if (messageMatch) document.getElementById('trans-message').value = messageMatch[1];
+        };
+
+        imageInput.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    imagePreview.src = event.target.result;
+                    imagePreview.classList.remove('hidden');
+                };
+                reader.readAsDataURL(file);
+            } else {
+                imagePreview.src = '';
+                imagePreview.classList.add('hidden');
+            }
+        });
+
+        const handleTransactionSubmit = async (event) => {
+            event.preventDefault();
+            submitTransactionBtn.disabled = true;
+            submitTransactionBtn.textContent = 'Processing...';
+
+            const file = imageInput.files[0];
+
+            // 1. Prepare transaction data (without image URL)
+            const transactionData = {
+                account: document.getElementById('trans-account').value,
+                type: document.getElementById('trans-type').value,
+                madeBy: document.getElementById('trans-made-by').value,
+                amount: document.getElementById('trans-amount').value,
+                message: document.getElementById('trans-message').value,
+                createdAt: window.firebase.serverTimestamp(),
+                createdBy: currentUserId
+            };
+
+            // 2. Save the text data to Firestore first
+            try {
+                await window.firebase.addDoc(window.firebase.collection(db, `artifacts/${appId}/public/data/transactions`), transactionData);
+            } catch (error) {
+                console.error("Error saving transaction:", error);
+                transactionFeedback.textContent = "Failed to save transaction. See console.";
+                transactionFeedback.className = "text-sm h-5 mt-1 text-red-500";
+                submitTransactionBtn.disabled = false;
+                submitTransactionBtn.textContent = 'Save & Send to Discord';
+                return;
+            }
+
+            // 3. Prepare the Discord payload
+            const selectedWebhookUrl = webhookSelector.value;
+            if (!selectedWebhookUrl) {
+                transactionFeedback.textContent = "Transaction saved. Select a webhook to send to Discord.";
+                transactionFeedback.className = "text-sm h-5 mt-1 text-yellow-500";
+                setTimeout(() => transactionFeedback.textContent = '', 4000);
+                submitTransactionBtn.disabled = false;
+                submitTransactionBtn.textContent = 'Save & Send to Discord';
+                return;
+            }
+
+            const payload = {
+                content: null,
+                embeds: [{
+                    "title": "💳 TRANSACTION LOG – TRANSFER",
+                    "color": 15844367,
+                    "fields": [
+                        { "name": "Transfer from account / To:", "value": `\`${transactionData.account}\``, "inline": false },
+                        { "name": "Type:", "value": transactionData.type, "inline": false },
+                        { "name": "Made by:", "value": `${transactionData.madeBy}`, "inline": false },
+                        { "name": "Time:", "value": `<t:${Math.floor(Date.now() / 1000)}:R>`, "inline": false },
+                        { "name": "Amount:", "value": `\`${transactionData.amount}\``, "inline": false },
+                        { "name": "Message:", "value": transactionData.message, "inline": false }
+                    ],
+                }],
+                username: "UPD Transaction Logs",
+                avatar_url: "https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png"
+            };
+
+            // 4. Send to Discord, attaching the image if it exists
+            try {
+                let response;
+                if (file) {
+                    // If there's a file, send as multipart/form-data
+                    const formData = new FormData();
+                    formData.append('payload_json', JSON.stringify(payload));
+                    formData.append('file1', file);
+                    response = await fetch(selectedWebhookUrl, {
+                        method: 'POST',
+                        body: formData
+                    });
+                } else {
+                    // If no file, send as standard JSON
+                    response = await fetch(selectedWebhookUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                }
+
+                if (response.ok) {
+                    transactionFeedback.textContent = "Transaction saved and sent successfully!";
+                    transactionFeedback.className = "text-sm h-5 mt-1 text-green-500";
+                    transactionLogForm.reset();
+                    pasteArea.value = '';
+                    imagePreview.src = '';
+                    imagePreview.classList.add('hidden');
+                } else {
+                    throw new Error(`Server responded with ${response.status}`);
+                }
+            } catch (error) {
+                console.error('Error sending webhook:', error);
+                transactionFeedback.textContent = "Saved, but failed to send to Discord.";
+                transactionFeedback.className = "text-sm h-5 mt-1 text-yellow-500";
+            } finally {
+                setTimeout(() => transactionFeedback.textContent = '', 4000);
+                submitTransactionBtn.disabled = false;
+                submitTransactionBtn.textContent = 'Save & Send to Discord';
+            }
+        };
+
+        pasteArea.addEventListener('paste', handlePaste);
+        transactionLogForm.addEventListener('submit', handleTransactionSubmit);
+
+        // --- Firestore Report Loading ---
+        const loadReportsFromFirestore = () => {
+            if (!db) return;
+            const reportsContainer = document.getElementById('reports-container');
+            const reportsLoading = document.getElementById('reports-loading');
+            const reportsCollection = window.firebase.collection(db, `artifacts/${appId}/public/data/reports`);
+            const q = window.firebase.query(reportsCollection);
+
+            window.firebase.onSnapshot(q, (querySnapshot) => {
+                reportsLoading.style.display = 'none';
+                reportsContainer.innerHTML = '';
+                if (querySnapshot.empty) {
+                    reportsContainer.innerHTML = '<p class="text-center text-slate-500 dark:text-slate-400">No reports found.</p>';
+                    return;
+                }
+                const reports = [];
+                querySnapshot.forEach(doc => reports.push({ id: doc.id, ...doc.data() }));
+                reports.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+                reports.forEach(report => {
+                    const reportEl = document.createElement('div');
+                    reportEl.className = 'p-4 bg-slate-50 dark:bg-slate-700 rounded-lg shadow-sm cursor-pointer hover:bg-slate-100 dark:hover:bg-slate-600 transition';
+                    reportEl.dataset.reportId = report.id;
+                    const reportTitle = report.reportFields?.caseTitle || 'Untitled Report';
+                    const officerMatch = report.reportLists?.['officers-list']?.match(/value="([^"]+)"/);
+                    const reportingOfficer = officerMatch ? officerMatch[1] : 'Unknown Officer';
+                    const reportDate = new Date(report.createdAt).toLocaleString();
+                    reportEl.innerHTML = `
+                                    <h3 class="font-bold text-lg text-blue-600 dark:text-blue-400">${reportTitle}</h3>
+                                    <p class="text-sm text-slate-600 dark:text-slate-300">Filed by: ${reportingOfficer}</p>
+                                    <p class="text-xs text-slate-400 dark:text-slate-500">Date: ${reportDate}</p>
+                                `;
+                    reportEl.addEventListener('click', () => openReportModal(report));
+                    reportsContainer.appendChild(reportEl);
+                });
+            }, (error) => {
+                console.error("Error fetching reports: ", error);
+                reportsLoading.style.display = 'none';
+                reportsContainer.innerHTML = '<p class="text-center text-red-500">Failed to load reports.</p>';
+            });
+        };
+
+        // --- Modal Logic ---
+        const reportDetailModal = document.getElementById('report-detail-modal');
+        const modalReportTitle = document.getElementById('modal-report-title');
+        const modalReportBody = document.getElementById('modal-report-body');
+        const closeReportModalBtn = document.getElementById('close-report-modal-btn');
+
+        const openReportModal = (reportData) => {
+            modalReportTitle.textContent = reportData.reportFields?.caseTitle || 'Untitled Report';
+            const description = reportData.reportFields?.['report-description'] || 'No description available.';
+            modalReportBody.innerHTML = `<pre class="whitespace-pre-wrap font-sans">${description}</pre>`;
+            reportDetailModal.classList.add('is-open');
+        };
+
+        closeReportModalBtn.addEventListener('click', () => reportDetailModal.classList.remove('is-open'));
+        reportDetailModal.addEventListener('click', e => e.target === reportDetailModal && reportDetailModal.classList.remove('is-open'));
+
+        // --- General UI Logic (Theme, Mobile Nav) ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const settingsModal = document.getElementById('settings-modal');
+            const themeRadios = document.querySelectorAll('input[name="theme"]');
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const navLinks = document.getElementById('nav-links');
+            const settingsBtn = document.getElementById('settings-btn');
+            const closeSettingsBtn = document.getElementById('close-settings-btn');
+
+            const applyTheme = (theme) => {
+                if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                    themeRadios.forEach(radio => radio.value === 'dark' ? radio.checked = true : false);
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    themeRadios.forEach(radio => radio.value === 'light' ? radio.checked = true : false);
+                }
+            };
+
+            const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+            applyTheme(savedTheme);
+
+            themeRadios.forEach(radio => radio.addEventListener('change', (e) => {
+                localStorage.setItem('theme', e.target.value);
+                applyTheme(e.target.value);
+            }));
+
+            hamburgerBtn.addEventListener('click', (e) => { e.stopPropagation(); navLinks.classList.toggle('nav-mobile-active'); });
+            settingsBtn.addEventListener('click', () => settingsModal.classList.add('is-open'));
+            closeSettingsBtn.addEventListener('click', () => settingsModal.classList.remove('is-open'));
+            settingsModal.addEventListener('click', (e) => e.target === settingsModal && settingsModal.classList.remove('is-open'));
+        });
+    </script>
+</body>
+</html>

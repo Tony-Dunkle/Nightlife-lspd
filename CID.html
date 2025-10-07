@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPD - Criminal Investigation Division</title>
+    <link rel="icon" href="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png" type="image/png">
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;700&family=Tinos:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+    <!-- PDF & Markdown Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/2.1.0/showdown.min.js"></script>
+
+    <!-- Custom Styles -->
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* Dark Gray-Blue */
+        }
+
+        .font-mono {
+            font-family: 'Roboto Mono', monospace;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1f2937;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #4b5563;
+            border-radius: 4px;
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #6b7280;
+            }
+
+        /* Modal & Overlay Styles */
+        .login-overlay, .modal-overlay {
+            background-color: rgba(17, 24, 39, 0.9);
+            backdrop-filter: blur(5px);
+        }
+
+        /* Tab Styling */
+        .tab-button.active {
+            border-color: #3b82f6; /* Blue-500 */
+            background-color: #1f2937; /* Gray-800 */
+            color: #ffffff;
+        }
+
+        .sidebar-link.active {
+            background-color: #374151; /* Gray-700 */
+            color: #ffffff;
+        }
+
+        /* Status Colors */
+        .status-active, .status-pending {
+            background-color: #3b82f6;
+        }
+        /* blue-500 */
+        .status-cold {
+            background-color: #6b7280;
+        }
+        /* gray-500 */
+        .status-closed, .status-approved, .status-executed {
+            background-color: #16a34a;
+        }
+        /* green-600 */
+        .status-denied {
+            background-color: #dc2626;
+        }
+        /* red-600 */
+
+
+        /* Sidebar Transition */
+        #sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+
+            #sidebar.sidebar-hidden {
+                transform: translateX(-100%);
+            }
+
+        /* Custom input styling */
+        .form-input, .form-textarea, .form-select {
+            background-color: #374151;
+            border: 1px solid #4b5563;
+            color: #d1d5db;
+            border-radius: 0.375rem;
+            padding: 0.5rem 0.75rem;
+        }
+
+            .form-input:focus, .form-textarea:focus, .form-select:focus {
+                outline: none;
+                border-color: #3b82f6;
+                box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.4);
+            }
+
+        /* Markdown Editor Styles */
+        #report-preview {
+            prose-p: text-gray-300;
+            prose-headings: text-white;
+            prose-strong: text-white;
+        }
+
+            #report-preview h1 {
+                font-size: 1.5em;
+                margin-bottom: 0.5em;
+            }
+
+            #report-preview h2 {
+                font-size: 1.25em;
+                margin-bottom: 0.5em;
+            }
+
+            #report-preview ul {
+                list-style-type: disc;
+                margin-left: 1.5rem;
+            }
+
+            #report-preview ol {
+                list-style-type: decimal;
+                margin-left: 1.5rem;
+            }
+
+        /* PDF Generation Styles */
+        .pdf-render-content {
+            font-family: 'Tinos', serif;
+            color: black;
+            width: 8.5in;
+            padding: 0.75in;
+            background: white;
+            font-size: 12pt;
+            line-height: 1.5;
+        }
+
+        .pdf-header {
+            text-align: center;
+            font-size: 16pt;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .pdf-subheader {
+            font-size: 14pt;
+            font-weight: bold;
+            margin-top: 20px;
+            margin-bottom: 10px;
+            border-bottom: 1px solid black;
+            padding-bottom: 5px;
+        }
+
+        .pdf-field {
+            margin-bottom: 12px;
+        }
+
+        .pdf-label {
+            font-weight: bold;
+        }
+
+        .pdf-value {
+            border-bottom: 1px dotted #666;
+            padding: 0 5px;
+        }
+
+        .pdf-prose {
+            margin-top: 15px;
+            text-align: justify;
+        }
+
+        .pdf-signature-block {
+            margin-top: 50px;
+        }
+
+        .pdf-signature-line {
+            border-top: 1px solid black;
+            padding-top: 5px;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body class="text-gray-300">
+
+    <!-- Login Overlay -->
+    <div id="login-overlay" class="hidden fixed inset-0 z-50 flex items-center justify-center login-overlay">
+        <div class="text-center p-8 bg-gray-800 border border-gray-700 rounded-lg shadow-2xl">
+            <h1 class="text-3xl font-bold text-white mb-2">Access Restricted</h1>
+            <p class="text-gray-400 mb-6">CID Portal requires authentication.</p>
+            <button id="login-btn" class="px-6 py-3 font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors">Authenticate</button>
+        </div>
+    </div>
+
+    <!-- Main Application Wrapper -->
+    <div id="app-wrapper" class="hidden flex h-screen bg-gray-900">
+        <aside id="sidebar" class="absolute md:relative z-40 flex-col w-64 bg-gray-800 shadow-lg -translate-x-full md:translate-x-0">
+            <div class="flex items-center justify-center h-20 border-b border-gray-700">
+                <img src="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png" alt="UPD Logo" class="w-12 h-12">
+                <h1 class="text-xl font-bold ml-2 text-white">CID Portal</h1>
+            </div>
+            <nav id="sidebar-nav" class="flex-1 px-2 py-4 space-y-2">
+                <a href="javascript:void(0)" data-view="dashboard" class="sidebar-link flex items-center px-3 py-2 text-gray-300 rounded-lg"><i class="ph-house-light w-6 h-6"></i><span class="ml-3">Dashboard</span></a>
+                <a href="javascript:void(0)" data-view="documents" class="sidebar-link flex items-center px-3 py-2 text-gray-400 rounded-lg hover:bg-gray-700"><i class="ph-files-light w-6 h-6"></i><span class="ml-3">Documents</span></a>
+                <a href="javascript:void(0)" data-view="warrants" class="sidebar-link flex items-center px-3 py-2 text-gray-400 rounded-lg hover:bg-gray-700"><i class="ph-scales-light w-6 h-6"></i><span class="ml-3">Warrants</span></a>
+                <a href="javascript:void(0)" data-view="roster" class="sidebar-link flex items-center px-3 py-2 text-gray-400 rounded-lg hover:bg-gray-700"><i class="ph-user-list-light w-6 h-6"></i><span class="ml-3">CID Roster</span></a>
+                <a href="javascript:void(0)" data-view="archives" class="sidebar-link flex items-center px-3 py-2 text-gray-400 rounded-lg hover:bg-gray-700"><i class="ph-archive-light w-6 h-6"></i><span class="ml-3">Archives</span></a>
+            </nav>
+        </aside>
+
+        <div class="flex flex-col flex-1 overflow-hidden">
+            <header class="bg-gray-900/70 backdrop-blur-sm border-b border-gray-700 sticky top-0 z-30 px-6 py-3">
+                <div class="flex items-center justify-between">
+                    <button id="hamburgerBtn" class="text-gray-400 focus:outline-none md:hidden"><i class="ph-list-light text-2xl"></i></button>
+                    <div class="flex-1"></div>
+                    <div id="user-info" class="text-sm text-gray-400 text-right">Loading...</div>
+                </div>
+            </header>
+
+            <div id="view-container" class="flex-1 overflow-y-auto p-4 md:p-8">
+                <!-- Dashboard View -->
+                <main id="dashboard-view" class="view-content">
+                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between mb-6 gap-4">
+                        <div><h1 class="text-3xl font-extrabold text-white">CID Dashboard</h1><p class="text-gray-400 mt-1">Live overview of all criminal investigations.</p></div>
+                        <div id="auth-buttons" class="hidden"><button id="addCaseFileBtn" class="flex items-center gap-2 px-4 py-2 text-sm font-semibold rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors"><i class="ph-plus-circle-light text-lg"></i> New Case File</button></div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                        <div class="bg-gray-800 border border-gray-700 rounded-lg p-5 flex items-center gap-4"><i class="ph-folder-open-light text-4xl text-blue-400"></i><div><h4 class="font-medium text-gray-400">Active Cases</h4><p id="stat-active-cases" class="text-3xl font-bold text-white">--</p></div></div>
+                        <div class="bg-gray-800 border border-gray-700 rounded-lg p-5 flex items-center gap-4"><i class="ph-snowflake-light text-4xl text-gray-400"></i><div><h4 class="font-medium text-gray-400">Cold Cases</h4><p id="stat-cold-cases" class="text-3xl font-bold text-white">--</p></div></div>
+                        <div class="bg-gray-800 border border-gray-700 rounded-lg p-5 flex items-center gap-4"><i class="ph-archive-box-light text-4xl text-green-400"></i><div><h4 class="font-medium text-gray-400">Cases Closed</h4><p id="stat-closed-cases" class="text-3xl font-bold text-white">--</p></div></div>
+                        <div class="bg-gray-800 border border-gray-700 rounded-lg p-5 flex items-center gap-4"><i class="ph-scales-light text-4xl text-yellow-400"></i><div><h4 class="font-medium text-gray-400">Warrants Issued</h4><p id="stat-warrants" class="text-3xl font-bold text-white">--</p></div></div>
+                    </div>
+                    <div class="flex items-center justify-between mb-4 bg-gray-800/50 p-3 rounded-lg border border-gray-700">
+                        <div class="w-1/2 md:w-1/3">
+                            <label for="case-search-input" class="sr-only">Search Cases</label>
+                            <div class="relative"><div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><i class="ph-magnifying-glass-light text-gray-400"></i></div><input type="text" id="case-search-input" class="form-input w-full pl-10" placeholder="Search by title, detective, or ID..."></div>
+                        </div>
+                        <div class="w-auto">
+                            <label for="case-status-filter" class="sr-only">Filter by Status</label>
+                            <select id="case-status-filter" class="form-select"><option value="all">All Statuses</option><option value="Active">Active</option><option value="Cold">Cold</option></select>
+                        </div>
+                    </div>
+                    <div class="bg-gray-800 border border-gray-700 rounded-lg p-4"><div class="overflow-x-auto"><table class="w-full text-sm text-left"><thead class="text-xs text-gray-400 uppercase bg-gray-700/50"><tr><th scope="col" class="px-6 py-3">Case #</th><th scope="col" class="px-6 py-3">Title</th><th scope="col" class="px-6 py-3">Lead Detective</th><th scope="col" class="px-6 py-3">Status</th><th scope="col" class="px-6 py-3">Last Update</th></tr></thead><tbody id="cases-table-body"></tbody></table></div></div>
+                </main>
+
+                <!-- Documents View -->
+                <main id="documents-view" class="view-content hidden">
+                    <div class="mb-6"><h1 class="text-3xl font-extrabold text-white">Document Generator</h1><p class="text-gray-400 mt-1">Create and print official warrants and legal paperwork.</p></div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <button data-doc-type="arrest-warrant" class="doc-gen-btn bg-gray-800 p-6 rounded-lg text-left hover:bg-gray-700 border border-gray-700 transition-colors"><h3 class="font-bold text-lg text-white">Arrest Warrant</h3><p class="text-sm text-gray-400 mt-1">Issue a warrant for the arrest of a suspect.</p></button>
+                        <button data-doc-type="search-warrant" class="doc-gen-btn bg-gray-800 p-6 rounded-lg text-left hover:bg-gray-700 border border-gray-700 transition-colors"><h3 class="font-bold text-lg text-white">Search Warrant</h3><p class="text-sm text-gray-400 mt-1">Authorize the search of a property or location.</p></button>
+                        <button data-doc-type="property-seizure" class="doc-gen-btn bg-gray-800 p-6 rounded-lg text-left hover:bg-gray-700 border border-gray-700 transition-colors"><h3 class="font-bold text-lg text-white">Property Seizure</h3><p class="text-sm text-gray-400 mt-1">Authorize the seizure of assets and property.</p></button>
+                        <button data-doc-type="plea-agreement" class="doc-gen-btn bg-gray-800 p-6 rounded-lg text-left hover:bg-gray-700 border border-gray-700 transition-colors"><h3 class="font-bold text-lg text-white">Plea Agreement</h3><p class="text-sm text-gray-400 mt-1">Formalize a plea deal with a defendant.</p></button>
+                        <button data-doc-type="ci-nda" class="doc-gen-btn bg-gray-800 p-6 rounded-lg text-left hover:bg-gray-700 border border-gray-700 transition-colors"><h3 class="font-bold text-lg text-white">Confidential Informant NDA</h3><p class="text-sm text-gray-400 mt-1">Non-disclosure agreement for CIs.</p></button>
+                        <button data-doc-type="ci-employment" class="doc-gen-btn bg-gray-800 p-6 rounded-lg text-left hover:bg-gray-700 border border-gray-700 transition-colors"><h3 class="font-bold text-lg text-white">CI Employment</h3><p class="text-sm text-gray-400 mt-1">Acknowledgment of CI employment.</p></button>
+                    </div>
+                </main>
+
+                <!-- Warrants View -->
+                <main id="warrants-view" class="view-content hidden">
+                    <div class="mb-6"><h1 class="text-3xl font-extrabold text-white">Warrant Submissions</h1><p class="text-gray-400 mt-1">Review and manage all submitted warrants.</p></div>
+                    <div class="bg-gray-800 border border-gray-700 rounded-lg p-4">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-sm text-left">
+                                <thead class="text-xs text-gray-400 uppercase bg-gray-700/50">
+                                    <tr>
+                                        <th scope="col" class="px-6 py-3">Warrant ID</th>
+                                        <th scope="col" class="px-6 py-3">Type</th>
+                                        <th scope="col" class="px-6 py-3">Subject</th>
+                                        <th scope="col" class="px-6 py-3">Status</th>
+                                        <th scope="col" class="px-6 py-3">Submitted By</th>
+                                        <th scope="col" class="px-6 py-3">Date</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="warrants-table-body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                </main>
+
+                <!-- Roster View -->
+                <main id="roster-view" class="view-content hidden">
+                    <div class="mb-6"><h1 class="text-3xl font-extrabold text-white">CID Roster</h1><p class="text-gray-400 mt-1">List of all active detectives and command staff.</p></div>
+                    <div id="roster-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"></div>
+                </main>
+
+                <!-- Archives View -->
+                <main id="archives-view" class="view-content hidden">
+                    <div class="mb-6"><h1 class="text-3xl font-extrabold text-white">Case Archives</h1><p class="text-gray-400 mt-1">A record of all closed investigations.</p></div>
+                    <div class="bg-gray-800 border border-gray-700 rounded-lg p-4"><div class="overflow-x-auto"><table class="w-full text-sm text-left"><thead class="text-xs text-gray-400 uppercase bg-gray-700/50"><tr><th scope="col" class="px-6 py-3">Case #</th><th scope="col" class="px-6 py-3">Title</th><th scope="col" class="px-6 py-3">Lead Detective</th><th scope="col" class="px-6 py-3">Date Closed</th></tr></thead><tbody id="archives-table-body"></tbody></table></div></div>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <!-- Case File Modal -->
+    <div id="caseFileModal" class="hidden fixed inset-0 z-50 modal-overlay flex items-center justify-center p-4">
+        <div class="bg-gray-800 rounded-lg shadow-2xl w-full max-w-5xl border border-gray-700 max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-gray-700">
+                <h3 id="caseFileModalTitle" class="text-xl font-bold text-white"></h3>
+                <div class="flex items-center gap-4">
+                    <button type="button" id="printCaseBtn" class="hidden flex items-center gap-2 px-3 py-1.5 text-sm font-semibold rounded-md bg-gray-600 hover:bg-gray-500"><i class="ph-printer-light text-lg"></i> Print Case</button>
+                    <button id="closeCaseFileModalBtn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+                </div>
+            </div>
+            <div class="flex-grow overflow-y-auto p-6">
+                <form id="caseFileForm" class="space-y-6">
+                    <input type="hidden" id="caseIdInput">
+                    <div id="step-1" class="modal-step"><h4 class="text-lg font-semibold text-white mb-4 border-b border-gray-600 pb-2">Step 1: Incident Details</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-6"><div><label for="caseTitleInput" class="block text-sm font-medium text-gray-300 mb-1">Case Title / Incident</label><input type="text" id="caseTitleInput" required class="form-input w-full"></div><div><label for="leadDetectiveInput" class="block text-sm font-medium text-gray-300 mb-1">Lead Detective</label><select id="leadDetectiveInput" required class="form-select w-full"></select></div><div><label for="caseStatusInput" class="block text-sm font-medium text-gray-300 mb-1">Status</label><select id="caseStatusInput" class="form-select w-full"><option>Active</option><option>Cold</option><option>Closed</option></select></div><div><label for="incidentDateInput" class="block text-sm font-medium text-gray-300 mb-1">Date of Incident</label><input type="date" id="incidentDateInput" class="form-input w-full"></div><div class="md:col-span-2"><label for="locationInput" class="block text-sm font-medium text-gray-300 mb-1">Location of Incident</label><input type="text" id="locationInput" class="form-input w-full"></div></div></div>
+                    <div id="step-2" class="modal-step hidden"><h4 class="text-lg font-semibold text-white mb-4 border-b border-gray-600 pb-2">Step 2: Persons Involved</h4><div id="persons-involved-container" class="space-y-4"></div><button type="button" id="add-person-btn" class="mt-4 text-sm flex items-center gap-2 text-blue-400 hover:text-blue-300"><i class="ph-plus-circle-light text-lg"></i> Add Person</button></div>
+                    <div id="step-3" class="modal-step hidden"><h4 class="text-lg font-semibold text-white mb-4 border-b border-gray-600 pb-2">Step 3: Narrative Report</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-4 h-[400px]"><div class="flex flex-col"><label for="report-editor" class="text-sm font-medium text-gray-300 mb-1">Markdown Editor</label><textarea id="report-editor" class="form-textarea w-full flex-grow resize-none" placeholder="## Synopsis&#10;..."></textarea></div><div class="flex flex-col"><label class="text-sm font-medium text-gray-300 mb-1">Live Preview</label><div id="report-preview" class="bg-gray-900/50 p-3 rounded-md h-full overflow-y-auto prose"></div></div></div></div>
+                    <div id="step-4" class="modal-step hidden"><h4 class="text-lg font-semibold text-white mb-4 border-b border-gray-600 pb-2">Step 4: Assign Personnel</h4><p class="text-sm text-gray-400 mb-4">Select the detectives who will have access to this case file.</p><div id="assign-personnel-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div></div>
+                </form>
+            </div>
+            <div class="flex justify-between items-center p-4 bg-gray-900/50 border-t border-gray-700">
+                <div><button type="button" id="deleteCaseBtn" class="hidden px-4 py-2 text-sm font-semibold rounded-md bg-red-600 text-white hover:bg-red-700">Delete Case</button></div>
+                <div class="flex space-x-4"><button type="button" id="prevStepBtn" class="hidden px-6 py-2 text-sm font-semibold rounded-md border border-gray-600 hover:bg-gray-700">Previous</button><button type="button" id="nextStepBtn" class="px-6 py-2 text-sm font-semibold rounded-md bg-blue-600 text-white hover:bg-blue-700">Next</button><button type="button" id="saveCaseBtn" class="hidden px-6 py-2 text-sm font-semibold rounded-md bg-green-600 text-white hover:bg-green-700">Save Case</button></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Document Generator Modal -->
+    <div id="docGenModal" class="hidden fixed inset-0 z-50 modal-overlay flex items-center justify-center p-4">
+        <div class="bg-gray-800 rounded-lg shadow-2xl w-full max-w-3xl border border-gray-700 max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-gray-700"><h3 id="docGenModalTitle" class="text-xl font-bold text-white"></h3><button id="closeDocGenModalBtn" class="text-gray-400 hover:text-white text-2xl">&times;</button></div>
+            <div id="docGenFormContainer" class="flex-grow overflow-y-auto p-6 space-y-4"></div>
+            <div class="flex justify-end p-4 bg-gray-900/50 border-t border-gray-700"><button type="button" id="generatePdfBtn" class="px-6 py-2 text-sm font-semibold rounded-md bg-blue-600 text-white hover:bg-blue-700">Submit & Generate PDF</button></div>
+        </div>
+    </div>
+
+    <!-- Warrant Detail Modal -->
+    <div id="warrantDetailModal" class="hidden fixed inset-0 z-50 modal-overlay flex items-center justify-center p-4">
+        <div class="bg-gray-800 rounded-lg shadow-2xl w-full max-w-3xl border border-gray-700 max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-gray-700">
+                <h3 id="warrantDetailTitle" class="text-xl font-bold text-white">Warrant Details</h3>
+                <button id="closeWarrantDetailModalBtn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <div id="warrantDetailContent" class="flex-grow overflow-y-auto p-6 space-y-4"></div>
+            <div class="flex justify-between items-center p-4 bg-gray-900/50 border-t border-gray-700">
+                <div>
+                    <label for="warrantStatusUpdate" class="text-sm mr-2">Update Status:</label>
+                    <select id="warrantStatusUpdate" class="form-select text-sm">
+                        <option>Pending</option>
+                        <option>Approved</option>
+                        <option>Denied</option>
+                        <option>Executed</option>
+                    </select>
+                </div>
+                <button type="button" id="saveWarrantStatusBtn" class="px-6 py-2 text-sm font-semibold rounded-md bg-green-600 text-white hover:bg-green-700">Save Status</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Hidden container for PDF rendering -->
+    <div id="pdf-render-container" class="absolute -left-full"></div>
+
+    <script type="module">
+        // Firebase Imports
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, query, onSnapshot, addDoc, updateDoc, deleteDoc, serverTimestamp, where, arrayUnion } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const { jsPDF } = window.jspdf;
+
+        // --- Firebase Config ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyDU7DRAxCzqu81DTa7k0DXaBRcMpk0sElc",
+            authDomain: "upd-system.firebaseapp.com",
+            projectId: "upd-system",
+            storageBucket: "upd-system.firebasestorage.app",
+            messagingSenderId: "28223003678",
+            appId: "1:28223003678:web:a19a9a8eb33fe74202220f",
+        };
+
+        // --- App Initialization ---
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        // --- DOM Elements ---
+        const loginOverlay = document.getElementById('login-overlay');
+        const appWrapper = document.getElementById('app-wrapper');
+        const userInfo = document.getElementById('user-info');
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarNav = document.getElementById('sidebar-nav');
+        const authButtons = document.getElementById('auth-buttons');
+        const addCaseFileBtn = document.getElementById('addCaseFileBtn');
+
+        const statActiveCases = document.getElementById('stat-active-cases'), statColdCases = document.getElementById('stat-cold-cases'), statClosedCases = document.getElementById('stat-closed-cases'), statWarrants = document.getElementById('stat-warrants');
+        const casesTableBody = document.getElementById('cases-table-body'), caseSearchInput = document.getElementById('case-search-input'), caseStatusFilter = document.getElementById('case-status-filter');
+        const rosterGrid = document.getElementById('roster-grid'), archivesTableBody = document.getElementById('archives-table-body');
+        const warrantsTableBody = document.getElementById('warrants-table-body');
+
+        // Modals
+        const caseFileModal = document.getElementById('caseFileModal'), caseFileModalTitle = document.getElementById('caseFileModalTitle'), closeCaseFileModalBtn = document.getElementById('closeCaseFileModalBtn'), printCaseBtn = document.getElementById('printCaseBtn'), caseFileForm = document.getElementById('caseFileForm'), caseIdInput = document.getElementById('caseIdInput');
+        const modalSteps = document.querySelectorAll('.modal-step'), prevStepBtn = document.getElementById('prevStepBtn'), nextStepBtn = document.getElementById('nextStepBtn'), saveCaseBtn = document.getElementById('saveCaseBtn'), deleteCaseBtn = document.getElementById('deleteCaseBtn');
+        const caseTitleInput = document.getElementById('caseTitleInput'), leadDetectiveInput = document.getElementById('leadDetectiveInput'), caseStatusInput = document.getElementById('caseStatusInput'), incidentDateInput = document.getElementById('incidentDateInput'), locationInput = document.getElementById('locationInput');
+        const personsInvolvedContainer = document.getElementById('persons-involved-container'), addPersonBtn = document.getElementById('add-person-btn');
+        const reportEditor = document.getElementById('report-editor'), reportPreview = document.getElementById('report-preview');
+        const assignPersonnelContainer = document.getElementById('assign-personnel-container');
+
+        const docGenModal = document.getElementById('docGenModal'), docGenModalTitle = document.getElementById('docGenModalTitle'), closeDocGenModalBtn = document.getElementById('closeDocGenModalBtn'), docGenFormContainer = document.getElementById('docGenFormContainer'), generatePdfBtn = document.getElementById('generatePdfBtn');
+
+        const warrantDetailModal = document.getElementById('warrantDetailModal'), warrantDetailTitle = document.getElementById('warrantDetailTitle'), warrantDetailContent = document.getElementById('warrantDetailContent'), closeWarrantDetailModalBtn = document.getElementById('closeWarrantDetailModalBtn'), warrantStatusUpdate = document.getElementById('warrantStatusUpdate'), saveWarrantStatusBtn = document.getElementById('saveWarrantStatusBtn');
+
+
+        // --- State ---
+        let userProfile = null, allCases = [], allUsers = [], allWarrants = [], unsubscribeCases = null, unsubscribeUsers = null, unsubscribeWarrants = null, currentModalStep = 1, currentDocType = null, currentWarrantId = null;
+        let markdownConverter = new showdown.Converter({ simplifiedAutoLink: true, strikethrough: true, tables: true });
+
+        const accessConfig = {
+            canView: ["Detective", "CID Lead", "CID Case Manager", "Command", "High Command", "Website Manager"],
+            canEdit: ["Detective", "CID Lead", "CID Case Manager", "Command", "High Command", "Website Manager"],
+            canManageAssignments: ["CID Lead", "CID Case Manager"],
+            canDelete: ["CID Lead", "High Command", "Website Manager"],
+            isManager: ["CID Lead", "CID Case Manager", "Command", "High Command", "Website Manager"],
+            isCid: ["Detective", "CID Lead", "CID Case Manager"],
+            canManageWarrants: ["CID Lead", "CID Case Manager", "Command", "High Command", "Website Manager"]
+        };
+
+        // --- Auth & Init ---
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                appWrapper.classList.remove('hidden');
+                loginOverlay.classList.add('hidden');
+                const userDocRef = doc(db, 'users', user.uid);
+                const userDocSnap = await getDoc(userDocRef);
+                userProfile = userDocSnap.exists() ? { uid: user.uid, ...userDocSnap.data() } : { name: 'Demo User', role: 'Detective', 'access level': '' };
+                userInfo.textContent = `${userProfile.name} | ${userProfile.role}`;
+                const canView = accessConfig.canView.includes(userProfile.role || '') || accessConfig.canView.includes(userProfile['access level'] || '');
+                if (canView) {
+                    authButtons.classList.remove('hidden');
+                    initializeCIDPortal();
+                } else {
+                    appWrapper.innerHTML = `<div class="w-full h-full flex items-center justify-center text-red-400 text-xl">Access Denied.</div>`;
+                }
+            } else {
+                appWrapper.classList.add('hidden');
+                loginOverlay.classList.remove('hidden');
+                if (unsubscribeCases) unsubscribeCases();
+                if (unsubscribeUsers) unsubscribeUsers();
+                if (unsubscribeWarrants) unsubscribeWarrants();
+            }
+        });
+
+        function initializeCIDPortal() {
+            const userRole = userProfile.role || '';
+            const userAccessLevel = userProfile['access level'] || '';
+            const isManager = accessConfig.isManager.includes(userRole) || accessConfig.isManager.includes(userAccessLevel);
+
+            let casesQuery;
+            if (isManager) {
+                casesQuery = query(collection(db, `artifacts/${appId}/public/data/cid_cases`));
+            } else {
+                casesQuery = query(collection(db, `artifacts/${appId}/public/data/cid_cases`), where('assignedPersonnel', 'array-contains', userProfile.uid));
+            }
+
+            unsubscribeCases = onSnapshot(casesQuery, s => {
+                allCases = s.docs.map(d => ({ id: d.id, ...d.data() }));
+                renderDashboardStats(); renderCasesTable(); renderArchivesTable();
+            });
+            unsubscribeUsers = onSnapshot(query(collection(db, 'users')), s => {
+                allUsers = s.docs.map(d => ({ id: d.id, ...d.data() }));
+                renderRoster();
+            });
+            unsubscribeWarrants = onSnapshot(query(collection(db, `artifacts/${appId}/public/data/warrants`)), s => {
+                allWarrants = s.docs.map(d => ({ id: d.id, ...d.data() }));
+                renderWarrantsTable();
+                renderDashboardStats(); // Update stats for warrants
+            });
+
+            addCaseFileBtn.addEventListener('click', () => openCaseFileModal());
+            closeCaseFileModalBtn.addEventListener('click', closeCaseFileModal);
+            sidebarNav.addEventListener('click', handleViewSwitch);
+            [casesTableBody, archivesTableBody].forEach(el => el.addEventListener('click', handleTableEditClick));
+            warrantsTableBody.addEventListener('click', handleWarrantTableClick);
+            nextStepBtn.addEventListener('click', () => changeStep(1));
+            prevStepBtn.addEventListener('click', () => changeStep(-1));
+            saveCaseBtn.addEventListener('click', handleSaveCaseFile);
+            deleteCaseBtn.addEventListener('click', handleDeleteCaseFile);
+            printCaseBtn.addEventListener('click', generateCasePdf);
+            addPersonBtn.addEventListener('click', () => addPersonEntry());
+            personsInvolvedContainer.addEventListener('click', e => e.target.closest('.remove-person-btn') && e.target.closest('.person-entry').remove());
+            reportEditor.addEventListener('input', () => reportPreview.innerHTML = markdownConverter.makeHtml(reportEditor.value));
+            document.querySelector('#documents-view').addEventListener('click', e => e.target.closest('.doc-gen-btn') && openDocGenModal(e.target.closest('.doc-gen-btn').dataset.docType));
+            closeDocGenModalBtn.addEventListener('click', () => docGenModal.classList.add('hidden'));
+            generatePdfBtn.addEventListener('click', () => handleGenerateWarrant(currentDocType));
+
+            closeWarrantDetailModalBtn.addEventListener('click', () => warrantDetailModal.classList.add('hidden'));
+            saveWarrantStatusBtn.addEventListener('click', handleSaveWarrantStatus);
+
+            caseSearchInput.addEventListener('keyup', renderCasesTable);
+            caseStatusFilter.addEventListener('change', renderCasesTable);
+
+            switchView('dashboard');
+        }
+
+        // --- View Switching & Rendering ---
+        function switchView(viewName) {
+            document.querySelectorAll('.view-content').forEach(v => v.classList.add('hidden'));
+            document.getElementById(`${viewName}-view`).classList.remove('hidden');
+            document.querySelectorAll('.sidebar-link').forEach(l => l.classList.toggle('active', l.dataset.view === viewName));
+        }
+        function handleViewSwitch(e) {
+            const link = e.target.closest('.sidebar-link');
+            if (link) switchView(link.dataset.view);
+        }
+        function renderDashboardStats() {
+            statActiveCases.textContent = allCases.filter(c => c.status === 'Active').length;
+            statColdCases.textContent = allCases.filter(c => c.status === 'Cold').length;
+            statClosedCases.textContent = allCases.filter(c => c.status === 'Closed').length;
+            statWarrants.textContent = allWarrants.filter(w => w.status === 'Approved' || w.status === 'Executed').length || '0';
+        }
+        function renderCasesTable() {
+            const term = caseSearchInput.value.toLowerCase();
+            const status = caseStatusFilter.value;
+            const filtered = allCases.filter(c =>
+                (c.status !== 'Closed') &&
+                (status === 'all' || c.status === status) &&
+                (term === '' || c.title.toLowerCase().includes(term) || (c.leadDetective && c.leadDetective.toLowerCase().includes(term)) || c.id.toLowerCase().includes(term))
+            );
+            casesTableBody.innerHTML = filtered.length ? filtered.map(c => `
+                        <tr class="bg-gray-800 border-b border-gray-700 hover:bg-gray-700/50 cursor-pointer" data-id="${c.id}">
+                            <td class="px-6 py-4 font-mono text-xs">${c.id.substring(0, 8).toUpperCase()}</td>
+                            <td class="px-6 py-4 font-semibold text-white">${c.title}</td><td class="px-6 py-4">${c.leadDetective}</td>
+                            <td class="px-6 py-4"><span class="px-2 py-1 text-xs font-medium rounded-full text-white status-${c.status.toLowerCase()}">${c.status}</span></td>
+                            <td class="px-6 py-4">${c.lastUpdated ? new Date(c.lastUpdated.seconds * 1000).toLocaleDateString() : 'N/A'}</td>
+                        </tr>`).join('') : `<tr><td colspan="5" class="text-center p-8 text-gray-500">No active or cold cases found.</td></tr>`;
+        }
+
+        function renderWarrantsTable() {
+            warrantsTableBody.innerHTML = allWarrants.length ? allWarrants.map(w => {
+                const subject = w.data.suspectName || w.data.location || w.data.ownerName || 'N/A';
+                return `
+                        <tr class="bg-gray-800 border-b border-gray-700 hover:bg-gray-700/50 cursor-pointer" data-id="${w.id}">
+                            <td class="px-6 py-4 font-mono text-xs">${w.id.substring(0, 8).toUpperCase()}</td>
+                            <td class="px-6 py-4 font-semibold text-white">${w.type}</td>
+                            <td class="px-6 py-4">${subject}</td>
+                            <td class="px-6 py-4"><span class="px-2 py-1 text-xs font-medium rounded-full text-white status-${w.status.toLowerCase()}">${w.status}</span></td>
+                            <td class="px-6 py-4">${w.createdBy}</td>
+                            <td class="px-6 py-4">${w.createdAt ? new Date(w.createdAt.seconds * 1000).toLocaleDateString() : 'N/A'}</td>
+                        </tr>
+                    `}).join('') : `<tr><td colspan="6" class="text-center p-8 text-gray-500">No warrants found.</td></tr>`;
+        }
+
+        function renderRoster() {
+            const cidRoles = accessConfig.isCid;
+            const cidPersonnel = allUsers.filter(user => {
+                const userRoles = Array.isArray(user.role) ? user.role : [user.role];
+                const userAccessLevels = Array.isArray(user['access level']) ? user['access level'] : [user['access level']];
+                const allUserPerms = [...userRoles, ...userAccessLevels].filter(Boolean);
+                return allUserPerms.some(perm => cidRoles.includes(perm));
+            });
+
+            rosterGrid.innerHTML = cidPersonnel.length
+                ? cidPersonnel.map(u => {
+                    const userRoles = Array.isArray(u.role) ? u.role : [u.role];
+                    const userAccessLevels = Array.isArray(u['access level']) ? u['access level'] : [u['access level']];
+                    const allUserPerms = [...userRoles, ...userAccessLevels].filter(Boolean);
+
+                    const displayRoles = allUserPerms.filter(perm => cidRoles.includes(perm));
+                    const displayRoleString = displayRoles.join(', ');
+
+                    return `<div class="bg-gray-800 border border-gray-700 rounded-lg p-4 flex items-center gap-4">
+                                        <i class="ph-user-circle-light text-5xl text-gray-400"></i>
+                                        <div>
+                                            <h3 class="font-bold text-white text-lg">${u.name}</h3>
+                                            <p class="text-sm text-blue-400">${displayRoleString}</p>
+                                        </div>
+                                    </div>`
+                }).join('')
+                : `<p class="text-gray-500 col-span-full text-center">No detectives found.</p>`;
+        }
+
+        function renderArchivesTable() {
+            const closed = allCases.filter(c => c.status === 'Closed');
+            archivesTableBody.innerHTML = closed.length ? closed.map(c => `
+                        <tr class="bg-gray-800 border-b border-gray-700 hover:bg-gray-700/50 cursor-pointer" data-id="${c.id}">
+                            <td class="px-6 py-4 font-mono text-xs">${c.id.substring(0, 8).toUpperCase()}</td>
+                            <td class="px-6 py-4 font-semibold text-white">${c.title}</td><td class="px-6 py-4">${c.leadDetective}</td>
+                            <td class="px-6 py-4">${c.lastUpdated ? new Date(c.lastUpdated.seconds * 1000).toLocaleDateString() : 'N/A'}</td>
+                        </tr>`).join('') : `<tr><td colspan="4" class="text-center p-8 text-gray-500">No archived cases.</td></tr>`;
+        }
+
+        // --- Case Modal Logic ---
+        function openCaseFileModal(caseData = null) {
+            caseFileForm.reset(); caseIdInput.value = '';
+            deleteCaseBtn.classList.add('hidden'); printCaseBtn.classList.add('hidden');
+            personsInvolvedContainer.innerHTML = '';
+
+            const userRole = userProfile.role || '';
+            const userAccessLevel = userProfile['access level'] || '';
+            const canManage = accessConfig.canManageAssignments.includes(userRole) || accessConfig.canManageAssignments.includes(userAccessLevel);
+            document.getElementById('step-4').style.display = canManage ? 'block' : 'none';
+
+            populateDetectiveDropdowns();
+
+            if (caseData) {
+                caseFileModalTitle.textContent = `Edit Case: ${caseData.id.substring(0, 8).toUpperCase()}`;
+                caseIdInput.value = caseData.id; printCaseBtn.classList.remove('hidden');
+                caseTitleInput.value = caseData.title || '';
+                leadDetectiveInput.value = caseData.leadDetectiveId || '';
+                caseStatusInput.value = caseData.status || 'Active'; incidentDateInput.value = caseData.incidentDate || '';
+                locationInput.value = caseData.location || '';
+                (caseData.personsInvolved || []).forEach(p => addPersonEntry(p));
+                reportEditor.value = caseData.report || ''; reportPreview.innerHTML = markdownConverter.makeHtml(caseData.report || '');
+                populateAssignmentCheckboxes(caseData.assignedPersonnel || []);
+
+                const canDelete = accessConfig.canDelete.includes(userRole) || accessConfig.canDelete.includes(userAccessLevel);
+                if (canDelete) deleteCaseBtn.classList.remove('hidden');
+            } else {
+                caseFileModalTitle.textContent = 'New Case File';
+                leadDetectiveInput.value = userProfile.uid;
+                addPersonEntry();
+                populateAssignmentCheckboxes([userProfile.uid]);
+            }
+            changeStep(0, 1);
+            caseFileModal.classList.remove('hidden');
+        }
+
+        function populateDetectiveDropdowns() {
+            const detectives = allUsers.filter(u => accessConfig.canView.includes(u.role) || accessConfig.canView.includes(u['access level']));
+            leadDetectiveInput.innerHTML = detectives.map(d => `<option value="${d.id}">${d.name}</option>`).join('');
+        }
+
+        function populateAssignmentCheckboxes(assignedIds) {
+            const detectives = allUsers.filter(u => accessConfig.isCid.includes(u.role) || accessConfig.isCid.includes(u['access level']));
+            assignPersonnelContainer.innerHTML = detectives.map(d => `
+                        <label class="flex items-center space-x-3 bg-gray-900/50 p-3 rounded-md">
+                            <input type="checkbox" value="${d.id}" class="form-checkbox h-5 w-5 rounded bg-gray-700 border-gray-600 text-blue-600 focus:ring-blue-500" ${assignedIds.includes(d.id) ? 'checked' : ''}>
+                            <span class="text-white">${d.name}</span>
+                        </label>
+                    `).join('');
+        }
+
+        function closeCaseFileModal() { caseFileModal.classList.add('hidden'); }
+        function changeStep(dir, abs = null) {
+            currentModalStep = abs !== null ? abs : currentModalStep + dir;
+            const canManage = accessConfig.canManageAssignments.includes(userProfile.role || '') || accessConfig.canManageAssignments.includes(userProfile['access level'] || '');
+            const maxSteps = canManage ? 4 : 3;
+
+            if (currentModalStep < 1 || currentModalStep > maxSteps) {
+                currentModalStep = Math.max(1, Math.min(currentModalStep, maxSteps));
+                return;
+            }
+            modalSteps.forEach((s, i) => s.classList.toggle('hidden', (i + 1) !== currentModalStep));
+            prevStepBtn.classList.toggle('hidden', currentModalStep === 1);
+            nextStepBtn.classList.toggle('hidden', currentModalStep === maxSteps);
+            saveCaseBtn.classList.toggle('hidden', currentModalStep !== maxSteps);
+        }
+        function addPersonEntry(p = {}) {
+            const div = document.createElement('div');
+            div.className = 'person-entry grid grid-cols-1 md:grid-cols-3 gap-4 bg-gray-900/50 p-4 rounded-lg relative';
+            div.innerHTML = `<button type="button" class="remove-person-btn absolute top-2 right-2 text-gray-500 hover:text-red-400">&times;</button><div><label class="block text-xs font-medium text-gray-400 mb-1">Full Name</label><input type="text" value="${p.name || ''}" class="form-input w-full text-sm person-name"></div><div><label class="block text-xs font-medium text-gray-400 mb-1">Role</label><select class="form-select w-full text-sm person-role"><option>Witness</option><option>Victim</option><option>Suspect</option><option>Other</option></select></div><div><label class="block text-xs font-medium text-gray-400 mb-1">Phone Number</label><input type="text" value="${p.phone || ''}" class="form-input w-full text-sm person-phone"></div><div class="md:col-span-3"><label class="block text-xs font-medium text-gray-400 mb-1">Address</label><input type="text" value="${p.address || ''}" class="form-input w-full text-sm person-address"></div>`;
+            if (p.role) div.querySelector('.person-role').value = p.role;
+            personsInvolvedContainer.appendChild(div);
+        }
+        async function handleSaveCaseFile() {
+            const selectedLeadId = leadDetectiveInput.value;
+            const selectedLead = allUsers.find(u => u.id === selectedLeadId);
+
+            const assignedPersonnel = [selectedLeadId]; // Start with the lead detective
+            assignPersonnelContainer.querySelectorAll('input[type="checkbox"]:checked').forEach(checkbox => {
+                if (!assignedPersonnel.includes(checkbox.value)) {
+                    assignedPersonnel.push(checkbox.value);
+                }
+            });
+            if (!assignedPersonnel.includes(userProfile.uid)) {
+                assignedPersonnel.push(userProfile.uid);
+            }
+
+            const personsInvolved = [...personsInvolvedContainer.querySelectorAll('.person-entry')].map(e => ({ name: e.querySelector('.person-name').value, role: e.querySelector('.person-role').value, phone: e.querySelector('.person-phone').value, address: e.querySelector('.person-address').value }));
+            const data = { title: caseTitleInput.value.trim(), leadDetective: selectedLead ? selectedLead.name : 'N/A', leadDetectiveId: selectedLeadId, status: caseStatusInput.value, incidentDate: incidentDateInput.value, location: locationInput.value.trim(), personsInvolved: personsInvolved, report: reportEditor.value, lastUpdated: serverTimestamp(), updatedBy: userProfile.name, assignedPersonnel: assignedPersonnel };
+            const caseId = caseIdInput.value;
+            try {
+                if (caseId) await updateDoc(doc(db, `artifacts/${appId}/public/data/cid_cases`, caseId), data);
+                else { data.createdBy = userProfile.name; data.createdAt = serverTimestamp(); await addDoc(collection(db, `artifacts/${appId}/public/data/cid_cases`), data); }
+                closeCaseFileModal();
+            } catch (err) { console.error("Error saving case:", err); alert("Could not save case file."); }
+        }
+        async function handleDeleteCaseFile() {
+            if (caseIdInput.value && confirm('Permanently delete this case file?')) {
+                await deleteDoc(doc(db, `artifacts/${appId}/public/data/cid_cases`, caseIdInput.value));
+                closeCaseFileModal();
+            }
+        }
+        function handleTableEditClick(e) {
+            const row = e.target.closest('tr[data-id]');
+            if (row) {
+                const caseData = allCases.find(c => c.id === row.dataset.id);
+                if (caseData) openCaseFileModal(caseData);
+            }
+        }
+
+        function handleWarrantTableClick(e) {
+            const row = e.target.closest('tr[data-id]');
+            if (row) {
+                const warrantData = allWarrants.find(w => w.id === row.dataset.id);
+                if (warrantData) openWarrantDetailModal(warrantData);
+            }
+        }
+
+        // --- Document & Warrant Generation ---
+        const docTemplates = {
+            'arrest-warrant': { title: 'Arrest Warrant', fields: [{ id: 'suspectName', label: 'Suspect Name' }, { id: 'suspectAddress', label: 'Suspect Last Known Address' }, { id: 'charges', label: 'Charges (comma separated)' }, { id: 'probableCause', label: 'Probable Cause Statement', type: 'textarea' }] },
+            'search-warrant': { title: 'Search Warrant', fields: [{ id: 'location', label: 'Location to be Searched' }, { id: 'items', label: 'Items to be Seized', type: 'textarea' }, { id: 'probableCause', label: 'Probable Cause Statement', type: 'textarea' }] },
+            'property-seizure': { title: 'Property Seizure Warrant', fields: [{ id: 'ownerName', label: 'Property Owner Name' }, { id: 'propertyAddress', label: 'Property Address' }, { id: 'propertyDescription', label: 'Description of Property to be Seized', type: 'textarea' }, { id: 'legalBasis', label: 'Legal Basis for Seizure', type: 'textarea' }] },
+            'plea-agreement': { title: 'Plea Agreement', fields: [{ id: 'defendantName', label: 'Defendant Name' }, { id: 'caseNumber', label: 'Case Number' }, { id: 'pleaTerms', label: 'Terms of the Agreement', type: 'textarea' }] },
+            'ci-nda': { title: 'Confidential Informant NDA', fields: [{ id: 'ciName', label: 'Informant Name/Identifier' }, { id: 'detectiveName', label: 'Detective Name' }, { id: 'effectiveDate', label: 'Effective Date', type: 'date' }] },
+            'ci-employment': { title: 'CI Employment Acknowledgment', fields: [{ id: 'ciName', label: 'Informant Name/Identifier' }, { id: 'handlerName', label: 'Handling Detective' }, { id: 'agreementDate', label: 'Date of Agreement', type: 'date' }, { id: 'terms', label: 'Employment Terms', type: 'textarea' }] }
+        };
+
+        function openDocGenModal(docType) {
+            currentDocType = docType;
+            const template = docTemplates[docType];
+            docGenModalTitle.textContent = template.title;
+            docGenFormContainer.innerHTML = template.fields.map(f => `<div><label for="${f.id}" class="block text-sm font-medium text-gray-300 mb-1">${f.label}</label>${f.type === 'textarea' ? `<textarea id="${f.id}" class="form-textarea w-full" rows="5"></textarea>` : `<input type="text" id="${f.id}" class="form-input w-full">`}</div>`).join('');
+            docGenModal.classList.remove('hidden');
+        }
+
+        async function handleGenerateWarrant(docType) {
+            const template = docTemplates[docType];
+            const data = {};
+            template.fields.forEach(f => {
+                const element = document.getElementById(f.id);
+                if (element) data[f.id] = element.value;
+            });
+
+            // Save to Firestore first
+            try {
+                await addDoc(collection(db, `artifacts/${appId}/public/data/warrants`), {
+                    type: template.title,
+                    status: 'Pending',
+                    data: data,
+                    createdBy: userProfile.name,
+                    createdById: userProfile.uid,
+                    createdAt: serverTimestamp()
+                });
+            } catch (err) {
+                console.error("Error saving warrant:", err);
+                alert("Could not save warrant to database.");
+                return;
+            }
+
+            // Then generate PDF
+            await generateDocumentPdf(docType, template, data);
+            docGenModal.classList.add('hidden');
+        }
+
+        async function generateDocumentPdf(docType, template, data) {
+            const renderContainer = document.getElementById('pdf-render-container');
+            let contentHTML = `<div class="pdf-render-content"><div class="pdf-header">${template.title}</div>`;
+            for (const key in data) {
+                const field = template.fields.find(f => f.id === key);
+                contentHTML += `<div class="pdf-field"><span class="pdf-label">${field.label}: </span><span class="pdf-value">${data[key].replace(/\n/g, '<br>')}</span></div>`;
+            }
+            contentHTML += `<div class="pdf-signature-block"><div class="pdf-signature-line">Authorizing Judge Signature</div></div><div class="pdf-signature-block"><div class="pdf-signature-line">Affiant Signature</div></div></div>`;
+            renderContainer.innerHTML = contentHTML;
+
+            const canvas = await html2canvas(renderContainer.firstElementChild);
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            pdf.addImage(imgData, 'PNG', 10, 10, pdf.internal.pageSize.getWidth() - 20, (pdf.internal.pageSize.getWidth() - 20) * (canvas.height / canvas.width));
+            pdf.save(`${docType}.pdf`);
+            renderContainer.innerHTML = '';
+        }
+
+        function openWarrantDetailModal(warrantData) {
+            currentWarrantId = warrantData.id;
+            warrantDetailTitle.textContent = `Warrant: ${warrantData.id.substring(0, 8).toUpperCase()}`;
+
+            let contentHTML = `<div class="space-y-3">`;
+            for (const key in warrantData.data) {
+                const label = key.replace(/([A-Z])/g, ' $1').replace(/^./, str => str.toUpperCase());
+                contentHTML += `<div><h4 class="font-semibold text-gray-400 text-sm">${label}</h4><p class="text-white bg-gray-900/50 p-2 rounded-md">${warrantData.data[key] || 'N/A'}</p></div>`;
+            }
+            contentHTML += `</div>`;
+            warrantDetailContent.innerHTML = contentHTML;
+
+            warrantStatusUpdate.value = warrantData.status;
+
+            const canManage = accessConfig.canManageWarrants.includes(userProfile.role) || accessConfig.canManageWarrants.includes(userProfile['access level']);
+            warrantStatusUpdate.disabled = !canManage;
+            saveWarrantStatusBtn.style.display = canManage ? 'block' : 'none';
+
+            warrantDetailModal.classList.remove('hidden');
+        }
+
+        async function handleSaveWarrantStatus() {
+            if (!currentWarrantId) return;
+            const newStatus = warrantStatusUpdate.value;
+            try {
+                const warrantRef = doc(db, `artifacts/${appId}/public/data/warrants`, currentWarrantId);
+                await updateDoc(warrantRef, { status: newStatus });
+                warrantDetailModal.classList.add('hidden');
+                currentWarrantId = null;
+            } catch (err) {
+                console.error("Error updating warrant status:", err);
+                alert("Could not update warrant status.");
+            }
+        }
+
+
+        async function generateCasePdf() {
+            const caseId = caseIdInput.value; if (!caseId) return;
+            const caseData = allCases.find(c => c.id === caseId); if (!caseData) return;
+            const renderContainer = document.getElementById('pdf-render-container');
+            const personsHTML = (caseData.personsInvolved || []).map(p => `<div class="section"><div class="section-title">PERSON INVOLVED</div><div class="field-group"><div class="field-label">Name:</div><div class="field-value">${p.name || ''}</div></div><div class="field-group"><div class="field-label">Role:</div><div class="field-value">${p.role || ''}</div></div><div class="field-group"><div class="field-label">Phone:</div><div class="field-value">${p.phone || ''}</div></div><div class="field-group"><div class="field-label">Address:</div><div class="field-value">${p.address || ''}</div></div></div>`).join('');
+            const reportHTML = markdownConverter.makeHtml(caseData.report || 'No narrative provided.');
+            renderContainer.innerHTML = `<div class="pdf-render-content" style="font-family: 'Times New Roman', serif; font-size: 12pt;"><h1 style="text-align:center; font-size: 16pt; font-weight: bold;">CRIMINAL INVESTIGATION REPORT</h1><div class="section"><div class="section-title">INCIDENT INFORMATION</div><div class="field-group"><div class="field-label">Case Title:</div><div class="field-value">${caseData.title || ''}</div></div><div class="field-group"><div class="field-label">Case Number:</div><div class="field-value">${caseId.substring(0, 12).toUpperCase()}</div></div><div class="field-group"><div class="field-label">Date of Incident:</div><div class="field-value">${caseData.incidentDate || ''}</div></div><div class="field-group"><div class="field-label">Location:</div><div class="field-value">${caseData.location || ''}</div></div></div>${personsHTML}<div class="section"><div class="section-title">NARRATIVE</div><div>${reportHTML}</div></div><div class="section"><div class="section-title">REPORTER INFORMATION</div><div class="field-group"><div class="field-label">Submitting Detective:</div><div class="field-value">${caseData.leadDetective || ''}</div></div><div class="field-group"><div class="field-label">Date Report Completed:</div><div class="field-value">${new Date().toLocaleDateString()}</div></div></div></div>`;
+            const canvas = await html2canvas(renderContainer.firstElementChild);
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            pdf.addImage(imgData, 'PNG', 0, 0, pdf.internal.pageSize.getWidth(), pdf.internal.pageSize.getWidth() * (canvas.height / canvas.width));
+            pdf.save(`case-file-${caseId.substring(0, 8)}.pdf`);
+            renderContainer.innerHTML = '';
+        }
+
+    </script>
+</body>
+</html>

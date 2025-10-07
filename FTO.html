@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unified PD - FTO Dashboard</title>
+    <link rel="icon" href='LSPD.png' type="image/png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #111827; /* A slightly darker gray */
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1f2937;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #4b5563;
+            border-radius: 4px;
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #6b7280;
+            }
+
+        /* Toast Notifications */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 12px 24px;
+            border-radius: 9999px;
+            background-color: #374151;
+            color: white;
+            border: 1px solid #4b5563;
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            z-index: 100;
+            opacity: 0;
+            transition: all 0.3s ease-in-out;
+        }
+
+            .toast.show {
+                opacity: 1;
+                transform: translateX(-50%) translateY(0);
+            }
+
+        /* Login Overlay */
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: #111827;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            z-index: 50;
+        }
+
+        .login-prompt {
+            text-align: center;
+            padding: 2rem;
+            background-color: #1f2937;
+            border: 1px solid #374151;
+            border-radius: 0.5rem;
+            box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+
+        /* Kanban Board Styles */
+        .kanban-column {
+            min-height: 400px;
+        }
+
+        .kanban-card .sortable-ghost {
+            background: #374151;
+            border: 2px dashed #4b5563;
+        }
+
+        .kanban-card {
+            cursor: grab;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+
+            .kanban-card:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.2), 0 4px 6px -4px rgb(0 0 0 / 0.2);
+            }
+
+            .kanban-card:active {
+                cursor: grabbing;
+            }
+
+        /* Priority Colors */
+        .priority-low {
+            border-left-color: #22c55e;
+        }
+        /* green-500 */
+        .priority-medium {
+            border-left-color: #3b82f6;
+        }
+        /* blue-500 */
+        .priority-high {
+            border-left-color: #eab308;
+        }
+        /* yellow-500 */
+        .priority-urgent {
+            border-left-color: #ef4444;
+        }
+        /* red-500 */
+
+        /* Modal Tabs */
+        .tab-button.active {
+            border-bottom-color: #3b82f6;
+            color: #ffffff;
+        }
+
+        /* Sidebar specific styles */
+        #sidebar {
+            transition: transform 0.3s ease-in-out;
+        }
+
+            #sidebar.sidebar-hidden {
+                transform: translateX(-100%);
+            }
+    </style>
+</head>
+<body class="text-gray-300">
+
+    <div id="login-overlay" class="hidden login-overlay">
+        <div class="login-prompt">
+            <h1 class="text-3xl font-bold text-white mb-2">Access Denied</h1>
+            <p class="text-gray-400 mb-6">You must be logged in to access the FTO Dashboard.</p>
+            <button id="login-btn" class="px-6 py-3 text-lg font-semibold rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors duration-200">Proceed to Login</button>
+        </div>
+    </div>
+
+    <div id="app-wrapper" class="hidden flex h-screen bg-gray-900">
+        <aside id="sidebar" class="absolute md:relative z-20 flex-col w-64 bg-gray-800 shadow-lg transition-transform duration-300 -translate-x-full md:translate-x-0">
+            <div class="flex items-center justify-center h-20 border-b border-gray-700 flex-shrink-0">
+                <img src="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png" alt="UPD Logo" class="w-12 h-12 object-contain">
+                <h1 class="text-xl font-bold ml-2 text-white">UPD Portal</h1>
+            </div>
+            <nav class="flex-1 px-2 py-4 space-y-2 overflow-y-auto">
+                <div>
+                    <h3 class="px-3 text-xs uppercase text-gray-500 font-semibold tracking-wider">Core</h3>
+                    <h3 class="px-3 text-xs uppercase text-slate-500 font-semibold tracking-wider">Core</h3>
+                    <a href="index.html" class="mt-1 flex items-center px-3 py-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
+                        <span class="ml-3">Dashboard</span>
+                    </a>
+                </div>
+                <div class="pt-2">
+                    <h3 class="px-3 text-xs uppercase text-slate-500 font-semibold tracking-wider">Resources</h3>
+                    <a href="SOP.html" class="mt-1 flex items-center px-3 py-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
+                        <span class="ml-3">SOPs</span>
+                    </a>
+                    <a href="training.html" class="mt-1 flex items-center px-3 py-2 text-slate-600 dark:text-slate-300 rounded-lg bg-slate-200 dark:bg-slate-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 14l9-5-9-5-9 5 9 5z"></path><path d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-9.998 12.078 12.078 0 01.665-6.479L12 14z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 14l9-5-9-5-9 5 9 5zm0 0l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-9.998 12.078 12.078 0 01.665-6.479L12 14z"></path></svg>
+                        <span class="ml-3">Training</span>
+                    </a>
+                </div>
+                <div class="pt-2">
+                    <h3 class="px-3 text-xs uppercase text-slate-500 font-semibold tracking-wider">Tools</h3>
+                    <a href="forms.html" class="mt-1 flex items-center px-3 py-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                        <span class="ml-3">Forms</span>
+                    </a>
+                    <a href="report.html" class="mt-1 flex items-center px-3 py-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        <span class="ml-3">Report Generator</span>
+                    </a>
+                    <a href="charges.html" class="mt-1 flex items-center px-3 py-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3.25a3.25 3.25 0 00-3.25-3.25H9.25A3.25 3.25 0 006 13.75V17m0 0h12M6 17H5a2 2 0 01-2-2V7a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-1m-6-14v2m-6-2v2"></path></svg>
+                        <span class="ml-3">Charge Calculator</span>
+                    </a>
+                </div>
+                <div class="pt-2">
+                    <h3 class="px-3 text-xs uppercase text-slate-500 font-semibold tracking-wider">Personnel</h3>
+                    <a href="roster.html" class="mt-1 flex items-center px-3 py-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.653-.124-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.653.124-1.283.356-1.857m0 0a3.001 3.001 0 015.644 0M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="ml-3">Roster</span>
+                    </a>
+                    <a href="hr.html" class="mt-1 flex items-center px-3 py-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M15 21a6 6 0 00-9-5.197M15 11a4 4 0 110-8 4 4 0 010 8z"></path></svg>
+                        <span class="ml-3">HR Info</span>
+                    </a>
+                    <a href="info.html" class="mt-1 flex items-center px-3 py-2 text-slate-600 dark:text-slate-300 rounded-lg hover:bg-slate-200 dark:hover:bg-slate-700">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        <span class="ml-3">Common Information</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <div class="flex flex-col flex-1 overflow-hidden">
+            <header id="main-header" class="bg-gray-900/70 backdrop-blur-sm border-b border-gray-700 sticky top-0 z-30 px-4 sm:px-6 lg:px-8 py-3">
+                <div class="flex items-center justify-between">
+                    <button id="hamburgerBtn" class="text-gray-400 focus:outline-none md:hidden">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                    </button>
+                    <div class="flex-1"></div>
+                    <div id="user-info" class="text-sm text-gray-400 text-right"></div>
+                </div>
+            </header>
+
+            <main id="main-content" class="flex-1 overflow-y-auto p-4 md:p-8">
+                <div class="flex flex-col sm:flex-row items-center justify-between mb-6 gap-4">
+                    <div class="flex items-center space-x-2">
+                        <h1 class="text-2xl font-extrabold text-white">Training Overview</h1>
+                    </div>
+                    <div id="auth-buttons" class="hidden flex items-center space-x-2">
+                        <div class="bg-gray-800 p-1 rounded-full flex items-center text-sm">
+                            <button id="list-view-btn" class="px-3 py-1 rounded-full bg-blue-600 text-white">List</button>
+                            <button id="board-view-btn" class="px-3 py-1 rounded-full text-gray-400 hover:text-white">Board</button>
+                        </div>
+                        <button id="addAnnouncementBtn" class="hidden px-4 py-2 text-sm font-semibold rounded-full border border-green-500 text-green-500 hover:bg-green-500 hover:text-white transition-colors duration-200">New Announcement</button>
+                        <button id="addRecordBtn" class="px-4 py-2 text-sm font-semibold rounded-full bg-blue-600 text-white hover:bg-blue-700 transition-colors duration-200">Add Record</button>
+                    </div>
+                </div>
+
+                <div id="dashboard-stats" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div class="bg-gray-800 border border-gray-700 rounded-lg p-5">
+                        <h4 class="text-sm font-medium text-gray-400">Status Distribution</h4>
+                        <canvas id="status-chart"></canvas>
+                    </div>
+                </div>
+
+                <div id="content-views">
+                    <div id="list-view-container" class="space-y-4">
+                        <div class="bg-gray-800 rounded-lg border border-gray-700 p-4 text-center">
+                            <p id="loading-message" class="text-gray-400 text-lg">Loading training records...</p>
+                            <p id="no-access-message" class="text-red-400 text-lg hidden">You do not have permission to view this page.</p>
+                        </div>
+                    </div>
+                    <div id="board-view-container" class="hidden">
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div id="recordModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center z-50 p-4">
+        <div class="bg-gray-800 rounded-lg shadow-xl w-full max-w-4xl border border-gray-700 max-h-[90vh] flex flex-col">
+            <div class="flex justify-between items-center p-4 border-b border-gray-700">
+                <h3 id="recordModalTitle" class="text-lg font-bold text-white">New Training Record</h3>
+                <button id="closeRecordModalBtn" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            <div class="flex-grow overflow-y-auto">
+                <form id="trainingForm" class="p-6 space-y-6">
+                    <input type="hidden" id="recordIdInput">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label for="traineeInput" class="block text-sm font-medium text-gray-300 mb-1">Trainee</label>
+                            <input type="text" id="traineeInput" required placeholder="Officer Name" class="w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="trainerInput" class="block text-sm font-medium text-gray-300 mb-1">Trainer(s)</label>
+                            <input type="text" id="trainerInput" required placeholder="Comma-separated names" class="w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="dueDateInput" class="block text-sm font-medium text-gray-300 mb-1">Due Date</label>
+                            <input type="date" id="dueDateInput" class="w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div>
+                            <label for="priorityInput" class="block text-sm font-medium text-gray-300 mb-1">Priority</label>
+                            <select id="priorityInput" class="w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <option value="Low">Low</option>
+                                <option value="Medium">Medium</option>
+                                <option value="High">High</option>
+                                <option value="Urgent">Urgent</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="border-b border-gray-700">
+                        <nav class="-mb-px flex space-x-6" aria-label="Tabs">
+                            <button type="button" data-tab="checklist" class="tab-button active whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm border-transparent text-gray-400 hover:text-white">Checklist</button>
+                            <button type="button" data-tab="notes" class="tab-button whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm border-transparent text-gray-400 hover:text-white">Notes</button>
+                            <button type="button" data-tab="activity" class="tab-button whitespace-nowrap py-3 px-1 border-b-2 font-medium text-sm border-transparent text-gray-400 hover:text-white">Activity</button>
+                        </nav>
+                    </div>
+
+                    <div id="tab-content-container">
+                        <div id="checklist-tab" class="tab-content">
+                            <h4 class="text-sm font-medium text-gray-300 mb-2">5-Day Training Checklist</h4>
+                            <div id="checklist-container" class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2 bg-gray-900/50 p-4 rounded-md max-h-60 overflow-y-auto"></div>
+                        </div>
+                        <div id="notes-tab" class="tab-content hidden">
+                            <label for="notesInput" class="block text-sm font-medium text-gray-300 mb-1">Officer Notes</label>
+                            <textarea id="notesInput" rows="8" placeholder="Add custom notes on performance, incidents, etc." class="w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"></textarea>
+                        </div>
+                        <div id="activity-tab" class="tab-content hidden">
+                            <div id="activity-feed" class="space-y-4 max-h-60 overflow-y-auto pr-2 mb-4"></div>
+                            <div class="flex space-x-3">
+                                <input type="text" id="comment-input" placeholder="Add a comment..." class="flex-grow bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                <button type="button" id="add-comment-btn" class="px-4 py-2 text-sm font-semibold rounded-md bg-blue-600 text-white hover:bg-blue-700">Post</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="recommendationInput" class="block text-sm font-medium text-gray-300 mb-1">Final Recommendation</label>
+                        <select id="recommendationInput" class="w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            <option value="None">Select...</option>
+                            <option value="Continuation">Continuation</option>
+                            <option value="Retraining">Retraining</option>
+                            <option value="Promotion">Promotion</option>
+                        </select>
+                    </div>
+                </form>
+            </div>
+            <div class="flex justify-between items-center p-4 bg-gray-800/50 border-t border-gray-700">
+                <button type="button" id="deleteRecordBtn" class="hidden px-4 py-2 text-sm font-semibold rounded-md bg-red-600 text-white hover:bg-red-700 transition-colors">Delete Record</button>
+                <div class="flex space-x-4">
+                    <button type="button" id="cancelRecordBtn" class="px-4 py-2 text-sm font-semibold rounded-md border border-gray-600 text-gray-300 hover:bg-gray-700 transition-colors">Cancel</button>
+                    <button type="submit" form="trainingForm" id="saveRecordBtn" class="px-4 py-2 text-sm font-semibold rounded-md bg-blue-600 text-white hover:bg-blue-700 transition-colors">Save Record</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="announcementModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-80 flex items-center justify-center z-50 p-4">
+    </div>
+
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, collection, query, onSnapshot, addDoc, updateDoc, deleteDoc, serverTimestamp, arrayUnion } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // --- Firebase Config ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyDU7DRAxCzqu81DTa7k0DXaBRcMpk0sElc",
+            authDomain: "upd-system.firebaseapp.com",
+            projectId: "upd-system",
+            storageBucket: "upd-system.firebasestorage.app",
+            messagingSenderId: "28223003678",
+            appId: "1:28223003678:web:a19a9a8eb33fe74202220f",
+        };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+
+        // --- DOM Elements ---
+        const loginOverlay = document.getElementById('login-overlay');
+        const appWrapper = document.getElementById('app-wrapper');
+        const addRecordBtn = document.getElementById('addRecordBtn');
+        const recordModal = document.getElementById('recordModal');
+        const trainingForm = document.getElementById('trainingForm');
+        const sidebar = document.getElementById('sidebar');
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const highCommandLink = document.getElementById('highCommandLink');
+        const websiteManagerContainer = document.getElementById('websiteManagerContainer');
+
+        const listViewBtn = document.getElementById('list-view-btn');
+        const boardViewBtn = document.getElementById('board-view-btn');
+        const listViewContainer = document.getElementById('list-view-container');
+        const boardViewContainer = document.getElementById('board-view-container');
+        const dashboardStatsContainer = document.getElementById('dashboard-stats');
+        const statusChartCanvas = document.getElementById('status-chart');
+
+        // Modal elements
+        const recordIdInput = document.getElementById('recordIdInput');
+        const recordModalTitle = document.getElementById('recordModalTitle');
+        const closeRecordModalBtn = document.getElementById('closeRecordModalBtn');
+        const cancelRecordBtn = document.getElementById('cancelRecordBtn');
+        const deleteRecordBtn = document.getElementById('deleteRecordBtn');
+        const traineeInput = document.getElementById('traineeInput');
+        const trainerInput = document.getElementById('trainerInput');
+        const dueDateInput = document.getElementById('dueDateInput');
+        const priorityInput = document.getElementById('priorityInput');
+        const notesInput = document.getElementById('notesInput');
+        const recommendationInput = document.getElementById('recommendationInput');
+        const checklistContainer = document.getElementById('checklist-container');
+        const activityFeed = document.getElementById('activity-feed');
+        const commentInput = document.getElementById('comment-input');
+        const addCommentBtn = document.getElementById('add-comment-btn');
+        const tabButtons = document.querySelectorAll('.tab-button');
+        const tabContents = document.querySelectorAll('.tab-content');
+
+        // --- State and Constants ---
+        const KANBAN_COLUMNS = {
+            "Not Started": { title: "Not Started", color: "gray" },
+            "In Progress": { title: "In Progress", color: "blue" },
+            "Pending Review": { title: "Pending Review", color: "yellow" },
+            "Completed": { title: "Completed", color: "green" },
+        };
+        const allowedAccessLevels = ["Field Training Officer", "Command", "High Command", "Commisioner", "Website Account Manager", "Account Manager"];
+        const announcementManagementRoles = ["High Command", "Website Account Manager", "Account Manager"];
+        const deletionAccessLevels = ["Website Manager", "Personnel Manager", "Account Manager"];
+        let userProfile = null;
+        let userId = null;
+        let trainingRecordsCache = [];
+        let statusChart = null;
+
+        const trainingChecklist = [
+            "Basic Radio Procedure & Ten-Codes", "Proper Traffic Stop Procedure", "Vehicle Pursuit Policies",
+            "Basic Report Writing", "Foot Pursuit & Apprehension", "Use of Force Policy",
+            "Unit Roles & Responsibilities", "Responding to Priority Calls", "Patrol Vehicle Familiarization",
+            "Weapon and Equipment Safety"
+        ];
+
+        // --- UI Functions ---
+
+        // Toast Notification
+        const showToast = (message) => {
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('show');
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                    setTimeout(() => toast.remove(), 300);
+                }, 3000);
+            }, 100);
+        };
+
+        // View Switching Logic
+        const setView = (view) => {
+            if (view === 'list') {
+                listViewBtn.classList.add('bg-blue-600', 'text-white');
+                listViewBtn.classList.remove('text-gray-400');
+                boardViewBtn.classList.remove('bg-blue-600', 'text-white');
+                boardViewBtn.classList.add('text-gray-400');
+                listViewContainer.classList.remove('hidden');
+                boardViewContainer.classList.add('hidden');
+            } else {
+                boardViewBtn.classList.add('bg-blue-600', 'text-white');
+                boardViewBtn.classList.remove('text-gray-400');
+                listViewBtn.classList.remove('bg-blue-600', 'text-white');
+                listViewBtn.classList.add('text-gray-400');
+                boardViewContainer.classList.remove('hidden');
+                listViewContainer.classList.add('hidden');
+                renderBoardView(trainingRecordsCache); // Re-render board view
+            }
+        };
+
+        // Dashboard Rendering
+        const renderDashboard = (records) => {
+            const total = records.length;
+            const pending = records.filter(r => r.status === 'Pending Review').length;
+            const inProgress = records.filter(r => r.status === 'In Progress').length;
+            const overdue = records.filter(r => r.dueDate && new Date(r.dueDate) < new Date()).length;
+
+            const stats = [
+                { label: 'Total Records', value: total, color: 'blue' },
+                { label: 'In Progress', value: inProgress, color: 'yellow' },
+                { label: 'Pending Review', value: pending, color: 'purple' },
+                { label: 'Overdue', value: overdue, color: 'red' },
+            ];
+
+            let statsHTML = stats.map(stat => `
+                        <div class="bg-gray-800 border border-gray-700 rounded-lg p-5">
+                            <h4 class="text-sm font-medium text-gray-400">${stat.label}</h4>
+                            <p class="text-3xl font-bold text-white mt-1">${stat.value}</p>
+                        </div>
+                    `).join('');
+
+            // Prepend stats to the container, keeping the chart
+            dashboardStatsContainer.innerHTML = statsHTML + dashboardStatsContainer.lastElementChild.outerHTML;
+
+            // Chart Logic
+            const statusCounts = Object.keys(KANBAN_COLUMNS).map(status => records.filter(r => r.status === status).length);
+            const chartData = {
+                labels: Object.keys(KANBAN_COLUMNS),
+                datasets: [{
+                    label: 'Record Status',
+                    data: statusCounts,
+                    backgroundColor: ['#6b7280', '#3b82f6', '#eab308', '#22c55e'],
+                    borderColor: '#1f2937',
+                    borderWidth: 2,
+                }]
+            };
+            if (statusChart) statusChart.destroy();
+            statusChart = new Chart(statusChartCanvas, {
+                type: 'doughnut',
+                data: chartData,
+                options: {
+                    responsive: true,
+                    plugins: { legend: { display: false } }
+                }
+            });
+        };
+
+        // List View Rendering
+        const renderListView = (records) => {
+            if (records.length === 0) {
+                listViewContainer.innerHTML = `<div class="bg-gray-800 rounded-lg border border-gray-700 p-4 text-center"><p class="text-gray-400">No training records found.</p></div>`;
+                return;
+            }
+            listViewContainer.innerHTML = records.map(record => createRecordCard(record, 'list')).join('');
+        };
+
+        // Board View Rendering
+        const renderBoardView = (records) => {
+            boardViewContainer.innerHTML = `
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                            ${Object.entries(KANBAN_COLUMNS).map(([status, { title, color }]) => `
+                                <div class="bg-gray-900/50 rounded-lg p-4">
+                                    <h3 class="font-bold text-white mb-4 flex items-center">
+                                        <span class="w-3 h-3 rounded-full bg-${color}-500 mr-2"></span>
+                                        ${title}
+                                        <span class="ml-2 text-sm text-gray-400 bg-gray-700 px-2 py-0.5 rounded-full">
+                                            ${records.filter(r => r.status === status).length}
+                                        </span>
+                                    </h3>
+                                    <div id="col-${status.replace(/\s+/g, '-')}" data-status="${status}" class="kanban-column space-y-4">
+                                        ${records.filter(r => r.status === status).map(record => createRecordCard(record, 'board')).join('')}
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+            // Initialize SortableJS on each column
+            document.querySelectorAll('.kanban-column').forEach(col => {
+                new Sortable(col, {
+                    group: 'kanban',
+                    animation: 150,
+                    ghostClass: 'sortable-ghost',
+                    onEnd: (evt) => {
+                        const recordId = evt.item.dataset.recordId;
+                        const newStatus = evt.to.dataset.status;
+                        const recordRef = doc(db, `artifacts/${appId}/public/data/trainingRecords`, recordId);
+                        updateDoc(recordRef, { status: newStatus });
+                        showToast('Status Updated!');
+                    }
+                });
+            });
+        };
+
+        // Generic Record Card Creator
+        const createRecordCard = (record, viewType) => {
+            const priorityClass = `priority-${(record.priority || 'low').toLowerCase()}`;
+            const isOverdue = record.dueDate && new Date(record.dueDate) < new Date();
+            const completedTasks = record.checklist?.filter(c => c.completed).length || 0;
+            const totalTasks = record.checklist?.length || trainingChecklist.length;
+            const progress = totalTasks > 0 ? (completedTasks / totalTasks) * 100 : 0;
+
+            return `
+                        <div class="bg-gray-800 rounded-lg border border-gray-700 border-l-4 ${priorityClass} p-4 record-card" data-record-id="${record.id}">
+                            <div class="flex justify-between items-start">
+                                <p class="text-lg font-bold text-white hover:text-blue-400">${record.traineeName}</p>
+                                ${isOverdue ? `<span class="text-xs font-bold text-red-400 bg-red-900/50 px-2 py-1 rounded-full">OVERDUE</span>` : ''}
+                            </div>
+                            <p class="text-sm text-gray-400 mt-1">Trainers: ${record.trainerNames.join(', ')}</p>
+
+                            <div class="my-4">
+                                <div class="flex justify-between text-xs text-gray-400 mb-1">
+                                    <span>Progress</span>
+                                    <span>${completedTasks}/${totalTasks}</span>
+                                </div>
+                                <div class="w-full bg-gray-700 rounded-full h-1.5">
+                                    <div class="bg-blue-500 h-1.5 rounded-full" style="width: ${progress}%"></div>
+                                </div>
+                            </div>
+
+                            <div class="flex justify-between items-center text-xs text-gray-500 mt-2">
+                                <span>Due: ${record.dueDate || 'N/A'}</span>
+                                <span>ID: ${record.id.substring(0, 6)}</span>
+                            </div>
+                        </div>
+                    `;
+        };
+
+        // Modal Logic
+        const openRecordModal = async (recordData = null) => {
+            trainingForm.reset();
+            recordIdInput.value = '';
+            recordModalTitle.textContent = 'Add New Training Record';
+            priorityInput.value = 'Medium'; // Default
+            deleteRecordBtn.classList.add('hidden'); // Hide delete button by default
+
+            if (recordData) {
+                recordIdInput.value = recordData.id;
+                recordModalTitle.textContent = `Edit: ${recordData.traineeName}`;
+                traineeInput.value = recordData.traineeName;
+                trainerInput.value = recordData.trainerNames.join(', ');
+                dueDateInput.value = recordData.dueDate || '';
+                priorityInput.value = recordData.priority || 'Medium';
+                notesInput.value = recordData.notes || '';
+                recommendationInput.value = recordData.recommendation || 'None';
+                renderActivityFeed(recordData.activity || []);
+
+                // Show delete button if user has permission
+                const canDelete = deletionAccessLevels.includes(userProfile['access level']);
+                if (canDelete) {
+                    deleteRecordBtn.classList.remove('hidden');
+                }
+
+            } else {
+                renderActivityFeed([]);
+            }
+
+            renderChecklistForForm(recordData);
+            recordModal.classList.remove('hidden');
+            document.querySelector('.tab-button[data-tab="checklist"]').click(); // Default to checklist tab
+        };
+
+        const closeRecordModal = () => {
+            recordModal.classList.add('hidden');
+            deleteRecordBtn.classList.add('hidden'); // Also hide delete btn on close
+        }
+
+        const renderChecklistForForm = (recordData) => {
+            const checklistState = recordData?.checklist || trainingChecklist.map(item => ({ item, completed: false }));
+            checklistContainer.innerHTML = trainingChecklist.map(item => {
+                const state = checklistState.find(c => c.item === item);
+                const isChecked = state ? state.completed : false;
+                return `
+                    <label class="flex items-center space-x-3 text-sm text-gray-300 cursor-pointer">
+                        <input type="checkbox" value="${item}" ${isChecked ? 'checked' : ''} class="w-4 h-4 bg-gray-600 border-gray-500 rounded text-blue-500 focus:ring-blue-600">
+                        <span>${item}</span>
+                    </label>
+                `;
+            }).join('');
+        };
+
+        const renderActivityFeed = (activities) => {
+            if (!activities || activities.length === 0) {
+                activityFeed.innerHTML = `<p class="text-sm text-gray-500 text-center">No activity yet.</p>`;
+                return;
+            }
+            activityFeed.innerHTML = activities.sort((a, b) => b.timestamp.seconds - a.timestamp.seconds).map(act => `
+                        <div class="text-sm">
+                            <p><span class="font-semibold text-white">${act.userName}</span>: ${act.comment}</p>
+                            <p class="text-xs text-gray-500 mt-1">${new Date(act.timestamp.seconds * 1000).toLocaleString()}</p>
+                        </div>
+                    `).join('');
+        };
+
+        // --- Firestore & Main Logic ---
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                appWrapper.classList.remove('hidden');
+                loginOverlay.classList.add('hidden');
+                userId = user.uid;
+
+                const userDocRef = doc(db, 'users', userId);
+                const userDocSnap = await getDoc(userDocRef);
+                userProfile = userDocSnap.exists() ? userDocSnap.data() : { name: 'Unknown', role: 'None', 'access level': 'None' };
+                document.getElementById('user-info').textContent = `${userProfile.name} | ${userProfile.role}`;
+
+                const userAccessLevel = userProfile['access level'] || '';
+                // Show High Command link for "High Command" or "Website Manager"
+                if (userAccessLevel === 'High Command' || userAccessLevel === 'Website Manager') {
+                    highCommandLink.classList.remove('hidden');
+                } else {
+                    highCommandLink.classList.add('hidden');
+                }
+
+                // Show Website Manager link only for "Website Manager"
+                if (userAccessLevel === 'Website Manager') {
+                    websiteManagerContainer.classList.remove('hidden');
+                } else {
+                    websiteManagerContainer.classList.add('hidden');
+                }
+
+
+                const canAccess = allowedAccessLevels.includes(userProfile['access level']) || allowedAccessLevels.includes(userProfile['role']);
+                if (canAccess) {
+                    document.getElementById('auth-buttons').classList.remove('hidden');
+                    const canManageAnnouncements = announcementManagementRoles.includes(userProfile['access level']) || announcementManagementRoles.includes(userProfile['role']);
+                    if (canManageAnnouncements) document.getElementById('addAnnouncementBtn').classList.remove('hidden');
+
+                    const qRecords = collection(db, `artifacts/${appId}/public/data/trainingRecords`);
+                    onSnapshot(qRecords, (snapshot) => {
+                        trainingRecordsCache = snapshot.docs.map(d => ({ id: d.id, ...d.data() }));
+                        renderDashboard(trainingRecordsCache);
+                        renderListView(trainingRecordsCache);
+                        // Do not render board view until it's selected
+                    });
+                } else {
+                    // Handle no access
+                }
+            } else {
+                appWrapper.classList.add('hidden');
+                loginOverlay.classList.remove('hidden');
+            }
+        });
+
+        // --- Event Listeners ---
+        listViewBtn.addEventListener('click', () => setView('list'));
+        boardViewBtn.addEventListener('click', () => setView('board'));
+        addRecordBtn.addEventListener('click', () => openRecordModal());
+        closeRecordModalBtn.addEventListener('click', closeRecordModal);
+        cancelRecordBtn.addEventListener('click', closeRecordModal);
+        hamburgerBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            sidebar.classList.toggle('-translate-x-full');
+        });
+
+        // Modal Tab Switching
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                tabContents.forEach(content => content.classList.add('hidden'));
+                document.getElementById(`${button.dataset.tab}-tab`).classList.remove('hidden');
+            });
+        });
+
+        // Form Submission
+        trainingForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const recordId = recordIdInput.value;
+            const data = {
+                traineeName: traineeInput.value.trim(),
+                trainerNames: trainerInput.value.split(',').map(name => name.trim()).filter(Boolean),
+                dueDate: dueDateInput.value,
+                priority: priorityInput.value,
+                notes: notesInput.value.trim(),
+                recommendation: recommendationInput.value,
+                checklist: trainingChecklist.map(item => ({ item, completed: trainingForm.querySelector(`input[value="${item}"]`)?.checked || false })),
+            };
+
+            if (recordId) {
+                await updateDoc(doc(db, `artifacts/${appId}/public/data/trainingRecords`, recordId), data);
+                showToast('Record updated!');
+            } else {
+                data.status = 'Not Started';
+                data.activity = [];
+                data.createdBy = userId;
+                data.timestamp = serverTimestamp();
+                await addDoc(collection(db, `artifacts/${appId}/public/data/trainingRecords`), data);
+                showToast('Record created!');
+            }
+            closeRecordModal();
+        });
+
+        // Add Comment
+        addCommentBtn.addEventListener('click', async () => {
+            const recordId = recordIdInput.value;
+            const commentText = commentInput.value.trim();
+            if (!recordId || !commentText) return;
+
+            const newActivity = {
+                userName: userProfile.name,
+                userId: userId,
+                comment: commentText,
+                timestamp: new Date()
+            };
+
+            const recordRef = doc(db, `artifacts/${appId}/public/data/trainingRecords`, recordId);
+            await updateDoc(recordRef, { activity: arrayUnion(newActivity) });
+
+            commentInput.value = '';
+            const docSnap = await getDoc(recordRef);
+            renderActivityFeed(docSnap.data().activity);
+        });
+
+        // Delete Record
+        deleteRecordBtn.addEventListener('click', async () => {
+            const recordId = recordIdInput.value;
+            if (!recordId) return;
+
+            if (confirm('Are you sure you want to permanently delete this training record? This action cannot be undone.')) {
+                try {
+                    await deleteDoc(doc(db, `artifacts/${appId}/public/data/trainingRecords`, recordId));
+                    showToast('Record deleted successfully!');
+                    closeRecordModal();
+                } catch (error) {
+                    console.error("Error deleting record:", error);
+                    showToast('Failed to delete record.');
+                }
+            }
+        });
+
+        // Open modal from card click
+        document.getElementById('content-views').addEventListener('click', async (e) => {
+            const card = e.target.closest('.record-card');
+            if (card) {
+                const record = trainingRecordsCache.find(r => r.id === card.dataset.recordId);
+                if (record) openRecordModal(record);
+            }
+        });
+
+    </script>
+</body>
+</html>

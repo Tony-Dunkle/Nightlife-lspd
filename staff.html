@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nightlife RP Staff Support</title>
+    <link rel="icon" href="NLRP.png" type="image/png"> <!-- Favicon added -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f8f8;
+            color: #333;
+            /* Flexbox to push footer to the bottom */
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh; /* Ensure body takes full viewport height */
+        }
+
+        main {
+            flex-grow: 1; /* Allow main content to grow and push footer down */
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 5px;
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #555;
+            }
+
+        .policy-section {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .policy-heading {
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1e3a8a;
+        }
+
+        .policy-content {
+            display: none;
+            padding-left: 1rem;
+            padding-top: 0.5rem;
+            line-height: 1.6;
+        }
+
+            .policy-content.active {
+                display: block;
+            }
+
+        .policy-heading .arrow {
+            transition: transform 0.3s ease;
+        }
+
+        .policy-heading.active .arrow {
+            transform: rotate(90deg);
+        }
+
+        .highlight {
+            background-color: yellow;
+            font-weight: bold;
+        }
+        /* Table styling for 10-Codes */
+        .ten-code-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+
+            .ten-code-table th, .ten-code-table td {
+                border: 1px solid #ccc;
+                padding: 0.5rem;
+                text-align: left;
+            }
+
+            .ten-code-table th {
+                background-color: #e0e7ff;
+                color: #1e3a8a;
+            }
+
+            .ten-code-table tr:nth-child(even) {
+                background-color: #f8f8f8;
+            }
+    </style>
+</head>
+<body class="antialiased">
+    <!-- Header Section -->
+    <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex flex-col md:flex-row items-center justify-between sticky top-0 z-50 rounded-b-lg">
+        <div class="flex items-center mb-4 md:mb-0">
+            <!-- Adjusted Logo: Changed to Nightlife RP Staff Support -->
+            <img src="NLRP.png" alt="NLRP Logo" class="mr-4 w-16 h-16 object-contain rounded-lg" onerror="this.onerror=null; this.src='https://placehold.co/64x64/000000/FFFFFF?text=NLRP';">
+            <h1 class="text-2xl md:text-3xl font-bold">Nightlife RP Staff Support</h1>
+        </div>
+        <nav class="w-full md:w-auto">
+            <ul class="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-8 text-lg font-medium">
+                <li><a href="index.html" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Dashboard</a></li>
+                <li><a href="#sops" class="text-white bg-blue-700 py-2 px-3 rounded-md">SOPs</a></li>
+                <li><a href="#staff-commands" class="text-blue-200 hover:text-white transition duration-300 ease-in-out py-2 px-3 rounded-md hover:bg-blue-700">Staff Commands</a></li>
+            </ul>
+        </nav>
+        <div class="mt-4 md:mt-0 w-full md:w-auto">
+            <input type="search" id="searchInput" placeholder="Search Guidelines..." class="p-2 border border-blue-600 rounded-lg focus:ring-2 focus:ring-blue-300 focus:border-transparent w-full md:w-64 bg-blue-800 text-white placeholder-blue-300">
+        </div>
+    </header>
+
+    <!-- Hero Section for SOPs: Background image removed -->
+    <section class="relative bg-gradient-to-r from-blue-700 to-blue-900 text-white py-16 px-6 md:px-12 rounded-lg m-4 md:m-8 overflow-hidden shadow-xl text-center">
+        <div class="absolute inset-0 bg-cover bg-center opacity-30"></div>
+        <div class="relative z-10 max-w-4xl mx-auto">
+            <h2 class="text-4xl md:text-5xl font-extrabold leading-tight mb-4">Staff Support Guidelines</h2>
+            <p class="text-lg md:text-xl mb-6">Your comprehensive guide to Nightlife RP Staff policies and protocols. Utilize the search bar to find specific information quickly.</p>
+        </div>
+    </section>
+
+    <!-- Main Content Section - SOPs -->
+    <main class="container mx-auto px-4 md:px-8 py-12">
+        <h2 class="text-3xl font-bold text-gray-800 mb-8 text-center">Staff Operations Guidelines & Commands</h2>
+
+
+        <div id="sop-container" class="bg-white p-6 rounded-lg shadow-lg">
+            <!-- SOP Content will be dynamically inserted here by JavaScript -->
+        </div>
+    </main>
+
+    <!-- Footer Section - Internal Contacts -->
+    <footer class="bg-gray-800 text-white py-10 px-6 md:px-12 rounded-t-lg">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+                <h4 class="text-xl font-semibold mb-4 text-blue-300">Internal Contacts</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="https://discord.gg/7FwxdpfDTM" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Discord</a></li>
+                    <li><a href="https://discord.com/channels/1383775098464370768/1383775099777318972" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Chat</a></li>
+                    <li><a href="https://discord.com/channels/1383775098464370768/1383782578976456735" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Cadet Support</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-xl font-semibold mb-4 text-blue-300">Quick Access</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="https://docs.google.com/document/d/1etjilZ1dAHGviw33MV5Zs-b5dXqcSHyoYIHvHiRIyy4/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">LSPD SOP</a></li>
+                    <li><a href="https://docs.google.com/document/d/1hKQ4fw9b1_yQELhPi1p1b4M6uiSaYb7bBp-9C6GVTdY/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Los Santos Police Department Interview Procedure & Questions</a></li>
+                    <li><a href="https://docs.google.com/document/d/1d004FfAhZBgESn88Mx21N3CGqXlcoNeP9_sadn_ePak/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Promotional Pathway & Subdivision Assignment Policy</a></li>
+                    <li><a href="https://docs.google.com/document/d/14QIEsYMWpTssti1xGbGWiMxQ2b0jbiYxuMmvV8XWUUo/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Highway Enforcement and Apprehension Team (HEAT) Activation Policy</a></li>
+                    <li><a href="https://docs.google.com/document/d/1Ggf7SS5voiIjr3iSLB3VtAc47JN3aDjm2J_gYnpoZ6s/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Disciplinary Guidelines</a></li>
+                    <li><a href="privacypolicy.html" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-xl font-semibold mb-4 text-blue-300">System Information</h4>
+                <p class="text-gray-500 text-sm mb-2">Unauthorized Access Strictly Prohibited</p>
+                <p class="text-gray-500 text-sm mb-2">For LSPD Personnel Use Only</p>
+                <p class="text-500 text-sm mb-2">Created and Maintained by FiveM "NightLife RP"</p>
+                <p class="text-gray-500 text-sm">&copy; 2025 Los Santos Police Department Internal Systems.</p>
+            </div>
+        </div>
+        <!-- Font Awesome for any potential internal icons (though less needed here) -->
+        <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    </footer>
+
+    <script>
+        // Structured SOP data for dynamic rendering and LLM interaction
+        const sopData = [
+            {
+                "id": "sops", // This will be the target for the "SOPs" button
+                "title": "Nightlife RP General SOPs", // Renamed title for the main SOP section
+                "isCollapsibleGroup": true,
+                "sections": [
+                    {
+                        "id": "sample-sop-content",
+                        "title": "Sample SOP Content",
+                        "content": `<p class="text-gray-700 mb-4">This is sample content for the Nightlife RP General SOPs section. All previous detailed content has been removed and replaced with this placeholder text.</p>`
+                    }
+                ]
+            },
+            {
+                "id": "promotional-pathway-policy", // This is already a guideline/SOP, keep it nested under "SOPs"
+                "title": "Nightlife RP Staff Promotional Pathway & Subdivision Assignment Policy",
+                "isCollapsibleGroup": true,
+                "sections": [
+                    {
+                        "id": "promotional-general-policy",
+                        "title": "I. General Promotion Policy",
+                        "content": `<p class="text-gray-700 mb-4">This is sample content for the General Promotion Policy section. All previous detailed content has been removed and replaced with this placeholder text.</p>`
+                    },
+                    {
+                        "id": "promotional-rank-structure",
+                        "title": "II. Rank Structure, Time Requirements & Subdivision Access",
+                        "content": `<p class="text-gray-700 mb-4">This is sample content for the Rank Structure, Time Requirements & Subdivision Access section. All previous detailed content has been removed and replaced with this placeholder text.</p>`
+                    }
+                ]
+            },
+            {
+                "id": "staff-commands", // This will be the target for the "Staff Commands" button
+                "title": "Nightlife RP Staff Commands Reference",
+                "isCollapsibleGroup": true,
+                "sections": [
+                    {
+                        "id": "general-utility-commands",
+                        "title": "General Utility Commands",
+                        "subsections": [
+                            {
+                                "id": "teleport-command",
+                                "title": "/tp [player_id]",
+                                "content": `<p class="text-gray-700 mb-4"><strong>Description:</strong> Teleports you to the specified player's location. Useful for responding to reports or checking on players.</p>`
+                            },
+                            {
+                                "id": "bring-command",
+                                "title": "/bring [player_id]",
+                                "content": `<p class="text-gray-700 mb-4"><strong>Description:</strong> Teleports the specified player to your current location. Use with caution and only when necessary for intervention or discussion.</p>`
+                            },
+                            {
+                                "id": "freeze-command",
+                                "title": "/freeze [player_id]",
+                                "content": `<p class="text-gray-700 mb-4"><strong>Description:</strong> Freezes the specified player in place, preventing movement. Often used during investigations or when a player is non-compliant.</p>`
+                            },
+                            {
+                                "id": "unfreeze-command",
+                                "title": "/unfreeze [player_id]",
+                                "content": `<p class="text-gray-700 mb-4"><strong>Description:</strong> Unfreezes a previously frozen player.</p>`
+                            }
+                        ]
+                    },
+                    {
+                        "id": "moderation-punishment-commands",
+                        "title": "Moderation & Punishment Commands",
+                        "subsections": [
+                            {
+                                "id": "warn-command",
+                                "title": "/warn [player_id] [reason]",
+                                "content": `<p class="text-gray-700 mb-4"><strong>Description:</strong> Issues an official warning to a player for a minor rule infraction. All warnings are logged.</p>`
+                            },
+                            {
+                                "id": "kick-command",
+                                "title": "/kick [player_id] [reason]",
+                                "content": `<p class="text-gray-700 mb-4"><strong>Description:</strong> Kicks a player from the server. Used for repeated minor infractions or immediate disruptive behavior.</p>`
+                            },
+                            {
+                                "id": "tempban-command",
+                                "title": "/tempban [player_id] [duration] [reason]",
+                                "content": `<p class="text-gray-700 mb-4"><strong>Description:</strong> Issues a temporary ban to a player for moderate rule violations. Specify duration (e.g., 1h, 1d, 1w).</p>`
+                            },
+                            {
+                                "id": "permbank-command",
+                                "title": "/permban [player_id] [reason]",
+                                "content": `<p class="text-gray-700 mb-4"><strong>Description:</strong> Issues a permanent ban to a player for severe rule violations or persistent disruptive behavior. Requires High Command approval.</p>`
+                            },
+                            {
+                                "id": "checklogs-command",
+                                "title": "/checklogs [player_id]",
+                                "content": `<p class="text-gray-700 mb-4"><strong>Description:</strong> Retrieves a player's recent activity logs, including warnings, kicks, and bans. Essential for investigations.</p>`
+                            }
+                        ]
+                    },
+                    {
+                        "id": "server-management-commands",
+                        "title": "Server Management Commands",
+                        "subsections": [
+                            {
+                                "id": "event-start-command",
+                                "title": "/startevent [event_name]",
+                                "content": `<p class="text-gray-700 mb-4"><strong>Description:</strong> Initiates a pre-configured server event. Only authorized staff may use this command.</p>`
+                            },
+                            {
+                                "id": "announce-command",
+                                "title": "/announce [message]",
+                                "content": `<p class="text-gray-700 mb-4"><strong>Description:</strong> Broadcasts a server-wide announcement. Use sparingly for important updates or emergencies.</p>`
+                            }
+                        ]
+                    }
+                ]
+            }
+        ];
+
+        // Function to dynamically render SOPs and handle nested collapsible sections
+        function renderSOPs(data, parentElement) {
+            const container = parentElement || document.getElementById('sop-container');
+            if (!container) return;
+
+            if (!parentElement) { // Only clear if it's the top-level call
+                container.innerHTML = '';
+            }
+
+            data.forEach(section => {
+                const sectionDiv = document.createElement('div');
+                // Set the ID for the top-level sections to enable anchor linking
+                sectionDiv.id = section.id;
+                // Adjust margin/padding based on nesting level if needed
+                sectionDiv.className = 'policy-section mb-6';
+
+                const sectionHeading = document.createElement('div');
+                sectionHeading.className = 'policy-heading bg-blue-100 p-4 rounded-md shadow-sm hover:bg-blue-200 transition duration-200 ease-in-out flex justify-between items-center';
+                sectionHeading.innerHTML = `
+                            <span>${section.title}</span>
+                            ${(section.isCollapsibleGroup || section.subsections || section.content) ? '<svg class="arrow w-5 h-5 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>' : ''}
+                        `;
+                sectionDiv.appendChild(sectionHeading);
+
+                const sectionContentDiv = document.createElement('div');
+                sectionContentDiv.className = 'policy-content bg-white p-4 rounded-b-md border border-t-0 border-blue-200';
+
+                // Check if this section itself contains nested sections (isCollapsibleGroup)
+                if (section.isCollapsibleGroup && section.sections) {
+                    renderSOPs(section.sections, sectionContentDiv); // Recursively call for nested sections
+                } else if (section.subsections) { // Handle the original subsection structure
+                    section.subsections.forEach(subsection => {
+                        const subsectionHeading = document.createElement('h3');
+                        subsectionHeading.className = 'text-xl font-semibold text-blue-700 mb-2 mt-4';
+                        subsectionHeading.textContent = subsection.title;
+
+                        const subsectionContent = document.createElement('div');
+                        subsectionContent.innerHTML = subsection.content;
+
+                        sectionContentDiv.appendChild(subsectionHeading);
+                        sectionContentDiv.appendChild(subsectionContent);
+                    });
+                } else if (section.content) { // Handle direct content (like HEAT policy)
+                    sectionContentDiv.innerHTML = section.content;
+                }
+
+                sectionDiv.appendChild(sectionContentDiv);
+                container.appendChild(sectionDiv);
+
+                // Add click event listener to toggle visibility for all collapsible elements
+                if (section.isCollapsibleGroup || section.subsections || section.content) {
+                    sectionHeading.addEventListener('click', () => {
+                        sectionContentDiv.classList.toggle('active');
+                        sectionHeading.classList.toggle('active');
+                    });
+                }
+            });
+        }
+
+        // Search functionality updated to handle nested structure
+        const searchInput = document.getElementById('searchInput');
+        searchInput.addEventListener('input', (event) => {
+            const searchTerm = event.target.value.toLowerCase();
+            const filteredData = [];
+
+            function filterSections(sections) {
+                const results = [];
+                sections.forEach(section => {
+                    if (section.isCollapsibleGroup && section.sections) {
+                        const nestedResults = filterSections(section.sections);
+                        if (nestedResults.length > 0) {
+                            results.push({
+                                ...section,
+                                sections: nestedResults // Include only matching nested sections
+                            });
+                        } else if (section.title.toLowerCase().includes(searchTerm)) {
+                            // If no nested results but parent title matches, include parent (empty content for children)
+                            results.push({
+                                ...section,
+                                sections: [] // No matching children, but parent title matches
+                            });
+                        }
+                    } else if (section.subsections) {
+                        const newSubsections = [];
+                        section.subsections.forEach(subsection => {
+                            if (subsection.title.toLowerCase().includes(searchTerm) || subsection.content.toLowerCase().includes(searchTerm)) {
+                                let highlightedContent = subsection.content;
+                                const regex = new RegExp(searchTerm, 'gi');
+                                highlightedContent = highlightedContent.replace(regex, match => `<span class="highlight">${match}</span>`);
+                                newSubsections.push({
+                                    id: subsection.id,
+                                    title: subsection.title,
+                                    content: highlightedContent
+                                });
+                            }
+                        });
+                        if (newSubsections.length > 0) {
+                            results.push({
+                                ...section,
+                                subsections: newSubsections
+                            });
+                        } else if (section.title.toLowerCase().includes(searchTerm)) {
+                            results.push({
+                                ...section,
+                                subsections: []
+                            });
+                        }
+                    } else if (section.content) { // Handle direct content search
+                        if (section.title.toLowerCase().includes(searchTerm) || section.content.toLowerCase().includes(searchTerm)) {
+                            let highlightedContent = section.content;
+                            const regex = new RegExp(searchTerm, 'gi');
+                            highlightedContent = highlightedContent.replace(regex, match => `<span class="highlight">${match}</span>`);
+                            results.push({
+                                ...section,
+                                content: highlightedContent
+                            });
+                        }
+                    } else if (section.title.toLowerCase().includes(searchTerm)) {
+                        // Catch-all for top-level titles matching without content
+                        results.push(section);
+                    }
+                });
+                return results;
+            }
+
+            if (searchTerm === '') {
+                renderSOPs(sopData); // Show all if search is empty
+            } else {
+                const searchResults = filterSections(sopData);
+                renderSOPs(searchResults);
+            }
+
+
+            // Expand all sections when search results are displayed
+            document.querySelectorAll('.policy-content').forEach(content => content.classList.add('active'));
+            document.querySelectorAll('.policy-heading').forEach(heading => heading.classList.add('active'));
+        });
+
+        // Initial render of all SOPs on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            renderSOPs(sopData);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unified Police Department - Roster</title>
+    <link rel="icon" type="image/png" href="LSPD.png"> <!-- Favicon added here -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        /* Ensure html and body take full height and width */
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f8f8;
+            color: #333;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 5px;
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #555;
+            }
+
+        /* Loading indicator styles */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* Light Mode */
+        body.light-mode {
+            background-color: #f8f8f8;
+            color: #333;
+        }
+
+            body.light-mode .bg-blue-900 {
+                background-color: #1e3a8a; /* Darker blue for header */
+            }
+
+            body.light-mode .text-white {
+                color: #ffffff;
+            }
+
+            body.light-mode .bg-gradient-to-r {
+                background-image: linear-gradient(to right, #1e3a8a, #102a43); /* Darker blue gradient */
+            }
+
+            body.light-mode .bg-blue-50 {
+                background-color: #e0f2fe; /* Light blue */
+            }
+
+            body.light-mode .bg-gray-100 {
+                background-color: #f3f4f6;
+            }
+
+            body.light-mode .bg-white {
+                background-color: #ffffff;
+            }
+
+            body.light-mode .text-blue-700 {
+                color: #1d4ed8;
+            }
+
+            body.light-mode .text-blue-800 {
+                color: #1e40af;
+            }
+
+            body.light-mode .text-gray-800 {
+                color: #1f2937;
+            }
+
+            body.light-mode .text-gray-600 {
+                color: #4b5563;
+            }
+
+            body.light-mode .text-gray-700 {
+                color: #374151;
+            }
+
+            body.light-mode .text-blue-500 {
+                color: #3b82f6;
+            }
+
+            body.light-mode .bg-gray-800 {
+                background-color: #1f2937;
+            }
+
+            body.light-mode .text-blue-300 {
+                color: #93c5fd;
+            }
+
+            body.light-mode .text-gray-400 {
+                color: #9ca3af;
+            }
+
+            body.light-mode .text-gray-500 {
+                color: #6b7280;
+            }
+
+
+        /* Dark Mode */
+        body.dark-mode {
+            background-color: #1a202c; /* bg-gray-900 */
+            color: #e2e8f0; /* Default text color for dark mode body */
+        }
+
+            body.dark-mode .bg-blue-900 {
+                background-color: #2d3748; /* Darker header */
+            }
+
+            body.dark-mode .text-white {
+                color: #e2e8f0;
+            }
+
+            body.dark-mode .bg-gradient-to-r {
+                background-image: linear-gradient(to right, #2d3748, #1a202c);
+            }
+
+            body.dark-mode .bg-blue-50 {
+                background-color: #2f3e58; /* Darker light blue for card backgrounds */
+            }
+
+            body.dark-mode .bg-gray-100 {
+                background-color: #2d3748;
+            }
+
+            body.dark-mode .bg-white {
+                background-color: #2d3748;
+            }
+
+            body.dark-mode .text-blue-700 {
+                color: #90cdf4;
+            }
+
+            body.dark-mode .text-blue-800 {
+                color: #a7d9ff;
+            }
+
+            /* Ensure main content text colors are readable in dark mode */
+            body.dark-mode main h2,
+            body.dark-mode main p {
+                color: #e2e8f0; /* General text color for main content */
+            }
+
+            /* Override for specific elements that use Tailwind's text-gray-X00 classes */
+            body.dark-mode .text-gray-800 {
+                color: #e2e8f0;
+            }
+
+            body.dark-mode .text-gray-600 {
+                color: #a0aec0;
+            }
+
+            body.dark-mode .text-gray-700 {
+                color: #cbd5e0;
+            }
+
+            body.dark-mode .text-blue-500 {
+                color: #63b3ed;
+            }
+
+            body.dark-mode .bg-gray-800 {
+                background-color: #1a202c;
+            }
+
+            body.dark-mode .text-blue-300 {
+                color: #90cdf4;
+            }
+
+            body.dark-mode .text-gray-400 {
+                color: #a0aec0;
+            }
+
+            body.dark-mode .text-gray-500 {
+                color: #cbd5e0;
+            }
+
+            body.dark-mode .shadow-lg,
+            body.dark-mode .shadow-xl,
+            body.dark-mode .shadow-inner {
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3), 0 1px 3px rgba(0, 0, 0, 0.2);
+            }
+
+            body.dark-mode .modal-content {
+                background-color: #2d3748;
+            }
+
+            body.dark-mode .modal-overlay {
+                background-color: rgba(0, 0, 0, 0.8);
+            }
+
+            body.dark-mode .border {
+                border-color: #4a5568;
+            }
+
+            /* Officer card specific text colors for dark mode */
+            body.dark-mode .officer-card .text-blue-800 { /* Name */
+                color: #90cdf4; /* A light blue for names in dark mode */
+            }
+
+            body.dark-mode .officer-card .text-gray-700 { /* Rank, etc. */
+                color: #cbd5e0; /* Lighter gray for details */
+            }
+
+            body.dark-mode .officer-card .text-gray-500 { /* Hire Date, etc. */
+                color: #a0aec0; /* Even lighter gray for less prominent text */
+            }
+
+            body.dark-mode .officer-card {
+                background-color: #2d3748; /* Darker background for cards */
+            }
+
+                body.dark-mode .officer-card.border-yellow-500 {
+                    border-color: #fbd38d; /* Lighter yellow border for highlight */
+                    box-shadow: 0 0 0 4px #f6e05e; /* Lighter yellow ring */
+                }
+
+            /* Officer summary section text and background */
+            body.dark-mode #officer-summary p {
+                color: #e2e8f0; /* Ensure summary text is light */
+            }
+
+            body.dark-mode #officer-summary .text-blue-800 {
+                color: #90cdf4; /* Keep blue-800 for titles */
+            }
+
+            body.dark-mode #officer-summary .text-blue-900 {
+                color: #a7d9ff; /* Keep blue-900 for numbers */
+            }
+
+            body.dark-mode #officer-summary > div {
+                background-color: #2d3748; /* Darker background for summary boxes */
+            }
+
+            /* Adjust modal text colors for dark mode */
+            body.dark-mode #settingsModal .radio-option label,
+            body.dark-mode #dataViewerModal .modal-content h3,
+            body.dark-mode #confirmDeleteModal .modal-content h3,
+            body.dark-mode #confirmDeleteModal .modal-content p {
+                color: #e2e8f0; /* Ensure modal text is light */
+            }
+
+            body.dark-mode .data-viewer-item .title {
+                color: #90cdf4; /* Make data viewer titles a distinct light blue */
+            }
+
+            body.dark-mode .data-viewer-item .description {
+                color: #cbd5e0; /* Make data viewer descriptions a lighter gray */
+            }
+
+        /* Settings icon styles */
+        #settingsIcon {
+            width: 28px; /* Slightly larger icon */
+            height: 28px;
+            cursor: pointer;
+            margin-left: 1.5rem; /* Space from navigation links */
+            transition: transform 0.2s ease-in-out;
+            filter: brightness(0) invert(1); /* Makes the icon white */
+        }
+
+            #settingsIcon:hover {
+                transform: rotate(15deg);
+            }
+
+        body.dark-mode #settingsIcon {
+            filter: none; /* Keep original color or adjust if necessary for dark mode */
+        }
+
+        /* Settings modal specific styles */
+        #settingsModal .modal-content {
+            width: 350px; /* Adjust width for settings modal */
+        }
+
+        #settingsModal .radio-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+
+            #settingsModal .radio-option input[type="radio"] {
+                margin-right: 0.5rem;
+            }
+
+            #settingsModal .radio-option label {
+                font-size: 1rem;
+                color: #333;
+            }
+
+        body.dark-mode #settingsModal .radio-option label {
+            color: #e2e8f0;
+        }
+
+        #settingsModal button {
+            margin-top: 1rem;
+            width: 100%;
+        }
+
+        /* Data Viewer Modal Styles */
+        #dataViewerModal .modal-content {
+            width: 600px;
+            max-width: 95%;
+        }
+
+        #dataViewerContent {
+            background-color: #f4f4f4;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+        }
+
+        body.dark-mode #dataViewerContent {
+            background-color: #1f2937;
+            border-color: #4a5568;
+            color: #e2e8f0;
+        }
+
+        /* Styles for data viewer items, similar to updates */
+        .data-viewer-item {
+            background-color: #ffffff;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            margin-bottom: 0.75rem;
+        }
+
+        body.dark-mode .data-viewer-item {
+            background-color: #2d3748;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        }
+
+        .data-viewer-item p {
+            margin: 0;
+            line-height: 1.5;
+        }
+
+        .data-viewer-item .title {
+            font-weight: 600; /* font-semibold */
+            color: #1f2937; /* text-gray-800 */
+        }
+
+        body.dark-mode .data-viewer-item .title {
+            color: #e2e8f0;
+        }
+
+        .data-viewer-item .description {
+            font-size: 0.875rem; /* text-sm */
+            color: #4b5563; /* text-gray-600 */
+        }
+
+        body.dark-mode .data-viewer-item .description {
+            color: #a0aec0;
+        }
+
+        /* Modal specific styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw; /* Use viewport width */
+            height: 100vh; /* Use viewport height */
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999; /* Very high z-index */
+        }
+
+        .modal-content {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); /* shadow-2xl */
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+            position: relative;
+            width: 500px; /* Adjusted width for better readability */
+        }
+
+        /* Footer Separation for Dark Mode */
+        body.dark-mode footer {
+            border-top: 3px solid #4a5568; /* A subtle, distinct border for separation */
+            box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.3); /* Add a shadow for more depth */
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header Section -->
+    <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex items-center justify-between sticky top-0 z-50 rounded-b-lg relative">
+        <div class="flex items-center">
+            <!-- UPD Logo -->
+            <img src="LSPD.png" alt="UPD Logo" class="mr-4 w-16 h-16 object-contain" onerror="this.onerror=null; this.src='https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';">
+            <!-- Responsive font size: text-2xl for small screens, text-3xl for medium screens and up -->
+            <h1 class="text-2xl md:text-3xl font-bold">Unified Police Department</h1>
+        </div>
+
+        <!-- Hamburger Menu Button for Mobile -->
+        <button id="hamburgerBtn" class="hamburger-menu text-white focus:outline-none md:hidden">
+            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-4 6h4"></path>
+            </svg>
+        </button>
+
+        <!-- Navigation Menu -->
+        <!-- Added md:flex-grow to nav to allow it to take available space -->
+        <nav class="nav-links md:flex md:flex-grow md:justify-end">
+            <!-- Changed md:space-x-8 to md:space-x-4 and added md:flex-wrap for stacking -->
+            <ul class="flex flex-col md:flex-row md:flex-wrap md:justify-end space-y-2 md:space-y-0 md:space-x-4 text-sm font-medium">
+                <li><a href="index.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Dashboard</a></li>
+                <li><a href="SOP.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">SOPs</a></li>
+                <li><a href="training.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Training</a></li>
+                <li><a href="forms.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Forms</a></li>
+                <li><a href="roster.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700 current-page">Roster</a></li>
+                <li><a href="hr.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">HR Info</a></li>
+                <li><a href="report.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Report Generator</a></li>
+                <li><a href="charges.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Charge Calculator</a></li>
+                <li><a href="info.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Common Information</a></li>
+            </ul>
+        </nav>
+        <!-- Settings Icon -->
+        <img src="settings.png" alt="Settings" id="settingsIcon" class="ml-4 cursor-pointer">
+    </header>
+    <!-- Main Content Section - Roster -->
+    <main class="container mx-auto px-4 md:px-8 py-12 flex-grow">
+        <section class="bg-white p-6 md:p-8 rounded-lg shadow-xl mb-12">
+            <h2 id="rosterTitle" class="text-3xl md:text-4xl font-extrabold text-gray-800 mb-6 text-center border-b-4 border-blue-500 pb-3">Department Roster</h2>
+            <p class="text-lg text-gray-700 text-center mb-8">
+                Select a department to view its current roster. Data is dynamically loaded and updated regularly by the HR division.
+            </p>
+
+            <!-- Department Selection Dropdown -->
+            <div class="mb-8 flex justify-center">
+                <label for="departmentSelect" class="sr-only">Select Department</label>
+                <select id="departmentSelect"
+                        class="px-6 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-lg font-semibold text-gray-800 bg-white dark:bg-gray-700 dark:text-white">
+                    <option value="">-- Unified Police Roster --</option>
+                    <option value="LSPD">Los Santos Police Department</option>
+                    <option value="LSCSO">Los Santos County Sheriff's Office</option>
+                    <option value="State Police">State Police</option>
+                </select>
+            </div>
+
+            <!-- Officer Count Summary Section -->
+            <div id="officer-summary" class="bg-blue-100 p-4 md:p-6 rounded-lg shadow-md mb-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-center">
+                <div class="p-2 bg-blue-200 rounded-md">
+                    <p class="text-lg font-semibold text-blue-800 dark:text-white">High Command Officers:</p>
+                    <p id="high-command-officers" class="text-2xl font-bold text-blue-900 dark:text-white">0</p>
+                </div>
+                <div class="p-2 bg-blue-200 rounded-md">
+                    <p class="text-lg font-semibold text-blue-800 dark:text-white">Command Officers:</p>
+                    <p id="command-officers" class="text-2xl font-bold text-blue-900 dark:text-white">0</p>
+                </div>
+                <div class="p-2 bg-blue-200 rounded-md">
+                    <p class="text-lg font-semibold text-blue-800 dark:text-white">Cadets:</p>
+                    <p id="cadets" class="text-2xl font-bold text-blue-900 dark:text-white">0</p>
+                </div>
+                <div class="p-2 bg-blue-200 rounded-md">
+                    <p class="text-lg font-semibold text-blue-800 dark:text-white">Total Officers:</p>
+                    <p id="total-officers" class="text-2xl font-bold text-blue-900 dark:text-white">0</p>
+                </div>
+            </div>
+
+            <div id="roster-display" class="w-full flex justify-center items-center min-h-[300px]">
+                <!-- Roster data will be loaded here dynamically -->
+                <div class="loader" id="roster-loader"></div>
+            </div>
+
+            <p class="text-gray-600 text-sm mt-8 text-center">
+                For any discrepancies or updates to the roster, please contact the UPD Human Resources Department.
+            </p>
+        </section>
+    </main>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Settings</h3>
+
+            <div class="mb-6">
+                <h4 class="text-lg font-semibold text-gray-700 mb-2">Website Theme</h4>
+                <div class="radio-option">
+                    <input type="radio" id="lightMode" name="theme" value="light" class="text-blue-600">
+                    <label for="lightMode">Light Mode</label>
+                </div>
+                <div class="radio-option">
+                    <input type="radio" id="darkMode" name="theme" value="dark" class="text-blue-600">
+                    <label for="darkMode">Dark Mode</label>
+                </div>
+            </div>
+
+            <div class="mb-6">
+                <h4 class="text-lg font-semibold text-gray-700 mb-2">Data Management</h4>
+                <button id="clearAllDataBtn" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md w-full mb-2">
+                    Clear All Local Data
+                </button>
+                <button id="viewDataBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md w-full">
+                    View Stored Data
+                </button>
+            </div>
+
+            <div class="flex justify-end mt-4">
+                <button id="closeSettingsModalBtn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Data Viewer Modal -->
+    <div id="dataViewerModal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Local Storage Data</h3>
+            <div id="dataViewerContent" class="space-y-4">
+                <!-- Data will be loaded here dynamically -->
+            </div>
+            <div class="flex justify-end mt-4">
+                <button id="closeDataViewerModalBtn" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">
+                    Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Delete All Data Confirmation Modal -->
+    <div id="confirmDeleteModal" class="modal-overlay hidden">
+        <div class="modal-content text-center">
+            <h3 class="text-xl font-bold text-gray-800 mb-4">Confirm Data Deletion</h3>
+            <p class="text-gray-700 mb-6">
+                Are you sure you want to completely delete ALL website data from your device?
+                This includes saved form data and theme preferences.
+                This action cannot be undone.
+            </p>
+            <div class="flex justify-center space-x-4">
+                <button id="confirmDeleteYesBtn"
+                        class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">
+                    Yes, Delete All
+                </button>
+                <button id="confirmDeleteNoBtn"
+                        class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition duration-200 ease-in-out shadow-md">
+                    No, Keep Data
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer Section - Internal Contacts -->
+    <footer class="bg-gray-800 text-white py-10 px-6 md:px-12 rounded-t-lg">
+        <div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div>
+                <h4 class="text-xl font-semibold mb-4 text-blue-300">Internal Contacts</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="https://discord.gg/7FwxdpfDTM" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Discord</a></li>
+                    <li><a href="https://discord.com/channels/1383775098464370768/1396398235660058685" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Support</a></li>
+                    <li><a href="https://discord.com/channels/1383775098464370768/1396398240840290374" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Chat</a></li>
+                    <li><a href="https://discord.com/channels/1383775098464370768/1396398235660058685" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Internal Affairs</a></li>
+                    <li><a href="https://discord.com/channels/1383775098464370768/1396398239678333030" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD Announcements</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-xl font-semibold mb-4 text-blue-300">Quick Access</h4>
+                <ul class="space-y-2 text-sm">
+                    <li><a href="https://docs.google.com/document/d/1etjilZ1dAHGviw33MV5Zs-b5dXqcSHyoYIHvHiRIyy4/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">UPD SOP</a></li>
+                    <li><a href="https://docs.google.com/document/d/1hKQ4fw9b1_yQELhPi1p1b4M6uiSaYb7bBp-9C6GVTdY/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Unified Police Department Interview Procedure & Questions</a></li>
+                    <li><a href="https://docs.google.com/document/d/1d004FfAhZBgESn88Mx21N3CGqXlcoNeP9_sadn_ePak/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Promotional Pathway & Subdivision Assignment Policy</a></li>
+                    <li><a href="https://docs.google.com/document/d/14QIEsYMWpTssti1xGbGWiMxQ2b0jbiYxuMmvV8XWUUo/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Highway Enforcement and Apprehension Team (HEAT) Activation Policy</a></li>
+                    <li><a href="https://docs.google.com/document/d/1Ggf7SS5voiIjr3iSLB3VtAc47JN3aDjm2J_gYnpoZ6s/edit?usp=sharing" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Disciplinary Guidelines</a></li>
+                    <li><a href="privacypolicy.html" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition duration-300 ease-in-out">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-xl font-semibold mb-4 text-blue-300">System Information</h4>
+                <p class="text-gray-500 text-sm mb-2">Unauthorized Access Strictly Prohibited</p>
+                <p class="text-gray-500 text-sm mb-2">For UPD Personnel Use Only</p>
+                <p class="text-500 text-sm mb-2">Created and Maintained by FiveM "NightLife RP"</p>
+                <p class="text-gray-500 text-sm">&copy; 2025 Unified Police Department Internal Systems.</p>
+            </div>
+        </div>
+        <!-- Font Awesome for any potential internal icons (though less needed here) -->
+        <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const rosterDisplay = document.getElementById('roster-display');
+            const rosterLoader = document.getElementById('roster-loader');
+            const totalOfficersEl = document.getElementById('total-officers');
+            const commandOfficersEl = document.getElementById('command-officers');
+            const highCommandOfficersEl = document.getElementById('high-command-officers');
+            const cadetsEl = document.getElementById('cadets');
+            const departmentSelect = document.getElementById('departmentSelect'); // New department select
+            const rosterTitle = document.getElementById('rosterTitle'); // Roster title element
+
+            // Settings Modal Elements
+            const settingsIcon = document.getElementById('settingsIcon');
+            const settingsModal = document.getElementById('settingsModal');
+            const closeSettingsModalBtn = document.getElementById('closeSettingsModalBtn');
+            const lightModeRadio = document.getElementById('lightMode');
+            const darkModeRadio = document.getElementById('darkMode');
+            const clearAllDataBtn = document.getElementById('clearAllDataBtn');
+            const viewDataBtn = document.getElementById('viewDataBtn');
+
+            // Data Viewer Modal Elements
+            const dataViewerModal = document.getElementById('dataViewerModal');
+            const dataViewerContent = document.getElementById('dataViewerContent');
+            const closeDataViewerModalBtn = document.getElementById('closeDataViewerModalBtn');
+
+            // Delete All Data Confirmation Modal Elements
+            const confirmDeleteModal = document.getElementById('confirmDeleteModal');
+            const confirmDeleteYesBtn = document.getElementById('confirmDeleteYesBtn');
+            const confirmDeleteNoBtn = document.getElementById('confirmDeleteNoBtn');
+
+            // --- Theme Switching Logic ---
+            const applyTheme = (theme) => {
+                if (theme === 'dark') {
+                    document.body.classList.add('dark-mode');
+                    document.body.classList.remove('light-mode');
+                    if (darkModeRadio) darkModeRadio.checked = true;
+                } else {
+                    document.body.classList.remove('dark-mode');
+                    document.body.classList.add('light-mode');
+                    if (lightModeRadio) lightModeRadio.checked = true;
+                }
+                localStorage.setItem('theme', theme);
+            };
+
+            // Apply theme on load
+            applyTheme(localStorage.getItem('theme') || 'light');
+
+            // Retrieve logged-in officer data from local storage
+            let loggedInOfficer = null;
+            try {
+                const storedOfficer = localStorage.getItem('loggedInOfficer');
+                if (storedOfficer) {
+                    loggedInOfficer = JSON.parse(storedOfficer);
+                }
+            } catch (e) {
+                console.error('Error parsing loggedInOfficer from localStorage:', e);
+                localStorage.removeItem('loggedInOfficer'); // Clear corrupted data
+            }
+
+            // Configuration for different department sheets
+            const departmentSheetConfig = {
+                "LSPD": {
+                    sheetId: '2PACX-1vT8yueJjp9o-XVH1_RXPji6N_IAP1DDbNLZ8l4__IqGCvVEUWscsdsJ6uNHZ8u6kDhhXkSxcdkdeDJi',
+                    gid: '0',
+                    rowRanges: [
+                        { start: 6, end: 6 },
+                        { start: 9, end: 16 },
+                        { start: 18, end: 22 },
+                        { start: 24, end: 27 },
+                        { start: 29, end: 32 },
+                        { start: 34, end: 43 },
+                        { start: 45, end: 54 },
+                        { start: 56, end: 65 },
+                        { start: 67, end: 78 },
+                        { start: 80, end: 96 },
+                        { start: 98, end: 117 },
+                        { start: 119, end: 148 }
+                    ]
+                },
+                "LSCSO": {
+                    sheetId: '2PACX-1vT8yueJjp9o-XVH1_RXPji6N_IAP1DDbNLZ8l4__IqGCvVEUWscsdsJ6uNHZ8u6kDhhXkSxcdkdeDJi',
+                    gid: '1747285908',
+                    rowRanges: null // Indicates generic filtering for this sheet
+                },
+                "State Police": {
+                    sheetId: '2PACX-1vT8yueJjp9o-XVH1_RXPji6N_IAP1DDbNLZ8l4__IqGCvVEUWscsdsJ6uNHZ8u6kDhhXkSxcdkdeDJi',
+                    gid: '394994291',
+                    rowRanges: null // Indicates generic filtering for this sheet
+                }
+            };
+
+            /**
+             * Converts an Excel-style column letter (e.g., 'A', 'B', 'AA') to a 0-based index.
+             * @param {string} columnLetter - The column letter (e.g., 'C').
+             * @returns {number} The 0-based column index (e.g., 'C' returns 2).
+             */
+            function columnLetterToIndex(columnLetter) {
+                let index = 0;
+                for (let i = 0; i < columnLetter.length; i++) {
+                    index = index * 26 + (columnLetter.charCodeAt(i) - 'A'.charCodeAt(0) + 1);
+                }
+                return index - 1; // Convert to 0-based index
+            }
+
+            /**
+             * Fetches CSV data from a Google Sheet and parses it.
+             * Displays the data in a structured, column-based format based on specific row and column filters.
+             * @param {string} department - The department to fetch the roster for (e.g., "LSPD", "LSCSO").
+             */
+            async function fetchAndRenderRoster(department) {
+                rosterLoader.classList.remove('hidden'); // Show loader
+                rosterDisplay.innerHTML = ''; // Clear previous content
+                rosterTitle.textContent = `${department} Current Roster`; // Update title
+
+                const config = departmentSheetConfig[department];
+                if (!config) {
+                    rosterDisplay.innerHTML = '<p class="text-red-500 text-center py-4">Please select a department to view the roster.</p>';
+                    rosterLoader.classList.add('hidden');
+                    // Reset counts
+                    totalOfficersEl.textContent = 0;
+                    commandOfficersEl.textContent = 0;
+                    highCommandOfficersEl.textContent = 0;
+                    cadetsEl.textContent = 0;
+                    return;
+                }
+
+                const csvUrl = `https://docs.google.com/spreadsheets/d/e/${config.sheetId}/pub?gid=${config.gid}&single=true&output=csv`;
+
+                try {
+                    const response = await fetch(csvUrl);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const csvText = await response.text();
+
+                    const rawRows = csvText.trim().split('\n');
+                    if (rawRows.length === 0) {
+                        rosterDisplay.innerHTML = `<p class="text-gray-600 text-center py-4">No roster data available for ${department}.</p>`;
+                        rosterLoader.classList.add('hidden');
+                        // Reset counts
+                        totalOfficersEl.textContent = 0;
+                        commandOfficersEl.textContent = 0;
+                        highCommandOfficersEl.textContent = 0;
+                        cadetsEl.textContent = 0;
+                        return;
+                    }
+
+                    const filteredRowsData = [];
+                    const regex = /,(?=(?:(?:[^"]*"){2})*[^"]*$)/;
+
+                    if (config.rowRanges) {
+                        const targetSpreadsheetRows = new Set();
+                        config.rowRanges.forEach(range => {
+                            for (let i = range.start; i <= range.end; i++) {
+                                targetSpreadsheetRows.add(i);
+                            }
+                        });
+
+                        rawRows.forEach((rowString, index) => {
+                            const spreadsheetRowNumber = index + 1;
+                            if (targetSpreadsheetRows.has(spreadsheetRowNumber)) {
+                                const parsedCells = rowString.split(regex).map(cell => cell.replace(/^"(.*)"$/, '$1').trim());
+                                filteredRowsData.push(parsedCells);
+                            }
+                        });
+                    } else {
+                        // Generic filtering for LSCSO and State Police
+                        const nameColIndex = columnLetterToIndex('D'); // Assuming 'D' for Name
+                        const badgeColIndex = columnLetterToIndex('C'); // Assuming 'C' for Badge No.
+
+                        rawRows.slice(1).forEach(rowString => { // Skip header row
+                            const parsedCells = rowString.split(regex).map(cell => cell.replace(/^"(.*)"$/, '$1').trim());
+                            const name = parsedCells[nameColIndex] ? parsedCells[nameColIndex].trim() : '';
+                            const badge = parsedCells[badgeColIndex] ? parsedCells[badgeColIndex].trim() : '';
+
+                            if (name && name !== 'N/A' && name.toLowerCase() !== 'name' && name.toLowerCase() !== 'full name' &&
+                                badge && badge !== 'N/A' && badge.toLowerCase() !== 'badge no.' && badge.toLowerCase() !== 'badge number') {
+                                filteredRowsData.push(parsedCells);
+                            }
+                        });
+                    }
+
+                    const displayHeaders = [
+                        'Badge No.', 'Name', 'Rank', 'Hire Date',
+                        'Region', 'Divison Information', 'Specialization', 'FTO Status',
+                        'Discord Username', 'I.C. Phone Number', 'Image Link'
+                    ];
+
+                    const headerToColIndexMap = {
+                        'Badge No.': columnLetterToIndex('C'),
+                        'Name': columnLetterToIndex('D'),
+                        'Rank': columnLetterToIndex('E'),
+                        'Hire Date': columnLetterToIndex('G'),
+                        'Region': columnLetterToIndex('L'),
+                        'Divison Information': columnLetterToIndex('P'),
+                        'Specialization': columnLetterToIndex('Q'),
+                        'FTO Status': columnLetterToIndex('R'),
+                        'Discord Username': columnLetterToIndex('Y'),
+                        'I.C. Phone Number': columnLetterToIndex('AA'),
+                        'Image Link': columnLetterToIndex('AJ'),
+                        'AI_Column_Data': columnLetterToIndex('AI'), // For combining with Discord
+                        'AK_Column_Data': columnLetterToIndex('AK')  // For combining with I.C. Phone Number
+                    };
+
+                    const processedData = [];
+                    filteredRowsData.forEach(rowData => {
+                        const newRow = [];
+                        displayHeaders.forEach(header => {
+                            let value;
+                            if (header === 'Discord Username') {
+                                const discordUserValue = rowData[headerToColIndexMap['Discord Username']] ? rowData[headerToColIndexMap['Discord Username']].trim() : '';
+                                const aiColumnValue = rowData[headerToColIndexMap['AI_Column_Data']] ? rowData[headerToColIndexMap['AI_Column_Data']].trim() : '';
+
+                                let displayDiscord = '';
+                                if (discordUserValue.toLowerCase() === 'true' || discordUserValue.toLowerCase() === 'false' || discordUserValue === '') {
+                                    displayDiscord = 'N/A';
+                                } else {
+                                    displayDiscord = discordUserValue;
+                                }
+
+                                if (aiColumnValue && aiColumnValue.toLowerCase() !== 'true' && aiColumnValue.toLowerCase() !== 'false' && aiColumnValue !== 'N/A' && aiColumnValue !== '') {
+                                    if (displayDiscord === 'N/A') {
+                                        value = aiColumnValue;
+                                    } else {
+                                        value = `${displayDiscord} (${aiColumnValue})`;
+                                    }
+                                } else {
+                                    value = displayDiscord;
+                                }
+
+                            } else if (header === 'I.C. Phone Number') {
+                                const icPhoneNumberValue = rowData[headerToColIndexMap['I.C. Phone Number']] ? rowData[headerToColIndexMap['I.C. Phone Number']].trim() : '';
+                                const akColumnValue = rowData[headerToColIndexMap['AK_Column_Data']] ? rowData[headerToColIndexMap['AK_Column_Data']].trim() : '';
+
+                                let displayICPhone = '';
+                                if (icPhoneNumberValue.toLowerCase() === 'true' || icPhoneNumberValue.toLowerCase() === 'false' || icPhoneNumberValue === '') {
+                                    displayICPhone = 'N/A';
+                                } else {
+                                    displayICPhone = icPhoneNumberValue;
+                                }
+
+                                if (akColumnValue && akColumnValue.toLowerCase() !== 'true' && akColumnValue.toLowerCase() !== 'false' && akColumnValue !== 'N/A' && akColumnValue !== '') {
+                                    if (displayICPhone === 'N/A') {
+                                        value = akColumnValue;
+                                    } else {
+                                        value = `${displayICPhone} (${akColumnValue})`;
+                                    }
+                                } else {
+                                    value = displayICPhone;
+                                }
+
+                            } else {
+                                const originalColIndex = headerToColIndexMap[header];
+                                if (originalColIndex !== undefined && rowData[originalColIndex] !== undefined) {
+                                    value = rowData[originalColIndex].trim();
+                                } else {
+                                    value = 'N/A';
+                                }
+                                if (value.toLowerCase() === 'true' || value.toLowerCase() === 'false' || value === '') {
+                                    value = 'N/A';
+                                }
+                            }
+                            newRow.push(value);
+                        });
+                        processedData.push(newRow);
+                    });
+
+                    renderRoster(processedData, displayHeaders);
+
+                } catch (error) {
+                    console.error('Error fetching or parsing roster data:', error);
+                    rosterDisplay.innerHTML = '<p class="text-red-500">Failed to load roster data. Please try again later.</p>';
+                    // Reset counts on error
+                    totalOfficersEl.textContent = 0;
+                    commandOfficersEl.textContent = 0;
+                    highCommandOfficersEl.textContent = 0;
+                    cadetsEl.textContent = 0;
+                } finally {
+                    rosterLoader.classList.add('hidden'); // Hide loader
+                }
+            }
+
+            /**
+             * Renders the roster data into the DOM and updates officer counts.
+             * @param {Array<Array<string>>} data - The processed data (array of rows, each row is an array of cells).
+             * @param {Array<string>} headers - An array of header names, used for displaying labels.
+             */
+            function renderRoster(data, headers) {
+                rosterDisplay.innerHTML = ''; // Clear loading spinner/previous content
+
+                if (data.length === 0) {
+                    rosterDisplay.innerHTML = '<p class="text-gray-600">No roster entries found for the selected department.</p>';
+                    // Reset counts if no data
+                    totalOfficersEl.textContent = 0;
+                    commandOfficersEl.textContent = 0;
+                    highCommandOfficersEl.textContent = 0;
+                    cadetsEl.textContent = 0;
+                    return;
+                }
+
+                let totalOfficers = 0;
+                let commandOfficers = 0;
+                let highCommandOfficers = 0;
+                let cadets = 0;
+
+                const rankIndex = headers.indexOf('Rank');
+                const badgeNoIndex = headers.indexOf('Badge No.');
+                if (rankIndex === -1 || badgeNoIndex === -1) {
+                    console.error("Rank or Badge No. column not found in headers.");
+                    return;
+                }
+
+                const gridContainer = document.createElement('div');
+                gridContainer.className = 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full';
+
+                const regionMap = {
+                    'NA': 'North America',
+                    'EU': 'Europe',
+                    'ASIA': 'Asia',
+                    'SA': 'South America',
+                    'AF': 'Africa',
+                    'OC': 'Oceania',
+                };
+
+                // Define ranks for each category
+                const highCommandRanks = ['Commissioner', 'Dpt. Commissioner', 'Chief of Police', 'Deputy Chief', 'Captain'];
+                const commandRanks = ['Lieutenant', 'Master Sergeant'];
+                const cadetRanks = ['Cadet'];
+
+                data.forEach((rowData) => {
+                    const nameValue = rowData[headers.indexOf('Name')];
+                    if (!nameValue || nameValue.trim() === 'N/A') {
+                        return;
+                    }
+
+                    totalOfficers++;
+
+                    const rank = rowData[rankIndex].trim();
+
+                    if (highCommandRanks.includes(rank)) {
+                        highCommandOfficers++;
+                    } else if (commandRanks.includes(rank)) {
+                        commandOfficers++;
+                    } else if (cadetRanks.includes(rank)) {
+                        cadets++;
+                    }
+
+                    const imageLink = rowData[headers.indexOf('Image Link')];
+                    const officerBadgeNo = rowData[badgeNoIndex].trim();
+
+                    const officerCard = document.createElement('div');
+                    let cardClasses = 'officer-card bg-blue-50 p-6 rounded-lg shadow-md hover:shadow-xl transition-shadow duration-300 ease-in-out flex flex-col items-start';
+
+                    if (loggedInOfficer && loggedInOfficer.badge === officerBadgeNo && loggedInOfficer.department === departmentSelect.value) {
+                        cardClasses += ' border-4 border-yellow-500 ring-4 ring-yellow-300';
+                    }
+                    officerCard.className = cardClasses;
+
+                    const nameAndImageContainer = document.createElement('div');
+                    nameAndImageContainer.className = 'flex items-center mb-2 w-full';
+
+                    const nameElement = document.createElement('h3');
+                    nameElement.className = 'text-xl font-semibold text-blue-800';
+                    nameElement.textContent = nameValue;
+                    nameAndImageContainer.appendChild(nameElement);
+
+                    if (imageLink && imageLink !== 'N/A' && (imageLink.startsWith('http://') || imageLink.startsWith('https://'))) {
+                        const imgElement = document.createElement('img');
+                        imgElement.src = imageLink;
+                        imgElement.alt = `${nameValue}'s profile picture`;
+                        imgElement.className = 'w-16 h-16 rounded-full ml-4 object-cover';
+                        imgElement.onerror = function () {
+                            this.onerror = null;
+                            this.src = 'https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';
+                        };
+                        nameAndImageContainer.appendChild(imgElement);
+                    } else {
+                        const placeholderImg = document.createElement('img');
+                        placeholderImg.src = 'https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png';
+                        placeholderImg.alt = 'No image available';
+                        placeholderImg.className = 'w-16 h-16 rounded-full ml-4 object-cover';
+                        nameAndImageContainer.appendChild(placeholderImg);
+                    }
+                    officerCard.appendChild(nameAndImageContainer);
+
+                    headers.forEach((header, colIndex) => {
+                        if (header === 'Name' || header === 'Image Link') {
+                            return;
+                        }
+
+                        let value = rowData[colIndex];
+                        if (value === undefined || value === null || value.trim() === '') {
+                            value = 'N/A';
+                        }
+
+                        if (header === 'Region' && regionMap[value]) {
+                            value = regionMap[value];
+                        }
+
+                        const detailDiv = document.createElement('div');
+                        detailDiv.className = 'mb-2';
+
+                        if (header === 'Rank') {
+                            detailDiv.innerHTML = `<p class="text-md text-gray-700 font-medium"><span class="font-bold">${header}:</span> ${value}</p>`;
+                        } else if (header === 'Badge No.' || header === 'I.C. Phone Number' || header === 'Discord Username') {
+                            detailDiv.innerHTML = `<p class="text-md text-gray-700"><span class="font-bold">${header}:</span> <span class="font-mono">${value}</span></p>`;
+                        }
+                        else if (header.includes('Date') || header.includes('Time')) {
+                            detailDiv.innerHTML = `<p class="text-md text-gray-700"><span class="font-bold">${header}:</span> <span class="text-sm text-gray-500">${value}</span></p>`;
+                        }
+                        else {
+                            detailDiv.innerHTML = `<p class="text-md text-gray-700"><span class="font-bold">${header}:</span> ${value}</p>`;
+                        }
+                        officerCard.appendChild(detailDiv);
+                    });
+                    gridContainer.appendChild(officerCard);
+                });
+                rosterDisplay.appendChild(gridContainer);
+
+                // Update the summary counts
+                totalOfficersEl.textContent = totalOfficers;
+                commandOfficersEl.textContent = commandOfficers;
+                highCommandOfficersEl.textContent = highCommandOfficers;
+                cadetsEl.textContent = cadets;
+            }
+
+            // Initial load based on logged-in officer's department or default
+            if (loggedInOfficer && departmentSheetConfig[loggedInOfficer.department]) {
+                departmentSelect.value = loggedInOfficer.department;
+                fetchAndRenderRoster(loggedInOfficer.department);
+            } else {
+                rosterLoader.classList.add('hidden'); // Hide loader if no department selected initially
+                rosterDisplay.innerHTML = '<p class="text-gray-600 text-center py-4">Please select a department from the dropdown above to view the roster.</p>';
+            }
+
+            // Event listener for department selection change
+            departmentSelect.addEventListener('change', (event) => {
+                const selectedDepartment = event.target.value;
+                if (selectedDepartment) {
+                    fetchAndRenderRoster(selectedDepartment);
+                } else {
+                    rosterDisplay.innerHTML = '<p class="text-gray-600 text-center py-4">Please select a department from the dropdown above to view the roster.</p>';
+                    rosterLoader.classList.add('hidden');
+                    rosterTitle.textContent = 'Department Roster'; // Reset title
+                    // Reset counts when no department is selected
+                    totalOfficersEl.textContent = 0;
+                    commandOfficersEl.textContent = 0;
+                    highCommandOfficersEl.textContent = 0;
+                    cadetsEl.textContent = 0;
+                }
+            });
+
+
+            // --- Settings Modal Logic ---
+            if (settingsIcon) {
+                settingsIcon.addEventListener('click', () => {
+                    settingsModal.classList.remove('hidden');
+                    const currentTheme = localStorage.getItem('theme') || 'light';
+                    if (currentTheme === 'dark') {
+                        if (darkModeRadio) darkModeRadio.checked = true;
+                    } else {
+                        if (lightModeRadio) lightModeRadio.checked = true;
+                    }
+                });
+            }
+
+            if (closeSettingsModalBtn) {
+                closeSettingsModalBtn.addEventListener('click', () => {
+                    settingsModal.classList.add('hidden');
+                });
+            }
+
+            if (settingsModal) {
+                settingsModal.addEventListener('click', (e) => {
+                    if (e.target === settingsModal) {
+                        settingsModal.classList.add('hidden');
+                    }
+                });
+            }
+
+            if (lightModeRadio) {
+                lightModeRadio.addEventListener('change', () => applyTheme('light'));
+            }
+            if (darkModeRadio) {
+                darkModeRadio.addEventListener('change', () => applyTheme('dark'));
+            }
+
+            // --- Clear All Data Logic ---
+            if (clearAllDataBtn) {
+                clearAllDataBtn.addEventListener('click', () => {
+                    settingsModal.classList.add('hidden'); // Hide settings modal first
+                    confirmDeleteModal.classList.remove('hidden'); // Show confirmation modal
+                });
+            }
+
+            if (confirmDeleteYesBtn) {
+                confirmDeleteYesBtn.addEventListener('click', () => {
+                    localStorage.clear(); // Clears all data from local storage for this domain
+                    console.log('All website data cleared from local storage.');
+                    confirmDeleteModal.classList.add('hidden');
+                    location.reload(); // Reload the page to reflect changes
+                });
+            }
+
+            if (confirmDeleteNoBtn) {
+                confirmDeleteNoBtn.addEventListener('click', () => {
+                    confirmDeleteModal.classList.add('hidden');
+                    settingsModal.classList.remove('hidden'); // Show settings modal again
+                });
+            }
+
+            if (confirmDeleteModal) {
+                confirmDeleteModal.addEventListener('click', (e) => {
+                    if (e.target === confirmDeleteModal) {
+                        confirmDeleteModal.classList.add('hidden');
+                        settingsModal.classList.remove('hidden'); // Show settings modal again
+                    }
+                });
+            }
+
+
+            // --- Data Viewer Logic ---
+            if (viewDataBtn) {
+                viewDataBtn.addEventListener('click', () => {
+                    settingsModal.classList.add('hidden'); // Hide settings modal
+                    dataViewerModal.classList.remove('hidden');
+                    displayLocalStorageData();
+                });
+            }
+
+            if (closeDataViewerModalBtn) {
+                closeDataViewerModalBtn.addEventListener('click', () => {
+                    dataViewerModal.classList.add('hidden');
+                    settingsModal.classList.remove('hidden'); // Show settings modal again
+                });
+            }
+
+            if (dataViewerModal) {
+                dataViewerModal.addEventListener('click', (e) => {
+                    if (e.target === dataViewerModal) {
+                        dataViewerModal.classList.add('hidden');
+                        settingsModal.classList.remove('hidden'); // Show settings modal again
+                    }
+                });
+            }
+
+            function displayLocalStorageData() {
+                dataViewerContent.innerHTML = ''; // Clear existing content
+
+                let hasData = false;
+
+                // Display Logged In Officer
+                const loggedInOfficer = localStorage.getItem('loggedInOfficer');
+                if (loggedInOfficer) {
+                    try {
+                        const officer = JSON.parse(loggedInOfficer);
+                        const officerDiv = document.createElement('div');
+                        officerDiv.className = 'data-viewer-item';
+                        officerDiv.innerHTML = `
+                                            <p class="title">Officer Logged In</p>
+                                            <p class="description">${officer.name} (Badge: ${officer.badge}, Department: ${officer.department || 'N/A'})</p>
+                                        `;
+                        dataViewerContent.appendChild(officerDiv);
+                        hasData = true;
+                    } catch (e) {
+                        console.error("Error parsing loggedInOfficer from local storage:", e);
+                    }
+                }
+
+                // Display Website Theme
+                const currentTheme = localStorage.getItem('theme');
+                if (currentTheme) {
+                    const themeDiv = document.createElement('div');
+                    themeDiv.className = 'data-viewer-item';
+                    themeDiv.innerHTML = `
+                                        <p class="title">Website Theme</p>
+                                        <p class="description">${currentTheme.charAt(0).toUpperCase() + currentTheme.slice(1)} Mode</p>
+                                    `;
+                    dataViewerContent.appendChild(themeDiv);
+                    hasData = true;
+                }
+
+                // Display Admin Report Generator Data (if applicable, though this is roster.html)
+                const adminReportData = localStorage.getItem('reportGeneratorData'); // Changed from adminReportGeneratorData
+                if (adminReportData) {
+                    try {
+                        const data = JSON.parse(adminReportData);
+                        const adminReportDiv = document.createElement('div');
+                        adminReportDiv.className = 'data-viewer-item mt-4';
+                        adminReportDiv.innerHTML = `
+                                            <p class="title">Report Generator Data</p>
+                                            <p class="description">Last saved report type: ${data.reportType || 'N/A'}</p>
+                                            <p class="description">Last saved officer info: ${data.officerInfo || 'N/A'}</p>
+                                            <p class="description">Other form fields saved. (Too detailed to list all here)</p>
+                                        `;
+                        dataViewerContent.appendChild(adminReportDiv);
+                        hasData = true;
+                    } catch (e) {
+                        console.error("Error parsing reportGeneratorData from local storage:", e); // Changed from adminReportGeneratorData
+                    }
+                }
+
+                // Display Other Stored Data
+                let otherDataCount = 0;
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    // Skip keys already displayed or internal keys
+                    if (key === 'loggedInOfficer' || key === 'theme' || key === 'reportGeneratorData' || key === 'cookieConsent') { // Changed from adminReportGeneratorData
+                        continue;
+                    }
+
+                    let value;
+                    try {
+                        // Try to parse as JSON, otherwise keep as string
+                        value = JSON.parse(localStorage.getItem(key));
+                        // If it's an object/array, stringify it nicely
+                        if (typeof value === 'object' && value !== null) {
+                            value = JSON.stringify(value, null, 2);
+                        }
+                    } catch (e) {
+                        value = localStorage.getItem(key);
+                    }
+
+                    if (otherDataCount === 0) {
+                        const otherDataHeader = document.createElement('div');
+                        otherDataHeader.className = 'data-viewer-item mt-4';
+                        otherDataHeader.innerHTML = `<p class="title">Other Stored Data</p>`;
+                        dataViewerContent.appendChild(otherDataHeader);
+                    }
+
+                    const dataDiv = document.createElement('div');
+                    dataDiv.className = 'data-viewer-item';
+                    dataDiv.innerHTML = `
+                                        <p class="title">${key}</p>
+                                        <p class="description">${value}</p>
+                                    `;
+                    dataViewerContent.appendChild(dataDiv);
+                    hasData = true;
+                    otherDataCount++;
+                }
+
+                if (!hasData) {
+                    dataViewerContent.innerHTML = '<p class="text-gray-500 text-center py-4">No user-specific data currently stored in local storage.</p>';
+                }
+            }
+        });
+    </script>
+</body>
+</html>

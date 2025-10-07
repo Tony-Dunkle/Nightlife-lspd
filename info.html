@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en" class="">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UPD Common Information</title>
+    <link rel="icon" href="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53T15804bfc13b8e3cc3762a3274d/LSPD.png" type="image/png">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display.swap');
+
+        /* Define CSS variables for theming */
+        :root {
+            --bg-primary: #f8fafc; /* slate-50 */
+            --bg-secondary: #ffffff; /* white */
+            --bg-tertiary: #f1f5f9; /* slate-100 */
+            --text-primary: #0f172a; /* slate-900 */
+            --text-secondary: #475569; /* slate-600 */
+            --border-color: #e2e8f0; /* slate-200 */
+            --accent-color: #3b82f6; /* blue-500 */
+            --modal-bg: rgba(0,0,0,0.7);
+            --modal-content-bg: #ffffff;
+        }
+
+        html.dark {
+            --bg-primary: #0f172a; /* slate-900 */
+            --bg-secondary: #1e293b; /* slate-800 */
+            --bg-tertiary: #334155; /* slate-700 */
+            --text-primary: #f1f5f9; /* slate-100 */
+            --text-secondary: #94a3b8; /* slate-400 */
+            --border-color: #334155; /* slate-700 */
+            --accent-color: #60a5fa; /* blue-400 */
+            --modal-content-bg: #1e293b; /* slate-800 */
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            transition: background-color 0.3s, color 0.3s;
+        }
+
+        /* Scrollbar styles */
+        ::-webkit-scrollbar {
+            width: 12px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-tertiary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 6px;
+        }
+
+            ::-webkit-scrollbar-thumb:hover {
+                background: #555;
+            }
+
+        html.dark ::-webkit-scrollbar-thumb {
+            background: #555;
+        }
+
+            html.dark ::-webkit-scrollbar-thumb:hover {
+                background: #777;
+            }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background-color: var(--modal-bg);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+            .modal-overlay.is-open {
+                display: flex;
+            }
+
+        .modal-box {
+            background-color: var(--modal-content-bg);
+            padding: 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);
+            width: 90%;
+            max-width: 600px;
+        }
+
+        .data-modal-box {
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        /* Mobile Nav Specific Styles */
+        #nav-links.nav-mobile-active {
+            display: flex !important;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background-color: #1e40af;
+            flex-direction: column;
+            padding: 1rem;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+
+        html.dark #nav-links.nav-mobile-active {
+            background-color: #111827;
+        }
+
+        /* Info Card Styles */
+        .info-card {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+        }
+    </style>
+</head>
+<body class="antialiased">
+
+    <!-- Header Section -->
+    <header class="bg-blue-900 text-white shadow-lg py-4 px-6 md:px-12 flex items-center justify-between sticky top-0 z-50">
+        <div class="flex items-center">
+            <img src="https://raw.githubusercontent.com/Tony-Dunkle/Nightlife-lspd/740c11da2aa53715804bfc13b8e3cc3762a3274d/LSPD.png" alt="UPD Logo" class="mr-4 w-16 h-16 object-contain">
+            <h1 class="text-2xl md:text-3xl font-bold">Unified Police Department</h1>
+        </div>
+
+        <div class="flex items-center">
+            <nav id="nav-links" class="hidden md:flex items-center">
+                <ul class="flex flex-row space-x-4 text-sm font-medium">
+                    <li><a href="index.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700 current-page">Dashboard</a></li>
+                    <li><a href="SOP.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">SOPs</a></li>
+                    <li><a href="training.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Training</a></li>
+                    <li><a href="forms.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Forms</a></li>
+                    <li><a href="roster.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Roster</a></li>
+                    <li><a href="hr.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">HR Info</a></li>
+                    <li><a href="report.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Report Generator</a></li>
+                    <li><a href="charges.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Charge Calculator</a></li>
+                    <li><a href="info.html" class="nav-item-link text-blue-200 hover:text-white transition duration-300 ease-in-out py-1 px-2 rounded-md hover:bg-blue-700">Common Information</a></li>
+                </ul>
+            </nav>
+
+            <div class="flex items-center ml-4">
+                <button id="settings-btn" class="p-2 rounded-full hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-white/50 transition-all">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                </button>
+                <button id="hamburgerBtn" class="hamburger-menu p-2 rounded-md hover:bg-white/10 focus:outline-none md:hidden ml-2">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path></svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="container mx-auto p-6 md:p-10">
+        <div class="text-center mb-12">
+            <h2 class="text-4xl md:text-5xl font-extrabold mb-3">Common Police Information</h2>
+            <p class="text-lg md:text-xl text-[var(--text-secondary)] max-w-3xl mx-auto">A quick reference guide for essential information, including 10-codes, speed limits, Miranda Rights, and in-game commands.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-8">
+            <!-- 10 Codes -->
+            <div class="info-card rounded-lg shadow-md p-6 md:col-span-2 xl:col-span-4">
+                <h3 class="text-2xl font-bold mb-4 text-[var(--accent-color)]">Useful 10 Codes</h3>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4 text-sm">
+                    <p><strong class="font-semibold">10-0:</strong> Caution</p>
+                    <p><strong class="font-semibold">10-1:</strong> Poor Reception</p>
+                    <p><strong class="font-semibold">10-02:</strong> Good Reception</p>
+                    <p><strong class="font-semibold">10-03:</strong> Stop Transmitting</p>
+                    <p><strong class="font-semibold">10-04:</strong> Affirmative</p>
+                    <p><strong class="font-semibold">10-05:</strong> Relay Message</p>
+                    <p><strong class="font-semibold">10-06:</strong> Busy</p>
+                    <p><strong class="font-semibold">10-07:</strong> Out of Service</p>
+                    <p><strong class="font-semibold">10-08:</strong> In Service</p>
+                    <p><strong class="font-semibold">10-09:</strong> Repeat</p>
+                    <p><strong class="font-semibold">10-10:</strong> Fight in Progress</p>
+                    <p><strong class="font-semibold">10-11:</strong> Animal Problem</p>
+                    <p><strong class="font-semibold">10-12:</strong> Standby</p>
+                    <p><strong class="font-semibold">10-13:</strong> Weather/Road Report</p>
+                    <p><strong class="font-semibold">10-15:</strong> Civil Disturbance</p>
+                    <p><strong class="font-semibold">10-20:</strong> Location</p>
+                    <p><strong class="font-semibold">10-21:</strong> Phone Call</p>
+                    <p><strong class="font-semibold">10-22:</strong> Disregard</p>
+                    <p><strong class="font-semibold">10-23:</strong> Arrived at Scene</p>
+                    <p><strong class="font-semibold">10-25:</strong> Meet In Person</p>
+                    <p><strong class="font-semibold">10-27:</strong> License Check</p>
+                    <p><strong class="font-semibold">10-28:</strong> Vehicle Reg. Check</p>
+                    <p><strong class="font-semibold">10-29:</strong> Warrant Check</p>
+                    <p><strong class="font-semibold">10-31:</strong> Crime in Progress</p>
+                    <p><strong class="font-semibold">10-32:</strong> Person with Gun</p>
+                    <p><strong class="font-semibold">10-35:</strong> Major Crime Alert</p>
+                    <p><strong class="font-semibold">10-38:</strong> Traffic Stop</p>
+                    <p><strong class="font-semibold">10-41:</strong> Beginning Tour of Duty</p>
+                    <p><strong class="font-semibold">10-42:</strong> Ending Tour of Duty</p>
+                    <p><strong class="font-semibold">10-50:</strong> Vehicle Accident</p>
+                    <p><strong class="font-semibold">10-51:</strong> Wrecker Needed</p>
+                    <p><strong class="font-semibold">10-52:</strong> Ambulance Needed</p>
+                    <p><strong class="font-semibold">10-60:</strong> Shots from Vehicle</p>
+                    <p><strong class="font-semibold">10-70:</strong> Fire</p>
+                    <p><strong class="font-semibold">10-76:</strong> Enroute</p>
+                    <p><strong class="font-semibold">10-77:</strong> ETA</p>
+                    <p><strong class="font-semibold">10-78:</strong> Need Assistance</p>
+                    <p><strong class="font-semibold">10-80:</strong> Pursuit in Progress</p>
+                    <p><strong class="font-semibold">10-85:</strong> Supervisor Needed</p>
+                    <p><strong class="font-semibold">10-90:</strong> Bank Alarm</p>
+                    <p><strong class="font-semibold">10-95:</strong> Suspect in Custody</p>
+                    <p><strong class="font-semibold">10-97:</strong> Arrived at Scene</p>
+                    <p><strong class="font-semibold">10-98:</strong> Jail Break</p>
+                    <p><strong class="font-semibold text-red-500">11-99:</strong> Officer Distress</p>
+                    <p><strong class="font-semibold text-orange-500">11-99b:</strong> Officer Distress (Low Risk)</p>
+                </div>
+            </div>
+
+            <!-- Other Cards -->
+            <div class="info-card rounded-lg shadow-md p-6"><h3 class="text-2xl font-bold mb-4 text-[var(--accent-color)]">Speed Limits</h3><ul class="list-disc list-inside space-y-2"><li>City: 50 MPH / 80 KPH</li><li>Route 68 / Joshua Road: 60 MPH / 96 KPH</li><li>Highway: 80 MPH / 129 KPH</li></ul></div>
+            <div class="info-card rounded-lg shadow-md p-6"><h3 class="text-2xl font-bold mb-4 text-[var(--accent-color)]">Miranda Rights</h3><p class="leading-relaxed">"You have the right to remain silent. Anything you say or do can and will be used against you in a court of law. You have the right to an attorney. If you cannot afford one, one will be provided to you. Do you understand these rights?"</p></div>
+            <div class="info-card rounded-lg shadow-md p-6"><h3 class="text-2xl font-bold mb-4 text-[var(--accent-color)]">Ingame Commands</h3><ul class="list-disc list-inside space-y-2"><li><strong class="font-semibold">F1:</strong> Radial Menu</li><li><strong class="font-semibold">K:</strong> Police Database</li><li><strong class="font-semibold">/seizecash:</strong> Seize Cash</li><li><strong class="font-semibold">/callsign:</strong> Set Callsign</li><li><strong class="font-semibold">/polcharge:</strong> Charge Command</li></ul></div>
+            <div class="info-card rounded-lg shadow-md p-6"><h3 class="text-2xl font-bold mb-4 text-[var(--accent-color)]">Situation Codes</h3><ul class="list-disc list-inside space-y-2"><li><strong>Code 0:</strong> Headpop/Crash</li><li><strong>Code 1:</strong> No Lights/Sirens</li><li><strong>Code 2:</strong> Lights Only</li><li><strong>Code 3:</strong> Lights & Sirens</li><li><strong>Code 4:</strong> Scene Clear</li><li><strong>Code 5:</strong> High Risk Stop</li><li><strong>Code 6:</strong> Investigating Area</li></ul></div>
+            <div class="info-card rounded-lg shadow-md p-6"><h3 class="text-2xl font-bold mb-4 text-[var(--accent-color)]">Frequencies</h3><ul class="list-disc list-inside space-y-2"><li><strong>Ch. 1:</strong> LSPD</li><li><strong>Ch. 2:</strong> EMS</li><li><strong>Ch. 3:</strong> PD - Alternate 1</li><li><strong>Ch. 4:</strong> PD - Alternate 2</li><li><strong>Ch. 7:</strong> DOJ (Restricted)</li></ul></div>
+            <div class="info-card rounded-lg shadow-md p-6"><h3 class="text-2xl font-bold mb-4 text-[var(--accent-color)]">Common Traffic Violations</h3><ul class="list-disc list-inside space-y-2 text-sm"><li>Speeding</li><li>Reckless Driving</li><li>Failure to Stop (Sign/Light)</li><li>Illegal U-Turn / Turn</li><li>Broken Headlight / Taillight</li><li>Driving on Wrong Side of Road</li><li>Failure to Yield</li></ul></div>
+            <div class="info-card rounded-lg shadow-md p-6"><h3 class="text-2xl font-bold mb-4 text-[var(--accent-color)]">Use of Force Continuum</h3><ol class="list-decimal list-inside space-y-2 text-sm"><li><strong>Officer Presence:</strong> Uniformed presence as deterrent.</li><li><strong>Verbal Commands:</strong> Clear, concise orders.</li><li><strong>Empty Hand Control:</strong> Takedowns, restraints.</li><li><strong>Less-Lethal:</strong> Taser, baton, pepper spray.</li><li><strong>Lethal Force:</strong> Firearm, as a last resort.</li></ol></div>
+            <div id="sfst-card" class="info-card rounded-lg shadow-md p-6 cursor-pointer hover:shadow-xl hover:border-blue-500/50 dark:hover:border-blue-400/50 transition-all duration-300"><h3 class="text-2xl font-bold mb-4 text-[var(--accent-color)]">Standard Field Sobriety Tests</h3><ul class="list-disc list-inside space-y-2 text-sm"><li><strong>Horizontal Gaze Nystagmus (HGN)</li><li><strong>Walk-and-Turn (WAT)</li><li><strong>One-Leg Stand (OLS)</li></ul><p class="text-xs text-right mt-4 text-[var(--text-secondary)] italic">Click for /me commands</p></div>
+            <div class="info-card rounded-lg shadow-md p-6"><h3 class="text-2xl font-bold mb-4 text-[var(--accent-color)]">Key Penal Codes</h3><ul class="list-disc list-inside space-y-2 text-sm"><li><strong>Assault:</strong> Unlawful attempt, coupled with a present ability, to commit a violent injury on another.</li><li><strong>Battery:</strong> Willful and unlawful use of force or violence upon the person of another.</li><li><strong>Robbery:</strong> Felonious taking of personal property from another's person or immediate presence, against their will, by means of force or fear.</li><li><strong>Burglary:</strong> Entering any structure with intent to commit grand or petit larceny or any felony.</li></ul></div>
+            <div class="info-card rounded-lg shadow-md p-6"><h3 class="text-2xl font-bold mb-4 text-[var(--accent-color)]">Radio Etiquette</h3><ul class="list-disc list-inside space-y-2 text-sm"><li>Keep transmissions brief and to the point.</li><li>Wait for the channel to be clear before speaking.</li><li>Acknowledge all calls directed to you.</li><li>Use plain language over obscure codes when possible.</li></ul></div>
+            <div class="info-card rounded-lg shadow-md p-6 md:col-span-2 xl:col-span-4"><h3 class="text-2xl font-bold mb-4 text-[var(--accent-color)]">Phonetic Alphabet</h3><div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-8 gap-2 text-sm"><span><strong>A</strong>lpha</span><span><strong>B</strong>ravo</span><span><strong>C</strong>harlie</span><span><strong>D</strong>elta</span><span><strong>E</strong>cho</span><span><strong>F</strong>oxtrot</span><span><strong>G</strong>olf</span><span><strong>H</strong>otel</span><span><strong>I</strong>ndia</span><span><strong>J</strong>uliett</span><span><strong>K</strong>ilo</span><span><strong>L</strong>ima</span><span><strong>M</strong>ike</span><span><strong>N</strong>ovember</span><span><strong>O</strong>scar</span><span><strong>P</strong>apa</span><span><strong>Q</strong>uebec</span><span><strong>R</strong>omeo</span><span><strong>S</strong>ierra</span><span><strong>T</strong>ango</span><span><strong>U</strong>niform</span><span><strong>V</strong>ictor</span><span><strong>W</strong>hiskey</span><span><strong>X</strong>-Ray</span><span><strong>Y</strong>ankee</span><span><strong>Z</strong>ulu</span></div></div>
+        </div>
+    </main>
+
+    <!-- Modals -->
+    <div id="settings-modal" class="modal-overlay"><div class="modal-box text-[var(--text-primary)]"><h2 class="text-2xl font-bold mb-6">Settings</h2><div class="mb-6"><h3 class="text-lg font-semibold mb-3">Website Theme</h3><div class="space-y-2"><label class="flex items-center"><input type="radio" name="theme" value="light" class="form-radio h-4 w-4 text-blue-600"><span class="ml-2">Light Mode</span></label><label class="flex items-center"><input type="radio" name="theme" value="dark" class="form-radio h-4 w-4 text-blue-600"><span class="ml-2">Dark Mode</span></label></div></div><div class="mb-6"><h3 class="text-lg font-semibold mb-3">Data Management</h3><div class="flex flex-col space-y-3"><button id="clear-data-btn" class="w-full bg-red-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-red-700 transition">Clear All Local Data</button><button id="view-data-btn" class="w-full bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold hover:bg-blue-700 transition">View Stored Data</button></div></div><div class="mt-8 text-right"><button id="close-settings-btn" class="bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-200 px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition">Close</button></div></div></div>
+    <div id="view-data-modal" class="modal-overlay"><div class="modal-box data-modal-box text-[var(--text-primary)]"><h2 class="text-2xl font-bold mb-4">Local Storage Data</h2><div id="data-container" class="space-y-4 text-sm"></div><div class="mt-6 text-right"><button id="close-view-data-btn" class="bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-200 px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition">Close</button></div></div></div>
+    <div id="confirm-modal" class="modal-overlay"><div class="modal-box text-[var(--text-primary)]"><h2 id="confirm-title" class="text-xl font-bold mb-4">Are you sure?</h2><p id="confirm-text" class="mb-6">This action cannot be undone.</p><div class="flex justify-end space-x-4"><button id="confirm-cancel-btn" class="bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-200 px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition">Cancel</button><button id="confirm-ok-btn" class="bg-red-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-700 transition">Confirm</button></div></div></div>
+
+    <!-- SFST Modal -->
+    <div id="sfst-modal" class="modal-overlay">
+        <div class="modal-box data-modal-box text-[var(--text-primary)]">
+            <h2 class="text-2xl font-bold mb-4">SFST /me Commands</h2>
+            <div class="space-y-6">
+                <!-- HGN Test -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-2 text-[var(--accent-color)]">Horizontal Gaze Nystagmus (HGN)</h3>
+                    <div class="space-y-2">
+                        <div class="relative flex items-center bg-[var(--bg-tertiary)] p-2 rounded-md">
+                            <pre class="text-sm whitespace-pre-wrap break-all flex-grow">/me instructs the subject to follow a stimulus with their eyes only, without moving their head.</pre>
+                            <button class="copy-btn ml-4 bg-blue-500 text-white text-xs px-2 py-1 rounded hover:bg-blue-600 transition flex-shrink-0">Copy</button>
+                        </div>
+                        <div class="relative flex items-center bg-[var(--bg-tertiary)] p-2 rounded-md">
+                            <pre class="text-sm whitespace-pre-wrap break-all flex-grow">/me moves the stimulus smoothly from side to side, checking for lack of smooth pursuit.</pre>
+                            <button class="copy-btn ml-4 bg-blue-500 text-white text-xs px-2 py-1 rounded hover:bg-blue-600 transition flex-shrink-0">Copy</button>
+                        </div>
+                        <div class="relative flex items-center bg-[var(--bg-tertiary)] p-2 rounded-md">
+                            <pre class="text-sm whitespace-pre-wrap break-all flex-grow">/me holds the stimulus at maximum deviation, checking for distinct and sustained nystagmus.</pre>
+                            <button class="copy-btn ml-4 bg-blue-500 text-white text-xs px-2 py-1 rounded hover:bg-blue-600 transition flex-shrink-0">Copy</button>
+                        </div>
+                        <div class="relative flex items-center bg-[var(--bg-tertiary)] p-2 rounded-md">
+                            <pre class="text-sm whitespace-pre-wrap break-all flex-grow">/me checks for the onset of nystagmus prior to 45 degrees.</pre>
+                            <button class="copy-btn ml-4 bg-blue-500 text-white text-xs px-2 py-1 rounded hover:bg-blue-600 transition flex-shrink-0">Copy</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- Walk and Turn Test -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-2 text-[var(--accent-color)]">Walk-and-Turn (WAT)</h3>
+                    <div class="space-y-2">
+                        <div class="relative flex items-center bg-[var(--bg-tertiary)] p-2 rounded-md">
+                            <pre class="text-sm whitespace-pre-wrap break-all flex-grow">/me instructs the subject to place their left foot on the line and their right foot in front of it, heel-to-toe.</pre>
+                            <button class="copy-btn ml-4 bg-blue-500 text-white text-xs px-2 py-1 rounded hover:bg-blue-600 transition flex-shrink-0">Copy</button>
+                        </div>
+                        <div class="relative flex items-center bg-[var(--bg-tertiary)] p-2 rounded-md">
+                            <pre class="text-sm whitespace-pre-wrap break-all flex-grow">/me demonstrates and instructs the subject to take nine heel-to-toe steps, turn, and take nine heel-to-toe steps back.</pre>
+                            <button class="copy-btn ml-4 bg-blue-500 text-white text-xs px-2 py-1 rounded hover:bg-blue-600 transition flex-shrink-0">Copy</button>
+                        </div>
+                        <div class="relative flex items-center bg-[var(--bg-tertiary)] p-2 rounded-md">
+                            <pre class="text-sm whitespace-pre-wrap break-all flex-grow">/me instructs the subject to keep their arms at their sides, watch their feet, and count the steps out loud.</pre>
+                            <button class="copy-btn ml-4 bg-blue-500 text-white text-xs px-2 py-1 rounded hover:bg-blue-600 transition flex-shrink-0">Copy</button>
+                        </div>
+                        <div class="relative flex items-center bg-[var(--bg-tertiary)] p-2 rounded-md">
+                            <pre class="text-sm whitespace-pre-wrap break-all flex-grow">/me observes the subject for clues of impairment during the instruction and walking stages.</pre>
+                            <button class="copy-btn ml-4 bg-blue-500 text-white text-xs px-2 py-1 rounded hover:bg-blue-600 transition flex-shrink-0">Copy</button>
+                        </div>
+                    </div>
+                </div>
+                <!-- One Leg Stand Test -->
+                <div>
+                    <h3 class="text-lg font-semibold mb-2 text-[var(--accent-color)]">One-Leg Stand (OLS)</h3>
+                    <div class="space-y-2">
+                        <div class="relative flex items-center bg-[var(--bg-tertiary)] p-2 rounded-md">
+                            <pre class="text-sm whitespace-pre-wrap break-all flex-grow">/me instructs the subject to stand with their feet together and arms at their sides.</pre>
+                            <button class="copy-btn ml-4 bg-blue-500 text-white text-xs px-2 py-1 rounded hover:bg-blue-600 transition flex-shrink-0">Copy</button>
+                        </div>
+                        <div class="relative flex items-center bg-[var(--bg-tertiary)] p-2 rounded-md">
+                            <pre class="text-sm whitespace-pre-wrap break-all flex-grow">/me instructs the subject to raise one leg approximately six inches off the ground, keeping it straight.</pre>
+                            <button class="copy-btn ml-4 bg-blue-500 text-white text-xs px-2 py-1 rounded hover:bg-blue-600 transition flex-shrink-0">Copy</button>
+                        </div>
+                        <div class="relative flex items-center bg-[var(--bg-tertiary)] p-2 rounded-md">
+                            <pre class="text-sm whitespace-pre-wrap break-all flex-grow">/me instructs the subject to count aloud "one thousand one, one thousand two..." while looking at their foot, until told to stop.</pre>
+                            <button class="copy-btn ml-4 bg-blue-500 text-white text-xs px-2 py-1 rounded hover:bg-blue-600 transition flex-shrink-0">Copy</button>
+                        </div>
+                        <div class="relative flex items-center bg-[var(--bg-tertiary)] p-2 rounded-md">
+                            <pre class="text-sm whitespace-pre-wrap break-all flex-grow">/me observes the subject for 30 seconds, looking for swaying, using arms for balance, hopping, or putting the foot down.</pre>
+                            <button class="copy-btn ml-4 bg-blue-500 text-white text-xs px-2 py-1 rounded hover:bg-blue-600 transition flex-shrink-0">Copy</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-6 text-right">
+                <button id="close-sfst-btn" class="bg-gray-200 text-gray-800 dark:bg-gray-600 dark:text-gray-200 px-6 py-2 rounded-lg font-semibold hover:opacity-90 transition">Close</button>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-10 px-6 md:px-12"><div class="container mx-auto grid grid-cols-1 md:grid-cols-3 gap-8"><div><h4 class="text-xl font-semibold mb-4 text-blue-300">Internal Contacts</h4><ul class="space-y-2 text-sm"><li><a href="https://discord.gg/7FwxdpfDTM" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white hover:underline transition">Discord</a></li><li><a href="#" class="text-gray-400 hover:text-white hover:underline transition">UPD Support</a></li><li><a href="#" class="text-gray-400 hover:text-white hover:underline transition">UPD Chat</a></li></ul></div><div><h4 class="text-xl font-semibold mb-4 text-blue-300">Quick Access</h4><ul class="space-y-2 text-sm"><li><a href="SOP.html" class="text-gray-400 hover:text-white hover:underline transition">UPD SOP</a></li><li><a href="training.html" class="text-gray-400 hover:text-white hover:underline transition">Training</a></li><li><a href="privacypolicy.html" class="text-gray-400 hover:text-white hover:underline transition">Privacy Policy</a></li></ul></div><div><h4 class="text-xl font-semibold mb-4 text-blue-300">System Information</h4><p class="text-gray-500 text-sm">&copy; 2025 Unified Police Department Internal Systems.</p></div></div></footer>
+
+    <script>
+        (() => {
+            // --- DOM ELEMENTS ---
+            const settingsModal = document.getElementById('settings-modal');
+            const themeRadios = document.querySelectorAll('input[name="theme"]');
+            const hamburgerBtn = document.getElementById('hamburgerBtn');
+            const navLinks = document.getElementById('nav-links');
+            const settingsBtn = document.getElementById('settings-btn');
+            const closeSettingsBtn = document.getElementById('close-settings-btn');
+            const viewDataBtn = document.getElementById('view-data-btn');
+            const clearDataBtn = document.getElementById('clear-data-btn');
+            const viewDataModal = document.getElementById('view-data-modal');
+            const closeViewDataBtn = document.getElementById('close-view-data-btn');
+            const dataContainer = document.getElementById('data-container');
+            const confirmModal = document.getElementById('confirm-modal');
+            const confirmOkBtn = document.getElementById('confirm-ok-btn');
+            const confirmCancelBtn = document.getElementById('confirm-cancel-btn');
+            const sfstCard = document.getElementById('sfst-card');
+            const sfstModal = document.getElementById('sfst-modal');
+            const closeSfstBtn = document.getElementById('close-sfst-btn');
+            const copyBtns = document.querySelectorAll('.copy-btn');
+
+            // --- STATE ---
+            let confirmCallback = null;
+
+            // --- FUNCTIONS ---
+            const applyTheme = (theme) => {
+                if (theme === 'dark') {
+                    document.documentElement.classList.add('dark');
+                    themeRadios.forEach(radio => radio.value === 'dark' ? radio.checked = true : false);
+                } else {
+                    document.documentElement.classList.remove('dark');
+                    themeRadios.forEach(radio => radio.value === 'light' ? radio.checked = true : false);
+                }
+            };
+
+            const openConfirmModal = (callback) => {
+                confirmCallback = callback;
+                confirmModal.classList.add('is-open');
+            };
+            const closeConfirmModal = () => {
+                confirmModal.classList.remove('is-open');
+                confirmCallback = null;
+            }
+
+            const copyToClipboard = (text, button) => {
+                const originalText = button.textContent;
+                navigator.clipboard.writeText(text).then(() => {
+                    button.textContent = 'Copied!';
+                    setTimeout(() => {
+                        button.textContent = originalText;
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy text: ', err);
+                    // Fallback for older browsers
+                    const textArea = document.createElement("textarea");
+                    textArea.value = text;
+                    document.body.appendChild(textArea);
+                    textArea.focus();
+                    textArea.select();
+                    try {
+                        document.execCommand('copy');
+                        button.textContent = 'Copied!';
+                        setTimeout(() => {
+                            button.textContent = originalText;
+                        }, 2000);
+                    } catch (err) {
+                        console.error('Fallback copy failed: ', err);
+                    }
+                    document.body.removeChild(textArea);
+                });
+            };
+
+            // --- EVENT LISTENERS ---
+            document.addEventListener('DOMContentLoaded', () => {
+                const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                applyTheme(savedTheme);
+
+                themeRadios.forEach(radio => radio.addEventListener('change', (e) => {
+                    localStorage.setItem('theme', e.target.value);
+                    applyTheme(e.target.value);
+                }));
+
+                hamburgerBtn.addEventListener('click', (e) => { e.stopPropagation(); navLinks.classList.toggle('nav-mobile-active'); });
+
+                settingsBtn.addEventListener('click', () => settingsModal.classList.add('is-open'));
+                closeSettingsBtn.addEventListener('click', () => settingsModal.classList.remove('is-open'));
+
+                sfstCard.addEventListener('click', () => sfstModal.classList.add('is-open'));
+                closeSfstBtn.addEventListener('click', () => sfstModal.classList.remove('is-open'));
+
+                viewDataBtn.addEventListener('click', () => {
+                    dataContainer.innerHTML = '';
+                    for (let i = 0; i < localStorage.length; i++) {
+                        const key = localStorage.key(i);
+                        const value = localStorage.getItem(key);
+                        const itemEl = document.createElement('div');
+                        itemEl.className = 'p-3 bg-[var(--bg-tertiary)] rounded-md';
+                        itemEl.innerHTML = `<strong class="text-[var(--accent-color)]">${key}:</strong><pre class="whitespace-pre-wrap break-all">${value}</pre>`;
+                        dataContainer.appendChild(itemEl);
+                    }
+                    if (localStorage.length === 0) dataContainer.innerHTML = '<p>No local data found.</p>';
+                    viewDataModal.classList.add('is-open');
+                });
+                closeViewDataBtn.addEventListener('click', () => viewDataModal.classList.remove('is-open'));
+
+                clearDataBtn.addEventListener('click', () => {
+                    openConfirmModal(() => {
+                        Object.keys(localStorage).forEach(key => { if (key !== 'theme') localStorage.removeItem(key); });
+                        location.reload();
+                    });
+                });
+
+                confirmOkBtn.addEventListener('click', () => { if (confirmCallback) confirmCallback(); closeConfirmModal(); });
+                confirmCancelBtn.addEventListener('click', closeConfirmModal);
+
+                copyBtns.forEach(btn => {
+                    btn.addEventListener('click', (event) => {
+                        const button = event.currentTarget;
+                        const textToCopy = button.parentElement.querySelector('pre').textContent;
+                        copyToClipboard(textToCopy, button);
+                    });
+                });
+            });
+        })();
+    </script>
+</body>
+</html>
