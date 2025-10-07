@@ -3,114 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UPD Website</title>
+    <title>Under Rebranding - Back Soon!</title>
+    <!-- Tailwind CSS for styling -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Google Fonts for a clean, modern look -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
+        /* Using the Inter font family */
         body {
             font-family: 'Inter', sans-serif;
         }
-
-        .nav-link {
-            @apply px-4 py-2 text-gray-300 hover:text-white hover:bg-gray-700 rounded-md transition-colors;
+        /* A subtle animation for the logo/icon */
+        .animate-pulse-slow {
+            animation: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
 
-        .active-link {
-            @apply bg-gray-900 text-white;
-        }
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
 
-        .page-section {
-            display: none;
-        }
-
-        .active-section {
-            display: block;
-        }
-
-        .hero-section {
-            background-image: url('https://placehold.co/1920x1080/000000/FFFFFF?text=UPD+Hero+Image');
-            background-size: cover;
-            background-position: center;
+            50% {
+                opacity: .7;
+            }
         }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800">
+<body class="bg-gray-50 text-gray-800 flex items-center justify-center min-h-screen">
+    <!-- Main container for the content -->
+    <div class="text-center p-8 max-w-lg mx-auto">
 
-    <!-- Navigation Bar -->
-    <nav class="bg-gray-800 shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
-                <div class="flex items-center">
-                    <div class="flex-shrink-0"><span class="text-white font-bold text-xl">UPD</span></div>
-                    <div class="hidden md:block"><div class="ml-10 flex items-baseline space-x-4"><a href="#" class="nav-link active-link" data-page="home">Home</a><a href="#" class="nav-link" data-page="about">About Us</a><a href="#" class="nav-link" data-page="careers">Careers</a><a href="#" class="nav-link" data-page="contact">Contact Us</a></div></div>
-                </div>
-                <div class="hidden md:block"><div class="ml-4 flex items-center md:ml-6"><a href="login.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md transition-colors">Employee Login</a></div></div>
-                <div class="-mr-2 flex md:hidden"><button type="button" id="mobile-menu-button" class="bg-gray-800 inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none"><span class="sr-only">Open main menu</span><svg class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" /></svg><svg class="hidden h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg></button></div>
-            </div>
+        <!-- Icon/Logo Placeholder -->
+        <div class="mb-8">
+            <svg class="w-20 h-20 mx-auto text-gray-400 animate-pulse-slow" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0011.667 0l3.181-3.183m-4.991-2.691V5.25a3.375 3.375 0 00-3.375-3.375H8.25a3.375 3.375 0 00-3.375 3.375v3.192m12.196 0c.07.246.114.5.114.757 0 1.397-.568 2.66-1.493 3.585l-1.157 1.157a3.375 3.375 0 01-4.772 0l-1.157-1.157A4.5 4.5 0 015.625 12.75a4.5 4.5 0 01.38-1.575m12.196 0c-.07-.246-.114-.5-.114-.757a4.5 4.5 0 00-8.228-2.227 4.5 4.5 0 00-1.631 4.227m12.196 0c.07.246.114.5.114.757v-.001" />
+            </svg>
         </div>
-        <div class="md:hidden" id="mobile-menu"><div class="px-2 pt-2 pb-3 space-y-1 sm:px-3"><a href="#" class="nav-link block active-link" data-page="home">Home</a><a href="#" class="nav-link block" data-page="about">About Us</a><a href="#" class="nav-link block" data-page="careers">Careers</a><a href="#" class="nav-link block" data-page="contact">Contact Us</a><a href="login.html" class="block bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md mt-2">Employee Login</a></div></div>
-    </nav>
 
-    <!-- Main Content -->
-    <main>
-        <section id="home" class="page-section active-section">
-            <div class="hero-section relative h-[60vh] flex items-center justify-center text-white"><div class="absolute inset-0 bg-black opacity-50"></div><div class="relative z-10 text-center px-4"><h1 class="text-4xl md:text-6xl font-extrabold">BECOME PART OF THE CHANGE</h1><p class="mt-4 text-lg md:text-xl max-w-3xl mx-auto">Join the Unified Police Department and dedicate yourself to a career of service, honor, and community protection.</p><div class="mt-8"><a href="#" data-page="careers" class="nav-link inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-md text-lg">Apply Now</a></div></div></div>
-            <div class="bg-white"><div class="max-w-7xl mx-auto py-16 px-4"><div class="text-center"><h2 class="text-3xl font-extrabold text-gray-900">A Career With Purpose</h2><p class="mt-4 text-lg text-gray-500">Discover the benefits and opportunities that come with a career at the UPD.</p></div><div class="mt-12 grid gap-8 md:grid-cols-2 lg:grid-cols-3"><div><img class="h-48 w-full object-cover" src="https://placehold.co/600x400/3498db/ffffff?text=Community" alt="Community Policing"><div class="p-6"><p class="text-sm font-medium text-blue-600">Service</p><p class="text-xl font-semibold text-gray-900">Community First</p><p class="mt-3 text-base text-gray-500">Engage with the community you serve and build lasting, positive relationships.</p></div></div><div><img class="h-48 w-full object-cover" src="https://placehold.co/600x400/2ecc71/ffffff?text=Training" alt="Officer Training"><div class="p-6"><p class="text-sm font-medium text-green-600">Excellence</p><p class="text-xl font-semibold text-gray-900">Advanced Training</p><p class="mt-3 text-base text-gray-500">We provide state-of-the-art training and equipment to ensure our officers are the best prepared.</p></div></div><div><img class="h-48 w-full object-cover" src="https://placehold.co/600x400/e74c3c/ffffff?text=Career" alt="Career Path"><div class="p-6"><p class="text-sm font-medium text-red-600">Opportunity</p><p class="text-xl font-semibold text-gray-900">Diverse Career Paths</p><p class="mt-3 text-base text-gray-500">From patrol to specialized units like CID and K-9, find your path within the department.</p></div></div></div></div></div>
-        </section>
+        <!-- Main Heading -->
+        <h1 class="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+            Something new is coming.
+        </h1>
 
-        <section id="about" class="page-section"><div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8"><div class="bg-white rounded-lg shadow-xl p-8"><h1 class="text-3xl font-bold text-gray-900">About the UPD</h1><p class="mt-4 text-gray-600">The Unified Police Department is a full-service law enforcement agency committed to excellence. Learn about our history, our values, and the dedicated men and women who serve our community.</p></div></div></section>
+        <!-- Subheading/Description -->
+        <p class="text-lg text-gray-600 mb-8">
+            Our website is currently undergoing an exciting rebranding. We are working hard to bring you a new and improved experience. Please check back shortly!
+        </p>
 
-        <section id="careers" class="page-section"><div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8"><div class="text-center"><h1 class="text-4xl font-extrabold text-gray-900">Career Opportunities</h1><p class="mt-4 text-lg text-gray-600">Join a team dedicated to making a difference. We are hiring for the following positions:</p></div><div id="job-listings" class="mt-10 space-y-8"><p class="text-center text-gray-500">Loading open positions...</p></div></div></section>
-
-        <section id="contact" class="page-section"><div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8"><div class="bg-white rounded-lg shadow-xl p-8"><h1 class="text-3xl font-bold text-gray-900">Contact Us</h1><p class="mt-4 text-gray-600">For emergencies, please dial 911. For non-emergencies, you can reach us at:</p><ul class="mt-4 list-disc list-inside"><li>Non-Emergency Line: (555) 123-4567</li><li>Public Information Office: (555) 123-4568</li><li>Address: 123 Police Plaza, City, State, ZIP</li></ul></div></div></section>
-    </main>
-
-    <footer class="bg-gray-800"><div class="max-w-7xl mx-auto py-4 px-4"><p class="text-center text-gray-400">&copy; 2024 Unified Police Department. All Rights Reserved.</p></div></footer>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getFirestore, collection, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        const firebaseConfig = { apiKey: "AIzaSyC_rsgZh17JF7Atv86tQeTmJW6vQOlilSM", authDomain: "upd-website-6dd4a.firebaseapp.com", projectId: "upd-website-6dd4a", storageBucket: "upd-website-6dd4a.appspot.com", messagingSenderId: "458463085192", appId: "1:458463085192:web:a1c2b3d4e5f6a7b8c9d0e1" };
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        // --- SPA Navigation ---
-        const navLinks = document.querySelectorAll('.nav-link');
-        const pageSections = document.querySelectorAll('.page-section');
-        const mobileMenuButton = document.getElementById('mobile-menu-button');
-        const mobileMenu = document.getElementById('mobile-menu');
-        function showPage(pageId) { pageSections.forEach(s => s.classList.remove('active-section')); document.getElementById(pageId)?.classList.add('active-section'); navLinks.forEach(l => { l.classList.remove('active-link'); if (l.dataset.page === pageId) l.classList.add('active-link'); }); }
-        document.body.addEventListener('click', e => { if (e.target.matches('.nav-link')) { e.preventDefault(); const pageId = e.target.dataset.page; if (pageId) { showPage(pageId); if (mobileMenu.offsetParent !== null) mobileMenu.classList.add('hidden'); } } });
-        mobileMenuButton.addEventListener('click', () => mobileMenu.classList.toggle('hidden'));
-
-        // --- Careers Page Logic ---
-        function loadJobPostings() {
-            const listingsContainer = document.getElementById('job-listings');
-            const jobsRef = collection(db, 'job_postings');
-            onSnapshot(jobsRef, snapshot => {
-                if (snapshot.empty) {
-                    listingsContainer.innerHTML = '<p class="text-center text-gray-500">There are currently no open positions. Please check back later.</p>';
-                    return;
-                }
-                listingsContainer.innerHTML = '';
-                snapshot.forEach(doc => {
-                    const job = doc.data();
-                    const jobCard = document.createElement('div');
-                    jobCard.className = 'bg-white shadow-lg rounded-lg p-6';
-                    jobCard.innerHTML = `
-                            <h3 class="text-2xl font-bold text-gray-900">${job.title}</h3>
-                            <p class="mt-2 text-gray-600">${job.description}</p>
-                            <div class="mt-4"><h4 class="font-semibold text-gray-800">Requirements:</h4><p class="text-gray-600 whitespace-pre-wrap">${job.requirements}</p></div>
-                            <div class="mt-6"><a href="#" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-md">Apply Now</a></div>
-                        `;
-                    listingsContainer.appendChild(jobCard);
-                });
-            });
-        }
-
-        showPage('home');
-        loadJobPostings();
-    </script>
+        <!-- Thank you message -->
+        <p class="text-md text-gray-500">
+            Thank you for your patience.
+        </p>
+    </div>
 </body>
 </html>
